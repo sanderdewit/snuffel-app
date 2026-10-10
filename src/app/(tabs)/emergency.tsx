@@ -2,7 +2,7 @@
 // vets and animal hospitals that are open now, nearest first; closed ones are
 // hidden and the search widens until there are options. "My vet" stays on top
 // with a call button.
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { ActivityIndicator, FlatList, Linking, Pressable, Text, View } from "react-native";
 import { useFocusEffect } from "expo-router";
 import { useI18n } from "../../i18n";
@@ -31,10 +31,12 @@ export default function Emergency() {
     } finally { setBusy(false); }
   }, [t]);
 
+  // Opening the tab is the "one tap". Coming back from a place's details within
+  // a couple of minutes keeps the list instead of searching again.
+  const lastRun = useRef(0);
   useFocusEffect(useCallback(() => {
     myVet().then(setVet).catch(() => undefined);
-    if (!busy) run();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (Date.now() - lastRun.current > 2 * 60 * 1000) { lastRun.current = Date.now(); run(); }
   }, [run]));
 
   const anyOpen = !!places && places.some((p) => p.openNow === true || p.is247);

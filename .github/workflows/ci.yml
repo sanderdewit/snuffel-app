@@ -72,7 +72,8 @@ jobs:
           SNUFFEL_UPLOAD_STORE_PASSWORD: ${{ secrets.ANDROID_UPLOAD_PASSWORD }}
           SNUFFEL_UPLOAD_KEY_ALIAS: ${{ secrets.ANDROID_UPLOAD_KEY_ALIAS }}
         working-directory: android
-        run: ./gradlew --no-daemon assembleRelease bundleRelease
+        # Phones only (ARM); x86 builds are for emulators and double the size.
+        run: ./gradlew --no-daemon assembleRelease bundleRelease -PreactNativeArchitectures=arm64-v8a,armeabi-v7a
       - name: Remove the key file
         if: always()
         run: rm -f "$RUNNER_TEMP/upload.p12"
