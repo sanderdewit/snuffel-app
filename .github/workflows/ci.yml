@@ -1,0 +1,113 @@
+# Every push and pull request: checks, then real native builds on both platforms.
+#   check    shared core matches snuffel-data, types, tests, expo-doctor, JS bundles
+#   android  release APK + AAB, signed with the Play upload key (GitHub secrets)
+#   ios      simulator build (proves it compiles; store signing needs an Apple
+#            developer account, which is added later)
+# The repository is public, so these runners (macOS included) cost nothing.
+name: ci
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Shared core matches snuffel-data
+        run: node tools/sync-core.mjs --check
+      - name: Types
+        run: npx tsc --noEmit
+      - name: Tests
+        run: npm test
+      - name: Expo doctor
+        run: npx expo-doctor
+      - name: Bundle the JavaScript for both platforms
+        run: npx expo export --platform android --platform ios --output-dir /tmp/export
+
+  android:
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v5
+      - run: npm ci
+      - name: Generate the native project
+        run: npx expo prebuild --platform android --no-install
+      - name: Upload key (from secrets, only on this repository)
+        if: github.event_name != 'pull_request'
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_UPLOAD_KEYSTORE_B64 }}
+        run: |
+          if [ -n "$KEYSTORE_B64" ]; then
+            echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/upload.p12"
+            echo "SNUFFEL_UPLOAD_STORE_FILE=$RUNNER_TEMP/upload.p12" >> "$GITHUB_ENV"
+          fi
+      - name: Build release APK and AAB
+        env:
+          SNUFFEL_UPLOAD_STORE_PASSWORD: ${{ secrets.ANDROID_UPLOAD_PASSWORD }}
+          SNUFFEL_UPLOAD_KEY_ALIAS: ${{ secrets.ANDROID_UPLOAD_KEY_ALIAS }}
+        working-directory: android
+        run: ./gradlew --no-daemon assembleRelease bundleRelease
+      - name: Remove the key file
+        if: always()
+        run: rm -f "$RUNNER_TEMP/upload.p12"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: snuffel-android-${{ github.run_number }}
+          path: |
+            android/app/build/outputs/apk/release/*.apk
+            android/app/build/outputs/bundle/release/*.aab
+          retention-days: 30
+
+  ios:
+    needs: check
+    runs-on: macos-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Generate the native project
+        run: npx expo prebuild --platform ios
+      - name: Build for the iOS simulator (no signing)
+        working-directory: ios
+        run: |
+          set -o pipefail
+          xcodebuild -workspace Snuffel.xcworkspace -scheme Snuffel -configuration Release \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build CODE_SIGNING_ALLOWED=NO | tail -n 40
+      - name: Package the simulator app
+        run: cd ios/build/Build/Products/Release-iphonesimulator && zip -qr "$GITHUB_WORKSPACE/Snuffel-simulator.zip" Snuffel.app
+      - uses: actions/upload-artifact@v7
+        with:
+          name: snuffel-ios-simulator-${{ github.run_number }}
+          path: Snuffel-simulator.zip
+          retention-days: 30

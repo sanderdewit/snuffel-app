@@ -1,25 +1,71 @@
 {
   "expo": {
-    "name": "snuffel-app",
-    "slug": "snuffel-app",
-    "version": "1.0.0",
+    "name": "Snuffel",
+    "slug": "snuffel",
+    "scheme": "snuffel",
+    "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "app.snuffel",
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Snuffel uses your location to find vets and dog services near you. It is not stored.",
+        "NSPhotoLibraryUsageDescription": "Choose a photo for your dog's profile. It stays on this phone.",
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
+      "package": "app.snuffel",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#FFF7ED",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "POST_NOTIFICATIONS"
+      ],
+      "blockedPermissions": [
+        "ACCESS_BACKGROUND_LOCATION",
+        "RECORD_AUDIO",
+        "SYSTEM_ALERT_WINDOW"
+      ],
       "predictiveBackGestureEnabled": false
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      "expo-localization",
+      "expo-quick-actions",
+      "@maplibre/maplibre-react-native",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Snuffel uses your location to find vets and dog services near you. It is not stored."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#EA580C"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Choose a photo for your dog's profile. It stays on this phone.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
+      ],
+      "./plugins/withReleaseSigning"
+    ],
+    "experiments": {
+      "typedRoutes": true
     }
   }
 }
