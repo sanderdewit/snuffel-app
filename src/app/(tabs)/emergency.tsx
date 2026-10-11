@@ -73,7 +73,16 @@ export default function Emergency() {
             {!busy && places && !places.length && <Text style={S.muted}>🐶 {t("noResults")}</Text>}
           </View>
         }
-        renderItem={({ item }) => <PlaceCard p={item} big />}
+        renderItem={({ item, index }) => {
+          // Unknown hours below a divider: often simply closed (evenings, weekends).
+          const firstUnknown = item.openNow == null && !item.is247 && (index === 0 || places![index - 1].openNow != null || places![index - 1].is247);
+          return (
+            <>
+              {firstUnknown && <Text style={[S.muted, { fontWeight: "700", marginTop: 6, marginBottom: 6 }]}>{t("emergencyUnknownHeading")}</Text>}
+              <PlaceCard p={item} big />
+            </>
+          );
+        }}
         ListFooterComponent={places && places.length ? <Text style={[S.muted, { textAlign: "center" }]}>{t("app_callFirst")}</Text> : null}
       />
     </View>
