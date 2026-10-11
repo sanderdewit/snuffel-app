@@ -10,6 +10,12 @@ import { isSaved, save, setMyVet, unsave } from "../../lib/saved";
 import { callUrl, ChainBadge, directionsUrl, displayName, OpenBadge } from "../../ui/PlaceCard";
 import { C, S } from "../../ui/theme";
 
+// OpenStreetMap's editor for this place: corrections go to the source.
+function osmEditUrl(id: string): string | null {
+  const m = /^([nwr])(\d+)$/.exec(id);
+  return m ? `https://www.openstreetmap.org/edit?${({ n: "node", w: "way", r: "relation" } as const)[m[1] as "n" | "w" | "r"]}=${m[2]}` : null;
+}
+
 export default function PlaceScreen() {
   const { t } = useI18n();
   const { id, lat, lon } = useLocalSearchParams<{ id: string; lat?: string; lon?: string }>();
@@ -55,6 +61,14 @@ export default function PlaceScreen() {
       <View style={S.card}>
         <Text style={S.h2}>🕒 {t("app_openingHours")}</Text>
         <Text style={[S.body, { marginTop: 4 }]}>{p.hours ? p.hours.split(";").map((s) => s.trim()).join("\n") : t("app_hoursUnknown")}</Text>
+        {p.hoursFromSite && <Text style={[S.muted, { marginTop: 4, fontStyle: "italic" }]}>{t("hoursFromWebsite")}</Text>}
+        {p.emergency === "on_call" && <Text style={[S.body, { marginTop: 6 }]}>📞 {t("emergencyOnCall")}{p.emergencyPhone ? ": " + p.emergencyPhone : ""}</Text>}
+        {p.emergency === "24/7" && <Text style={[S.body, { marginTop: 6 }]}>🚑 {t("emergency247")}</Text>}
+        {!!osmEditUrl(p.id) && (
+          <Pressable onPress={() => Linking.openURL(osmEditUrl(p.id)!)} accessibilityRole="link" style={{ marginTop: 6 }}>
+            <Text style={[S.muted, { textDecorationLine: "underline" }]}>{t("hoursFix")}</Text>
+          </Pressable>
+        )}
       </View>
 
       <View style={[S.row, { gap: 8, flexWrap: "wrap" }]}>

@@ -15,6 +15,7 @@ export function displayName(p: Place, t: (k: string) => string) {
 
 export function OpenBadge({ p }: { p: Place }) {
   const { t } = useI18n();
+  if (p.emergency === "24/7" && !p.is247) return <Text style={{ color: C.ok, fontWeight: "700" }}>🚑 {t("emergency247")}</Text>;
   if (p.is247) return <Text style={{ color: C.ok, fontWeight: "700" }}>● {t("open247")}</Text>;
   if (p.openNow === true) return <Text style={{ color: C.ok, fontWeight: "700" }}>● {t("openNow")}</Text>;
   if (p.openNow === false) return <Text style={{ color: C.muted, fontWeight: "600" }}>● {t("closedNow")}</Text>;
@@ -50,6 +51,7 @@ export function PlaceCard({ p, big }: { p: Place; big?: boolean }) {
             <OpenBadge p={p} />
             <ChainBadge p={p} />
           </View>
+          {p.emergency === "on_call" && <Text style={S.muted}>📞 {t("emergencyOnCall")}{p.emergencyPhone ? ": " + p.emergencyPhone : ""}</Text>}
         </View>
       </View>
       {big && (

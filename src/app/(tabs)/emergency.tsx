@@ -7,7 +7,7 @@ import { ActivityIndicator, FlatList, Linking, Pressable, Text, View } from "rea
 import { useFocusEffect } from "expo-router";
 import { useI18n } from "../../i18n";
 import { currentPosition, LocationDeniedError } from "../../lib/geo";
-import { emergency, NotCoveredError, type Place } from "../../lib/places";
+import { emergency, emergencyRank, NotCoveredError, type Place } from "../../lib/places";
 import { myVet, type SavedPlace } from "../../lib/saved";
 import { callUrl, PlaceCard } from "../../ui/PlaceCard";
 import { C, S } from "../../ui/theme";
@@ -39,7 +39,7 @@ export default function Emergency() {
     if (Date.now() - lastRun.current > 2 * 60 * 1000) { lastRun.current = Date.now(); run(); }
   }, [run]));
 
-  const anyOpen = !!places && places.some((p) => p.openNow === true || p.is247);
+  const anyOpen = !!places && places.some((p) => emergencyRank(p) === 0);
 
   return (
     <View style={S.screen}>
@@ -74,11 +74,14 @@ export default function Emergency() {
           </View>
         }
         renderItem={({ item, index }) => {
-          // Unknown hours below a divider: often simply closed (evenings, weekends).
-          const firstUnknown = item.openNow == null && !item.is247 && (index === 0 || places![index - 1].openNow != null || places![index - 1].is247);
+          // Unknown hours below a divider (often simply closed: evenings, weekends),
+          // then closed clinics whose phone line reaches the on-call vet.
+          const rank = emergencyRank(item);
+          const heading = rank > 0 && (index === 0 || emergencyRank(places![index - 1]) < rank)
+            ? t(rank === 1 ? "emergencyUnknownHeading" : "emergencyOnCallHeading") : null;
           return (
             <>
-              {firstUnknown && <Text style={[S.muted, { fontWeight: "700", marginTop: 6, marginBottom: 6 }]}>{t("emergencyUnknownHeading")}</Text>}
+              {heading && <Text style={[S.muted, { fontWeight: "700", marginTop: 6, marginBottom: 6 }]}>{heading}</Text>}
               <PlaceCard p={item} big />
             </>
           );

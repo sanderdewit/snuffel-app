@@ -21,6 +21,11 @@ export interface Place {
   website: string | null;
   phone: string | null;
   hours: string | null;
+  // From the clinic's own website (snuffel-data tools/scan-hours.js), when OSM has no hours.
+  // Optional: places saved by an older version don't have them.
+  hoursFromSite?: boolean;
+  emergency?: "24/7" | "on_call" | null;
+  emergencyPhone?: string | null;
   dist: number;          // km from the search centre
   openNow: boolean | null;
   is247: boolean;
@@ -174,7 +179,10 @@ function normalize(els: Element[], ref: ChainRef | null, lat: number, lon: numbe
       address: address(tags),
       website: first(tags.website || tags["contact:website"] || tags.url),
       phone: first(tags.phone || tags["contact:phone"]),
-      hours: tags.opening_hours || null,
+      hours: tags.opening_hours || tags["snuffel:opening_hours"] || null,
+      hoursFromSite: !tags.opening_hours && !!tags["snuffel:opening_hours"],
+      emergency: tags["snuffel:emergency"] === "24/7" || tags["snuffel:emergency"] === "on_call" ? tags["snuffel:emergency"] : null,
+      emergencyPhone: tags["snuffel:emergency_phone"] || null,
       dist: haversineKm(lat, lon, el.lat, el.lon), openNow: null, is247: false
     });
   }
@@ -201,15 +209,19 @@ export async function search(lat: number, lon: number, radiusM: number, opts: { 
  * Emergency: vets and hospitals that are not known to be closed, widening the
  * radius until at least 5 are found and at least one of them is known to be
  * open (as the website does): clinics with unknown hours nearby must not hide
- * an open emergency clinic a little further away. Open places first, then
+ * an open emergency clinic a little further away. Open places first (and
+ * clinics with their own 24/7 emergency service), then unknown hours, then
+ * closed clinics whose phone line reaches the on-call vet; within each,
  * independents before chains, then distance.
  */
+export const emergencyRank = (p: Place) => (p.openNow === true || p.is247 || p.emergency === "24/7" ? 0 : p.openNow == null ? 1 : 2);
+
 export async function emergency(lat: number, lon: number): Promise<{ places: Place[]; radiusM: number }> {
   let last: Place[] = [], radiusM = CONFIG.emergencySteps[0];
-  const rank = (p: Place) => (p.openNow === true || p.is247 ? 0 : p.openNow == null ? 1 : 2);
+  const rank = emergencyRank;
   for (const r of CONFIG.emergencySteps) {
     radiusM = r;
-    last = (await search(lat, lon, r)).filter((p) => (p.cat === "vet" || p.cat === "hospital") && p.openNow !== false);
+    last = (await search(lat, lon, r)).filter((p) => (p.cat === "vet" || p.cat === "hospital") && (p.openNow !== false || !!p.emergency));
     if (last.length >= 5 && last.some((p) => rank(p) === 0)) break;
   }
   last.sort((a, b) => rank(a) - rank(b) || (a.chain ? 1 : 0) - (b.chain ? 1 : 0) || a.dist - b.dist);
