@@ -54,6 +54,12 @@ for L in ${LANGS[@]}; do
   shot "$L" 4-ask       "/ask" 8
   shot "$L" 5-dog       "/dog/1" 8
   shot "$L" 6-saved     "/saved" 8
+  # Diagnostics (not uploaded to the store): app log lines and crash reports.
+  mkdir -p "$OUT/logs"
+  xcrun simctl spawn "$UDID" log show --last 30m --style compact \
+    --predicate 'process == "Snuffel" AND (messageType == error OR messageType == fault OR subsystem == "com.facebook.react.log")' \
+    > "$OUT/logs/$L-app.log" 2>&1 || true
+  cp ~/Library/Logs/DiagnosticReports/Snuffel* "$OUT/logs/" 2>/dev/null || true
   xcrun simctl shutdown "$UDID"
   xcrun simctl delete "$UDID"
 done

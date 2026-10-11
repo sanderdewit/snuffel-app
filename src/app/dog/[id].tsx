@@ -1,6 +1,6 @@
 // Add / edit a dog, and its care reminders.
 import { useEffect, useState } from "react";
-import { Alert, Image, Pressable, ScrollView, Switch, Text, TextInput, View } from "react-native";
+import { Alert, Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { File, Paths } from "expo-file-system";
@@ -9,6 +9,7 @@ import {
   deleteDog, getDog, listReminders, markDone, notificationsAllowed, REMINDER_KINDS, saveDog, setReminder, today, validDate,
   type Reminder, type ReminderKind
 } from "../../lib/dogs";
+import { Toggle } from "../../ui/Toggle";
 import { C, S } from "../../ui/theme";
 
 export default function DogScreen() {
@@ -105,7 +106,7 @@ export default function DogScreen() {
       {sex && (
         <View style={[S.row, { justifyContent: "space-between" }]}>
           <Text style={S.body}>{t("app_neutered")}</Text>
-          <Switch value={neutered} onValueChange={setNeutered} />
+          <Toggle value={neutered} onValueChange={setNeutered} />
         </View>
       )}
       <Pressable style={S.btn} onPress={async () => { if (await persist()) router.back(); }} accessibilityRole="button">

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#FDBA74"/><stop offset="1" stop-color="#EA580C"/></linearGradient></defs><rect width="1024" height="1024" fill="url(#bg)"/>
+    <g transform="translate(512 530) scale(0.92) translate(-512 -540)">
+  <!-- ears -->
+  <ellipse cx="292" cy="455" rx="118" ry="215" transform="rotate(24 292 455)" fill="#7A4426"/>
+  <ellipse cx="732" cy="455" rx="118" ry="215" transform="rotate(-24 732 455)" fill="#7A4426"/>
+  <!-- head -->
+  <ellipse cx="512" cy="545" rx="265" ry="250" fill="#D9975E"/>
+  <!-- face blaze and muzzle -->
+  <path d="M512 330 C 470 330 455 420 452 520 L 572 520 C 569 420 554 330 512 330 Z" fill="#F6E7D4"/>
+  <ellipse cx="512" cy="672" rx="168" ry="128" fill="#F6E7D4"/>
+  <!-- eyes -->
+  <ellipse cx="404" cy="528" rx="40" ry="46" fill="#2B1B12"/>
+  <ellipse cx="620" cy="528" rx="40" ry="46" fill="#2B1B12"/>
+  <circle cx="418" cy="512" r="14" fill="#fff"/><circle cx="634" cy="512" r="14" fill="#fff"/>
+  <circle cx="394" cy="545" r="6" fill="#fff" opacity="0.8"/><circle cx="610" cy="545" r="6" fill="#fff" opacity="0.8"/>
+  <!-- eyebrows -->
+  <path d="M362 462 Q 400 440 438 458" stroke="#7A4426" stroke-width="12" stroke-linecap="round" fill="none"/>
+  <path d="M586 458 Q 624 440 662 462" stroke="#7A4426" stroke-width="12" stroke-linecap="round" fill="none"/>
+  <!-- cheeks -->
+  <ellipse cx="350" cy="640" rx="44" ry="26" fill="#F4A3A8" opacity="0.55"/><ellipse cx="674" cy="640" rx="44" ry="26" fill="#F4A3A8" opacity="0.55"/>
+  <!-- tongue -->
+  <path d="M470 712 C 470 790 554 790 554 712 Z" fill="#EF6F86"/>
+  <path d="M512 718 L 512 760" stroke="#D9536C" stroke-width="6" stroke-linecap="round"/>
+  <!-- mouth -->
+  <path d="M512 640 L 512 700 M 512 700 Q 466 738 428 702 M 512 700 Q 558 738 596 702" stroke="#2B1B12" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- nose -->
+  <ellipse cx="512" cy="618" rx="62" ry="44" fill="#2B1B12"/>
+  <ellipse cx="494" cy="603" rx="20" ry="10" fill="#fff" opacity="0.55"/></g></svg>

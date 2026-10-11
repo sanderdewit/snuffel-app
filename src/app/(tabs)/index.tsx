@@ -1,6 +1,6 @@
 // Find: address or GPS search, categories, independents-only, map or list.
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, FlatList, Keyboard, Pressable, ScrollView, Switch, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, FlatList, Keyboard, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
 import { useI18n } from "../../i18n";
@@ -9,6 +9,7 @@ import { CATEGORIES, CATEGORY_ORDER, NotCoveredError, offline, search, type Plac
 import type { Category } from "../../core/classify";
 import { PlaceCard } from "../../ui/PlaceCard";
 import { PlaceMap } from "../../ui/PlaceMap";
+import { Toggle } from "../../ui/Toggle";
 import { C, S } from "../../ui/theme";
 
 const RADII = [1000, 3000, 5000, 10000, 25000];
@@ -113,7 +114,7 @@ export default function Find() {
         </ScrollView>
         <View style={[S.row, { justifyContent: "space-between" }]}>
           <View style={[S.row, { gap: 6 }]}>
-            <Switch value={independentOnly} onValueChange={setIndependentOnly} />
+            <Toggle value={independentOnly} onValueChange={setIndependentOnly} />
             <Text style={S.body}>{t("independentOnly")}</Text>
           </View>
           <View style={[S.row, { gap: 6 }]}>
