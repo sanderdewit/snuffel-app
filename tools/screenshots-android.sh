@@ -9,7 +9,16 @@ APK="$1"; OUT="$2"; shift 2
 LANGS=("${@:-nl en}")
 PKG=app.snuffel
 
-boot_wait() { adb wait-for-device; until [ "$(adb shell getprop sys.boot_completed | tr -d '\r')" = "1" ]; do sleep 2; done; sleep 5; }
+# "adb root" and a zygote restart drop the connection for a moment ("device
+# offline"): wait until adb really reports a booted device again.
+boot_wait() {
+  for i in $(seq 1 90); do
+    if [ "$(adb get-state 2>/dev/null)" = "device" ] && [ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" = "1" ]; then sleep 5; return 0; fi
+    sleep 2
+  done
+  echo "device did not come back"; return 1
+}
+retry() { for i in 1 2 3 4 5; do "$@" && return 0; echo "retry $i: $*"; sleep 5; done; return 1; }
 open() { adb shell "am start -W -a android.intent.action.VIEW -d '$1' $PKG" > /dev/null; }
 shot() {   # shot <lang> <name> <app link> <seconds>
   open "$3"; sleep "$4"
@@ -17,8 +26,8 @@ shot() {   # shot <lang> <name> <app link> <seconds>
   echo "  $1/$2.png"
 }
 
-adb root > /dev/null; boot_wait
-adb install -r "$APK" > /dev/null
+echo "== root"; adb root || true; sleep 3; boot_wait
+echo "== install $APK"; retry adb install -r "$APK"
 adb shell settings put secure location_mode 3
 adb shell settings put global sysui_demo_allowed 1
 
@@ -26,7 +35,8 @@ for L in ${LANGS[@]}; do
   case "$L" in nl) LOC=nl-NL ;; en) LOC=en-GB ;; *) LOC="$L-$(echo "$L" | tr a-z A-Z)" ;; esac
   mkdir -p "$OUT/$L"
   adb shell pm clear "$PKG" > /dev/null
-  adb shell "setprop persist.sys.locale $LOC; setprop ctl.restart zygote"; boot_wait
+  echo "== language $LOC"
+  adb shell "setprop persist.sys.locale $LOC; setprop ctl.restart zygote" || true; sleep 5; boot_wait
   adb shell pm grant "$PKG" android.permission.ACCESS_FINE_LOCATION
   adb shell pm grant "$PKG" android.permission.ACCESS_COARSE_LOCATION
   adb emu geo fix 4.8852 52.3600 > /dev/null
