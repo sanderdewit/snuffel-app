@@ -41,16 +41,17 @@ for L in ${LANGS[@]}; do
   adb shell pm grant "$PKG" android.permission.ACCESS_COARSE_LOCATION
   adb emu geo fix 4.8852 52.3600 > /dev/null
   # Clean status bar: 9:41, full battery, full signal, no notification icons.
-  for c in "enter" "clock -e hhmm 0941" "battery -e level 100 -e plugged false" "network -e wifi show -e level 4 -e mobile show -e datatype none -e level 4" "notifications -e visible false"; do
+  for c in "enter" "clock -e hhmm 0941" "battery -e level 100 -e plugged false" "network -e wifi show -e level 4 -e fully true" "network -e mobile show -e datatype none -e level 4 -e fully true" "notifications -e visible false"; do
     adb shell "am broadcast -a com.android.systemui.demo -e command $c" > /dev/null
   done
   adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1 > /dev/null 2>&1
   sleep 40   # first start: place data, demo data incl. one AI answer
-  adb emu geo fix 4.8852 52.3600 > /dev/null
+  # GPS fixes in a row, so the location service has a current position.
+  for i in 1 2 3; do adb emu geo fix 4.8852 52.3600 > /dev/null; sleep 2; done
   echo "$L:"
-  shot "$L" 1-find      "snuffel:///?near=1&view=list" 16
-  shot "$L" 2-emergency "snuffel:///emergency" 16
-  shot "$L" 3-map       "snuffel:///?near=1&view=map" 20
+  shot "$L" 1-find      "snuffel:///?near=1&view=list" 25
+  shot "$L" 2-emergency "snuffel:///emergency" 25
+  shot "$L" 3-map       "snuffel:///?near=1&view=map" 30
   shot "$L" 4-ask       "snuffel:///ask" 8
   shot "$L" 5-dog       "snuffel:///dog/1" 8
   shot "$L" 6-file      "snuffel:///dog/file/1" 8

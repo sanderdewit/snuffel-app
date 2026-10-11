@@ -31,13 +31,27 @@ export async function reverseLabel(lat: number, lon: number, lang: string): Prom
 
 export class LocationDeniedError extends Error {}
 
-/** Current position: a recent last-known fix first (instant), else a fresh one. */
+function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([p, new Promise<T>((_, reject) => setTimeout(() => reject(new Error("timeout")), ms))]);
+}
+
+/**
+ * Current position: a recent last-known fix first (instant), else a fresh one.
+ * Balanced accuracy uses Wi-Fi / mobile networks; when that isn't available
+ * (Android set to "GPS only", no network location) fall back to GPS. Both with
+ * a time limit, so a search never hangs.
+ */
 export async function currentPosition(): Promise<{ lat: number; lon: number }> {
   const perm = await Location.requestForegroundPermissionsAsync();
   if (perm.status !== "granted") throw new LocationDeniedError();
-  const last = await Location.getLastKnownPositionAsync({ maxAge: 2 * 60 * 1000, requiredAccuracy: 500 });
+  const last = await Location.getLastKnownPositionAsync({ maxAge: 2 * 60 * 1000, requiredAccuracy: 500 }).catch(() => null);
   if (last) return { lat: last.coords.latitude, lon: last.coords.longitude };
-  const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
+  let pos: Location.LocationObject;
+  try {
+    pos = await withTimeout(Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced }), 10000);
+  } catch {
+    pos = await withTimeout(Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High }), 20000);
+  }
   return { lat: pos.coords.latitude, lon: pos.coords.longitude };
 }
 
