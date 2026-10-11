@@ -1,6 +1,7 @@
-// Screenshot mode, for the App Store images made in CI (tools/screenshots.sh).
-// Only active when the iOS app is launched with the argument "-SnuffelDemo YES"
-// (simctl launch); a normal start never sees it. It fills the phone with a
+// Screenshot mode, for the store images made in CI (tools/screenshots.sh, and
+// tools/screenshots-android.sh). On iOS only when the app is launched with the
+// argument "-SnuffelDemo YES" (simctl launch); on Android only in a separate
+// screenshot build. A normal start never sees it. It fills the phone with a
 // sample dog, reminders, "my vet" and one real AI conversation, once.
 import { Platform, Settings } from "react-native";
 import { Asset } from "expo-asset";
@@ -13,14 +14,19 @@ import { search } from "./places";
 import { setMyVet } from "./saved";
 import { addRecord } from "./dogfile";
 
+// Android has no launch arguments: there it is a separate screenshot build
+// (EXPO_PUBLIC_SNUFFEL_DEMO=1, inlined at build time); store builds never have it.
+const ANDROID_DEMO_BUILD = process.env.EXPO_PUBLIC_SNUFFEL_DEMO === "1";
+
 export function isDemo(): boolean {
+  if (Platform.OS === "android") return ANDROID_DEMO_BUILD;
   if (Platform.OS !== "ios") return false;
   try { return Settings.get("SnuffelDemo") === "YES" || Settings.get("SnuffelDemo") === true; } catch { return false; }
 }
 
 /** Screen to open at launch ("-SnuffelDemoRoute /emergency"): links would show iOS's "Open in…?" prompt. */
 export function demoRoute(): string | null {
-  if (!isDemo()) return null;
+  if (!isDemo() || Platform.OS !== "ios") return null;   // Android screenshots open screens via app links
   try { const r = Settings.get("SnuffelDemoRoute"); return typeof r === "string" && r.startsWith("/") ? r : null; } catch { return null; }
 }
 

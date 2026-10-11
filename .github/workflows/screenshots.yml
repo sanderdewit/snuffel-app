@@ -9,12 +9,16 @@ on:
       languages:
         description: "Languages, space separated"
         default: "nl en"
+      platforms:
+        description: "ios, android or both"
+        default: "ios android"
 
 permissions:
   contents: read
 
 jobs:
   ios:
+    if: contains(github.event.inputs.platforms, 'ios')
     runs-on: macos-latest
     timeout-minutes: 120
     steps:
@@ -38,4 +42,46 @@ jobs:
         with:
           name: screenshots-ios
           path: screenshots
+          retention-days: 90
+
+  android:
+    if: contains(github.event.inputs.platforms, 'android')
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v5
+      - run: npm ci
+      - run: npx expo prebuild --platform android --no-install
+      - name: Screenshot build (sample data; never published)
+        working-directory: android
+        env:
+          EXPO_PUBLIC_SNUFFEL_DEMO: "1"
+        run: ./gradlew --no-daemon assembleRelease -PreactNativeArchitectures=x86_64
+      - name: Enable KVM for the emulator
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - name: Take the screenshots (16:9 phone, Amsterdam)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: pixel_2
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          script: bash tools/screenshots-android.sh android/app/build/outputs/apk/release/app-release.apk screenshots-android ${{ github.event.inputs.languages }}
+      - uses: actions/upload-artifact@v7
+        with:
+          name: screenshots-android
+          path: screenshots-android
           retention-days: 90
