@@ -5,13 +5,14 @@ import { ActivityIndicator, FlatList, KeyboardAvoidingView, Platform, Pressable,
 import { router, useFocusEffect } from "expo-router";
 import { useI18n } from "../../i18n";
 import { addChat, ask, clearChat, loadChat, type ChatMessage } from "../../lib/ai";
-import { listDogs, type Dog } from "../../lib/dogs";
+import { listDogs, today, type Dog } from "../../lib/dogs";
+import { addRecord } from "../../lib/dogfile";
 import { speak, startListening, stopListening, stopSpeaking } from "../../lib/voice";
 import { useSpeechRecognitionEvent } from "expo-speech-recognition";
 import { C, S } from "../../ui/theme";
 
 export default function Ask() {
-  const { t, lang } = useI18n();
+  const { t, tf, lang } = useI18n();
   const [dogs, setDogs] = useState<Dog[]>([]);
   const [dogId, setDogId] = useState<number | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -76,6 +77,17 @@ export default function Ask() {
   };
   useFocusEffect(useCallback(() => () => { stopSpeaking(); stopListening(); }, []));
 
+  // "Save to the dog's file": the question as title, the answer as details.
+  const dog = dogs.find((d) => d.id === dogId) || null;
+  const [filed, setFiled] = useState<Set<number>>(new Set());
+  useEffect(() => setFiled(new Set()), [dogId]);
+  const saveToFile = async (i: number) => {
+    if (!dog) return;
+    const question = messages.slice(0, i).reverse().find((m) => m.role === "user");
+    await addRecord({ dogId: dog.id, kind: "ai", date: today(), title: (question ? question.content : t("app_rec_ai")).slice(0, 200), details: messages[i].content, value: null });
+    setFiled((s) => new Set(s).add(i));
+  };
+
   const cta = (m: ChatMessage) => {
     if (m.urgency === "emergency") return { label: t("aiCtaEmergency"), go: () => router.push("/emergency") };
     if (m.urgency === "vet_soon" || m.urgency === "monitor") {
@@ -119,10 +131,19 @@ export default function Ask() {
                 <Text style={[S.body, { color: m.role === "user" ? "#fff" : C.text }]}>{m.content}</Text>
               </View>
               {m.role === "assistant" && (
-                <Pressable onPress={() => toggleRead(i, m.content)} hitSlop={8} accessibilityRole="button"
-                  accessibilityLabel={t(speaking === i ? "app_stopReading" : "app_readAloud")}>
-                  <Text style={{ color: C.brandDark, fontWeight: "600" }}>{speaking === i ? "⏹ " + t("app_stopReading") : "🔊 " + t("app_readAloud")}</Text>
-                </Pressable>
+                <View style={[S.row, { gap: 16, flexWrap: "wrap" }]}>
+                  <Pressable onPress={() => toggleRead(i, m.content)} hitSlop={8} accessibilityRole="button"
+                    accessibilityLabel={t(speaking === i ? "app_stopReading" : "app_readAloud")}>
+                    <Text style={{ color: C.brandDark, fontWeight: "600" }}>{speaking === i ? "⏹ " + t("app_stopReading") : "🔊 " + t("app_readAloud")}</Text>
+                  </Pressable>
+                  {dog && m.urgency && (
+                    filed.has(i)
+                      ? <Text style={{ color: C.ok, fontWeight: "600" }}>✓ {t("app_savedToFile")}</Text>
+                      : <Pressable onPress={() => saveToFile(i)} hitSlop={8} accessibilityRole="button">
+                          <Text style={{ color: C.brandDark, fontWeight: "600" }}>📁 {tf("app_saveToFile", { name: dog.name })}</Text>
+                        </Pressable>
+                  )}
+                </View>
               )}
               {action && (
                 <Pressable style={[S.btn, m.urgency === "emergency" && { backgroundColor: C.danger }]} onPress={action.go}>

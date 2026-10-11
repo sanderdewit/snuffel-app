@@ -53,7 +53,8 @@ for L in ${LANGS[@]}; do
   shot "$L" 3-map       "/?near=1&view=map" 20
   shot "$L" 4-ask       "/ask" 8
   shot "$L" 5-dog       "/dog/1" 8
-  shot "$L" 6-saved     "/saved" 8
+  shot "$L" 6-file      "/dog/file/1" 8
+  shot "$L" 7-saved     "/saved" 8
   # Diagnostics (not uploaded to the store): app log lines and crash reports.
   mkdir -p "$OUT/logs"
   xcrun simctl spawn "$UDID" log show --last 30m --style compact \

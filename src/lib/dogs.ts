@@ -57,6 +57,7 @@ export async function deleteDog(id: number): Promise<void> {
   await db.withTransactionAsync(async () => {
     await db.runAsync("DELETE FROM reminders WHERE dog_id = ?", id);
     await db.runAsync("DELETE FROM chats WHERE dog_id = ?", id);
+    await db.runAsync("DELETE FROM records WHERE dog_id = ?", id);
     await db.runAsync("DELETE FROM dogs WHERE id = ?", id);
   });
 }

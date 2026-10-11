@@ -113,6 +113,17 @@ export default function DogScreen() {
         <Text style={S.btnText}>{t("app_done")}</Text>
       </Pressable>
 
+      {dogId != null && (
+        <Pressable style={[S.card, S.row, { gap: 10, marginTop: 4 }]} onPress={() => router.push({ pathname: "/dog/file/[id]", params: { id: String(dogId) } })} accessibilityRole="button">
+          <Text style={{ fontSize: 26 }}>📁</Text>
+          <View style={{ flex: 1 }}>
+            <Text style={S.h2}>{t("app_dogFile")}</Text>
+            <Text style={S.muted} numberOfLines={2}>{t("app_dogFileIntro")}</Text>
+          </View>
+          <Text style={{ color: C.muted, fontSize: 20 }}>›</Text>
+        </Pressable>
+      )}
+
       <Text style={[S.h2, { marginTop: 8 }]}>⏰ {t("app_reminders")}</Text>
       {notifOff && <Text style={[S.muted, { color: C.warn }]}>{t("app_notifDenied")}</Text>}
       {REMINDER_KINDS.map((k) => {

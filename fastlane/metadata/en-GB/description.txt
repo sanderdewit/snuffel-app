@@ -9,8 +9,11 @@ Many practices have been bought by large chains in recent years, often without c
 YOUR DOG, YOUR REMINDERS
 Create a profile for your dog (breed, age, weight, photo) and get timely reminders for vaccinations, deworming, flea and tick treatment and the yearly check-up.
 
+YOUR DOG'S FILE
+Keep vet visits, diagnoses, medication, allergies, weight and behaviour in one place. Export the file as a PDF for a new vet or a pet sitter, or move it to another phone (optionally protected with a password).
+
 AI HELP WITH HEALTH AND BEHAVIOUR
-Ask about symptoms or behaviour, like barking, anxiety, pulling on the lead or puppy training, typed or by voice. The assistant knows your dog's profile, helps you judge how urgent something is and suggests reward-based first steps. General information, not a substitute for a vet or behaviourist.
+Ask about symptoms or behaviour, like barking, anxiety, pulling on the lead or puppy training, typed or by voice. The assistant knows your dog's profile and, if you want, the key points from its file. It helps you judge how urgent something is and suggests reward-based first steps. General information, not a substitute for a vet or behaviourist.
 
 WORKS WITHOUT SIGNAL
 Your saved places, your own vet and all places within 15 km of home also work offline.

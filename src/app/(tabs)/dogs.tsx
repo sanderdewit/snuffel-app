@@ -1,6 +1,9 @@
 // My dogs: profiles with their next care reminder.
 import { useCallback, useState } from "react";
-import { FlatList, Image, Pressable, Text, View } from "react-native";
+import { ActivityIndicator, Alert, FlatList, Image, Pressable, Text, TextInput, View } from "react-native";
+import * as DocumentPicker from "expo-document-picker";
+import { File } from "expo-file-system";
+import { importData, NeedsPasswordError } from "../../lib/dogfile";
 import { router, useFocusEffect } from "expo-router";
 import { useI18n } from "../../i18n";
 import { ageMonths, listDogs, listReminders, REMINDER_KINDS, today, type Dog, type Reminder } from "../../lib/dogs";
@@ -11,16 +14,39 @@ type Row = Dog & { next: Reminder | null };
 export default function Dogs() {
   const { t, tf } = useI18n();
   const [dogs, setDogs] = useState<Row[]>([]);
-  useFocusEffect(useCallback(() => {
-    (async () => {
-      const out: Row[] = [];
-      for (const d of await listDogs()) {
-        const due = (await listReminders(d.id)).filter((r) => r.due).sort((a, b) => a.due!.localeCompare(b.due!));
-        out.push({ ...d, next: due[0] || null });
-      }
-      setDogs(out);
-    })().catch(() => undefined);
-  }, []));
+  const withNext = async (): Promise<Row[]> => {
+    const out: Row[] = [];
+    for (const d of await listDogs()) {
+      const due = (await listReminders(d.id)).filter((r) => r.due).sort((a, b) => a.due!.localeCompare(b.due!));
+      out.push({ ...d, next: due[0] || null });
+    }
+    return out;
+  };
+  useFocusEffect(useCallback(() => { withNext().then(setDogs).catch(() => undefined); }, []));
+
+  // Import a dog from an export (another phone, or a backup). Encrypted files ask for the password.
+  const [asking, setAsking] = useState<string | null>(null);   // the file text, while a password is needed
+  const [pw, setPw] = useState("");
+  const [importing, setImporting] = useState(false);
+  const runImport = async (text: string, password: string | null) => {
+    setImporting(true);
+    try {
+      const name = await importData(text, password);
+      setAsking(null); setPw("");
+      Alert.alert(tf("app_importDone", { name }));
+      setDogs(await withNext());
+    } catch (e) {
+      if (e instanceof NeedsPasswordError) { if (password) Alert.alert(t("app_wrongPassword")); setAsking(text); }
+      else { setAsking(null); Alert.alert(t("app_importFailed")); }
+    } finally { setImporting(false); }
+  };
+  const pickImport = async () => {
+    const r = await DocumentPicker.getDocumentAsync({ type: ["application/json", "text/plain", "*/*"], copyToCacheDirectory: true });
+    if (r.canceled || !r.assets[0]) return;
+    let text = "";
+    try { text = await new File(r.assets[0].uri).text(); } catch { Alert.alert(t("app_importFailed")); return; }
+    await runImport(text, null);
+  };
 
   const age = (d: Dog) => {
     const m = ageMonths(d.birth);
@@ -54,9 +80,25 @@ export default function Dogs() {
           </Pressable>
         )}
         ListFooterComponent={
-          <Pressable style={[S.btn, { marginTop: 6 }]} onPress={() => router.push({ pathname: "/dog/[id]", params: { id: "new" } })} accessibilityRole="button">
-            <Text style={S.btnText}>＋ {t("app_addDog")}</Text>
-          </Pressable>
+          <View style={{ gap: 8, marginTop: 6 }}>
+            <Pressable style={S.btn} onPress={() => router.push({ pathname: "/dog/[id]", params: { id: "new" } })} accessibilityRole="button">
+              <Text style={S.btnText}>＋ {t("app_addDog")}</Text>
+            </Pressable>
+            {asking ? (
+              <View style={[S.card, { gap: 6 }]}>
+                <Text style={S.body}>{t("app_importPassword")}</Text>
+                <TextInput style={S.input} value={pw} onChangeText={setPw} placeholder={t("app_password")} secureTextEntry autoCapitalize="none" autoFocus />
+                <View style={[S.row, { gap: 8 }]}>
+                  <Pressable style={[S.btnGhost, { flex: 1 }]} onPress={() => { setAsking(null); setPw(""); }}><Text style={S.btnGhostText}>{t("app_cancel")}</Text></Pressable>
+                  <Pressable style={[S.btn, { flex: 1 }]} onPress={() => runImport(asking, pw)}><Text style={S.btnText}>OK</Text></Pressable>
+                </View>
+              </View>
+            ) : (
+              <Pressable style={S.btnGhost} onPress={pickImport} disabled={importing} accessibilityRole="button">
+                {importing ? <ActivityIndicator color={C.brand} /> : <Text style={S.btnGhostText}>📥 {t("app_import")}</Text>}
+              </Pressable>
+            )}
+          </View>
         }
       />
     </View>

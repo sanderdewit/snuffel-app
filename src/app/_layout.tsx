@@ -44,6 +44,7 @@ function Screens() {
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="place/[id]" options={{ title: "" }} />
       <Stack.Screen name="dog/[id]" options={{ title: t("app_editDog") }} />
+      <Stack.Screen name="dog/file/[id]" options={{ title: t("app_dogFile") }} />
       <Stack.Screen name="settings" options={{ title: t("app_settings") }} />
     </Stack>
   );

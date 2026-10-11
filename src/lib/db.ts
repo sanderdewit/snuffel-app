@@ -12,7 +12,12 @@ const MIGRATIONS = [
    CREATE TABLE IF NOT EXISTS dogs (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, breed TEXT, birth TEXT, weight REAL, sex TEXT, neutered INTEGER, photo TEXT);
    CREATE TABLE IF NOT EXISTS reminders (id INTEGER PRIMARY KEY AUTOINCREMENT, dog_id INTEGER NOT NULL, kind TEXT NOT NULL, due TEXT, every_months INTEGER NOT NULL, notif_id TEXT,
      UNIQUE (dog_id, kind));
-   CREATE TABLE IF NOT EXISTS chats (id INTEGER PRIMARY KEY AUTOINCREMENT, dog_id INTEGER, role TEXT NOT NULL, content TEXT NOT NULL, urgency TEXT, topic TEXT, at INTEGER NOT NULL);`
+   CREATE TABLE IF NOT EXISTS chats (id INTEGER PRIMARY KEY AUTOINCREMENT, dog_id INTEGER, role TEXT NOT NULL, content TEXT NOT NULL, urgency TEXT, topic TEXT, at INTEGER NOT NULL);`,
+  // v2: the dog's health & behaviour file
+  `CREATE TABLE IF NOT EXISTS records (id INTEGER PRIMARY KEY AUTOINCREMENT, dog_id INTEGER NOT NULL, kind TEXT NOT NULL, date TEXT NOT NULL,
+     title TEXT NOT NULL, details TEXT, value REAL, created INTEGER NOT NULL);
+   CREATE INDEX IF NOT EXISTS records_dog ON records (dog_id, date);
+   ALTER TABLE dogs ADD COLUMN share_file INTEGER NOT NULL DEFAULT 1;`
 ];
 
 let ready: Promise<void> | null = null;

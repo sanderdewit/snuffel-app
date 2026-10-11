@@ -5,6 +5,7 @@ import * as Crypto from "expo-crypto";
 import { CONFIG } from "./config";
 import { db, dbReady, kvGet, kvSet } from "./db";
 import { ageMonths, type Dog } from "./dogs";
+import { aiSummary } from "./dogfile";
 
 export type Urgency = "emergency" | "vet_soon" | "monitor" | "unclear";
 export type Topic = "health" | "behaviour" | "other";
@@ -22,7 +23,13 @@ export async function ask(history: ChatMessage[], lang: string, emergencyLabel: 
     lang, emergencyLabel,
     messages: history.slice(-12).map((m) => ({ role: m.role, content: m.content }))
   };
-  if (dog) body.dog = { breed: dog.breed || undefined, ageMonths: ageMonths(dog.birth) ?? undefined, weightKg: dog.weight ?? undefined, sex: dog.sex ?? undefined, neutered: dog.neutered ?? undefined };
+  if (dog) {
+    body.dog = {
+      breed: dog.breed || undefined, ageMonths: ageMonths(dog.birth) ?? undefined, weightKg: dog.weight ?? undefined,
+      sex: dog.sex ?? undefined, neutered: dog.neutered ?? undefined,
+      history: (await aiSummary(dog.id).catch(() => null)) ?? undefined   // only when the owner allows it for this dog
+    };
+  }
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 45000);
   try {
