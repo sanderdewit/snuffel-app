@@ -101,7 +101,7 @@ export default function Ask() {
   return (
     <KeyboardAvoidingView style={S.screen} behavior={Platform.OS === "ios" ? "padding" : undefined} keyboardVerticalOffset={90}>
       {dogs.length > 0 && (
-        <ScrollView horizontal style={{ flexGrow: 0 }} contentContainerStyle={{ gap: 6, padding: 12, alignItems: "center" }} showsHorizontalScrollIndicator={false}>
+        <ScrollView horizontal style={{ flexGrow: 0, flexShrink: 0, minHeight: 58 }} contentContainerStyle={{ gap: 6, paddingHorizontal: 12, paddingVertical: 10, alignItems: "center" }} showsHorizontalScrollIndicator={false}>
           <Text style={S.muted}>{t("app_askFor")}:</Text>
           {[{ id: null as number | null, name: t("app_noDog") }].concat(dogs).map((d) => (
             <Pressable key={String(d.id)} onPress={() => setDogId(d.id)}
