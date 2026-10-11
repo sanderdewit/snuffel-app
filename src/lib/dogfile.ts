@@ -64,7 +64,7 @@ interface ExportV1 {
   reminders: { kind: ReminderKind; due: string | null }[];
 }
 
-const safeName = (s: string) => s.replace(/[^\p{L}\p{N}_-]+/gu, "_").slice(0, 40) || "dog";
+const safeName = (s: string) => (typeof s.normalize === "function" ? s.normalize("NFD") : s).replace(/[\u0300-\u036f]/g, "").replace(/[^A-Za-z0-9_-]+/g, "_").slice(0, 40) || "dog";
 
 async function buildExport(dogId: number): Promise<ExportV1> {
   const dog = await getDog(dogId);

@@ -13,7 +13,7 @@ export const b64dec = (s: string) => Uint8Array.from(atob(s), (c) => c.charCodeA
 export const b64 = { enc: b64enc, dec: b64dec };
 
 const keyFrom = (password: string, salt: Uint8Array, p: { N: number; r: number; p: number }) =>
-  scryptAsync(utf8ToBytes(password.normalize("NFKC")), salt, { N: p.N, r: p.r, p: p.p, dkLen: 32 });
+  scryptAsync(utf8ToBytes(typeof password.normalize === "function" ? password.normalize("NFKC") : password), salt, { N: p.N, r: p.r, p: p.p, dkLen: 32 });
 
 export async function seal(plain: string, password: string, random: (n: number) => Uint8Array): Promise<Sealed> {
   const salt = random(16), nonce = random(12);

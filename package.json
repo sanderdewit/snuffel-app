@@ -41,7 +41,7 @@
     "ios": "expo run:ios",
     "typecheck": "tsc --noEmit",
     "sync-core": "node tools/sync-core.mjs",
-    "test": "node tests/i18n-app.test.mjs && node tests/dates.test.ts && node tests/dogfile.test.ts"
+    "test": "node tests/i18n-app.test.mjs && node tests/plural.test.ts && node tests/dates.test.ts && node tests/dogfile.test.ts"
   },
   "private": true
 }

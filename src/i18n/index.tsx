@@ -4,6 +4,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { getLocales } from "expo-localization";
 import { PACKS, REGISTRY } from "./packs";
+import { pluralCategory } from "./plural";
 import { kvGet, kvSet } from "../lib/db";
 
 type Vars = Record<string, string | number>;
@@ -36,7 +37,7 @@ function lookup(lang: string, key: string): unknown {
 export function translate(lang: string, key: string, vars?: Vars): string {
   let v = lookup(lang, key);
   if (v && typeof v === "object") {
-    const cat = new Intl.PluralRules(lang).select(Number(vars && vars.n));
+    const cat = pluralCategory(lang, Number(vars && vars.n));   // Hermes has no Intl.PluralRules
     const forms = v as Record<string, string>;
     v = forms[cat] ?? forms.other;
   }
