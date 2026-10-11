@@ -50,10 +50,9 @@
     "android": {
       "package": "app.snuffel",
       "adaptiveIcon": {
-        "backgroundColor": "#FFF7ED",
+        "backgroundColor": "#F5EBDD",
         "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "backgroundImage": "./assets/android-icon-background.png"
       },
       "permissions": [
         "ACCESS_COARSE_LOCATION",
