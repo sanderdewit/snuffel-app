@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Text } from "react-native";
-import { Tabs } from "expo-router";
+import { Tabs, router } from "expo-router";
+import { demoRoute } from "../../lib/demo";
 import * as QuickActions from "expo-quick-actions";
 import { useQuickActionRouting } from "expo-quick-actions/router";
 import { useI18n } from "../../i18n";
@@ -18,6 +19,14 @@ export default function TabsLayout() {
     QuickActions.setItems([{ id: "emergency", title: t("app_shortcutEmergency"), icon: "symbol:cross.case.fill", params: { href: "/emergency" } }])
       .catch(() => undefined);
   }, [t]);
+
+  // Screenshot mode only: open the screen named at launch.
+  useEffect(() => {
+    const route = demoRoute();
+    if (!route) return;
+    const timer = setTimeout(() => router.push(route as never), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <Tabs screenOptions={{ tabBarActiveTintColor: C.brandDark, headerTintColor: C.text }}>

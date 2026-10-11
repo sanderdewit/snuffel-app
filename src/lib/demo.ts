@@ -14,7 +14,13 @@ export function isDemo(): boolean {
   try { return Settings.get("SnuffelDemo") === "YES" || Settings.get("SnuffelDemo") === true; } catch { return false; }
 }
 
-const DEMO_SPOT = { lat: 52.3600, lon: 4.8852 };   // Amsterdam, Vondelpark
+/** Screen to open at launch ("-SnuffelDemoRoute /emergency"): links would show iOS's "Open in…?" prompt. */
+export function demoRoute(): string | null {
+  if (!isDemo()) return null;
+  try { const r = Settings.get("SnuffelDemoRoute"); return typeof r === "string" && r.startsWith("/") ? r : null; } catch { return null; }
+}
+
+const DEMO_SPOT ={ lat: 52.3600, lon: 4.8852 };   // Amsterdam, Vondelpark
 
 const QUESTION: Record<string, string> = {
   nl: "Bobbie eet sinds gisteren minder en is wat lusteloos, maar drinkt wel. Moet ik naar de dierenarts?",

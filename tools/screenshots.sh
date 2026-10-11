@@ -21,8 +21,15 @@ rts = [r for r in json.load(sys.stdin)["runtimes"] if r["platform"] == "iOS" and
 print(sorted(rts, key=lambda r: [int(x) for x in r["version"].split(".")])[-1]["identifier"])')
 echo "device $DEVICE_TYPE, runtime $RUNTIME"
 
-shot() {   # shot <lang> <name> <url> <seconds to settle>
-  xcrun simctl openurl "$UDID" "$3"
+launch() {   # launch <lang> [route]
+  xcrun simctl terminate "$UDID" "$BUNDLE" > /dev/null 2>&1 || true
+  xcrun simctl launch "$UDID" "$BUNDLE" -AppleLanguages "($1)" -AppleLocale "$LOCALE" -SnuffelDemo YES \
+    ${2:+-SnuffelDemoRoute "$2"} > /dev/null
+}
+# Each screen: restart the app at that route (links would trigger iOS's
+# "Open in Snuffel?" prompt).
+shot() {   # shot <lang> <name> <route> <seconds to settle>
+  launch "$1" "$3"
   sleep "$4"
   xcrun simctl io "$UDID" screenshot "$OUT/$1/$2.png" > /dev/null
   echo "  $1/$2.png"
@@ -38,15 +45,15 @@ for L in ${LANGS[@]}; do
   xcrun simctl location "$UDID" set "$LAT,$LON"
   xcrun simctl install "$UDID" "$APP"
   xcrun simctl privacy "$UDID" grant location "$BUNDLE"
-  xcrun simctl launch "$UDID" "$BUNDLE" -AppleLanguages "($L)" -AppleLocale "$LOCALE" -SnuffelDemo YES > /dev/null
-  sleep 25   # first start: map style, place data, demo data incl. one AI answer
+  launch "$L"
+  sleep 30   # first start: place data, demo data incl. one AI answer
   echo "$L:"
-  shot "$L" 1-find      "snuffel:///?near=1&view=list" 14
-  shot "$L" 2-emergency "snuffel:///emergency" 14
-  shot "$L" 3-map       "snuffel:///?near=1&view=map" 16
-  shot "$L" 4-ask       "snuffel:///ask" 6
-  shot "$L" 5-dog       "snuffel:///dog/1" 5
-  shot "$L" 6-saved     "snuffel:///saved" 5
+  shot "$L" 1-find      "/?near=1&view=list" 16
+  shot "$L" 2-emergency "/emergency" 16
+  shot "$L" 3-map       "/?near=1&view=map" 20
+  shot "$L" 4-ask       "/ask" 8
+  shot "$L" 5-dog       "/dog/1" 8
+  shot "$L" 6-saved     "/saved" 8
   xcrun simctl shutdown "$UDID"
   xcrun simctl delete "$UDID"
 done
