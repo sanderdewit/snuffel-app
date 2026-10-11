@@ -16,7 +16,7 @@ artifact, 16:9 phone).
 
 | Field | Value |
 |---|---|
-| App name | Snuffel: dierenarts & hond |
+| App name | Snuffel: alles voor je hond |
 | Default language | Dutch (nl-NL) |
 | App or game | App |
 | Free or paid | Free |
@@ -58,7 +58,7 @@ been published once, `completed` afterwards).
 | Privacy policy | https://snuffel.app/privacy |
 | Ads | No ads |
 | App access | All functionality available without special access (no login) |
-| Target audience | 18 and over (avoids the Families programme; the app is for dog owners) |
+| Target audience | 16 and over (matches the privacy policy and the Dutch GDPR age of consent; under 13 would bring the Families programme). Appeals to children: No |
 | News app | No |
 | Government app | No |
 | Financial features | None |
@@ -111,5 +111,5 @@ Expected: PEGI 3 / Everyone.
 | Contact e-mail | your support address (e.g. support@snuffel.app via Cloudflare Email Routing) |
 | Website | https://snuffel.app |
 
-Countries: start with the Netherlands and Belgium, or all of Europe (the data
-covers 45 countries).
+Countries: **the Netherlands** only for now (the data covers 45 countries, so
+more can be added later without an app update).

@@ -9,13 +9,13 @@ App Store Connect (or answered in its forms).
 | Field | Value |
 |---|---|
 | Platform | iOS |
-| Name | Snuffel: dierenarts & hond (nl) / Snuffel: vets & dog care (en). If taken, see note below |
+| Name | Snuffel: alles voor je hond (nl) / Snuffel: all for your dog (en). If taken, see note below |
 | Primary language | Dutch (Netherlands) |
 | Bundle ID | `app.snuffel` (register it first under Certificates, Identifiers & Profiles → Identifiers) |
 | SKU | `snuffel-ios` |
 | User access | Full access |
 | Price | Free (0) |
-| Availability | Start with the Netherlands and Belgium, or all of Europe; the data covers 45 countries |
+| Availability | The Netherlands only for now (the data covers 45 countries; more later without an app update) |
 | Category | Lifestyle; secondary: Navigation |
 
 If "Snuffel" is already taken as an app name, "Snuffel – hondenzorg dichtbij"
