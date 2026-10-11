@@ -125,5 +125,6 @@
   "app_pdfTitle": "Sundheds- og adfærdsjournal for {name}",
   "app_pdfGenerated": "Lavet med Snuffel den {date}",
   "app_born": "Født",
-  "app_working": "Et øjeblik…"
+  "app_working": "Et øjeblik…",
+  "app_unnamedPlay": "Hundeområde"
 }

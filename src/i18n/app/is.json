@@ -125,5 +125,6 @@
   "app_pdfTitle": "Heilsu- og hegðunarskrá: {name}",
   "app_pdfGenerated": "Búið til með Snuffel {date}",
   "app_born": "Fæðingardagur",
-  "app_working": "Augnablik…"
+  "app_working": "Augnablik…",
+  "app_unnamedPlay": "Hundasvæði"
 }

@@ -133,5 +133,6 @@
   "app_pdfTitle": "Karta zdraví a chování: {name}",
   "app_pdfGenerated": "Vytvořeno v aplikaci Snuffel {date}",
   "app_born": "Datum narození",
-  "app_working": "Moment…"
+  "app_working": "Moment…",
+  "app_unnamedPlay": "Psí výběh"
 }

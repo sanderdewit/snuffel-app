@@ -129,5 +129,6 @@
   "app_pdfTitle": "Ficha de saúde e comportamento de {name}",
   "app_pdfGenerated": "Criado com o Snuffel em {date}",
   "app_born": "Nascimento",
-  "app_working": "Um momento…"
+  "app_working": "Um momento…",
+  "app_unnamedPlay": "Parque para cães"
 }

@@ -129,5 +129,6 @@
   "app_pdfTitle": "Historial de salud y comportamiento de {name}",
   "app_pdfGenerated": "Creado con Snuffel el {date}",
   "app_born": "Nacimiento",
-  "app_working": "Un momento…"
+  "app_working": "Un momento…",
+  "app_unnamedPlay": "Zona para perros"
 }

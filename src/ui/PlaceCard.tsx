@@ -9,7 +9,8 @@ export const directionsUrl = (p: Place) => `https://www.google.com/maps/dir/?api
 export const callUrl = (phone: string) => "tel:" + phone.replace(/[^\d+]/g, "");
 
 export function displayName(p: Place, t: (k: string) => string) {
-  return p.name || "(" + t(CATEGORIES[p.cat].key) + ")";
+  // Unnamed places are nearly always dog areas; others fall back to their category.
+  return p.name || t(p.cat === "play" ? "app_unnamedPlay" : CATEGORIES[p.cat].key);
 }
 
 export function OpenBadge({ p }: { p: Place }) {

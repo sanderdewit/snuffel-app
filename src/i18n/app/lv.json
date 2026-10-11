@@ -129,5 +129,6 @@
   "app_pdfTitle": "Veselības un uzvedības žurnāls: {name}",
   "app_pdfGenerated": "Izveidots ar Snuffel {date}",
   "app_born": "Dzimis",
-  "app_working": "Mirkli…"
+  "app_working": "Mirkli…",
+  "app_unnamedPlay": "Suņu laukums"
 }

@@ -125,5 +125,6 @@
   "app_pdfTitle": "Terveys- ja käytöskansio: {name}",
   "app_pdfGenerated": "Tehty Snuffelilla {date}",
   "app_born": "Syntynyt",
-  "app_working": "Hetkinen…"
+  "app_working": "Hetkinen…",
+  "app_unnamedPlay": "Koira-alue"
 }

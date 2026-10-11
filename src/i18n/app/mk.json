@@ -125,5 +125,6 @@
   "app_pdfTitle": "Картон за здравје и однесување: {name}",
   "app_pdfGenerated": "Направено со Snuffel на {date}",
   "app_born": "Датум на раѓање",
-  "app_working": "Момент…"
+  "app_working": "Момент…",
+  "app_unnamedPlay": "Парк за кучиња"
 }

@@ -1,0 +1,75 @@
+getpwuid_r did not find a match for uid 501
+Timestamp               Ty Process[PID:TID]
+2026-10-11 13:42:23.399 F  Snuffel[45144:1eaa6] [com.apple.runtime-issues:UIKit App Config] `UIScene` lifecycle will soon be required. Failure to adopt will result in an assert in the future.
+2026-10-11 13:42:26.516 E  Snuffel[45144:1eaf0] [com.facebook.react.log:javascript] '[expo-notifications] Error reading persisted server registration info: ', { [Error: FunctionCallException: Calling the 'getRegistrationInfoAsync' function has failed (at ExpoModulesCore/AsyncFunctionDefinition.swift:123)
+→ Caused by: ERR_NOTIFICATIONS_KEYCHAIN_ACCESS: Keychain access failed: Een vereiste bevoegdheid ontbreekt. (at ExpoNotifications/ServerRegistrationModule.swift:161)] code: '-34018' }
+2026-10-11 13:42:26.749 E  Snuffel[45144:1eaa6] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:42:26.751 E  Snuffel[45144:1eaa6] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:42:26.751 E  Snuffel[45144:1eaa6] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:42:57.224 F  Snuffel[46276:1f573] [com.apple.runtime-issues:UIKit App Config] `UIScene` lifecycle will soon be required. Failure to adopt will result in an assert in the future.
+2026-10-11 13:43:00.537 E  Snuffel[46276:1f5a0] [com.facebook.react.log:javascript] '[expo-notifications] Error reading persisted server registration info: ', { [Error: FunctionCallException: Calling the 'getRegistrationInfoAsync' function has failed (at ExpoModulesCore/AsyncFunctionDefinition.swift:123)
+→ Caused by: ERR_NOTIFICATIONS_KEYCHAIN_ACCESS: Keychain access failed: Een vereiste bevoegdheid ontbreekt. (at ExpoNotifications/ServerRegistrationModule.swift:161)] code: '-34018' }
+2026-10-11 13:43:00.634 E  Snuffel[46276:1f573] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:43:00.636 E  Snuffel[46276:1f573] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:43:00.636 E  Snuffel[46276:1f573] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:43:20.174 F  Snuffel[47439:20028] [com.apple.runtime-issues:UIKit App Config] `UIScene` lifecycle will soon be required. Failure to adopt will result in an assert in the future.
+2026-10-11 13:43:23.367 E  Snuffel[47439:2003a] [com.facebook.react.log:javascript] '[expo-notifications] Error reading persisted server registration info: ', { [Error: FunctionCallException: Calling the 'getRegistrationInfoAsync' function has failed (at ExpoModulesCore/AsyncFunctionDefinition.swift:123)
+→ Caused by: ERR_NOTIFICATIONS_KEYCHAIN_ACCESS: Keychain access failed: Een vereiste bevoegdheid ontbreekt. (at ExpoNotifications/ServerRegistrationModule.swift:161)] code: '-34018' }
+2026-10-11 13:43:23.442 E  Snuffel[47439:20028] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:43:23.443 E  Snuffel[47439:20028] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:43:23.443 E  Snuffel[47439:20028] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:43:24.244 E  Snuffel[47439:20028] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:43:42.416 F  Snuffel[47552:2029b] [com.apple.runtime-issues:UIKit App Config] `UIScene` lifecycle will soon be required. Failure to adopt will result in an assert in the future.
+2026-10-11 13:43:42.572 E  Snuffel[47552:202a3] [com.apple.app_launch_measurement:General] Failed to send CA Event for app launch measurements for ca_event_type: 0 event_name: com.apple.app_launch_measurement.FirstFramePresentationMetric
+2026-10-11 13:43:42.590 E  Snuffel[47552:202a3] [com.apple.app_launch_measurement:General] Failed to send CA Event for app launch measurements for ca_event_type: 1 event_name: com.apple.app_launch_measurement.ExtendedLaunchMetrics
+2026-10-11 13:43:44.779 E  Snuffel[47552:202aa] [com.facebook.react.log:javascript] '[expo-notifications] Error reading persisted server registration info: ', { [Error: FunctionCallException: Calling the 'getRegistrationInfoAsync' function has failed (at ExpoModulesCore/AsyncFunctionDefinition.swift:123)
+→ Caused by: ERR_NOTIFICATIONS_KEYCHAIN_ACCESS: Keychain access failed: Een vereiste bevoegdheid ontbreekt. (at ExpoNotifications/ServerRegistrationModule.swift:161)] code: '-34018' }
+2026-10-11 13:43:44.857 E  Snuffel[47552:2029b] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:43:44.859 E  Snuffel[47552:2029b] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:43:44.860 E  Snuffel[47552:2029b] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:43:45.756 E  Snuffel[47552:202a4] [com.apple.network:] nw_protocol_instance_set_output_handler Not calling remove_input_handler on 0x10b75cc00:socket
+2026-10-11 13:43:45.759 E  Snuffel[47552:202a4] [com.apple.network:connection] nw_connection_copy_connected_local_endpoint_block_invoke [C1] Connection has no local endpoint
+2026-10-11 13:43:45.759 E  Snuffel[47552:202a4] [com.apple.network:connection] nw_connection_copy_connected_local_endpoint_block_invoke [C1] Connection has no local endpoint
+2026-10-11 13:43:45.867 E  Snuffel[47552:2029b] (libCoreFSCache.dylib) fopen failed for data file: errno = 2 (No such file or directory)
+2026-10-11 13:43:46.728 E  Snuffel[47552:2029b] (libCoreFSCache.dylib) fopen failed for data file: errno = 2 (No such file or directory)
+2026-10-11 13:43:47.924 E  Snuffel[47552:2029b] [com.apple.Metal:Metal Compiler Warning] Warning: Compilation succeeded with: 
+
+program_source:392:32: warning: unused variable 'data' [-Wunused-variable]
+    device const DataInstance& data = dataInstances[instance];
+                               ^
+2026-10-11 13:43:47.968 E  Snuffel[47552:2029b] [com.apple.Metal:Metal Compiler Warning] Warning: Compilation succeeded with: 
+
+program_source:367:32: warning: unused variable 'data' [-Wunused-variable]
+    device const DataInstance& data = dataInstances[instance];
+                               ^
+2026-10-11 13:44:06.073 F  Snuffel[48496:20dc1] [com.apple.runtime-issues:UIKit App Config] `UIScene` lifecycle will soon be required. Failure to adopt will result in an assert in the future.
+2026-10-11 13:44:08.973 E  Snuffel[48496:20df6] [com.facebook.react.log:javascript] '[expo-notifications] Error reading persisted server registration info: ', { [Error: FunctionCallException: Calling the 'getRegistrationInfoAsync' function has failed (at ExpoModulesCore/AsyncFunctionDefinition.swift:123)
+→ Caused by: ERR_NOTIFICATIONS_KEYCHAIN_ACCESS: Keychain access failed: Een vereiste bevoegdheid ontbreekt. (at ExpoNotifications/ServerRegistrationModule.swift:161)] code: '-34018' }
+2026-10-11 13:44:09.037 E  Snuffel[48496:20dc1] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:44:09.038 E  Snuffel[48496:20dc1] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:44:09.038 E  Snuffel[48496:20dc1] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:44:09.831 E  Snuffel[48496:20dc1] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:44:09.946 E  Snuffel[48496:20dc1] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:44:19.063 F  Snuffel[49697:219de] [com.apple.runtime-issues:UIKit App Config] `UIScene` lifecycle will soon be required. Failure to adopt will result in an assert in the future.
+2026-10-11 13:44:21.523 E  Snuffel[49697:21a13] [com.facebook.react.log:javascript] '[expo-notifications] Error reading persisted server registration info: ', { [Error: FunctionCallException: Calling the 'getRegistrationInfoAsync' function has failed (at ExpoModulesCore/AsyncFunctionDefinition.swift:123)
+→ Caused by: ERR_NOTIFICATIONS_KEYCHAIN_ACCESS: Keychain access failed: Een vereiste bevoegdheid ontbreekt. (at ExpoNotifications/ServerRegistrationModule.swift:161)] code: '-34018' }
+2026-10-11 13:44:21.608 E  Snuffel[49697:219de] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:44:21.608 E  Snuffel[49697:219de] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:44:21.609 E  Snuffel[49697:219de] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:44:22.413 E  Snuffel[49697:219de] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:44:29.703 F  Snuffel[50038:21e7e] [com.apple.runtime-issues:UIKit App Config] `UIScene` lifecycle will soon be required. Failure to adopt will result in an assert in the future.
+2026-10-11 13:44:29.825 E  Snuffel[50038:21f06] [com.apple.app_launch_measurement:General] Failed to send CA Event for app launch measurements for ca_event_type: 0 event_name: com.apple.app_launch_measurement.FirstFramePresentationMetric
+2026-10-11 13:44:29.856 E  Snuffel[50038:21f00] [com.apple.app_launch_measurement:General] Failed to send CA Event for app launch measurements for ca_event_type: 1 event_name: com.apple.app_launch_measurement.ExtendedLaunchMetrics
+2026-10-11 13:44:32.659 E  Snuffel[50038:21f08] [com.facebook.react.log:javascript] '[expo-notifications] Error reading persisted server registration info: ', { [Error: FunctionCallException: Calling the 'getRegistrationInfoAsync' function has failed (at ExpoModulesCore/AsyncFunctionDefinition.swift:123)
+→ Caused by: ERR_NOTIFICATIONS_KEYCHAIN_ACCESS: Keychain access failed: Een vereiste bevoegdheid ontbreekt. (at ExpoNotifications/ServerRegistrationModule.swift:161)] code: '-34018' }
+2026-10-11 13:44:32.743 E  Snuffel[50038:21e7e] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:44:32.744 E  Snuffel[50038:21e7e] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:44:32.744 E  Snuffel[50038:21e7e] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:44:33.550 E  Snuffel[50038:21e7e] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:44:39.155 F  Snuffel[50636:22448] [com.apple.runtime-issues:UIKit App Config] `UIScene` lifecycle will soon be required. Failure to adopt will result in an assert in the future.
+2026-10-11 13:44:41.419 E  Snuffel[50636:22463] [com.facebook.react.log:javascript] '[expo-notifications] Error reading persisted server registration info: ', { [Error: FunctionCallException: Calling the 'getRegistrationInfoAsync' function has failed (at ExpoModulesCore/AsyncFunctionDefinition.swift:123)
+→ Caused by: ERR_NOTIFICATIONS_KEYCHAIN_ACCESS: Keychain access failed: Een vereiste bevoegdheid ontbreekt. (at ExpoNotifications/ServerRegistrationModule.swift:161)] code: '-34018' }
+2026-10-11 13:44:41.470 E  Snuffel[50636:22448] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:44:41.471 E  Snuffel[50636:22448] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:44:41.471 E  Snuffel[50636:22448] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-11 13:44:42.281 E  Snuffel[50636:22448] [com.apple.UIKit:UIFocus] RCTScrollViewComponentView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.

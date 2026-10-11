@@ -125,5 +125,6 @@
   "app_pdfTitle": "Kartela e shëndetit dhe sjelljes: {name}",
   "app_pdfGenerated": "Krijuar me Snuffel më {date}",
   "app_born": "Datëlindja",
-  "app_working": "Një moment…"
+  "app_working": "Një moment…",
+  "app_unnamedPlay": "Park për qen"
 }

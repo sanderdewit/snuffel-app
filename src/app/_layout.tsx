@@ -40,7 +40,7 @@ function NotificationLinks() {
 function Screens() {
   const { t } = useI18n();
   return (
-    <Stack screenOptions={{ headerTintColor: C.brandDark, contentStyle: { backgroundColor: C.bg } }}>
+    <Stack screenOptions={{ headerTintColor: C.brandDark, contentStyle: { backgroundColor: C.bg }, headerBackButtonDisplayMode: "minimal" }}>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="place/[id]" options={{ title: "" }} />
       <Stack.Screen name="dog/[id]" options={{ title: t("app_editDog") }} />

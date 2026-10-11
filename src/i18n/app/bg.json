@@ -125,5 +125,6 @@
   "app_pdfTitle": "Здравен и поведенчески картон: {name}",
   "app_pdfGenerated": "Създадено със Snuffel на {date}",
   "app_born": "Дата на раждане",
-  "app_working": "Момент…"
+  "app_working": "Момент…",
+  "app_unnamedPlay": "Площадка за кучета"
 }

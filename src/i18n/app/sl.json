@@ -133,5 +133,6 @@
   "app_pdfTitle": "Kartoteka zdravja in vedenja: {name}",
   "app_pdfGenerated": "Ustvarjeno v aplikaciji Snuffel {date}",
   "app_born": "Datum rojstva",
-  "app_working": "Trenutek…"
+  "app_working": "Trenutek…",
+  "app_unnamedPlay": "Pasji park"
 }

@@ -125,5 +125,6 @@
   "app_pdfTitle": "Hälso- och beteendejournal för {name}",
   "app_pdfGenerated": "Skapad med Snuffel den {date}",
   "app_born": "Född",
-  "app_working": "Ett ögonblick…"
+  "app_working": "Ett ögonblick…",
+  "app_unnamedPlay": "Hundrastgård"
 }

@@ -125,5 +125,6 @@
   "app_pdfTitle": "Gezondheids- en gedragsdossier van {name}",
   "app_pdfGenerated": "Gemaakt met Snuffel op {date}",
   "app_born": "Geboren",
-  "app_working": "Even geduld…"
+  "app_working": "Even geduld…",
+  "app_unnamedPlay": "Hondenspeelplek"
 }

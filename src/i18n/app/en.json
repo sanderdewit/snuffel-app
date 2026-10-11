@@ -125,5 +125,6 @@
   "app_pdfTitle": "Health & behaviour file of {name}",
   "app_pdfGenerated": "Made with Snuffel on {date}",
   "app_born": "Born",
-  "app_working": "One moment…"
+  "app_working": "One moment…",
+  "app_unnamedPlay": "Dog area"
 }

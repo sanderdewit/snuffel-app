@@ -125,5 +125,6 @@
   "app_pdfTitle": "Tervise- ja käitumistoimik: {name}",
   "app_pdfGenerated": "Koostatud Snuffeliga {date}",
   "app_born": "Sündinud",
-  "app_working": "Hetk…"
+  "app_working": "Hetk…",
+  "app_unnamedPlay": "Koerte jalutusala"
 }

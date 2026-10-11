@@ -125,5 +125,6 @@
   "app_pdfTitle": "Φάκελος υγείας και συμπεριφοράς: {name}",
   "app_pdfGenerated": "Δημιουργήθηκε με το Snuffel στις {date}",
   "app_born": "Ημ. γέννησης",
-  "app_working": "Μια στιγμή…"
+  "app_working": "Μια στιγμή…",
+  "app_unnamedPlay": "Χώρος για σκύλους"
 }

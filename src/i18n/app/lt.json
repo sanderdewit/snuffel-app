@@ -133,5 +133,6 @@
   "app_pdfTitle": "Sveikatos ir elgesio aplankas: {name}",
   "app_pdfGenerated": "Sukurta su Snuffel {date}",
   "app_born": "Gimimo data",
-  "app_working": "Palaukite…"
+  "app_working": "Palaukite…",
+  "app_unnamedPlay": "Šunų aikštelė"
 }

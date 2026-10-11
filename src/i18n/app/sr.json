@@ -129,5 +129,6 @@
   "app_pdfTitle": "Karton zdravlja i ponašanja: {name}",
   "app_pdfGenerated": "Napravljeno u aplikaciji Snuffel {date}",
   "app_born": "Datum rođenja",
-  "app_working": "Trenutak…"
+  "app_working": "Trenutak…",
+  "app_unnamedPlay": "Park za pse"
 }

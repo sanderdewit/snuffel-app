@@ -125,5 +125,6 @@
   "app_pdfTitle": "Egészség- és viselkedésnapló: {name}",
   "app_pdfGenerated": "Készült a Snuffellel: {date}",
   "app_born": "Születési dátum",
-  "app_working": "Egy pillanat…"
+  "app_working": "Egy pillanat…",
+  "app_unnamedPlay": "Kutyafuttató"
 }

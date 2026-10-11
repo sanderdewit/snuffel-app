@@ -125,5 +125,6 @@
   "app_pdfTitle": "Gesundheits- und Verhaltensakte von {name}",
   "app_pdfGenerated": "Erstellt mit Snuffel am {date}",
   "app_born": "Geboren",
-  "app_working": "Einen Moment…"
+  "app_working": "Einen Moment…",
+  "app_unnamedPlay": "Hundeauslauf"
 }

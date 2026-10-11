@@ -129,5 +129,6 @@
   "app_pdfTitle": "Fitxa de salut i comportament de {name}",
   "app_pdfGenerated": "Creat amb Snuffel el {date}",
   "app_born": "Naixement",
-  "app_working": "Un moment…"
+  "app_working": "Un moment…",
+  "app_unnamedPlay": "Zona per a gossos"
 }

@@ -133,5 +133,6 @@
   "app_pdfTitle": "Karta zdrowia i zachowania: {name}",
   "app_pdfGenerated": "Utworzono w aplikacji Snuffel {date}",
   "app_born": "Data urodzenia",
-  "app_working": "Chwileczkę…"
+  "app_working": "Chwileczkę…",
+  "app_unnamedPlay": "Wybieg dla psów"
 }

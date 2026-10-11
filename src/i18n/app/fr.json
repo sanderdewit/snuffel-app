@@ -129,5 +129,6 @@
   "app_pdfTitle": "Dossier santé et comportement de {name}",
   "app_pdfGenerated": "Créé avec Snuffel le {date}",
   "app_born": "Né(e) le",
-  "app_working": "Un instant…"
+  "app_working": "Un instant…",
+  "app_unnamedPlay": "Espace canin"
 }

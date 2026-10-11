@@ -133,5 +133,6 @@
   "app_pdfTitle": "Картка здоров’я та поведінки: {name}",
   "app_pdfGenerated": "Створено в Snuffel {date}",
   "app_born": "Дата народження",
-  "app_working": "Хвилинку…"
+  "app_working": "Хвилинку…",
+  "app_unnamedPlay": "Майданчик для собак"
 }
