@@ -1,2 +1,2 @@
 --------- beginning of main
-10-11 17:05:42.994  6036  6166 I ReactNativeJS: Running "main"
+10-11 17:22:35.741  6113  6184 I ReactNativeJS: Running "main"

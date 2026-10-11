@@ -8,6 +8,7 @@ import { Asset } from "expo-asset";
 import { File, Paths } from "expo-file-system";
 import poodle from "../../assets/icon.png";
 import { addChat, ask, loadChat } from "./ai";
+import { CONFIG } from "./config";
 import { kvGet, kvSet } from "./db";
 import { addMonths, isoDate, saveDog, setReminder, today } from "./dogs";
 import { search } from "./places";
@@ -38,12 +39,19 @@ const QUESTION: Record<string, string> = {
 };
 
 // The app icon (an illustration of a real mini poodle) as Bobbie's photo.
+// On Android release builds bundled images live inside the APK and can't be
+// copied as a file, so there the same picture comes from the website.
 async function demoPhoto(): Promise<string | null> {
   try {
     const asset = Asset.fromModule(poodle);
     await asset.downloadAsync();
     const dest = new File(Paths.document, `dog-demo.png`);
     if (!dest.exists) await new File(asset.localUri!).copy(dest);
+    return dest.uri;
+  } catch { /* try the website copy */ }
+  try {
+    const dest = new File(Paths.document, `dog-demo.jpg`);
+    if (!dest.exists) await File.downloadFileAsync(CONFIG.website + "img/bobbie.jpg", dest);
     return dest.uri;
   } catch { return null; }
 }
