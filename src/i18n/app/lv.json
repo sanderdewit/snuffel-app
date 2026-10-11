@@ -80,10 +80,16 @@
     "other": "Mājas apkārtne saglabāta: {n} vietas"
   },
   "app_privacy": "Privātums",
-  "app_privacyText": "Snuffel nav kontu un nav izsekošanas. Tavi suņi, atgādinājumi, saglabātās vietas un sarunas paliek šajā tālrunī. Tava atrašanās vieta tiek izmantota tikai meklēšanai un netiek saglabāta. Jautājumi MI asistentam tiek nosūtīti uz Azure OpenAI ES, un tie netiek izmantoti apmācībai.",
+  "app_privacyText": "Snuffel nav kontu un nav izsekošanas. Tavi suņi, atgādinājumi, saglabātās vietas un sarunas paliek šajā tālrunī. Tava atrašanās vieta tiek izmantota tikai meklēšanai un netiek saglabāta. Jautājumi MI asistentam tiek nosūtīti uz Azure OpenAI ES, un tie netiek izmantoti apmācībai. Mutiski uzdotos jautājumus tekstā pārvērš paša tālruņa runas atpazīšana (Apple vai Google); Snuffel nekad nesaņem audio.",
   "app_about": "Par lietotni",
   "app_aboutText": "Snuffel palīdz atrast neatkarīgus veterinārārstus, suņu frizētavas, zooveikalus, suņu trenerus, suņu viesnīcas un suņu laukumus visā Eiropā un parāda, kuras vietas pieder lieliem tīkliem.",
   "app_version": "Versija {v}",
   "app_shortcutEmergency": "Atrast atvērtu veterinārārstu",
-  "app_errLoad": "Neizdevās ielādēt vietas. Pārbaudi savienojumu un mēģini vēlreiz."
+  "app_errLoad": "Neizdevās ielādēt vietas. Pārbaudi savienojumu un mēģini vēlreiz.",
+  "app_voiceStart": "Jautāt balsī",
+  "app_voiceListening": "Klausos… pieskaries, lai apturētu",
+  "app_voiceUnavailable": "Runas atpazīšana šajā tālrunī pašlaik nav pieejama.",
+  "app_voiceDenied": "Atļauj mikrofonu un runas atpazīšanu, lai jautātu balsī.",
+  "app_readAloud": "Lasīt skaļi",
+  "app_stopReading": "Pārtraukt lasīšanu"
 }

@@ -4,6 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import * as Notifications from "expo-notifications";
 import { I18nProvider, useI18n } from "../i18n";
 import { REMINDER_KINDS, rescheduleAll, setReminderTexts } from "../lib/dogs";
+import { seedDemo } from "../lib/demo";
 import { C } from "../ui/theme";
 
 Notifications.setNotificationHandler({
@@ -21,6 +22,7 @@ function ReminderTexts() {
       body: (dog, kind) => tf("app_reminderBody", { what: what(kind), name: dog.name })
     });
     rescheduleAll().catch(() => undefined);
+    seedDemo(lang, t("emergencyBtn")).catch(() => undefined);   // screenshot mode only
   }, [lang, t, tf]);
   return null;
 }

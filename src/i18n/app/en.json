@@ -76,10 +76,16 @@
     "other": "Home area saved: {n} places"
   },
   "app_privacy": "Privacy",
-  "app_privacyText": "Snuffel has no accounts and no tracking. Your dogs, reminders, saved places and chats stay on this phone. Your location is only used to search and is not stored. Questions to the AI assistant are sent to Azure OpenAI in the EU and are not used for training.",
+  "app_privacyText": "Snuffel has no accounts and no tracking. Your dogs, reminders, saved places and chats stay on this phone. Your location is only used to search and is not stored. Questions to the AI assistant are sent to Azure OpenAI in the EU and are not used for training. Spoken questions are turned into text by your phone's own speech recognition (Apple or Google); Snuffel never receives audio.",
   "app_about": "About",
   "app_aboutText": "Snuffel helps you find independent vets, groomers, shops, trainers, dog hotels and play areas across Europe, and shows which places belong to large chains.",
   "app_version": "Version {v}",
   "app_shortcutEmergency": "Find an open vet",
-  "app_errLoad": "Couldn't load places. Check your connection and try again."
+  "app_errLoad": "Couldn't load places. Check your connection and try again.",
+  "app_voiceStart": "Ask by voice",
+  "app_voiceListening": "Listening… tap to stop",
+  "app_voiceUnavailable": "Speech recognition isn't available on this phone right now.",
+  "app_voiceDenied": "Allow the microphone and speech recognition to ask by voice.",
+  "app_readAloud": "Read aloud",
+  "app_stopReading": "Stop reading"
 }

@@ -80,10 +80,16 @@
     "other": "Zona di casa salvata: {n} luoghi"
   },
   "app_privacy": "Privacy",
-  "app_privacyText": "Snuffel non ha account né tracciamento. I tuoi cani, promemoria, luoghi salvati e chat restano su questo telefono. La tua posizione viene usata solo per la ricerca e non viene salvata. Le domande all'assistente IA vengono inviate ad Azure OpenAI nell'UE e non vengono usate per l'addestramento.",
+  "app_privacyText": "Snuffel non ha account né tracciamento. I tuoi cani, promemoria, luoghi salvati e chat restano su questo telefono. La tua posizione viene usata solo per la ricerca e non viene salvata. Le domande all'assistente IA vengono inviate ad Azure OpenAI nell'UE e non vengono usate per l'addestramento. Le domande a voce vengono trasformate in testo dal riconoscimento vocale del tuo telefono (Apple o Google); Snuffel non riceve mai audio.",
   "app_about": "Info",
   "app_aboutText": "Snuffel ti aiuta a trovare veterinari, toelettature, negozi, educatori, pensioni e aree cani indipendenti in tutta Europa, e mostra quali luoghi appartengono a grandi catene.",
   "app_version": "Versione {v}",
   "app_shortcutEmergency": "Trova un veterinario aperto",
-  "app_errLoad": "Impossibile caricare i luoghi. Controlla la connessione e riprova."
+  "app_errLoad": "Impossibile caricare i luoghi. Controlla la connessione e riprova.",
+  "app_voiceStart": "Chiedi a voce",
+  "app_voiceListening": "In ascolto… tocca per fermare",
+  "app_voiceUnavailable": "Il riconoscimento vocale non è disponibile su questo telefono al momento.",
+  "app_voiceDenied": "Consenti microfono e riconoscimento vocale per chiedere a voce.",
+  "app_readAloud": "Leggi ad alta voce",
+  "app_stopReading": "Interrompi lettura"
 }

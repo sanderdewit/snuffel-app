@@ -80,10 +80,16 @@
     "other": "Oblast doma sačuvana: {n} mesta"
   },
   "app_privacy": "Privatnost",
-  "app_privacyText": "Snuffel nema naloge ni praćenje. Tvoji psi, podsetnici, sačuvana mesta i razgovori ostaju na ovom telefonu. Tvoja lokacija se koristi samo za pretragu i ne čuva se. Pitanja AI asistentu šalju se na Azure OpenAI u EU i ne koriste se za treniranje.",
+  "app_privacyText": "Snuffel nema naloge ni praćenje. Tvoji psi, podsetnici, sačuvana mesta i razgovori ostaju na ovom telefonu. Tvoja lokacija se koristi samo za pretragu i ne čuva se. Pitanja AI asistentu šalju se na Azure OpenAI u EU i ne koriste se za treniranje. Izgovorena pitanja u tekst pretvara ugrađeno prepoznavanje govora tvog telefona (Apple ili Google); Snuffel nikada ne prima zvuk.",
   "app_about": "O aplikaciji",
   "app_aboutText": "Snuffel ti pomaže da pronađeš nezavisne veterinare, salone za pse, prodavnice, trenere, hotele za pse i parkove za pse širom Evrope i pokazuje koja mesta pripadaju velikim lancima.",
   "app_version": "Verzija {v}",
   "app_shortcutEmergency": "Pronađi otvorenog veterinara",
-  "app_errLoad": "Učitavanje mesta nije uspelo. Proveri vezu i pokušaj ponovo."
+  "app_errLoad": "Učitavanje mesta nije uspelo. Proveri vezu i pokušaj ponovo.",
+  "app_voiceStart": "Pitaj glasom",
+  "app_voiceListening": "Slušam… dodirni da zaustaviš",
+  "app_voiceUnavailable": "Prepoznavanje govora trenutno nije dostupno na ovom telefonu.",
+  "app_voiceDenied": "Dozvoli mikrofon i prepoznavanje govora za pitanja glasom.",
+  "app_readAloud": "Čitaj naglas",
+  "app_stopReading": "Zaustavi čitanje"
 }

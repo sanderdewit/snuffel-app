@@ -60,14 +60,17 @@ export default function Find() {
   };
 
   // From the AI chat: "show vets / trainers near me" opens this tab with ?cat=.
-  const params = useLocalSearchParams<{ cat?: string }>();
+  // Links may also ask for a search near the phone (?near=1) and the map (?view=map).
+  const params = useLocalSearchParams<{ cat?: string; near?: string; view?: string }>();
   useEffect(() => {
     const c = params.cat as Category | undefined;
-    if (!c || !CATEGORIES[c]) return;
-    setCats(Object.fromEntries(CATEGORY_ORDER.map((x) => [x, x === c || (c === "vet" && x === "hospital")])) as Record<Category, boolean>);
-    nearMe();
+    if (params.view === "map" || params.view === "list") setView(params.view);
+    if (c && CATEGORIES[c]) {
+      setCats(Object.fromEntries(CATEGORY_ORDER.map((x) => [x, x === c || (c === "vet" && x === "hospital")])) as Record<Category, boolean>);
+      nearMe();
+    } else if (params.near === "1") nearMe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.cat]);
+  }, [params.cat, params.near, params.view]);
 
   const filtered = useMemo(() => places.filter((p) => cats[p.cat]), [places, cats]);
   const independents = filtered.filter((p) => !p.chain);

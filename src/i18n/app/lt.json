@@ -84,10 +84,16 @@
     "other": "Namų vietovė išsaugota: {n} vietų"
   },
   "app_privacy": "Privatumas",
-  "app_privacyText": "Snuffel neturi paskyrų ir jūsų nesekama. Jūsų šunys, priminimai, išsaugotos vietos ir pokalbiai lieka šiame telefone. Jūsų vieta naudojama tik paieškai ir nėra saugoma. Klausimai DI asistentui siunčiami į Azure OpenAI ES ir nenaudojami modeliams mokyti.",
+  "app_privacyText": "Snuffel neturi paskyrų ir jūsų nesekama. Jūsų šunys, priminimai, išsaugotos vietos ir pokalbiai lieka šiame telefone. Jūsų vieta naudojama tik paieškai ir nėra saugoma. Klausimai DI asistentui siunčiami į Azure OpenAI ES ir nenaudojami modeliams mokyti. Sakytinius klausimus į tekstą paverčia paties telefono kalbos atpažinimas (Apple arba Google); Snuffel niekada negauna garso įrašų.",
   "app_about": "Apie",
   "app_aboutText": "Snuffel padeda visoje Europoje rasti nepriklausomus veterinarus, šunų kirpyklas, parduotuves, dresuotojus, šunų viešbučius ir šunų aikšteles bei parodo, kurios vietos priklauso dideliems tinklams.",
   "app_version": "Versija {v}",
   "app_shortcutEmergency": "Rasti dirbantį veterinarą",
-  "app_errLoad": "Nepavyko įkelti vietų. Patikrinkite ryšį ir bandykite dar kartą."
+  "app_errLoad": "Nepavyko įkelti vietų. Patikrinkite ryšį ir bandykite dar kartą.",
+  "app_voiceStart": "Klausti balsu",
+  "app_voiceListening": "Klausausi… bakstelėkite, kad sustabdytumėte",
+  "app_voiceUnavailable": "Kalbos atpažinimas šiuo metu šiame telefone nepasiekiamas.",
+  "app_voiceDenied": "Leiskite naudoti mikrofoną ir kalbos atpažinimą, kad galėtumėte klausti balsu.",
+  "app_readAloud": "Skaityti garsiai",
+  "app_stopReading": "Nustoti skaityti"
 }

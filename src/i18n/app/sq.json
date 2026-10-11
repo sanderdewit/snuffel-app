@@ -76,10 +76,16 @@
     "other": "Zona e shtëpisë u ruajt: {n} vende"
   },
   "app_privacy": "Privatësia",
-  "app_privacyText": "Snuffel nuk ka llogari dhe nuk bën gjurmim. Qentë, kujtesat, vendet e ruajtura dhe bisedat e tua mbeten në këtë telefon. Vendndodhja jote përdoret vetëm për kërkim dhe nuk ruhet. Pyetjet për asistentin AI dërgohen te Azure OpenAI në BE dhe nuk përdoren për trajnim.",
+  "app_privacyText": "Snuffel nuk ka llogari dhe nuk bën gjurmim. Qentë, kujtesat, vendet e ruajtura dhe bisedat e tua mbeten në këtë telefon. Vendndodhja jote përdoret vetëm për kërkim dhe nuk ruhet. Pyetjet për asistentin AI dërgohen te Azure OpenAI në BE dhe nuk përdoren për trajnim. Pyetjet e folura kthehen në tekst nga njohja e të folurit e vetë telefonit tënd (Apple ose Google); Snuffel nuk merr kurrë audio.",
   "app_about": "Rreth nesh",
   "app_aboutText": "Snuffel të ndihmon të gjesh veterinerë, sallone për qen, dyqane, trajnerë, hotele për qen dhe parqe për qen të pavarur në gjithë Evropën, dhe tregon cilat vende u përkasin zinxhirëve të mëdhenj.",
   "app_version": "Versioni {v}",
   "app_shortcutEmergency": "Gjej një veteriner të hapur",
-  "app_errLoad": "Vendet nuk u ngarkuan. Kontrollo lidhjen dhe provo përsëri."
+  "app_errLoad": "Vendet nuk u ngarkuan. Kontrollo lidhjen dhe provo përsëri.",
+  "app_voiceStart": "Pyet me zë",
+  "app_voiceListening": "Po dëgjoj… prek për ta ndalur",
+  "app_voiceUnavailable": "Njohja e të folurit nuk është e disponueshme tani në këtë telefon.",
+  "app_voiceDenied": "Lejo mikrofonin dhe njohjen e të folurit që të pyesësh me zë.",
+  "app_readAloud": "Lexo me zë",
+  "app_stopReading": "Ndalo leximin"
 }

@@ -80,10 +80,16 @@
     "other": "Zona de casa desada: {n} llocs"
   },
   "app_privacy": "Privadesa",
-  "app_privacyText": "Snuffel no té comptes ni seguiment. Els teus gossos, recordatoris, llocs desats i xats es queden en aquest mòbil. La teva ubicació només s'utilitza per cercar i no es desa. Les preguntes a l'assistent d'IA s'envien a Azure OpenAI a la UE i no s'utilitzen per a entrenament.",
+  "app_privacyText": "Snuffel no té comptes ni seguiment. Els teus gossos, recordatoris, llocs desats i xats es queden en aquest mòbil. La teva ubicació només s'utilitza per cercar i no es desa. Les preguntes a l'assistent d'IA s'envien a Azure OpenAI a la UE i no s'utilitzen per a entrenament. Les preguntes parlades les converteix en text el reconeixement de veu del teu mòbil (Apple o Google); Snuffel no rep mai àudio.",
   "app_about": "Quant a",
   "app_aboutText": "Snuffel t'ajuda a trobar veterinaris, perruqueries canines, botigues, educadors, residències canines i parcs per a gossos independents arreu d'Europa, i et mostra quins llocs pertanyen a grans cadenes.",
   "app_version": "Versió {v}",
   "app_shortcutEmergency": "Veterinari obert",
-  "app_errLoad": "No s'han pogut carregar els llocs. Comprova la connexió i torna-ho a provar."
+  "app_errLoad": "No s'han pogut carregar els llocs. Comprova la connexió i torna-ho a provar.",
+  "app_voiceStart": "Pregunta amb la veu",
+  "app_voiceListening": "Escoltant… toca per aturar",
+  "app_voiceUnavailable": "El reconeixement de veu no està disponible en aquest mòbil ara mateix.",
+  "app_voiceDenied": "Permet el micròfon i el reconeixement de veu per preguntar amb la veu.",
+  "app_readAloud": "Llegeix en veu alta",
+  "app_stopReading": "Deixa de llegir"
 }

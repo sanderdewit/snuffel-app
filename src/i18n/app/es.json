@@ -80,10 +80,16 @@
     "other": "Zona de casa guardada: {n} sitios"
   },
   "app_privacy": "Privacidad",
-  "app_privacyText": "Snuffel no tiene cuentas ni rastreo. Tus perros, recordatorios, sitios guardados y chats se quedan en este móvil. Tu ubicación solo se usa para buscar y no se guarda. Las preguntas al asistente de IA se envían a Azure OpenAI en la UE y no se usan para entrenamiento.",
+  "app_privacyText": "Snuffel no tiene cuentas ni rastreo. Tus perros, recordatorios, sitios guardados y chats se quedan en este móvil. Tu ubicación solo se usa para buscar y no se guarda. Las preguntas al asistente de IA se envían a Azure OpenAI en la UE y no se usan para entrenamiento. Las preguntas habladas las convierte en texto el propio reconocimiento de voz de tu móvil (Apple o Google); Snuffel nunca recibe audio.",
   "app_about": "Acerca de",
   "app_aboutText": "Snuffel te ayuda a encontrar veterinarios, peluquerías caninas, tiendas, adiestradores, residencias caninas y parques caninos independientes en toda Europa, y te indica qué sitios pertenecen a grandes cadenas.",
   "app_version": "Versión {v}",
   "app_shortcutEmergency": "Veterinario abierto",
-  "app_errLoad": "No se han podido cargar los sitios. Comprueba tu conexión e inténtalo de nuevo."
+  "app_errLoad": "No se han podido cargar los sitios. Comprueba tu conexión e inténtalo de nuevo.",
+  "app_voiceStart": "Preguntar por voz",
+  "app_voiceListening": "Escuchando… toca para parar",
+  "app_voiceUnavailable": "El reconocimiento de voz no está disponible en este móvil ahora mismo.",
+  "app_voiceDenied": "Permite el micrófono y el reconocimiento de voz para preguntar por voz.",
+  "app_readAloud": "Leer en voz alta",
+  "app_stopReading": "Dejar de leer"
 }

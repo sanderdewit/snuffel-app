@@ -76,10 +76,16 @@
     "other": "Otthoni terület mentve: {n} hely"
   },
   "app_privacy": "Adatvédelem",
-  "app_privacyText": "A Snuffelben nincsenek fiókok és nincs követés. A kutyáid, emlékeztetőid, mentett helyeid és beszélgetéseid ezen a telefonon maradnak. A helyzetedet csak keresésre használjuk, és nem tároljuk. Az MI-asszisztensnek feltett kérdések az EU-ban működő Azure OpenAI-hoz kerülnek, és nem használjuk fel őket tanításra.",
+  "app_privacyText": "A Snuffelben nincsenek fiókok és nincs követés. A kutyáid, emlékeztetőid, mentett helyeid és beszélgetéseid ezen a telefonon maradnak. A helyzetedet csak keresésre használjuk, és nem tároljuk. Az MI-asszisztensnek feltett kérdések az EU-ban működő Azure OpenAI-hoz kerülnek, és nem használjuk fel őket tanításra. A kimondott kérdéseket a telefonod saját beszédfelismerése (Apple vagy Google) alakítja szöveggé; a Snuffel soha nem kap hangfelvételt.",
   "app_about": "Névjegy",
   "app_aboutText": "A Snuffel segít független állatorvosokat, kutyakozmetikákat, boltokat, kutyakiképzőket, kutyapanziókat és kutyafuttatókat találni egész Európában, és megmutatja, mely helyek tartoznak nagy láncokhoz.",
   "app_version": "Verzió: {v}",
   "app_shortcutEmergency": "Nyitva tartó állatorvos",
-  "app_errLoad": "Nem sikerült betölteni a helyeket. Ellenőrizd a kapcsolatot, és próbáld újra."
+  "app_errLoad": "Nem sikerült betölteni a helyeket. Ellenőrizd a kapcsolatot, és próbáld újra.",
+  "app_voiceStart": "Kérdezz hanggal",
+  "app_voiceListening": "Figyelek… koppints a leállításhoz",
+  "app_voiceUnavailable": "A beszédfelismerés most nem érhető el ezen a telefonon.",
+  "app_voiceDenied": "Engedélyezd a mikrofont és a beszédfelismerést, hogy hanggal kérdezhess.",
+  "app_readAloud": "Felolvasás",
+  "app_stopReading": "Felolvasás leállítása"
 }

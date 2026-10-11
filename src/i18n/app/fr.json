@@ -80,10 +80,16 @@
     "other": "Zone du domicile enregistrée : {n} lieux"
   },
   "app_privacy": "Confidentialité",
-  "app_privacyText": "Snuffel n'a ni comptes ni pistage. Vos chiens, rappels, lieux enregistrés et discussions restent sur ce téléphone. Votre position sert uniquement à la recherche et n'est pas conservée. Les questions posées à l'assistant IA sont envoyées à Azure OpenAI dans l'UE et ne sont pas utilisées pour l'entraînement.",
+  "app_privacyText": "Snuffel n'a ni comptes ni pistage. Vos chiens, rappels, lieux enregistrés et discussions restent sur ce téléphone. Votre position sert uniquement à la recherche et n'est pas conservée. Les questions posées à l'assistant IA sont envoyées à Azure OpenAI dans l'UE et ne sont pas utilisées pour l'entraînement. Les questions dictées sont converties en texte par la reconnaissance vocale de votre téléphone (Apple ou Google) ; Snuffel ne reçoit jamais d'audio.",
   "app_about": "À propos",
   "app_aboutText": "Snuffel vous aide à trouver des vétérinaires, toiletteurs, magasins, éducateurs, hôtels pour chiens et aires de jeux indépendants partout en Europe, et indique quels lieux appartiennent à de grandes chaînes.",
   "app_version": "Version {v}",
   "app_shortcutEmergency": "Vétérinaire ouvert",
-  "app_errLoad": "Impossible de charger les lieux. Vérifiez votre connexion et réessayez."
+  "app_errLoad": "Impossible de charger les lieux. Vérifiez votre connexion et réessayez.",
+  "app_voiceStart": "Demander à voix haute",
+  "app_voiceListening": "À l'écoute… touchez pour arrêter",
+  "app_voiceUnavailable": "La reconnaissance vocale n'est pas disponible sur ce téléphone pour le moment.",
+  "app_voiceDenied": "Autorisez le micro et la reconnaissance vocale pour poser vos questions à voix haute.",
+  "app_readAloud": "Lire à voix haute",
+  "app_stopReading": "Arrêter la lecture"
 }

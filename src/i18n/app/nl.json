@@ -76,10 +76,16 @@
     "other": "Thuisgebied bewaard: {n} plekken"
   },
   "app_privacy": "Privacy",
-  "app_privacyText": "Snuffel heeft geen accounts en geen tracking. Je honden, herinneringen, bewaarde plekken en gesprekken blijven op deze telefoon. Je locatie wordt alleen gebruikt om te zoeken en wordt niet opgeslagen. Vragen aan de AI-assistent gaan naar Azure OpenAI in de EU en worden niet gebruikt voor training.",
+  "app_privacyText": "Snuffel heeft geen accounts en geen tracking. Je honden, herinneringen, bewaarde plekken en gesprekken blijven op deze telefoon. Je locatie wordt alleen gebruikt om te zoeken en wordt niet opgeslagen. Vragen aan de AI-assistent gaan naar Azure OpenAI in de EU en worden niet gebruikt voor training. Ingesproken vragen worden door de eigen spraakherkenning van je telefoon (Apple of Google) omgezet in tekst; Snuffel ontvangt nooit audio.",
   "app_about": "Over Snuffel",
   "app_aboutText": "Snuffel helpt je onafhankelijke dierenartsen, trimsalons, winkels, trainers, hondenhotels en speelplekken in heel Europa te vinden, en laat zien welke plekken bij grote ketens horen.",
   "app_version": "Versie {v}",
   "app_shortcutEmergency": "Vind een open dierenarts",
-  "app_errLoad": "Plekken laden lukte niet. Controleer je verbinding en probeer het opnieuw."
+  "app_errLoad": "Plekken laden lukte niet. Controleer je verbinding en probeer het opnieuw.",
+  "app_voiceStart": "Vraag met je stem",
+  "app_voiceListening": "Aan het luisteren… tik om te stoppen",
+  "app_voiceUnavailable": "Spraakherkenning is nu niet beschikbaar op deze telefoon.",
+  "app_voiceDenied": "Sta de microfoon en spraakherkenning toe om met je stem te vragen.",
+  "app_readAloud": "Voorlezen",
+  "app_stopReading": "Stoppen met voorlezen"
 }

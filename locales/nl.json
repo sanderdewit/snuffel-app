@@ -1,0 +1,12 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Snuffel",
+    "NSLocationWhenInUseUsageDescription": "Snuffel gebruikt je locatie om dierenartsen en hondenplekken bij jou in de buurt te vinden. Je locatie wordt niet opgeslagen.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "Snuffel gebruikt je locatie alleen terwijl de app open is, om dierenartsen en hondenplekken in de buurt te vinden. Je locatie wordt niet opgeslagen.",
+    "NSLocationAlwaysUsageDescription": "Snuffel gebruikt je locatie alleen terwijl de app open is, om dierenartsen en hondenplekken in de buurt te vinden. Je locatie wordt niet opgeslagen.",
+    "NSPhotoLibraryUsageDescription": "Kies een foto voor het profiel van je hond. De foto blijft op deze telefoon.",
+    "NSMicrophoneUsageDescription": "Stel de AI-assistent van Snuffel je vraag met je stem. Geluid wordt niet opgeslagen en niet naar Snuffel gestuurd.",
+    "NSSpeechRecognitionUsageDescription": "Je telefoon zet je gesproken vraag om in tekst voor de AI-assistent van Snuffel.",
+    "NSMotionUsageDescription": "Snuffel gebruikt geen bewegingsgegevens."
+  }
+}

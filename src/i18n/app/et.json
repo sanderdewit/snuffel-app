@@ -76,10 +76,16 @@
     "other": "Kodupiirkond salvestatud: {n} kohta"
   },
   "app_privacy": "Privaatsus",
-  "app_privacyText": "Snuffelil pole kasutajakontosid ega jälgimist. Sinu koerad, meeldetuletused, salvestatud kohad ja vestlused jäävad sellesse telefoni. Sinu asukohta kasutatakse ainult otsinguks ja seda ei salvestata. AI-assistendile esitatud küsimused saadetakse ELis asuvale Azure OpenAI teenusele ja neid ei kasutata mudelite treenimiseks.",
+  "app_privacyText": "Snuffelil pole kasutajakontosid ega jälgimist. Sinu koerad, meeldetuletused, salvestatud kohad ja vestlused jäävad sellesse telefoni. Sinu asukohta kasutatakse ainult otsinguks ja seda ei salvestata. AI-assistendile esitatud küsimused saadetakse ELis asuvale Azure OpenAI teenusele ja neid ei kasutata mudelite treenimiseks. Suuliselt esitatud küsimused muudab tekstiks sinu telefoni enda kõnetuvastus (Apple või Google); Snuffel ei saa kunagi helisalvestist.",
   "app_about": "Teave",
   "app_aboutText": "Snuffel aitab sul leida sõltumatuid loomaarste, trimmijaid, lemmikloomapoode, koerakoolitajaid, koertehotelle ja koerte jalutusväljakuid kõikjal Euroopas ning näitab, millised kohad kuuluvad suurtesse kettidesse.",
   "app_version": "Versioon {v}",
   "app_shortcutEmergency": "Leia avatud loomaarst",
-  "app_errLoad": "Kohtade laadimine ebaõnnestus. Kontrolli ühendust ja proovi uuesti."
+  "app_errLoad": "Kohtade laadimine ebaõnnestus. Kontrolli ühendust ja proovi uuesti.",
+  "app_voiceStart": "Küsi häälega",
+  "app_voiceListening": "Kuulan… puuduta lõpetamiseks",
+  "app_voiceUnavailable": "Kõnetuvastus pole selles telefonis praegu saadaval.",
+  "app_voiceDenied": "Luba mikrofon ja kõnetuvastus, et häälega küsida.",
+  "app_readAloud": "Loe ette",
+  "app_stopReading": "Lõpeta ettelugemine"
 }

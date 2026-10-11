@@ -76,10 +76,16 @@
     "other": "Hemområde sparat: {n} ställen"
   },
   "app_privacy": "Integritet",
-  "app_privacyText": "Snuffel har inga konton och ingen spårning. Dina hundar, påminnelser, sparade ställen och chattar stannar på den här telefonen. Din plats används bara för att söka och sparas inte. Frågor till AI-assistenten skickas till Azure OpenAI i EU och används inte för träning.",
+  "app_privacyText": "Snuffel har inga konton och ingen spårning. Dina hundar, påminnelser, sparade ställen och chattar stannar på den här telefonen. Din plats används bara för att söka och sparas inte. Frågor till AI-assistenten skickas till Azure OpenAI i EU och används inte för träning. Talade frågor omvandlas till text av telefonens egen taligenkänning (Apple eller Google); Snuffel tar aldrig emot ljud.",
   "app_about": "Om",
   "app_aboutText": "Snuffel hjälper dig att hitta fristående veterinärer, hundfrisörer, butiker, hundtränare, hundpensionat och hundrastgårdar i hela Europa och visar vilka ställen som tillhör stora kedjor.",
   "app_version": "Version {v}",
   "app_shortcutEmergency": "Hitta en öppen veterinär",
-  "app_errLoad": "Det gick inte att ladda ställen. Kontrollera anslutningen och försök igen."
+  "app_errLoad": "Det gick inte att ladda ställen. Kontrollera anslutningen och försök igen.",
+  "app_voiceStart": "Fråga med rösten",
+  "app_voiceListening": "Lyssnar… tryck för att stoppa",
+  "app_voiceUnavailable": "Taligenkänning är inte tillgänglig på den här telefonen just nu.",
+  "app_voiceDenied": "Tillåt mikrofon och taligenkänning för att fråga med rösten.",
+  "app_readAloud": "Läs upp",
+  "app_stopReading": "Sluta läsa upp"
 }

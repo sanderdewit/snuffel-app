@@ -9,11 +9,42 @@
     "userInterfaceStyle": "light",
     "ios": {
       "bundleIdentifier": "app.snuffel",
-      "supportsTablet": true,
+      "supportsTablet": false,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Snuffel uses your location to find vets and dog services near you. It is not stored.",
         "NSPhotoLibraryUsageDescription": "Choose a photo for your dog's profile. It stays on this phone.",
         "ITSAppUsesNonExemptEncryption": false
+      },
+      "buildNumber": "1",
+      "privacyManifests": {
+        "NSPrivacyTracking": false,
+        "NSPrivacyTrackingDomains": [],
+        "NSPrivacyAccessedAPITypes": [
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+            "NSPrivacyAccessedAPITypeReasons": [
+              "CA92.1"
+            ]
+          },
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryFileTimestamp",
+            "NSPrivacyAccessedAPITypeReasons": [
+              "C617.1"
+            ]
+          },
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategorySystemBootTime",
+            "NSPrivacyAccessedAPITypeReasons": [
+              "35F9.1"
+            ]
+          },
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryDiskSpace",
+            "NSPrivacyAccessedAPITypeReasons": [
+              "E174.1"
+            ]
+          }
+        ]
       }
     },
     "android": {
@@ -27,14 +58,15 @@
       "permissions": [
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION",
-        "POST_NOTIFICATIONS"
+        "POST_NOTIFICATIONS",
+        "RECORD_AUDIO"
       ],
       "blockedPermissions": [
         "ACCESS_BACKGROUND_LOCATION",
-        "RECORD_AUDIO",
         "SYSTEM_ALERT_WINDOW"
       ],
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "versionCode": 1
     },
     "plugins": [
       "expo-router",
@@ -45,7 +77,10 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "Snuffel uses your location to find vets and dog services near you. It is not stored."
+          "locationWhenInUsePermission": "Snuffel uses your location to find vets and dog services near you. It is not stored.",
+          "locationAlwaysAndWhenInUsePermission": "Snuffel only uses your location while the app is open, to find vets and dog services near you. It is not stored.",
+          "locationAlwaysPermission": "Snuffel only uses your location while the app is open, to find vets and dog services near you. It is not stored.",
+          "motionUsagePermission": "Snuffel does not use motion data."
         }
       ],
       [
@@ -58,14 +93,26 @@
         "expo-image-picker",
         {
           "photosPermission": "Choose a photo for your dog's profile. It stays on this phone.",
-          "cameraPermission": false,
-          "microphonePermission": false
+          "cameraPermission": false
         }
       ],
-      "./plugins/withReleaseSigning"
+      "./plugins/withReleaseSigning",
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "Ask Snuffel's AI assistant a question by voice. Audio is not stored or sent to Snuffel.",
+          "speechRecognitionPermission": "Your phone turns your spoken question into text for Snuffel's AI assistant.",
+          "androidSpeechServicePackages": [
+            "com.google.android.googlequicksearchbox"
+          ]
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "locales": {
+      "nl": "./locales/nl.json"
     }
   }
 }

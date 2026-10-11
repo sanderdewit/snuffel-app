@@ -76,10 +76,16 @@
     "other": "Heimasvæði vistað: {n} staðir"
   },
   "app_privacy": "Persónuvernd",
-  "app_privacyText": "Snuffel er hvorki með notendaaðganga né rakningu. Hundarnir þínir, áminningar, vistaðir staðir og spjall verða eftir í þessum síma. Staðsetningin þín er aðeins notuð til að leita og er ekki vistuð. Spurningar til gervigreindarráðgjafans eru sendar til Azure OpenAI innan ESB og eru ekki notaðar til þjálfunar.",
+  "app_privacyText": "Snuffel er hvorki með notendaaðganga né rakningu. Hundarnir þínir, áminningar, vistaðir staðir og spjall verða eftir í þessum síma. Staðsetningin þín er aðeins notuð til að leita og er ekki vistuð. Spurningar til gervigreindarráðgjafans eru sendar til Azure OpenAI innan ESB og eru ekki notaðar til þjálfunar. Töluðum spurningum er breytt í texta með talgreiningu símans sjálfs (Apple eða Google); Snuffel fær aldrei hljóð.",
   "app_about": "Um appið",
   "app_aboutText": "Snuffel hjálpar þér að finna sjálfstæða dýralækna, hundasnyrta, verslanir, hundaþjálfara, hundahótel og hundasvæði um alla Evrópu og sýnir hvaða staðir tilheyra stórum keðjum.",
   "app_version": "Útgáfa {v}",
   "app_shortcutEmergency": "Finna opinn dýralækni",
-  "app_errLoad": "Ekki tókst að sækja staði. Athugaðu tenginguna og reyndu aftur."
+  "app_errLoad": "Ekki tókst að sækja staði. Athugaðu tenginguna og reyndu aftur.",
+  "app_voiceStart": "Spyrja með rödd",
+  "app_voiceListening": "Hlustar… ýttu til að stöðva",
+  "app_voiceUnavailable": "Talgreining er ekki í boði í þessum síma núna.",
+  "app_voiceDenied": "Leyfðu hljóðnema og talgreiningu til að spyrja með rödd.",
+  "app_readAloud": "Lesa upphátt",
+  "app_stopReading": "Hætta lestri"
 }

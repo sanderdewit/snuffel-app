@@ -84,10 +84,16 @@
     "other": "Zapisano okolicę domu: {n} miejsca"
   },
   "app_privacy": "Prywatność",
-  "app_privacyText": "Snuffel nie ma kont ani śledzenia. Twoje psy, przypomnienia, zapisane miejsca i rozmowy pozostają w tym telefonie. Twoja lokalizacja służy tylko do wyszukiwania i nie jest zapisywana. Pytania do asystenta AI są wysyłane do Azure OpenAI w UE i nie są używane do trenowania modeli.",
+  "app_privacyText": "Snuffel nie ma kont ani śledzenia. Twoje psy, przypomnienia, zapisane miejsca i rozmowy pozostają w tym telefonie. Twoja lokalizacja służy tylko do wyszukiwania i nie jest zapisywana. Pytania do asystenta AI są wysyłane do Azure OpenAI w UE i nie są używane do trenowania modeli. Pytania zadane głosem są zamieniane na tekst przez wbudowane rozpoznawanie mowy w telefonie (Apple lub Google); Snuffel nigdy nie otrzymuje nagrań dźwięku.",
   "app_about": "O aplikacji",
   "app_aboutText": "Snuffel pomaga znaleźć niezależnych weterynarzy, groomerów, sklepy, trenerów, hotele dla psów i wybiegi w całej Europie oraz pokazuje, które miejsca należą do dużych sieci.",
   "app_version": "Wersja {v}",
   "app_shortcutEmergency": "Znajdź otwartego weterynarza",
-  "app_errLoad": "Nie udało się wczytać miejsc. Sprawdź połączenie i spróbuj ponownie."
+  "app_errLoad": "Nie udało się wczytać miejsc. Sprawdź połączenie i spróbuj ponownie.",
+  "app_voiceStart": "Zapytaj głosem",
+  "app_voiceListening": "Słucham… dotknij, aby zatrzymać",
+  "app_voiceUnavailable": "Rozpoznawanie mowy jest teraz niedostępne w tym telefonie.",
+  "app_voiceDenied": "Zezwól na dostęp do mikrofonu i rozpoznawania mowy, aby pytać głosem.",
+  "app_readAloud": "Czytaj na głos",
+  "app_stopReading": "Przestań czytać"
 }

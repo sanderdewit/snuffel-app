@@ -76,10 +76,16 @@
     "other": "Hjemområde gemt: {n} steder"
   },
   "app_privacy": "Privatliv",
-  "app_privacyText": "Snuffel har ingen konti og ingen sporing. Dine hunde, påmindelser, gemte steder og chats bliver på denne telefon. Din placering bruges kun til at søge og gemmes ikke. Spørgsmål til AI-assistenten sendes til Azure OpenAI i EU og bruges ikke til træning.",
+  "app_privacyText": "Snuffel har ingen konti og ingen sporing. Dine hunde, påmindelser, gemte steder og chats bliver på denne telefon. Din placering bruges kun til at søge og gemmes ikke. Spørgsmål til AI-assistenten sendes til Azure OpenAI i EU og bruges ikke til træning. Talte spørgsmål omdannes til tekst af telefonens egen talegenkendelse (Apple eller Google); Snuffel modtager aldrig lyd.",
   "app_about": "Om",
   "app_aboutText": "Snuffel hjælper dig med at finde uafhængige dyrlæger, hundefrisører, butikker, trænere, hundepensioner og hundeskove i hele Europa og viser, hvilke steder der tilhører store kæder.",
   "app_version": "Version {v}",
   "app_shortcutEmergency": "Find en åben dyrlæge",
-  "app_errLoad": "Kunne ikke hente steder. Tjek din forbindelse, og prøv igen."
+  "app_errLoad": "Kunne ikke hente steder. Tjek din forbindelse, og prøv igen.",
+  "app_voiceStart": "Spørg med stemmen",
+  "app_voiceListening": "Lytter… tryk for at stoppe",
+  "app_voiceUnavailable": "Talegenkendelse er ikke tilgængelig på denne telefon lige nu.",
+  "app_voiceDenied": "Tillad mikrofon og talegenkendelse for at spørge med stemmen.",
+  "app_readAloud": "Læs højt",
+  "app_stopReading": "Stop oplæsning"
 }

@@ -80,10 +80,16 @@
     "other": "Zona de acasă salvată: {n} de locuri"
   },
   "app_privacy": "Confidențialitate",
-  "app_privacyText": "Snuffel nu are conturi și nu te urmărește. Câinii, mementourile, locurile salvate și conversațiile tale rămân pe acest telefon. Locația ta este folosită doar pentru căutare și nu este stocată. Întrebările pentru asistentul AI sunt trimise către Azure OpenAI în UE și nu sunt folosite pentru antrenare.",
+  "app_privacyText": "Snuffel nu are conturi și nu te urmărește. Câinii, mementourile, locurile salvate și conversațiile tale rămân pe acest telefon. Locația ta este folosită doar pentru căutare și nu este stocată. Întrebările pentru asistentul AI sunt trimise către Azure OpenAI în UE și nu sunt folosite pentru antrenare. Întrebările rostite sunt transformate în text de recunoașterea vocală proprie a telefonului tău (Apple sau Google); Snuffel nu primește niciodată audio.",
   "app_about": "Despre",
   "app_aboutText": "Snuffel te ajută să găsești veterinari, saloane de toaletaj, magazine, dresori, hoteluri canine și parcuri pentru câini independente în toată Europa și îți arată ce locuri aparțin marilor lanțuri.",
   "app_version": "Versiunea {v}",
   "app_shortcutEmergency": "Găsește un veterinar deschis",
-  "app_errLoad": "Nu am putut încărca locurile. Verifică conexiunea și încearcă din nou."
+  "app_errLoad": "Nu am putut încărca locurile. Verifică conexiunea și încearcă din nou.",
+  "app_voiceStart": "Întreabă vocal",
+  "app_voiceListening": "Ascult… atinge pentru a opri",
+  "app_voiceUnavailable": "Recunoașterea vocală nu este disponibilă acum pe acest telefon.",
+  "app_voiceDenied": "Permite accesul la microfon și la recunoașterea vocală ca să poți întreba vocal.",
+  "app_readAloud": "Citește cu voce tare",
+  "app_stopReading": "Oprește citirea"
 }

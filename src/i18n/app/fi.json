@@ -76,10 +76,16 @@
     "other": "Kotialue tallennettu: {n} paikkaa"
   },
   "app_privacy": "Tietosuoja",
-  "app_privacyText": "Snuffelissa ei ole käyttäjätilejä eikä seurantaa. Koirasi, muistutukset, tallennetut paikat ja keskustelut pysyvät tässä puhelimessa. Sijaintiasi käytetään vain hakuun, eikä sitä tallenneta. Tekoälyavustajalle esitetyt kysymykset lähetetään Azure OpenAI -palveluun EU:ssa, eikä niitä käytetä koulutukseen.",
+  "app_privacyText": "Snuffelissa ei ole käyttäjätilejä eikä seurantaa. Koirasi, muistutukset, tallennetut paikat ja keskustelut pysyvät tässä puhelimessa. Sijaintiasi käytetään vain hakuun, eikä sitä tallenneta. Tekoälyavustajalle esitetyt kysymykset lähetetään Azure OpenAI -palveluun EU:ssa, eikä niitä käytetä koulutukseen. Puhutut kysymykset muuttaa tekstiksi puhelimesi oma puheentunnistus (Apple tai Google); Snuffel ei koskaan vastaanota ääntä.",
   "app_about": "Tietoja",
   "app_aboutText": "Snuffel auttaa sinua löytämään itsenäisiä eläinlääkäreitä, trimmaamoja, eläinkauppoja, kouluttajia, koirahoitoloita ja koira-aitauksia kaikkialla Euroopassa ja näyttää, mitkä paikat kuuluvat suuriin ketjuihin.",
   "app_version": "Versio {v}",
   "app_shortcutEmergency": "Etsi auki oleva eläinlääkäri",
-  "app_errLoad": "Paikkoja ei voitu ladata. Tarkista yhteys ja yritä uudelleen."
+  "app_errLoad": "Paikkoja ei voitu ladata. Tarkista yhteys ja yritä uudelleen.",
+  "app_voiceStart": "Kysy äänellä",
+  "app_voiceListening": "Kuuntelee… lopeta napauttamalla",
+  "app_voiceUnavailable": "Puheentunnistus ei ole juuri nyt käytettävissä tässä puhelimessa.",
+  "app_voiceDenied": "Salli mikrofoni ja puheentunnistus, niin voit kysyä äänellä.",
+  "app_readAloud": "Lue ääneen",
+  "app_stopReading": "Lopeta lukeminen"
 }

@@ -76,10 +76,16 @@
     "other": "Heimatgebiet gespeichert: {n} Orte"
   },
   "app_privacy": "Datenschutz",
-  "app_privacyText": "Snuffel hat keine Konten und kein Tracking. Deine Hunde, Erinnerungen, gemerkten Orte und Chats bleiben auf diesem Handy. Dein Standort wird nur für die Suche verwendet und nicht gespeichert. Fragen an den KI-Assistenten werden an Azure OpenAI in der EU gesendet und nicht zum Training verwendet.",
+  "app_privacyText": "Snuffel hat keine Konten und kein Tracking. Deine Hunde, Erinnerungen, gemerkten Orte und Chats bleiben auf diesem Handy. Dein Standort wird nur für die Suche verwendet und nicht gespeichert. Fragen an den KI-Assistenten werden an Azure OpenAI in der EU gesendet und nicht zum Training verwendet. Gesprochene Fragen werden von der eigenen Spracherkennung deines Handys (Apple oder Google) in Text umgewandelt; Snuffel erhält nie Audio.",
   "app_about": "Über Snuffel",
   "app_aboutText": "Snuffel hilft dir, unabhängige Tierärzte, Hundesalons, Geschäfte, Hundetrainer, Hundehotels und Auslaufflächen in ganz Europa zu finden, und zeigt, welche Orte zu großen Ketten gehören.",
   "app_version": "Version {v}",
   "app_shortcutEmergency": "Geöffneten Tierarzt finden",
-  "app_errLoad": "Orte konnten nicht geladen werden. Prüfe deine Verbindung und versuche es erneut."
+  "app_errLoad": "Orte konnten nicht geladen werden. Prüfe deine Verbindung und versuche es erneut.",
+  "app_voiceStart": "Per Sprache fragen",
+  "app_voiceListening": "Hört zu… zum Beenden tippen",
+  "app_voiceUnavailable": "Die Spracherkennung ist auf diesem Handy gerade nicht verfügbar.",
+  "app_voiceDenied": "Erlaube Mikrofon und Spracherkennung, um per Sprache zu fragen.",
+  "app_readAloud": "Vorlesen",
+  "app_stopReading": "Vorlesen beenden"
 }

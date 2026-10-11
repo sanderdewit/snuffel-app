@@ -1,0 +1,9 @@
+Snuffel is a free directory of dog services (vets, animal hospitals, groomers, shops, trainers, dog hotels, off-lead areas) across Europe, built on OpenStreetMap data. No account or login is needed; every feature works immediately.
+
+How to test:
+- Find: tap "Use my location" or type a European address (e.g. "Amsterdam"). Coverage is Europe only; with the simulator's default US location there are no results, so please use an address in Europe.
+- Emergency tab: lists vets that are open now near the device location (Europe). Long-pressing the app icon offers the same as a shortcut.
+- My dogs: add a dog and set a reminder date to test the local notification (scheduled at 10:00 on that date).
+- Ask: AI assistant for dog health and behaviour questions (Azure OpenAI, EU). The microphone button uses the phone's speech recognition. It always advises contacting a vet for red-flag symptoms and states that it is general information, not a substitute for a vet.
+
+Privacy: no accounts, no tracking, no ads. Dogs, reminders, saved places and chats are stored only on the device. Location is used only while the app is open, for the search, and is not stored. The "Always" location and motion purpose strings exist only because the location library references those APIs; the app never requests them.

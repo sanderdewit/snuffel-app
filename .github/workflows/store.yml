@@ -1,0 +1,55 @@
+# Upload the App Store texts (fastlane/metadata) and the screenshots from a
+# screenshots run to App Store Connect (started by hand). Does not upload a
+# build and does not submit for review: that stays a click in App Store Connect.
+name: store
+
+on:
+  workflow_dispatch:
+    inputs:
+      screenshots_run:
+        description: "Run ID of a successful 'screenshots' run (empty = texts only)"
+        default: ""
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  deliver:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - name: Screenshots from that run
+        if: github.event.inputs.screenshots_run != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download "${{ github.event.inputs.screenshots_run }}" -n screenshots-ios -D /tmp/shots
+          mkdir -p fastlane/screenshots/nl-NL fastlane/screenshots/en-GB
+          cp /tmp/shots/nl/*.png fastlane/screenshots/nl-NL/ 2>/dev/null || true
+          cp /tmp/shots/en/*.png fastlane/screenshots/en-GB/ 2>/dev/null || true
+          ls -R fastlane/screenshots
+      - name: API key for fastlane
+        env:
+          KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ISSUER: ${{ secrets.ASC_ISSUER_ID }}
+          KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+        run: |
+          python3 - <<'EOF'
+          import base64, json, os
+          key = base64.b64decode(os.environ["KEY_P8"]).decode()
+          json.dump({"key_id": os.environ["KEY_ID"], "issuer_id": os.environ["ISSUER"], "key": key, "in_house": False},
+                    open(os.path.join(os.environ["RUNNER_TEMP"], "asc.json"), "w"))
+          EOF
+      - run: gem install fastlane --no-document
+      - name: Upload texts and screenshots
+        run: |
+          fastlane deliver --api_key_path "$RUNNER_TEMP/asc.json" --app_identifier app.snuffel \
+            --skip_binary_upload --skip_app_version_update false --force --submit_for_review false \
+            --overwrite_screenshots ${{ github.event.inputs.screenshots_run != '' }} \
+            --skip_screenshots ${{ github.event.inputs.screenshots_run == '' }} \
+            --precheck_include_in_app_purchases false --run_precheck_before_submit false
+      - name: Remove the key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/asc.json"

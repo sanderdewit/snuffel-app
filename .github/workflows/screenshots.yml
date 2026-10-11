@@ -1,0 +1,41 @@
+# App Store screenshots (started by hand): builds the app for the simulator,
+# runs it in screenshot mode on a 6.9" iPhone in Amsterdam, and stores the
+# images as an artifact (later uploaded with the store texts by store.yml).
+name: screenshots
+
+on:
+  workflow_dispatch:
+    inputs:
+      languages:
+        description: "Languages, space separated"
+        default: "nl en"
+
+permissions:
+  contents: read
+
+jobs:
+  ios:
+    runs-on: macos-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx expo prebuild --platform ios
+      - name: Build for the simulator
+        working-directory: ios
+        run: |
+          set -o pipefail
+          xcodebuild -workspace Snuffel.xcworkspace -scheme Snuffel -configuration Release \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build CODE_SIGNING_ALLOWED=NO | tail -n 20
+      - name: Take the screenshots
+        run: bash tools/screenshots.sh ios/build/Build/Products/Release-iphonesimulator/Snuffel.app screenshots ${{ github.event.inputs.languages }}
+      - uses: actions/upload-artifact@v7
+        with:
+          name: screenshots-ios
+          path: screenshots
+          retention-days: 90

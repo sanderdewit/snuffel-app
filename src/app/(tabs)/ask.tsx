@@ -6,6 +6,8 @@ import { router, useFocusEffect } from "expo-router";
 import { useI18n } from "../../i18n";
 import { addChat, ask, clearChat, loadChat, type ChatMessage } from "../../lib/ai";
 import { listDogs, type Dog } from "../../lib/dogs";
+import { speak, startListening, stopListening, stopSpeaking } from "../../lib/voice";
+import { useSpeechRecognitionEvent } from "expo-speech-recognition";
 import { C, S } from "../../ui/theme";
 
 export default function Ask() {
@@ -25,8 +27,8 @@ export default function Ask() {
   }, []));
   useEffect(() => { loadChat(dogId).then(setMessages).catch(() => setMessages([])); }, [dogId]);
 
-  const send = async () => {
-    const content = text.trim().slice(0, 1000);
+  const send = async (spoken?: string) => {
+    const content = (spoken ?? text).trim().slice(0, 1000);
     if (!content || busy) return;
     const user: ChatMessage = { role: "user", content };
     const history = messages.concat(user);
@@ -39,7 +41,40 @@ export default function Ask() {
     if (!("error" in r)) await addChat(dogId, reply);
     setMessages((m) => m.concat(reply));
     setBusy(false);
+    // Asked by voice: answer by voice too (hands busy with the dog).
+    if (spoken != null) { setSpeaking(messages.length + 1); speak(reply.content, lang, () => setSpeaking(null)); }
   };
+
+  // ---- voice ----
+  const [listening, setListening] = useState(false);
+  const [speaking, setSpeaking] = useState<number | null>(null);   // index of the message being read
+  const [voiceNote, setVoiceNote] = useState<string | null>(null);
+  const heard = useRef("");
+  useSpeechRecognitionEvent("result", (e) => {
+    const said = e.results[0]?.transcript || "";
+    heard.current = said;
+    setText(said);
+    if (e.isFinal && said.trim()) { setListening(false); send(said); }
+  });
+  useSpeechRecognitionEvent("end", () => setListening(false));
+  useSpeechRecognitionEvent("error", (e) => {
+    setListening(false);
+    if (e.error !== "no-speech" && e.error !== "aborted") setVoiceNote(t("app_voiceUnavailable"));
+  });
+  const toggleListening = async () => {
+    setVoiceNote(null);
+    if (listening) { stopListening(); return; }
+    stopSpeaking(); setSpeaking(null);
+    const problem = await startListening(lang);
+    if (problem) setVoiceNote(t(problem === "denied" ? "app_voiceDenied" : "app_voiceUnavailable"));
+    else { heard.current = ""; setText(""); setListening(true); }
+  };
+  const toggleRead = (i: number, content: string) => {
+    if (speaking === i) { stopSpeaking(); setSpeaking(null); return; }
+    setSpeaking(i);
+    speak(content, lang, () => setSpeaking((cur) => (cur === i ? null : cur)));
+  };
+  useFocusEffect(useCallback(() => () => { stopSpeaking(); stopListening(); }, []));
 
   const cta = (m: ChatMessage) => {
     if (m.urgency === "emergency") return { label: t("aiCtaEmergency"), go: () => router.push("/emergency") };
@@ -71,7 +106,7 @@ export default function Ask() {
         contentContainerStyle={{ padding: 12, gap: 8 }}
         onContentSizeChange={() => list.current?.scrollToEnd({ animated: true })}
         ListHeaderComponent={<View style={[S.card, { marginBottom: 8 }]}><Text style={S.body}>{t("aiIntro")}</Text></View>}
-        renderItem={({ item: m }) => {
+        renderItem={({ item: m, index: i }) => {
           const action = m.role === "assistant" ? cta(m) : null;
           return (
             <View style={{ alignSelf: m.role === "user" ? "flex-end" : "flex-start", maxWidth: "88%", gap: 6 }}>
@@ -83,6 +118,12 @@ export default function Ask() {
               <View style={{ backgroundColor: m.role === "user" ? C.brand : C.card, borderRadius: 14, padding: 10, borderWidth: m.role === "user" ? 0 : 1, borderColor: C.line }}>
                 <Text style={[S.body, { color: m.role === "user" ? "#fff" : C.text }]}>{m.content}</Text>
               </View>
+              {m.role === "assistant" && (
+                <Pressable onPress={() => toggleRead(i, m.content)} hitSlop={8} accessibilityRole="button"
+                  accessibilityLabel={t(speaking === i ? "app_stopReading" : "app_readAloud")}>
+                  <Text style={{ color: C.brandDark, fontWeight: "600" }}>{speaking === i ? "⏹ " + t("app_stopReading") : "🔊 " + t("app_readAloud")}</Text>
+                </Pressable>
+              )}
               {action && (
                 <Pressable style={[S.btn, m.urgency === "emergency" && { backgroundColor: C.danger }]} onPress={action.go}>
                   <Text style={S.btnText}>{action.label}</Text>
@@ -94,9 +135,15 @@ export default function Ask() {
         ListFooterComponent={busy ? <ActivityIndicator color={C.brand} style={{ marginTop: 8 }} /> : null}
       />
       <View style={{ padding: 12, gap: 6, borderTopWidth: 1, borderColor: C.line, backgroundColor: C.card }}>
+        {listening && <Text style={[S.muted, { color: C.danger, fontWeight: "700" }]}>🎙️ {t("app_voiceListening")}</Text>}
+        {!!voiceNote && <Text style={[S.muted, { color: C.warn }]}>{voiceNote}</Text>}
         <View style={[S.row, { gap: 8 }]}>
+          <Pressable onPress={toggleListening} disabled={busy} accessibilityRole="button" accessibilityLabel={t(listening ? "app_voiceListening" : "app_voiceStart")}
+            style={{ width: 46, height: 46, borderRadius: 23, alignItems: "center", justifyContent: "center", backgroundColor: listening ? C.danger : C.chip, opacity: busy ? 0.5 : 1 }}>
+            <Text style={{ fontSize: 22 }}>{listening ? "⏹" : "🎙️"}</Text>
+          </Pressable>
           <TextInput style={[S.input, { flex: 1, maxHeight: 120 }]} value={text} onChangeText={setText} placeholder={t("aiPlaceholder")} multiline maxLength={1000} />
-          <Pressable style={[S.btn, busy && { opacity: 0.5 }]} onPress={send} disabled={busy} accessibilityRole="button"><Text style={S.btnText}>{t("aiSend")}</Text></Pressable>
+          <Pressable style={[S.btn, busy && { opacity: 0.5 }]} onPress={() => send()} disabled={busy} accessibilityRole="button"><Text style={S.btnText}>{t("aiSend")}</Text></Pressable>
         </View>
         <View style={[S.row, { justifyContent: "space-between" }]}>
           <Text style={[S.muted, { flex: 1 }]}>{t("aiDisclaimer")}</Text>

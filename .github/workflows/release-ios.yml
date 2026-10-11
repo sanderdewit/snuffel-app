@@ -1,0 +1,78 @@
+# Build, sign and upload the iOS app to App Store Connect / TestFlight
+# (started by hand). Signing is automatic through an App Store Connect API key:
+# Xcode creates and renews the certificate and profile itself, so there are no
+# certificate files to manage. Secrets: APPLE_TEAM_ID, ASC_KEY_ID,
+# ASC_ISSUER_ID, ASC_KEY_P8 (base64 of the .p8) - see store/APP_STORE.md.
+name: release-ios
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-ios
+  cancel-in-progress: false
+
+jobs:
+  testflight:
+    runs-on: macos-latest
+    timeout-minutes: 120
+    env:
+      TEAM: ${{ secrets.APPLE_TEAM_ID }}
+      KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ISSUER: ${{ secrets.ASC_ISSUER_ID }}
+    steps:
+      - name: Secrets present
+        run: |
+          for v in TEAM KEY_ID ISSUER; do [ -n "${!v}" ] || { echo "::error::secret for $v is missing (see store/APP_STORE.md)"; exit 1; }; done
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Checks
+        run: |
+          node tools/sync-core.mjs --check
+          npx tsc --noEmit
+          npm test
+      - run: npx expo prebuild --platform ios
+      - name: API key file
+        env:
+          KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+        run: |
+          echo "$KEY_P8" | base64 -d > "$RUNNER_TEMP/AuthKey.p8"
+          echo "AUTH=-authenticationKeyPath $RUNNER_TEMP/AuthKey.p8 -authenticationKeyID $KEY_ID -authenticationKeyIssuerID $ISSUER" >> "$GITHUB_ENV"
+      - name: Build number = run number
+        run: /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${{ github.run_number }}" ios/Snuffel/Info.plist
+      - name: Archive (automatic signing)
+        working-directory: ios
+        run: |
+          set -o pipefail
+          xcodebuild -workspace Snuffel.xcworkspace -scheme Snuffel -configuration Release \
+            -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/Snuffel.xcarchive" \
+            DEVELOPMENT_TEAM="$TEAM" CODE_SIGN_STYLE=Automatic \
+            -allowProvisioningUpdates $AUTH archive | tail -n 40
+      - name: Export and upload to App Store Connect
+        run: |
+          set -o pipefail
+          cat > "$RUNNER_TEMP/ExportOptions.plist" <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+            <key>method</key><string>app-store-connect</string>
+            <key>destination</key><string>upload</string>
+            <key>teamID</key><string>$TEAM</string>
+            <key>signingStyle</key><string>automatic</string>
+            <key>uploadSymbols</key><true/>
+          </dict></plist>
+          EOF
+          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/Snuffel.xcarchive" \
+            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" -exportPath "$RUNNER_TEMP/export" \
+            -allowProvisioningUpdates $AUTH | tail -n 40
+          echo "Uploaded build ${{ github.run_number }}: it appears in TestFlight after Apple's processing (10-30 min)." >> "$GITHUB_STEP_SUMMARY"
+      - name: Remove the key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/AuthKey.p8"

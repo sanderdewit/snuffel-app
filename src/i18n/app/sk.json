@@ -84,10 +84,16 @@
     "other": "Domáca oblasť uložená: {n} miest"
   },
   "app_privacy": "Súkromie",
-  "app_privacyText": "Snuffel nemá účty ani sledovanie. Vaše psy, pripomienky, uložené miesta a chaty zostávajú v tomto telefóne. Vaša poloha sa používa iba na vyhľadávanie a neukladá sa. Otázky pre AI pomocníka sa odosielajú do Azure OpenAI v EÚ a nepoužívajú sa na trénovanie.",
+  "app_privacyText": "Snuffel nemá účty ani sledovanie. Vaše psy, pripomienky, uložené miesta a chaty zostávajú v tomto telefóne. Vaša poloha sa používa iba na vyhľadávanie a neukladá sa. Otázky pre AI pomocníka sa odosielajú do Azure OpenAI v EÚ a nepoužívajú sa na trénovanie. Hovorené otázky prevádza na text vlastné rozpoznávanie reči vášho telefónu (Apple alebo Google); Snuffel nikdy nedostáva zvuk.",
   "app_about": "O aplikácii",
   "app_aboutText": "Snuffel vám pomôže nájsť nezávislých veterinárov, psie salóny, obchody, trénerov, psie hotely a výbehy po celej Európe a ukáže, ktoré miesta patria veľkým reťazcom.",
   "app_version": "Verzia {v}",
   "app_shortcutEmergency": "Nájsť otvoreného veterinára",
-  "app_errLoad": "Miesta sa nepodarilo načítať. Skontrolujte pripojenie a skúste to znova."
+  "app_errLoad": "Miesta sa nepodarilo načítať. Skontrolujte pripojenie a skúste to znova.",
+  "app_voiceStart": "Opýtať sa hlasom",
+  "app_voiceListening": "Počúvam… ťuknutím zastavíte",
+  "app_voiceUnavailable": "Rozpoznávanie reči teraz v tomto telefóne nie je k dispozícii.",
+  "app_voiceDenied": "Povoľte mikrofón a rozpoznávanie reči, aby ste sa mohli pýtať hlasom.",
+  "app_readAloud": "Prečítať nahlas",
+  "app_stopReading": "Prestať čítať"
 }
