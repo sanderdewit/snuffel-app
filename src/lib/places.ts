@@ -199,17 +199,19 @@ export async function search(lat: number, lon: number, radiusM: number, opts: { 
 
 /**
  * Emergency: vets and hospitals that are not known to be closed, widening the
- * radius until at least 5 are found (as the website does). Open places first,
- * then independents before chains, then distance.
+ * radius until at least 5 are found and at least one of them is known to be
+ * open (as the website does): clinics with unknown hours nearby must not hide
+ * an open emergency clinic a little further away. Open places first, then
+ * independents before chains, then distance.
  */
 export async function emergency(lat: number, lon: number): Promise<{ places: Place[]; radiusM: number }> {
   let last: Place[] = [], radiusM = CONFIG.emergencySteps[0];
+  const rank = (p: Place) => (p.openNow === true || p.is247 ? 0 : p.openNow == null ? 1 : 2);
   for (const r of CONFIG.emergencySteps) {
     radiusM = r;
     last = (await search(lat, lon, r)).filter((p) => (p.cat === "vet" || p.cat === "hospital") && p.openNow !== false);
-    if (last.length >= 5) break;
+    if (last.length >= 5 && last.some((p) => rank(p) === 0)) break;
   }
-  const rank = (p: Place) => (p.openNow === true || p.is247 ? 0 : p.openNow == null ? 1 : 2);
   last.sort((a, b) => rank(a) - rank(b) || (a.chain ? 1 : 0) - (b.chain ? 1 : 0) || a.dist - b.dist);
   return { places: last, radiusM };
 }

@@ -18,6 +18,8 @@ export function OpenBadge({ p }: { p: Place }) {
   if (p.is247) return <Text style={{ color: C.ok, fontWeight: "700" }}>● {t("open247")}</Text>;
   if (p.openNow === true) return <Text style={{ color: C.ok, fontWeight: "700" }}>● {t("openNow")}</Text>;
   if (p.openNow === false) return <Text style={{ color: C.muted, fontWeight: "600" }}>● {t("closedNow")}</Text>;
+  // For vets "no badge" reads as "open" in the emergency list: say it's unknown.
+  if (p.cat === "vet" || p.cat === "hospital") return <Text style={S.muted}>○ {t("hoursUnknown")}</Text>;
   return null;
 }
 
