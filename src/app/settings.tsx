@@ -58,6 +58,7 @@ export default function Settings() {
       <View style={[S.card, { gap: 6 }]}>
         <Text style={S.h2}>🔒 {t("app_privacy")}</Text>
         <Text style={S.body}>{t("app_privacyText")}</Text>
+        <Pressable onPress={() => Linking.openURL(CONFIG.privacy)}><Text style={{ color: C.brandDark, fontWeight: "600" }}>{t("app_privacy")} ↗</Text></Pressable>
       </View>
 
       <View style={[S.card, { gap: 6 }]}>

@@ -9,6 +9,7 @@ export const CONFIG = {
   sprite: "https://protomaps.github.io/basemaps-assets/sprites/v4/light",
   chatApi: "https://wonderful-island-0c49a0103.7.azurestaticapps.net/api/chat",
   website: "https://wonderful-island-0c49a0103.7.azurestaticapps.net/",
+  privacy: "https://wonderful-island-0c49a0103.7.azurestaticapps.net/privacy",
   nominatim: "https://nominatim.openstreetmap.org",
   // Nominatim's usage policy asks for an identifying User-Agent (no personal data).
   userAgent: "Snuffel-app/1.0 (+https://github.com/sanderdewit/snuffel-app)",

@@ -25,8 +25,8 @@ is a fallback that keeps the brand first.
 
 | Field | Value |
 |---|---|
-| Privacy policy URL | `https://<domain>/privacy`: page drafted in `store/privacy-nl.md` and `store/privacy-en.md` |
-| Support URL | `https://<domain>/support`, or for now https://github.com/sanderdewit/snuffel-data/issues |
+| Privacy policy URL | https://wonderful-island-0c49a0103.7.azurestaticapps.net/privacy (live; source: docs/privacy-*.md in the website repo). Switch to https://<domain>/privacy once the domain exists |
+| Support URL | https://github.com/sanderdewit/snuffel-app/issues (the privacy page also lists privacy@dewit-automatisering.nl) |
 | Marketing URL (optional) | `https://<domain>/` |
 
 ## App Privacy ("nutrition label")
