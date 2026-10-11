@@ -2,7 +2,7 @@
   "app_tab_find": "Барај",
   "app_tab_saved": "Зачувани",
   "app_tab_dogs": "Мои кучиња",
-  "app_tab_ask": "Прашај",
+  "app_tab_ask": "AI помош",
   "app_searchHere": "Барај во оваа област",
   "app_nearMe": "Во близина",
   "app_locationNeeded": "Дозволи пристап до локацијата за да го најдеш најблискиот отворен ветеринар или внеси адреса.",
@@ -126,5 +126,6 @@
   "app_pdfGenerated": "Направено со Snuffel на {date}",
   "app_born": "Датум на раѓање",
   "app_working": "Момент…",
-  "app_unnamedPlay": "Парк за кучиња"
+  "app_unnamedPlay": "Парк за кучиња",
+  "app_askTitle": "AI асистент"
 }

@@ -2,7 +2,7 @@
   "app_tab_find": "Meklēt",
   "app_tab_saved": "Saglabātie",
   "app_tab_dogs": "Mani suņi",
-  "app_tab_ask": "Jautāt",
+  "app_tab_ask": "MI palīdzība",
   "app_searchHere": "Meklēt šajā apkārtnē",
   "app_nearMe": "Tuvumā",
   "app_locationNeeded": "Atļauj piekļuvi atrašanās vietai, lai atrastu tuvāko atvērto veterinārārstu, vai ievadi adresi.",
@@ -130,5 +130,6 @@
   "app_pdfGenerated": "Izveidots ar Snuffel {date}",
   "app_born": "Dzimis",
   "app_working": "Mirkli…",
-  "app_unnamedPlay": "Suņu laukums"
+  "app_unnamedPlay": "Suņu laukums",
+  "app_askTitle": "MI asistents"
 }

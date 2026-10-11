@@ -2,7 +2,7 @@
   "app_tab_find": "Etsi",
   "app_tab_saved": "Tallennetut",
   "app_tab_dogs": "Koirani",
-  "app_tab_ask": "Kysy",
+  "app_tab_ask": "Tekoälyapu",
   "app_searchHere": "Hae tältä alueelta",
   "app_nearMe": "Lähelläni",
   "app_locationNeeded": "Salli sijainnin käyttö, niin löydät lähimmän auki olevan eläinlääkärin, tai kirjoita osoite.",
@@ -126,5 +126,6 @@
   "app_pdfGenerated": "Tehty Snuffelilla {date}",
   "app_born": "Syntynyt",
   "app_working": "Hetkinen…",
-  "app_unnamedPlay": "Koira-alue"
+  "app_unnamedPlay": "Koira-alue",
+  "app_askTitle": "Tekoälyavustaja"
 }

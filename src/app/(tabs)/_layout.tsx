@@ -34,7 +34,7 @@ export default function TabsLayout() {
       <Tabs.Screen name="emergency" options={{ title: t("emergencyBtn"), tabBarIcon: icon("🚨"), tabBarActiveTintColor: C.danger }} />
       <Tabs.Screen name="saved" options={{ title: t("app_tab_saved"), tabBarIcon: icon("⭐") }} />
       <Tabs.Screen name="dogs" options={{ title: t("app_tab_dogs"), tabBarIcon: icon("🐕") }} />
-      <Tabs.Screen name="ask" options={{ title: t("app_tab_ask"), tabBarIcon: icon("💬") }} />
+      <Tabs.Screen name="ask" options={{ title: t("app_tab_ask"), headerTitle: t("app_askTitle"), tabBarIcon: icon("💬") }} />
     </Tabs>
   );
 }

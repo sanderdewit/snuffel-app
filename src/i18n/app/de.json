@@ -2,7 +2,7 @@
   "app_tab_find": "Suchen",
   "app_tab_saved": "Gemerkt",
   "app_tab_dogs": "Meine Hunde",
-  "app_tab_ask": "Fragen",
+  "app_tab_ask": "KI-Hilfe",
   "app_searchHere": "In diesem Bereich suchen",
   "app_nearMe": "In meiner Nähe",
   "app_locationNeeded": "Erlaube den Standortzugriff, um den nächsten geöffneten Tierarzt zu finden, oder gib eine Adresse ein.",
@@ -126,5 +126,6 @@
   "app_pdfGenerated": "Erstellt mit Snuffel am {date}",
   "app_born": "Geboren",
   "app_working": "Einen Moment…",
-  "app_unnamedPlay": "Hundeauslauf"
+  "app_unnamedPlay": "Hundeauslauf",
+  "app_askTitle": "KI-Assistent"
 }

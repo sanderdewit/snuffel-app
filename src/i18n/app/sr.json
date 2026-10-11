@@ -2,7 +2,7 @@
   "app_tab_find": "Traži",
   "app_tab_saved": "Sačuvano",
   "app_tab_dogs": "Moji psi",
-  "app_tab_ask": "Pitaj",
+  "app_tab_ask": "AI pomoć",
   "app_searchHere": "Pretraži ovu oblast",
   "app_nearMe": "U blizini",
   "app_locationNeeded": "Dozvoli pristup lokaciji da pronađeš najbližeg otvorenog veterinara ili unesi adresu.",
@@ -130,5 +130,6 @@
   "app_pdfGenerated": "Napravljeno u aplikaciji Snuffel {date}",
   "app_born": "Datum rođenja",
   "app_working": "Trenutak…",
-  "app_unnamedPlay": "Park za pse"
+  "app_unnamedPlay": "Park za pse",
+  "app_askTitle": "AI asistent"
 }

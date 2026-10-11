@@ -2,7 +2,7 @@
   "app_tab_find": "Hľadať",
   "app_tab_saved": "Uložené",
   "app_tab_dogs": "Moje psy",
-  "app_tab_ask": "Opýtať sa",
+  "app_tab_ask": "Pomoc AI",
   "app_searchHere": "Hľadať v tejto oblasti",
   "app_nearMe": "V mojom okolí",
   "app_locationNeeded": "Povoľte prístup k polohe, aby ste našli najbližšieho otvoreného veterinára, alebo zadajte adresu.",
@@ -134,5 +134,6 @@
   "app_pdfGenerated": "Vytvorené v aplikácii Snuffel {date}",
   "app_born": "Dátum narodenia",
   "app_working": "Moment…",
-  "app_unnamedPlay": "Výbeh pre psov"
+  "app_unnamedPlay": "Výbeh pre psov",
+  "app_askTitle": "AI asistent"
 }

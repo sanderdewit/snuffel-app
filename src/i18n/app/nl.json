@@ -2,7 +2,7 @@
   "app_tab_find": "Zoeken",
   "app_tab_saved": "Bewaard",
   "app_tab_dogs": "Mijn honden",
-  "app_tab_ask": "Vragen",
+  "app_tab_ask": "AI-hulp",
   "app_searchHere": "Zoek in dit gebied",
   "app_nearMe": "Bij mij in de buurt",
   "app_locationNeeded": "Geef toegang tot je locatie om de dichtstbijzijnde open dierenarts te vinden, of typ een adres.",
@@ -126,5 +126,6 @@
   "app_pdfGenerated": "Gemaakt met Snuffel op {date}",
   "app_born": "Geboren",
   "app_working": "Even geduld…",
-  "app_unnamedPlay": "Hondenspeelplek"
+  "app_unnamedPlay": "Hondenspeelplek",
+  "app_askTitle": "AI-assistent"
 }

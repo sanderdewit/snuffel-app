@@ -2,7 +2,7 @@
   "app_tab_find": "Cerca",
   "app_tab_saved": "Desats",
   "app_tab_dogs": "Els meus gossos",
-  "app_tab_ask": "Pregunta",
+  "app_tab_ask": "Ajuda IA",
   "app_searchHere": "Cerca en aquesta zona",
   "app_nearMe": "A prop meu",
   "app_locationNeeded": "Permet l'accés a la ubicació per trobar el veterinari obert més proper, o escriu una adreça.",
@@ -130,5 +130,6 @@
   "app_pdfGenerated": "Creat amb Snuffel el {date}",
   "app_born": "Naixement",
   "app_working": "Un moment…",
-  "app_unnamedPlay": "Zona per a gossos"
+  "app_unnamedPlay": "Zona per a gossos",
+  "app_askTitle": "Assistent IA"
 }

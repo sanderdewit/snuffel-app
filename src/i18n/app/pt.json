@@ -2,7 +2,7 @@
   "app_tab_find": "Pesquisar",
   "app_tab_saved": "Guardados",
   "app_tab_dogs": "Os meus cães",
-  "app_tab_ask": "Perguntar",
+  "app_tab_ask": "Ajuda IA",
   "app_searchHere": "Pesquisar nesta zona",
   "app_nearMe": "Perto de mim",
   "app_locationNeeded": "Permita o acesso à localização para encontrar o veterinário aberto mais próximo, ou escreva uma morada.",
@@ -130,5 +130,6 @@
   "app_pdfGenerated": "Criado com o Snuffel em {date}",
   "app_born": "Nascimento",
   "app_working": "Um momento…",
-  "app_unnamedPlay": "Parque para cães"
+  "app_unnamedPlay": "Parque para cães",
+  "app_askTitle": "Assistente IA"
 }

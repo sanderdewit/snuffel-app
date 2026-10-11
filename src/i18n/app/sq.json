@@ -2,7 +2,7 @@
   "app_tab_find": "Kërko",
   "app_tab_saved": "Të ruajtura",
   "app_tab_dogs": "Qentë e mi",
-  "app_tab_ask": "Pyet",
+  "app_tab_ask": "Ndihmë AI",
   "app_searchHere": "Kërko në këtë zonë",
   "app_nearMe": "Pranë meje",
   "app_locationNeeded": "Lejo aksesin te vendndodhja për të gjetur veterinerin më të afërt të hapur, ose shkruaj një adresë.",
@@ -126,5 +126,6 @@
   "app_pdfGenerated": "Krijuar me Snuffel më {date}",
   "app_born": "Datëlindja",
   "app_working": "Një moment…",
-  "app_unnamedPlay": "Park për qen"
+  "app_unnamedPlay": "Park për qen",
+  "app_askTitle": "Asistent AI"
 }

@@ -2,7 +2,7 @@
   "app_tab_find": "Find",
   "app_tab_saved": "Saved",
   "app_tab_dogs": "My dogs",
-  "app_tab_ask": "Ask",
+  "app_tab_ask": "AI help",
   "app_searchHere": "Search this area",
   "app_nearMe": "Near me",
   "app_locationNeeded": "Allow location access to find the nearest open vet, or type an address.",
@@ -126,5 +126,6 @@
   "app_pdfGenerated": "Made with Snuffel on {date}",
   "app_born": "Born",
   "app_working": "One moment…",
-  "app_unnamedPlay": "Dog area"
+  "app_unnamedPlay": "Dog area",
+  "app_askTitle": "AI assistant"
 }

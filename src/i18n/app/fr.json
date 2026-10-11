@@ -2,7 +2,7 @@
   "app_tab_find": "Chercher",
   "app_tab_saved": "Favoris",
   "app_tab_dogs": "Mes chiens",
-  "app_tab_ask": "Demander",
+  "app_tab_ask": "Aide IA",
   "app_searchHere": "Rechercher dans cette zone",
   "app_nearMe": "Près de moi",
   "app_locationNeeded": "Autorisez l'accès à votre position pour trouver le vétérinaire ouvert le plus proche, ou saisissez une adresse.",
@@ -130,5 +130,6 @@
   "app_pdfGenerated": "Créé avec Snuffel le {date}",
   "app_born": "Né(e) le",
   "app_working": "Un instant…",
-  "app_unnamedPlay": "Espace canin"
+  "app_unnamedPlay": "Espace canin",
+  "app_askTitle": "Assistant IA"
 }

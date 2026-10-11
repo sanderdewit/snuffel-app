@@ -2,7 +2,7 @@
   "app_tab_find": "Finn",
   "app_tab_saved": "Lagret",
   "app_tab_dogs": "Mine hunder",
-  "app_tab_ask": "Spør",
+  "app_tab_ask": "AI-hjelp",
   "app_searchHere": "Søk i dette området",
   "app_nearMe": "Nær meg",
   "app_locationNeeded": "Gi tilgang til posisjonen din for å finne nærmeste åpne veterinær, eller skriv inn en adresse.",
@@ -126,5 +126,6 @@
   "app_pdfGenerated": "Laget med Snuffel {date}",
   "app_born": "Født",
   "app_working": "Et øyeblikk…",
-  "app_unnamedPlay": "Hundeområde"
+  "app_unnamedPlay": "Hundeområde",
+  "app_askTitle": "AI-assistent"
 }

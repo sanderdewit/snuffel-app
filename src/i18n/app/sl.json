@@ -2,7 +2,7 @@
   "app_tab_find": "Išči",
   "app_tab_saved": "Shranjeno",
   "app_tab_dogs": "Moji psi",
-  "app_tab_ask": "Vprašaj",
+  "app_tab_ask": "Pomoč UI",
   "app_searchHere": "Išči na tem območju",
   "app_nearMe": "V bližini",
   "app_locationNeeded": "Dovolite dostop do lokacije, da najdete najbližjega odprtega veterinarja, ali vnesite naslov.",
@@ -134,5 +134,6 @@
   "app_pdfGenerated": "Ustvarjeno v aplikaciji Snuffel {date}",
   "app_born": "Datum rojstva",
   "app_working": "Trenutek…",
-  "app_unnamedPlay": "Pasji park"
+  "app_unnamedPlay": "Pasji park",
+  "app_askTitle": "Pomočnik UI"
 }

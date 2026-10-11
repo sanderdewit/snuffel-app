@@ -2,7 +2,7 @@
   "app_tab_find": "Buscar",
   "app_tab_saved": "Guardados",
   "app_tab_dogs": "Mis perros",
-  "app_tab_ask": "Preguntar",
+  "app_tab_ask": "Ayuda IA",
   "app_searchHere": "Buscar en esta zona",
   "app_nearMe": "Cerca de mí",
   "app_locationNeeded": "Permite el acceso a tu ubicación para encontrar el veterinario abierto más cercano, o escribe una dirección.",
@@ -130,5 +130,6 @@
   "app_pdfGenerated": "Creado con Snuffel el {date}",
   "app_born": "Nacimiento",
   "app_working": "Un momento…",
-  "app_unnamedPlay": "Zona para perros"
+  "app_unnamedPlay": "Zona para perros",
+  "app_askTitle": "Asistente IA"
 }

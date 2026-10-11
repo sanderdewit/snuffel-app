@@ -2,7 +2,7 @@
   "app_tab_find": "Αναζήτηση",
   "app_tab_saved": "Αποθηκευμένα",
   "app_tab_dogs": "Οι σκύλοι μου",
-  "app_tab_ask": "Ρωτήστε",
+  "app_tab_ask": "Βοήθεια AI",
   "app_searchHere": "Αναζήτηση σε αυτή την περιοχή",
   "app_nearMe": "Κοντά μου",
   "app_locationNeeded": "Επιτρέψτε την πρόσβαση στην τοποθεσία για να βρείτε τον πλησιέστερο ανοιχτό κτηνίατρο ή πληκτρολογήστε μια διεύθυνση.",
@@ -126,5 +126,6 @@
   "app_pdfGenerated": "Δημιουργήθηκε με το Snuffel στις {date}",
   "app_born": "Ημ. γέννησης",
   "app_working": "Μια στιγμή…",
-  "app_unnamedPlay": "Χώρος για σκύλους"
+  "app_unnamedPlay": "Χώρος για σκύλους",
+  "app_askTitle": "Βοηθός AI"
 }

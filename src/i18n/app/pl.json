@@ -2,7 +2,7 @@
   "app_tab_find": "Szukaj",
   "app_tab_saved": "Zapisane",
   "app_tab_dogs": "Moje psy",
-  "app_tab_ask": "Zapytaj",
+  "app_tab_ask": "Pomoc AI",
   "app_searchHere": "Szukaj w tym obszarze",
   "app_nearMe": "W pobliżu",
   "app_locationNeeded": "Zezwól na dostęp do lokalizacji, aby znaleźć najbliższego otwartego weterynarza, albo wpisz adres.",
@@ -134,5 +134,6 @@
   "app_pdfGenerated": "Utworzono w aplikacji Snuffel {date}",
   "app_born": "Data urodzenia",
   "app_working": "Chwileczkę…",
-  "app_unnamedPlay": "Wybieg dla psów"
+  "app_unnamedPlay": "Wybieg dla psów",
+  "app_askTitle": "Asystent AI"
 }

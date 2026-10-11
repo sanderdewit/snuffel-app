@@ -2,7 +2,7 @@
   "app_tab_find": "Hledat",
   "app_tab_saved": "Uložené",
   "app_tab_dogs": "Moji psi",
-  "app_tab_ask": "Zeptat se",
+  "app_tab_ask": "Pomoc AI",
   "app_searchHere": "Hledat v této oblasti",
   "app_nearMe": "V mém okolí",
   "app_locationNeeded": "Povolte přístup k poloze, abyste našli nejbližšího otevřeného veterináře, nebo zadejte adresu.",
@@ -134,5 +134,6 @@
   "app_pdfGenerated": "Vytvořeno v aplikaci Snuffel {date}",
   "app_born": "Datum narození",
   "app_working": "Moment…",
-  "app_unnamedPlay": "Psí výběh"
+  "app_unnamedPlay": "Psí výběh",
+  "app_askTitle": "AI asistent"
 }

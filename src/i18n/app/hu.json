@@ -2,7 +2,7 @@
   "app_tab_find": "Keresés",
   "app_tab_saved": "Mentett",
   "app_tab_dogs": "Kutyáim",
-  "app_tab_ask": "Kérdezz",
+  "app_tab_ask": "MI-segítség",
   "app_searchHere": "Keresés ezen a területen",
   "app_nearMe": "A közelemben",
   "app_locationNeeded": "Engedélyezd a helymeghatározást, hogy megtaláld a legközelebbi nyitva tartó állatorvost, vagy írj be egy címet.",
@@ -126,5 +126,6 @@
   "app_pdfGenerated": "Készült a Snuffellel: {date}",
   "app_born": "Születési dátum",
   "app_working": "Egy pillanat…",
-  "app_unnamedPlay": "Kutyafuttató"
+  "app_unnamedPlay": "Kutyafuttató",
+  "app_askTitle": "MI-asszisztens"
 }

@@ -2,7 +2,7 @@
   "app_tab_find": "Hitta",
   "app_tab_saved": "Sparade",
   "app_tab_dogs": "Mina hundar",
-  "app_tab_ask": "Fråga",
+  "app_tab_ask": "AI-hjälp",
   "app_searchHere": "Sök i det här området",
   "app_nearMe": "Nära mig",
   "app_locationNeeded": "Ge åtkomst till din plats för att hitta närmaste öppna veterinär, eller skriv in en adress.",
@@ -126,5 +126,6 @@
   "app_pdfGenerated": "Skapad med Snuffel den {date}",
   "app_born": "Född",
   "app_working": "Ett ögonblick…",
-  "app_unnamedPlay": "Hundrastgård"
+  "app_unnamedPlay": "Hundrastgård",
+  "app_askTitle": "AI-assistent"
 }

@@ -2,7 +2,7 @@
   "app_tab_find": "Пошук",
   "app_tab_saved": "Збережене",
   "app_tab_dogs": "Мої собаки",
-  "app_tab_ask": "Запитати",
+  "app_tab_ask": "Допомога ШІ",
   "app_searchHere": "Шукати в цьому районі",
   "app_nearMe": "Поруч зі мною",
   "app_locationNeeded": "Дозвольте доступ до геолокації, щоб знайти найближчу відчинену ветклініку, або введіть адресу.",
@@ -134,5 +134,6 @@
   "app_pdfGenerated": "Створено в Snuffel {date}",
   "app_born": "Дата народження",
   "app_working": "Хвилинку…",
-  "app_unnamedPlay": "Майданчик для собак"
+  "app_unnamedPlay": "Майданчик для собак",
+  "app_askTitle": "Помічник ШІ"
 }

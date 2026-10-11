@@ -2,7 +2,7 @@
   "app_tab_find": "Finna",
   "app_tab_saved": "Vistað",
   "app_tab_dogs": "Hundarnir mínir",
-  "app_tab_ask": "Spyrja",
+  "app_tab_ask": "Gervigreind",
   "app_searchHere": "Leita á þessu svæði",
   "app_nearMe": "Nálægt mér",
   "app_locationNeeded": "Leyfðu aðgang að staðsetningu til að finna næsta opna dýralækni, eða sláðu inn heimilisfang.",
@@ -126,5 +126,6 @@
   "app_pdfGenerated": "Búið til með Snuffel {date}",
   "app_born": "Fæðingardagur",
   "app_working": "Augnablik…",
-  "app_unnamedPlay": "Hundasvæði"
+  "app_unnamedPlay": "Hundasvæði",
+  "app_askTitle": "Gervigreindaraðstoð"
 }

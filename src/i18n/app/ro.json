@@ -2,7 +2,7 @@
   "app_tab_find": "Caută",
   "app_tab_saved": "Salvate",
   "app_tab_dogs": "Câinii mei",
-  "app_tab_ask": "Întreabă",
+  "app_tab_ask": "Ajutor AI",
   "app_searchHere": "Caută în această zonă",
   "app_nearMe": "Lângă mine",
   "app_locationNeeded": "Permite accesul la locație ca să găsești cel mai apropiat veterinar deschis sau introdu o adresă.",
@@ -130,5 +130,6 @@
   "app_pdfGenerated": "Creat cu Snuffel pe {date}",
   "app_born": "Data nașterii",
   "app_working": "O clipă…",
-  "app_unnamedPlay": "Parc pentru câini"
+  "app_unnamedPlay": "Parc pentru câini",
+  "app_askTitle": "Asistent AI"
 }

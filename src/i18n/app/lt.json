@@ -2,7 +2,7 @@
   "app_tab_find": "Paieška",
   "app_tab_saved": "Išsaugota",
   "app_tab_dogs": "Mano šunys",
-  "app_tab_ask": "Klausti",
+  "app_tab_ask": "DI pagalba",
   "app_searchHere": "Ieškoti šioje vietovėje",
   "app_nearMe": "Netoliese",
   "app_locationNeeded": "Leiskite naudoti jūsų vietą, kad rastume artimiausią dirbantį veterinarą, arba įveskite adresą.",
@@ -134,5 +134,6 @@
   "app_pdfGenerated": "Sukurta su Snuffel {date}",
   "app_born": "Gimimo data",
   "app_working": "Palaukite…",
-  "app_unnamedPlay": "Šunų aikštelė"
+  "app_unnamedPlay": "Šunų aikštelė",
+  "app_askTitle": "DI asistentas"
 }

@@ -2,7 +2,7 @@
   "app_tab_find": "Търси",
   "app_tab_saved": "Запазени",
   "app_tab_dogs": "Моите кучета",
-  "app_tab_ask": "Питай",
+  "app_tab_ask": "AI помощ",
   "app_searchHere": "Търси в този район",
   "app_nearMe": "Около мен",
   "app_locationNeeded": "Разрешете достъп до местоположението, за да намерите най-близкия отворен ветеринар, или въведете адрес.",
@@ -126,5 +126,6 @@
   "app_pdfGenerated": "Създадено със Snuffel на {date}",
   "app_born": "Дата на раждане",
   "app_working": "Момент…",
-  "app_unnamedPlay": "Площадка за кучета"
+  "app_unnamedPlay": "Площадка за кучета",
+  "app_askTitle": "AI асистент"
 }

@@ -2,7 +2,7 @@
   "app_tab_find": "Find",
   "app_tab_saved": "Gemt",
   "app_tab_dogs": "Mine hunde",
-  "app_tab_ask": "Spørg",
+  "app_tab_ask": "AI-hjælp",
   "app_searchHere": "Søg i dette område",
   "app_nearMe": "I nærheden",
   "app_locationNeeded": "Giv adgang til din placering for at finde den nærmeste åbne dyrlæge, eller skriv en adresse.",
@@ -126,5 +126,6 @@
   "app_pdfGenerated": "Lavet med Snuffel den {date}",
   "app_born": "Født",
   "app_working": "Et øjeblik…",
-  "app_unnamedPlay": "Hundeområde"
+  "app_unnamedPlay": "Hundeområde",
+  "app_askTitle": "AI-assistent"
 }

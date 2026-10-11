@@ -2,7 +2,7 @@
   "app_tab_find": "Otsi",
   "app_tab_saved": "Salvestatud",
   "app_tab_dogs": "Minu koerad",
-  "app_tab_ask": "Küsi",
+  "app_tab_ask": "AI-abi",
   "app_searchHere": "Otsi sellest piirkonnast",
   "app_nearMe": "Minu lähedal",
   "app_locationNeeded": "Luba asukoha kasutamine, et leida lähim avatud loomaarst, või sisesta aadress.",
@@ -126,5 +126,6 @@
   "app_pdfGenerated": "Koostatud Snuffeliga {date}",
   "app_born": "Sündinud",
   "app_working": "Hetk…",
-  "app_unnamedPlay": "Koerte jalutusala"
+  "app_unnamedPlay": "Koerte jalutusala",
+  "app_askTitle": "AI-assistent"
 }
