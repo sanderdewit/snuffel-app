@@ -2,7 +2,10 @@
 // Password-protected export round trip, and the summary sent to the AI.
 import assert from "node:assert";
 import { webcrypto } from "node:crypto";
-import { seal, unseal, WrongPasswordError } from "../src/lib/seal.ts";
+import { gcm } from "@noble/ciphers/aes.js";
+import { utf8ToBytes } from "@noble/ciphers/utils.js";
+import { scryptAsync } from "@noble/hashes/scrypt.js";
+import { b64, BadSealError, imageType, PasswordTooShortError, seal, SCRYPT, unseal, WrongPasswordError } from "../src/lib/seal.ts";
 import { summarise, SUMMARY_MAX, type DogRecord } from "../src/lib/dogsummary.ts";
 
 let passed = 0, failed = 0;
@@ -26,15 +29,44 @@ await test("encrypted export opens with the right password only", async () => {
 });
 
 await test("a tampered file is rejected", async () => {
-  const sealed = await seal("{}", "pw", random);
+  const sealed = await seal("{}", "pw-lang-genoeg", random);
   const bytes = Uint8Array.from(atob(sealed.data), (c) => c.charCodeAt(0));
   bytes[0] ^= 1;
-  await assert.rejects(unseal({ ...sealed, data: btoa(String.fromCharCode(...bytes)) }, "pw"), WrongPasswordError);
+  await assert.rejects(unseal({ ...sealed, data: btoa(String.fromCharCode(...bytes)) }, "pw-lang-genoeg"), WrongPasswordError);
+});
+
+await test("new exports use scrypt N=2^16, r=8, p=1", async () => {
+  const sealed = await seal("{}", "pw-lang-genoeg", random);
+  assert.deepStrictEqual([sealed.N, sealed.r, sealed.p], [2 ** 16, 8, 1]);
+  assert.deepStrictEqual(SCRYPT, { N: 2 ** 16, r: 8, p: 1 });
+});
+
+await test("an older export (N=2^14) still opens", async () => {
+  const salt = random(16), nonce = random(12), plain = JSON.stringify({ format: "snuffel-dog", dog: { name: "Oud" } });
+  const key = await scryptAsync(utf8ToBytes("oud wachtwoord"), salt, { N: 2 ** 14, r: 8, p: 1, dkLen: 32 });
+  const old = { format: "snuffel-dog-encrypted" as const, version: 1 as const, kdf: "scrypt" as const, N: 2 ** 14, r: 8, p: 1,
+    salt: b64.enc(salt), nonce: b64.enc(nonce), data: b64.enc(gcm(key, nonce).encrypt(utf8ToBytes(plain))) };
+  assert.strictEqual(await unseal(old, "oud wachtwoord"), plain);
 });
 
 await test("crafted work factors are refused", async () => {
-  const sealed = await seal("{}", "pw", random);
-  await assert.rejects(unseal({ ...sealed, N: 2 ** 24 }, "pw"), WrongPasswordError);
+  const sealed = await seal("{}", "pw-lang-genoeg", random);
+  for (const bad of [{ N: 2 ** 18 }, { r: 16 }, { p: 2 }, { N: 2 ** 24 }, { N: 2 ** 10 }, { N: "65536" as any }])
+    await assert.rejects(unseal({ ...sealed, ...bad }, "pw-lang-genoeg"), BadSealError, JSON.stringify(bad));
+});
+
+await test("short passwords are refused", async () => {
+  await assert.rejects(seal("{}", "123456789", random), PasswordTooShortError);
+  await assert.rejects(seal("{}", "", random), PasswordTooShortError);
+  await seal("{}", "1234567890", random);   // exactly 10 is fine
+});
+
+await test("imported photos: only real JPEG or PNG", () => {
+  assert.strictEqual(imageType(Uint8Array.from([0xff, 0xd8, 0xff, 0xe0, 0, 0x10])), "jpg");
+  assert.strictEqual(imageType(Uint8Array.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0])), "png");
+  assert.strictEqual(imageType(utf8ToBytes("<svg onload=alert(1)>")), null);
+  assert.strictEqual(imageType(utf8ToBytes("GIF89a......")), null);
+  assert.strictEqual(imageType(new Uint8Array(0)), null);
 });
 
 await test("summary: allergies, diagnoses, recent medication, weight trend, recent events", () => {

@@ -175,5 +175,6 @@
   "app_aiUses": "Con el perfil de {name}",
   "app_callMyVet": "Llamar a {name}",
   "app_newChatConfirm": "¿Eliminar esta conversación? No se puede deshacer.",
-  "app_retry": "Reintentar"
+  "app_retry": "Reintentar",
+  "app_passwordTooShort": "Usa una contraseña de al menos 10 caracteres."
 }

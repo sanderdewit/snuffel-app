@@ -19,13 +19,19 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # The input reaches scripts only through env, and is checked first.
+      - name: Check the inputs
+        env:
+          RUN_ID: ${{ inputs.screenshots_run }}
+        run: '[[ -z "$RUN_ID" || "$RUN_ID" =~ ^[0-9]+$ ]] || { echo "::error::screenshots_run must be a run ID (digits only)"; exit 1; }'
       - name: Screenshots from that run
-        if: github.event.inputs.screenshots_run != ''
+        if: inputs.screenshots_run != ''
         env:
           GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ inputs.screenshots_run }}
         run: |
-          gh run download "${{ github.event.inputs.screenshots_run }}" -n screenshots-ios -D /tmp/shots
+          gh run download "$RUN_ID" -n screenshots-ios -D /tmp/shots
           mkdir -p fastlane/screenshots/nl-NL fastlane/screenshots/en-GB
           cp /tmp/shots/nl/*.png fastlane/screenshots/nl-NL/ 2>/dev/null || true
           cp /tmp/shots/en/*.png fastlane/screenshots/en-GB/ 2>/dev/null || true
@@ -44,11 +50,14 @@ jobs:
           EOF
       - run: gem install fastlane --no-document
       - name: Upload texts and screenshots
+        env:
+          RUN_ID: ${{ inputs.screenshots_run }}
         run: |
+          if [ -n "$RUN_ID" ]; then SHOTS=true SKIP=false; else SHOTS=false SKIP=true; fi
           fastlane deliver --api_key_path "$RUNNER_TEMP/asc.json" --app_identifier app.snuffel \
             --skip_binary_upload --skip_app_version_update false --force --submit_for_review false \
-            --overwrite_screenshots ${{ github.event.inputs.screenshots_run != '' }} \
-            --skip_screenshots ${{ github.event.inputs.screenshots_run == '' }} \
+            --overwrite_screenshots "$SHOTS" \
+            --skip_screenshots "$SKIP" \
             --precheck_include_in_app_purchases false --run_precheck_before_submit false
       - name: Remove the key
         if: always()

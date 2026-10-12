@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 import { ActivityIndicator, Alert, FlatList, Image, Pressable, Text, TextInput, View } from "react-native";
 import * as DocumentPicker from "expo-document-picker";
 import { File } from "expo-file-system";
-import { importData, NeedsPasswordError } from "../../lib/dogfile";
+import { IMPORT_MAX_BYTES, importData, NeedsPasswordError } from "../../lib/dogfile";
 import { router, useFocusEffect } from "expo-router";
 import { useI18n } from "../../i18n";
 import { ageMonths, listDogs, listReminders, REMINDER_KINDS, today, type Dog, type Reminder } from "../../lib/dogs";
@@ -44,7 +44,13 @@ export default function Dogs() {
     const r = await DocumentPicker.getDocumentAsync({ type: ["application/json", "text/plain", "*/*"], copyToCacheDirectory: true });
     if (r.canceled || !r.assets[0]) return;
     let text = "";
-    try { text = await new File(r.assets[0].uri).text(); } catch { Alert.alert(t("app_importFailed")); return; }
+    try {
+      // Size first: a huge file is refused before it is read into memory.
+      const file = new File(r.assets[0].uri);
+      const size = r.assets[0].size ?? file.size;
+      if (!size || size > IMPORT_MAX_BYTES) { Alert.alert(t("app_importFailed")); return; }
+      text = await file.text();
+    } catch { Alert.alert(t("app_importFailed")); return; }
     await runImport(text, null);
   };
 

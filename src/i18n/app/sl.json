@@ -179,5 +179,6 @@
   "app_aiUses": "Uporablja se profil psa {name}",
   "app_callMyVet": "Pokličite {name}",
   "app_newChatConfirm": "Želite izbrisati ta pogovor? Tega ni mogoče razveljaviti.",
-  "app_retry": "Poskusite znova"
+  "app_retry": "Poskusite znova",
+  "app_passwordTooShort": "Uporabite geslo z vsaj 10 znaki."
 }

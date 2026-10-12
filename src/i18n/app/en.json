@@ -171,5 +171,6 @@
   "app_aiUses": "Using {name}'s profile",
   "app_callMyVet": "Call {name}",
   "app_newChatConfirm": "Delete this conversation? This can't be undone.",
-  "app_retry": "Try again"
+  "app_retry": "Try again",
+  "app_passwordTooShort": "Use a password of at least 10 characters."
 }

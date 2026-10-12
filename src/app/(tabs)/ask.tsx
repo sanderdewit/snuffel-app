@@ -73,7 +73,7 @@ export default function Ask() {
     setBusy(false);
     const reply: ChatMessage = "error" in r
       ? { role: "assistant", local: true, content: t(r.error === "rate_limited" ? "aiRateLimited" : r.error === "unavailable" ? "aiReply" : "aiError") }
-      : { role: "assistant", content: r.reply, urgency: r.urgency, topic: r.topic };
+      : { role: "assistant", content: r.reply, urgency: r.urgency, topic: r.topic, sig: r.sig };
     if (!reply.local) await addChat(askedFor, reply);
     if (currentDog.current !== askedFor) return;   // the user switched dogs meanwhile: it's in that dog's thread
     scrollTo.current = history.length;

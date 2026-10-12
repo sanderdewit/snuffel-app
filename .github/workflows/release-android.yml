@@ -1,11 +1,14 @@
 # Build the Android App Bundle, sign it with the Play upload key and upload it
 # to Google Play's internal test track (started by hand). Promoting a build to
 # closed / open testing or production stays a click in the Play Console.
+# This is the only workflow that signs: the job runs in the "release"
+# environment, which holds the secrets (ci.yml builds with the debug key).
 #
 # Secrets: ANDROID_UPLOAD_KEYSTORE_B64, ANDROID_UPLOAD_PASSWORD, ANDROID_UPLOAD_KEY_ALIAS
 #          PLAY_SERVICE_ACCOUNT_JSON (see store/GOOGLE_PLAY.md)
 # Google requires the very first upload to be done by hand in the Play Console:
-# use the .aab of any green "ci" run for that (version code 1).
+# use the .aab artifact of a run of this workflow for that (the Play step fails
+# until then).
 name: release-android
 
 on:
@@ -13,6 +16,8 @@ on:
     inputs:
       status:
         description: "Release status: draft (until the app is published once) or completed"
+        type: choice
+        options: [draft, completed]
         default: "draft"
 
 permissions:
@@ -25,18 +30,19 @@ concurrency:
 jobs:
   play:
     runs-on: ubuntu-latest
+    environment: release
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
           cache: npm
-      - uses: actions/setup-java@v5
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
         with:
           distribution: temurin
           java-version: 17
-      - uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
       - run: npm ci
       - name: Checks
         run: |
@@ -44,12 +50,13 @@ jobs:
           npx tsc --noEmit
           npm test
       - run: npx expo prebuild --platform android --no-install
-      - name: Version code = 100 + run number (1 is the first manual upload)
+      - name: Version code = 100 + run number
         run: sed -i -E "s/versionCode [0-9]+/versionCode $((100 + ${{ github.run_number }}))/" android/app/build.gradle && grep versionCode android/app/build.gradle
       - name: Upload key
         env:
           KEYSTORE_B64: ${{ secrets.ANDROID_UPLOAD_KEYSTORE_B64 }}
         run: |
+          [ -n "$KEYSTORE_B64" ] || { echo "::error::ANDROID_UPLOAD_KEYSTORE_B64 is missing in the release environment"; exit 1; }
           echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/upload.p12"
           echo "SNUFFEL_UPLOAD_STORE_FILE=$RUNNER_TEMP/upload.p12" >> "$GITHUB_ENV"
       - name: Build the App Bundle
@@ -61,17 +68,17 @@ jobs:
       - name: Remove the key file
         if: always()
         run: rm -f "$RUNNER_TEMP/upload.p12"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: snuffel-play-${{ github.run_number }}
+          path: android/app/build/outputs/bundle/release/app-release.aab
+          retention-days: 90
       - name: Upload to the internal test track
-        uses: r0adkll/upload-google-play@v1
+        uses: r0adkll/upload-google-play@e738b9dd8f2476ea806d921b64aacd24f34515a5 # v1.1.5
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
           packageName: app.snuffel
           releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
           track: internal
-          status: ${{ github.event.inputs.status }}
+          status: ${{ inputs.status }}
           whatsNewDirectory: fastlane/android-metadata/whatsnew
-      - uses: actions/upload-artifact@v7
-        with:
-          name: snuffel-play-${{ github.run_number }}
-          path: android/app/build/outputs/bundle/release/app-release.aab
-          retention-days: 90

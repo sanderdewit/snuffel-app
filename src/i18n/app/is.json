@@ -171,5 +171,6 @@
   "app_aiUses": "Notar prófíl {name}",
   "app_callMyVet": "Hringja í {name}",
   "app_newChatConfirm": "Eyða þessu samtali? Ekki er hægt að afturkalla það.",
-  "app_retry": "Reyna aftur"
+  "app_retry": "Reyna aftur",
+  "app_passwordTooShort": "Notaðu lykilorð með að minnsta kosti 10 stöfum."
 }

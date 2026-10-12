@@ -171,5 +171,6 @@
   "app_aiUses": "Bruker profilen til {name}",
   "app_callMyVet": "Ring {name}",
   "app_newChatConfirm": "Slette denne samtalen? Dette kan ikke angres.",
-  "app_retry": "Prøv igjen"
+  "app_retry": "Prøv igjen",
+  "app_passwordTooShort": "Bruk et passord på minst 10 tegn."
 }

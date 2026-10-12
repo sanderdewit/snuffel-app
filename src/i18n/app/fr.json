@@ -175,5 +175,6 @@
   "app_aiUses": "Avec le profil de {name}",
   "app_callMyVet": "Appeler {name}",
   "app_newChatConfirm": "Supprimer cette conversation ? Cette action est irréversible.",
-  "app_retry": "Réessayer"
+  "app_retry": "Réessayer",
+  "app_passwordTooShort": "Utilisez un mot de passe d'au moins 10 caractères."
 }

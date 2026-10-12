@@ -175,5 +175,6 @@
   "app_aiUses": "Izmanto {name} profilu",
   "app_callMyVet": "Zvanīt: {name}",
   "app_newChatConfirm": "Dzēst šo sarunu? To nevarēs atsaukt.",
-  "app_retry": "Mēģināt vēlreiz"
+  "app_retry": "Mēģināt vēlreiz",
+  "app_passwordTooShort": "Izmanto paroli ar vismaz 10 rakstzīmēm."
 }

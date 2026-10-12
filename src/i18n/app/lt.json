@@ -179,5 +179,6 @@
   "app_aiUses": "Naudojamas {name} profilis",
   "app_callMyVet": "Skambinti: {name}",
   "app_newChatConfirm": "Ištrinti šį pokalbį? To nebus galima atšaukti.",
-  "app_retry": "Bandyti dar kartą"
+  "app_retry": "Bandyti dar kartą",
+  "app_passwordTooShort": "Naudokite bent 10 simbolių slaptažodį."
 }

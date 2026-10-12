@@ -179,5 +179,6 @@
   "app_aiUses": "Používá se profil psa {name}",
   "app_callMyVet": "Zavolat {name}",
   "app_newChatConfirm": "Smazat tuto konverzaci? Tuto akci nelze vrátit.",
-  "app_retry": "Zkusit znovu"
+  "app_retry": "Zkusit znovu",
+  "app_passwordTooShort": "Použijte heslo o délce alespoň 10 znaků."
 }

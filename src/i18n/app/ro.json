@@ -175,5 +175,6 @@
   "app_aiUses": "Folosind profilul lui {name}",
   "app_callMyVet": "Sună la {name}",
   "app_newChatConfirm": "Ștergi această conversație? Acțiunea nu poate fi anulată.",
-  "app_retry": "Încearcă din nou"
+  "app_retry": "Încearcă din nou",
+  "app_passwordTooShort": "Folosiți o parolă de cel puțin 10 caractere."
 }

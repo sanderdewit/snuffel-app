@@ -10,9 +10,10 @@ import { File, Paths } from "expo-file-system";
 import { db, dbReady } from "./db";
 import { getDog, listReminders, saveDog, setReminder, validDate, type Dog, type ReminderKind } from "./dogs";
 import { RECORD_KINDS, summarise, type DogRecord, type RecordKind } from "./dogsummary";
-import { b64, seal, unseal, WrongPasswordError, type Sealed } from "./seal";
+import { acceptedParams, b64, imageType, seal, unseal, WrongPasswordError, type Sealed } from "./seal";
 
 export { RECORD_KINDS, summarise, type DogRecord, type RecordKind };
+export { IMPORT_MAX_BYTES, PASSWORD_MIN, PasswordTooShortError } from "./seal";
 
 const toRecord = (r: any): DogRecord => ({ id: r.id, dogId: r.dog_id, kind: r.kind, date: r.date, title: r.title, details: r.details, value: r.value });
 
@@ -88,7 +89,7 @@ function shareText(name: string, body: string | Uint8Array, mimeType: string, UT
   return Sharing.shareAsync(file.uri, { mimeType, UTI });
 }
 
-/** Data file for another phone; with a password it is encrypted. Opens the share sheet. */
+/** Data file for another phone; with a password (PASSWORD_MIN or more, else PasswordTooShortError) it is encrypted. Opens the share sheet. */
 export async function exportData(dogId: number, password: string | null): Promise<void> {
   const data = await buildExport(dogId);
   const plain = JSON.stringify(data);
@@ -104,6 +105,7 @@ export async function importData(text: string, password: string | null): Promise
   let parsed: any;
   try { parsed = JSON.parse(text); } catch { throw new BadFileError(); }
   if (parsed && parsed.format === "snuffel-dog-encrypted") {
+    if (!acceptedParams(parsed)) throw new BadFileError();   // before asking for a password
     if (!password) throw new NeedsPasswordError();
     try { parsed = JSON.parse(await unseal(parsed as Sealed, password)); }
     catch (e) { throw e instanceof WrongPasswordError ? new NeedsPasswordError() : new BadFileError(); }
@@ -112,7 +114,11 @@ export async function importData(text: string, password: string | null): Promise
   if (!d || d.format !== "snuffel-dog" || d.version !== 1 || !d.dog || typeof d.dog.name !== "string") throw new BadFileError();
   let photo: string | null = null;
   if (typeof d.dog.photoJpegBase64 === "string" && d.dog.photoJpegBase64.length < 8_000_000) {
-    try { const f = new File(Paths.document, `dog-${Date.now()}.jpg`); f.create(); f.write(b64.dec(d.dog.photoJpegBase64)); photo = f.uri; } catch { photo = null; }
+    // Only a real JPEG or PNG is kept; anything else is dropped, the rest of the dog still comes in.
+    try {
+      const bytes = b64.dec(d.dog.photoJpegBase64), type = imageType(bytes);
+      if (type) { const f = new File(Paths.document, `dog-${Date.now()}.${type}`); f.create(); f.write(bytes); photo = f.uri; }
+    } catch { photo = null; }
   }
   const str = (v: unknown, n: number) => (typeof v === "string" ? v.slice(0, n) : null);
   const num = (v: unknown, lo: number, hi: number) => (typeof v === "number" && v >= lo && v <= hi ? v : null);
@@ -141,7 +147,7 @@ export async function exportPdf(dogId: number, t: (k: string) => string, tf: (k:
   const records = await listRecords(dogId);
   const reminders = (await listReminders(dogId)).filter((r) => r.due);
   let photo = "";
-  if (dog.photo) { try { photo = `<img src="data:image/jpeg;base64,${await new File(dog.photo).base64()}" />`; } catch { /* no photo */ } }
+  if (dog.photo) { try { photo = `<img src="data:image/${dog.photo.endsWith(".png") ? "png" : "jpeg"};base64,${await new File(dog.photo).base64()}" />`; } catch { /* no photo */ } }
   const kindLabel = (k: RecordKind) => t(RECORD_KINDS.find((x) => x.kind === k)!.key);
   const facts = [
     dog.breed && [t("app_breed"), dog.breed], dog.birth && [t("app_born"), dog.birth],
@@ -157,9 +163,9 @@ export async function exportPdf(dogId: number, t: (k: string) => string, tf: (k:
   </style></head><body>
     <div class="head">${photo}<div><h1>${esc(tf("app_pdfTitle", { name: dog.name }))}</h1>
       ${facts.map(([k, v]) => `<div>${esc(k)}: <b>${esc(String(v))}</b></div>`).join("")}</div></div>
-    ${reminders.length ? `<h2>${esc(t("app_reminders"))}</h2><table>${reminders.map((r) => `<tr><td class="d">${r.due}</td><td>${esc(t("app_rem_" + r.kind))}</td></tr>`).join("")}</table>` : ""}
+    ${reminders.length ? `<h2>${esc(t("app_reminders"))}</h2><table>${reminders.map((r) => `<tr><td class="d">${esc(String(r.due))}</td><td>${esc(t("app_rem_" + r.kind))}</td></tr>`).join("")}</table>` : ""}
     <h2>${esc(t("app_dogFile"))}</h2>
-    ${records.length ? `<table>${records.map((r) => `<tr><td class="d">${r.date}</td><td class="k">${esc(kindLabel(r.kind))}</td><td><b>${esc(r.title)}</b>${r.value ? ` ${r.value} kg` : ""}${r.details ? `<br>${esc(r.details).replace(/\n/g, "<br>")}` : ""}</td></tr>`).join("")}</table>` : `<p class="muted">${esc(t("app_noEntries"))}</p>`}
+    ${records.length ? `<table>${records.map((r) => `<tr><td class="d">${esc(r.date)}</td><td class="k">${esc(kindLabel(r.kind))}</td><td><b>${esc(r.title)}</b>${r.value ? ` ${esc(String(r.value))} kg` : ""}${r.details ? `<br>${esc(r.details).replace(/\n/g, "<br>")}` : ""}</td></tr>`).join("")}</table>` : `<p class="muted">${esc(t("app_noEntries"))}</p>`}
     <p class="muted" style="margin-top:28px">${esc(tf("app_pdfGenerated", { date: new Date().toISOString().slice(0, 10) }))}</p>
   </body></html>`;
   const { uri } = await Print.printToFileAsync({ html });

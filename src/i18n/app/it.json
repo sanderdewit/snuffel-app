@@ -175,5 +175,6 @@
   "app_aiUses": "Con il profilo di {name}",
   "app_callMyVet": "Chiama {name}",
   "app_newChatConfirm": "Eliminare questa conversazione? L'azione non può essere annullata.",
-  "app_retry": "Riprova"
+  "app_retry": "Riprova",
+  "app_passwordTooShort": "Usa una password di almeno 10 caratteri."
 }

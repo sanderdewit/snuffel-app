@@ -171,5 +171,6 @@
   "app_aiUses": "Använder {name}s profil",
   "app_callMyVet": "Ring {name}",
   "app_newChatConfirm": "Radera den här konversationen? Det går inte att ångra.",
-  "app_retry": "Försök igen"
+  "app_retry": "Försök igen",
+  "app_passwordTooShort": "Använd ett lösenord på minst 10 tecken."
 }

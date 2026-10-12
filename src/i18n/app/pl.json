@@ -179,5 +179,6 @@
   "app_aiUses": "Na podstawie profilu: {name}",
   "app_callMyVet": "Zadzwoń: {name}",
   "app_newChatConfirm": "Usunąć tę rozmowę? Tej operacji nie można cofnąć.",
-  "app_retry": "Spróbuj ponownie"
+  "app_retry": "Spróbuj ponownie",
+  "app_passwordTooShort": "Użyj hasła o długości co najmniej 10 znaków."
 }

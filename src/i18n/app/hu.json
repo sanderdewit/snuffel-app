@@ -171,5 +171,6 @@
   "app_aiUses": "{name} profilja alapján",
   "app_callMyVet": "{name} hívása",
   "app_newChatConfirm": "Törlöd ezt a beszélgetést? Ez nem vonható vissza.",
-  "app_retry": "Újra"
+  "app_retry": "Újra",
+  "app_passwordTooShort": "Használj legalább 10 karakterből álló jelszót."
 }

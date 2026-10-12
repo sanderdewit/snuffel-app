@@ -16,14 +16,20 @@ on:
 permissions:
   contents: read
 
+# The inputs reach scripts only through env, and are checked first.
+env:
+  LANGUAGES: ${{ inputs.languages }}
+
 jobs:
   ios:
-    if: contains(github.event.inputs.platforms, 'ios')
+    if: contains(inputs.platforms, 'ios')
     runs-on: macos-latest
     timeout-minutes: 120
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - name: Check the inputs
+        run: '[[ "$LANGUAGES" =~ ^[a-z\ ]+$ ]] || { echo "::error::languages: lowercase codes separated by spaces"; exit 1; }'
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
           cache: npm
@@ -37,28 +43,30 @@ jobs:
             -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath build CODE_SIGNING_ALLOWED=NO | tail -n 20
       - name: Take the screenshots
-        run: bash tools/screenshots.sh ios/build/Build/Products/Release-iphonesimulator/Snuffel.app screenshots ${{ github.event.inputs.languages }}
-      - uses: actions/upload-artifact@v7
+        run: bash tools/screenshots.sh ios/build/Build/Products/Release-iphonesimulator/Snuffel.app screenshots $LANGUAGES
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: screenshots-ios
           path: screenshots
           retention-days: 90
 
   android:
-    if: contains(github.event.inputs.platforms, 'android')
+    if: contains(inputs.platforms, 'android')
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - name: Check the inputs
+        run: '[[ "$LANGUAGES" =~ ^[a-z\ ]+$ ]] || { echo "::error::languages: lowercase codes separated by spaces"; exit 1; }'
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
           cache: npm
-      - uses: actions/setup-java@v5
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
         with:
           distribution: temurin
           java-version: 17
-      - uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
       - run: npm ci
       - run: npx expo prebuild --platform android --no-install
       - name: Screenshot build (sample data; never published)
@@ -71,7 +79,7 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
       - name: Take the screenshots (16:9 phone, Amsterdam)
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
         with:
           api-level: 34
           target: google_apis
@@ -79,8 +87,8 @@ jobs:
           profile: pixel_2
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
-          script: bash tools/screenshots-android.sh android/app/build/outputs/apk/release/app-release.apk screenshots-android ${{ github.event.inputs.languages }}
-      - uses: actions/upload-artifact@v7
+          script: bash tools/screenshots-android.sh android/app/build/outputs/apk/release/app-release.apk screenshots-android $LANGUAGES
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: screenshots-android
           path: screenshots-android

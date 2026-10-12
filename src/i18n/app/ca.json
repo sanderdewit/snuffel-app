@@ -175,5 +175,6 @@
   "app_aiUses": "Amb el perfil de {name}",
   "app_callMyVet": "Truca a {name}",
   "app_newChatConfirm": "Vols suprimir aquesta conversa? No es pot desfer.",
-  "app_retry": "Torna-ho a provar"
+  "app_retry": "Torna-ho a provar",
+  "app_passwordTooShort": "Fes servir una contrasenya d'almenys 10 caràcters."
 }

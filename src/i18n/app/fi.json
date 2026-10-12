@@ -171,5 +171,6 @@
   "app_aiUses": "Käytössä koiran {name} profiili",
   "app_callMyVet": "Soita: {name}",
   "app_newChatConfirm": "Poistetaanko tämä keskustelu? Toimintoa ei voi perua.",
-  "app_retry": "Yritä uudelleen"
+  "app_retry": "Yritä uudelleen",
+  "app_passwordTooShort": "Käytä vähintään 10 merkin salasanaa."
 }

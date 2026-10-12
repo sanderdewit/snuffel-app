@@ -171,5 +171,6 @@
   "app_aiUses": "Mit dem Profil von {name}",
   "app_callMyVet": "{name} anrufen",
   "app_newChatConfirm": "Diese Unterhaltung löschen? Das kann nicht rückgängig gemacht werden.",
-  "app_retry": "Erneut versuchen"
+  "app_retry": "Erneut versuchen",
+  "app_passwordTooShort": "Verwende ein Passwort mit mindestens 10 Zeichen."
 }

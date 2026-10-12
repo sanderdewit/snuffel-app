@@ -171,5 +171,6 @@
   "app_aiUses": "Duke përdorur profilin e {name}",
   "app_callMyVet": "Telefono {name}",
   "app_newChatConfirm": "Ta fshish këtë bisedë? Ky veprim nuk mund të zhbëhet.",
-  "app_retry": "Provo përsëri"
+  "app_retry": "Provo përsëri",
+  "app_passwordTooShort": "Përdor një fjalëkalim me të paktën 10 karaktere."
 }

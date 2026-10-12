@@ -175,5 +175,6 @@
   "app_aiUses": "Koristi se profil psa {name}",
   "app_callMyVet": "Pozovi {name}",
   "app_newChatConfirm": "Obrisati ovaj razgovor? Ovo ne može da se opozove.",
-  "app_retry": "Pokušaj ponovo"
+  "app_retry": "Pokušaj ponovo",
+  "app_passwordTooShort": "Koristi lozinku od najmanje 10 znakova."
 }

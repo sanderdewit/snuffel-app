@@ -5,7 +5,7 @@ import { Stack, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useI18n } from "../../../i18n";
 import { getDog, today, validDate, type Dog } from "../../../lib/dogs";
 import {
-  addRecord, deleteRecord, exportData, exportPdf, listRecords, RECORD_KINDS, setShareFileWithAi, shareFileWithAi,
+  addRecord, deleteRecord, exportData, exportPdf, listRecords, PASSWORD_MIN, PasswordTooShortError, RECORD_KINDS, setShareFileWithAi, shareFileWithAi,
   type DogRecord, type RecordKind
 } from "../../../lib/dogfile";
 import { Toggle } from "../../../ui/Toggle";
@@ -56,10 +56,11 @@ export default function DogFile() {
   ]);
 
   const doExport = async () => {
+    if (pw && pw.length < PASSWORD_MIN) { Alert.alert(t("app_passwordTooShort")); return; }
     if (pw && pw !== pw2) { Alert.alert(t("app_passwordMismatch")); return; }
     setBusy(true);
     try { await exportData(dogId, pw || null); setExporting(false); setPw(""); setPw2(""); }
-    catch { Alert.alert(t("app_errLoad")); }
+    catch (e) { Alert.alert(t(e instanceof PasswordTooShortError ? "app_passwordTooShort" : "app_errLoad")); }
     finally { setBusy(false); }
   };
   const doPdf = async () => {

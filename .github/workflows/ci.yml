@@ -1,6 +1,8 @@
 # Every push and pull request: checks, then real native builds on both platforms.
 #   check    shared core matches snuffel-data, types, tests, expo-doctor, JS bundles
-#   android  release APK + AAB, signed with the Play upload key (GitHub secrets)
+#   android  release APK + AAB, signed with the debug key: CI never sees the
+#            Play upload key (only release-android.yml signs, in the "release"
+#            environment). The APK is kept as an artifact for testing.
 #   ios      simulator build (proves it compiles; store signing needs an Apple
 #            developer account, which is added later)
 # The repository is public, so these runners (macOS included) cost nothing.
@@ -23,8 +25,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
           cache: npm
@@ -45,44 +47,29 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
           cache: npm
-      - uses: actions/setup-java@v5
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
         with:
           distribution: temurin
           java-version: 17
-      - uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
       - run: npm ci
       - name: Generate the native project
         run: npx expo prebuild --platform android --no-install
-      - name: Upload key (from secrets, only on this repository)
-        if: github.event_name != 'pull_request'
-        env:
-          KEYSTORE_B64: ${{ secrets.ANDROID_UPLOAD_KEYSTORE_B64 }}
-        run: |
-          if [ -n "$KEYSTORE_B64" ]; then
-            echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/upload.p12"
-            echo "SNUFFEL_UPLOAD_STORE_FILE=$RUNNER_TEMP/upload.p12" >> "$GITHUB_ENV"
-          fi
-      - name: Build release APK and AAB
-        env:
-          SNUFFEL_UPLOAD_STORE_PASSWORD: ${{ secrets.ANDROID_UPLOAD_PASSWORD }}
-          SNUFFEL_UPLOAD_KEY_ALIAS: ${{ secrets.ANDROID_UPLOAD_KEY_ALIAS }}
+      - name: Build release APK and AAB (debug key)
         working-directory: android
-        # Phones only (ARM); x86 builds are for emulators and double the size.
+        # Without SNUFFEL_UPLOAD_* the release build type signs with the debug
+        # key (plugins/withReleaseSigning.js). Phones only (ARM); x86 builds are
+        # for emulators and double the size.
         run: ./gradlew --no-daemon assembleRelease bundleRelease -PreactNativeArchitectures=arm64-v8a,armeabi-v7a
-      - name: Remove the key file
-        if: always()
-        run: rm -f "$RUNNER_TEMP/upload.p12"
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: snuffel-android-${{ github.run_number }}
-          path: |
-            android/app/build/outputs/apk/release/*.apk
-            android/app/build/outputs/bundle/release/*.aab
+          name: snuffel-android-debugsigned-${{ github.run_number }}
+          path: android/app/build/outputs/apk/release/*.apk
           retention-days: 30
 
   ios:
@@ -90,8 +77,8 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 90
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
           cache: npm
@@ -107,7 +94,7 @@ jobs:
             -derivedDataPath build CODE_SIGNING_ALLOWED=NO | tail -n 40
       - name: Package the simulator app
         run: cd ios/build/Build/Products/Release-iphonesimulator && zip -qr "$GITHUB_WORKSPACE/Snuffel-simulator.zip" Snuffel.app
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: snuffel-ios-simulator-${{ github.run_number }}
           path: Snuffel-simulator.zip

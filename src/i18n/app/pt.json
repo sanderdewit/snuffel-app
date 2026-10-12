@@ -175,5 +175,6 @@
   "app_aiUses": "A usar o perfil de {name}",
   "app_callMyVet": "Ligar para {name}",
   "app_newChatConfirm": "Eliminar esta conversa? Esta ação não pode ser anulada.",
-  "app_retry": "Tentar novamente"
+  "app_retry": "Tentar novamente",
+  "app_passwordTooShort": "Utilize uma palavra-passe com pelo menos 10 caracteres."
 }
