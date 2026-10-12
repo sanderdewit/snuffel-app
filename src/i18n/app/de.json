@@ -163,5 +163,13 @@
   "app_aiStarter3": "Mein Hund hat etwas gefressen, das er nicht darf. Was nun?",
   "app_aiStarter4": "Wie bekomme ich meinen Welpen stubenrein?",
   "app_aiStarter5": "Mein Hund zieht an der Leine. Was kann ich tun?",
-  "app_aiStarter6": "Wie oft sollte ich meinen Hund entwurmen?"
+  "app_aiStarter6": "Wie oft sollte ich meinen Hund entwurmen?",
+  "app_aiIsAI": "Du chattest mit einem KI-Assistenten, nicht mit einem Tierarzt.",
+  "app_aiEmergencyLine": "Ist es gerade wirklich ernst?",
+  "app_aiAddDog": "Füge deinen Hund hinzu für passende Ratschläge",
+  "app_aiTryAsking": "Du könntest zum Beispiel fragen:",
+  "app_aiUses": "Mit dem Profil von {name}",
+  "app_callMyVet": "{name} anrufen",
+  "app_newChatConfirm": "Diese Unterhaltung löschen? Das kann nicht rückgängig gemacht werden.",
+  "app_retry": "Erneut versuchen"
 }

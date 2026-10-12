@@ -9,7 +9,8 @@ import { aiSummary } from "./dogfile";
 
 export type Urgency = "emergency" | "vet_soon" | "monitor" | "unclear";
 export type Topic = "health" | "behaviour" | "other";
-export interface ChatMessage { id?: number; role: "user" | "assistant"; content: string; urgency?: Urgency; topic?: Topic }
+// local: shown on screen only (an error message); never stored, never sent to the model.
+export interface ChatMessage { id?: number; role: "user" | "assistant"; content: string; urgency?: Urgency; topic?: Topic; local?: boolean }
 export type AskResult = { reply: string; urgency: Urgency; topic: Topic } | { error: "rate_limited" | "unavailable" | "failed" };
 
 async function installId(): Promise<string> {
@@ -18,7 +19,8 @@ async function installId(): Promise<string> {
   return id;
 }
 
-export async function ask(history: ChatMessage[], lang: string, emergencyLabel: string, dog: Dog | null): Promise<AskResult> {
+export async function ask(all: ChatMessage[], lang: string, emergencyLabel: string, dog: Dog | null): Promise<AskResult> {
+  const history = all.filter((m) => !m.local);
   const body: Record<string, unknown> = {
     lang, emergencyLabel,
     // The last 12 turns, but always the first question: it usually describes the problem.

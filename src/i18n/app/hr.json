@@ -167,5 +167,13 @@
   "app_aiStarter3": "Moj pas je pojeo nešto što ne smije. Što sad?",
   "app_aiStarter4": "Kako naučiti štene da obavlja nuždu vani?",
   "app_aiStarter5": "Moj pas vuče na povodcu. Što mogu učiniti?",
-  "app_aiStarter6": "Koliko često trebam dehelmintizirati psa?"
+  "app_aiStarter6": "Koliko često trebam dehelmintizirati psa?",
+  "app_aiIsAI": "Razgovaraš s AI asistentom, ne s veterinarom.",
+  "app_aiEmergencyLine": "Je li stvarno nešto ozbiljno upravo sada?",
+  "app_aiAddDog": "Dodaj svog psa za savjete po mjeri",
+  "app_aiTryAsking": "Možeš pitati, na primjer:",
+  "app_aiUses": "Koristi se profil psa {name}",
+  "app_callMyVet": "Nazovi {name}",
+  "app_newChatConfirm": "Izbrisati ovaj razgovor? To se ne može poništiti.",
+  "app_retry": "Pokušaj ponovno"
 }

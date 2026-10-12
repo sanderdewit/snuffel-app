@@ -163,5 +163,13 @@
   "app_aiStarter3": "A kutyám megevett valamit, amit nem szabad. Most mi legyen?",
   "app_aiStarter4": "Hogyan szoktassam szobatisztaságra a kölyköm?",
   "app_aiStarter5": "A kutyám húzza a pórázt. Mit tehetek?",
-  "app_aiStarter6": "Milyen gyakran kell féregteleníteni a kutyámat?"
+  "app_aiStarter6": "Milyen gyakran kell féregteleníteni a kutyámat?",
+  "app_aiIsAI": "Egy MI-asszisztenssel csevegsz, nem állatorvossal.",
+  "app_aiEmergencyLine": "Tényleg nagy most a baj?",
+  "app_aiAddDog": "Add hozzá a kutyádat a rá szabott tanácsokért",
+  "app_aiTryAsking": "Kérdezheted például:",
+  "app_aiUses": "{name} profilja alapján",
+  "app_callMyVet": "{name} hívása",
+  "app_newChatConfirm": "Törlöd ezt a beszélgetést? Ez nem vonható vissza.",
+  "app_retry": "Újra"
 }

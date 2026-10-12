@@ -1,16 +1,30 @@
-// AI vet & behaviour help. With a dog chosen, its profile goes along so the
-// advice fits that dog. Each dog has its own conversation, kept on the phone.
+// AI help with health and behaviour. With a dog chosen, its profile (and, if
+// the owner allows it, a summary of its file) goes along so the advice fits
+// that dog. Each dog has its own conversation, kept on the phone.
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ActivityIndicator, FlatList, KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Alert, FlatList, KeyboardAvoidingView, Linking, Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
-import { kvGet, kvSet } from "../../lib/db";
 import { useI18n } from "../../i18n";
 import { addChat, ask, clearChat, loadChat, type ChatMessage } from "../../lib/ai";
-import { listDogs, today, type Dog } from "../../lib/dogs";
-import { addRecord } from "../../lib/dogfile";
+import { kvGet, kvSet } from "../../lib/db";
+import { ageMonths, listDogs, today, type Dog } from "../../lib/dogs";
+import { addRecord, setShareFileWithAi, shareFileWithAi } from "../../lib/dogfile";
+import { myVet, type SavedPlace } from "../../lib/saved";
 import { speak, startListening, stopListening, stopSpeaking } from "../../lib/voice";
 import { useSpeechRecognitionEvent } from "expo-speech-recognition";
+import { callUrl } from "../../ui/PlaceCard";
+import { Toggle } from "../../ui/Toggle";
 import { C, S } from "../../ui/theme";
+
+const MONITOR = "#1d4ed8";   // "keep an eye on it": not green, which reads as "all fine"
+
+// Example questions for an empty conversation; a puppy gets house-training first.
+function starters(dog: Dog | null): string[] {
+  const months = dog ? ageMonths(dog.birth) : null;
+  return months != null && months < 12
+    ? ["app_aiStarter4", "app_aiStarter1", "app_aiStarter3", "app_aiStarter5"]
+    : ["app_aiStarter1", "app_aiStarter3", "app_aiStarter2", "app_aiStarter5"];
+}
 
 export default function Ask() {
   const { t, tf, lang } = useI18n();
@@ -19,12 +33,17 @@ export default function Ask() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
+  const [vet, setVet] = useState<SavedPlace | null>(null);
+  const [shareFile, setShareFile] = useState(true);
   const list = useRef<FlatList<ChatMessage>>(null);
+  const currentDog = useRef<number | null>(null);    // for answers that arrive after a dog switch
+  const scrollTo = useRef<number | null>(null);      // index of a new answer: show its start
 
   // ?q= fills in a question (not sent), ?dog= picks the dog: from the walkthrough.
   const params = useLocalSearchParams<{ q?: string; dog?: string }>();
   const appliedDogParam = useRef<string | undefined>(undefined);   // tab params stick: apply once
   useFocusEffect(useCallback(() => {
+    myVet().then(setVet).catch(() => undefined);
     Promise.all([listDogs(), kvGet("askDog")]).then(([d, last]) => {
       setDogs(d);
       const fromLink = params.dog && params.dog !== appliedDogParam.current ? Number(params.dog) : null;
@@ -38,36 +57,49 @@ export default function Ask() {
   }, [params.dog]));
   useEffect(() => { if (params.q) setText(String(params.q).slice(0, 1000)); }, [params.q]);
   useEffect(() => {
+    currentDog.current = dogId;
     loadChat(dogId).then(setMessages).catch(() => setMessages([]));
     kvSet("askDog", dogId == null ? null : String(dogId)).catch(() => undefined);
+    if (dogId != null) shareFileWithAi(dogId).then(setShareFile).catch(() => undefined);
   }, [dogId]);
 
+  const dog = dogs.find((d) => d.id === dogId) || null;
+
+  // Sends the conversation. Error bubbles are local: never sent, never stored.
+  const run = async (history: ChatMessage[], spoken: boolean) => {
+    const askedFor = dogId;
+    setBusy(true);
+    const r = await ask(history.filter((m) => !m.local), lang, t("emergencyBtn"), dog);
+    setBusy(false);
+    const reply: ChatMessage = "error" in r
+      ? { role: "assistant", local: true, content: t(r.error === "rate_limited" ? "aiRateLimited" : r.error === "unavailable" ? "aiReply" : "aiError") }
+      : { role: "assistant", content: r.reply, urgency: r.urgency, topic: r.topic };
+    if (!reply.local) await addChat(askedFor, reply);
+    if (currentDog.current !== askedFor) return;   // the user switched dogs meanwhile: it's in that dog's thread
+    scrollTo.current = history.length;
+    setMessages(history.concat(reply));
+    // Asked by voice: answer by voice too (hands busy with the dog).
+    if (spoken && !reply.local) { setSpeaking(history.length); speak(reply.content, lang, () => setSpeaking(null)); }
+  };
   const send = async (spoken?: string) => {
     const content = (spoken ?? text).trim().slice(0, 1000);
     if (!content || busy) return;
     const user: ChatMessage = { role: "user", content };
-    const history = messages.concat(user);
-    setMessages(history); setText(""); setBusy(true);
+    const history = messages.filter((m) => !m.local).concat(user);
+    setMessages(history); setText("");
     await addChat(dogId, user);
-    const r = await ask(history, lang, t("emergencyBtn"), dogs.find((d) => d.id === dogId) || null);
-    const reply: ChatMessage = "error" in r
-      ? { role: "assistant", content: t(r.error === "rate_limited" ? "aiRateLimited" : r.error === "unavailable" ? "aiReply" : "aiError") }
-      : { role: "assistant", content: r.reply, urgency: r.urgency, topic: r.topic };
-    if (!("error" in r)) await addChat(dogId, reply);
-    setMessages((m) => m.concat(reply));
-    setBusy(false);
-    // Asked by voice: answer by voice too (hands busy with the dog).
-    if (spoken != null) { setSpeaking(messages.length + 1); speak(reply.content, lang, () => setSpeaking(null)); }
+    await run(history, spoken != null);
   };
+  // The last question got no answer (an error, or the app was closed): ask again.
+  const lastUnanswered = !busy && messages.length > 0 && (messages[messages.length - 1].role === "user" || !!messages[messages.length - 1].local);
+  const retry = () => run(messages.filter((m) => !m.local), false);
 
   // ---- voice ----
   const [listening, setListening] = useState(false);
   const [speaking, setSpeaking] = useState<number | null>(null);   // index of the message being read
   const [voiceNote, setVoiceNote] = useState<string | null>(null);
-  const heard = useRef("");
   useSpeechRecognitionEvent("result", (e) => {
     const said = e.results[0]?.transcript || "";
-    heard.current = said;
     setText(said);
     if (e.isFinal && said.trim()) { setListening(false); send(said); }
   });
@@ -82,7 +114,7 @@ export default function Ask() {
     stopSpeaking(); setSpeaking(null);
     const problem = await startListening(lang);
     if (problem) setVoiceNote(t(problem === "denied" ? "app_voiceDenied" : "app_voiceUnavailable"));
-    else { heard.current = ""; setText(""); setListening(true); }
+    else { setText(""); setListening(true); }
   };
   const toggleRead = (i: number, content: string) => {
     if (speaking === i) { stopSpeaking(); setSpeaking(null); return; }
@@ -92,85 +124,146 @@ export default function Ask() {
   useFocusEffect(useCallback(() => () => { stopSpeaking(); stopListening(); }, []));
 
   // "Save to the dog's file": the question as title, the answer as details.
-  const dog = dogs.find((d) => d.id === dogId) || null;
-  const [filed, setFiled] = useState<Set<number>>(new Set());
-  useEffect(() => setFiled(new Set()), [dogId]);
-  const saveToFile = async (i: number) => {
+  // Keyed by message id, so a remount or dog switch can't save it twice.
+  const [filed, setFiled] = useState<Set<string>>(new Set());
+  const fileKey = (m: ChatMessage, i: number) => String(m.id ?? `${dogId}:${i}:${m.content.length}`);
+  const saveToFile = async (m: ChatMessage, i: number) => {
     if (!dog) return;
-    const question = messages.slice(0, i).reverse().find((m) => m.role === "user");
-    await addRecord({ dogId: dog.id, kind: "ai", date: today(), title: (question ? question.content : t("app_rec_ai")).slice(0, 200), details: messages[i].content, value: null });
-    setFiled((s) => new Set(s).add(i));
+    const question = messages.slice(0, i).reverse().find((x) => x.role === "user");
+    await addRecord({ dogId: dog.id, kind: "ai", date: today(), title: (question ? question.content : t("app_rec_ai")).slice(0, 200), details: m.content, value: null });
+    setFiled((s) => new Set(s).add(fileKey(m, i)));
   };
 
-  const cta = (m: ChatMessage) => {
-    if (m.urgency === "emergency") return { label: t("aiCtaEmergency"), go: () => router.push("/emergency") };
-    if (m.urgency === "vet_soon" || m.urgency === "monitor") {
-      return m.topic === "behaviour"
-        ? { label: t("aiCtaTrainers"), go: () => router.push({ pathname: "/", params: { cat: "training" } }) }
-        : m.urgency === "vet_soon" ? { label: t("aiCtaVets"), go: () => router.push({ pathname: "/", params: { cat: "vet" } }) } : null;
+  const newChat = () => Alert.alert(t("app_newChatConfirm"), undefined, [
+    { text: t("app_cancel"), style: "cancel" },
+    { text: t("app_newChat"), style: "destructive", onPress: async () => { await clearChat(dogId); setMessages([]); } }
+  ]);
+
+  // What to do next: call your own vet first, then find one / a trainer.
+  const actions = (m: ChatMessage) => {
+    const out: { label: string; go: () => void; danger?: boolean }[] = [];
+    const health = m.topic !== "behaviour";
+    if (health && (m.urgency === "emergency" || m.urgency === "vet_soon") && vet?.phone) {
+      out.push({ label: "📞 " + tf("app_callMyVet", { name: vet.name || t("app_myVet") }), go: () => Linking.openURL(callUrl(vet.phone!)), danger: m.urgency === "emergency" });
     }
-    return null;
+    if (m.urgency === "emergency") out.push({ label: t("aiCtaEmergency"), go: () => router.push("/emergency"), danger: !vet?.phone });
+    else if (m.urgency === "vet_soon" || m.urgency === "monitor") {
+      if (m.topic === "behaviour") out.push({ label: t("aiCtaTrainers"), go: () => router.push({ pathname: "/", params: { cat: "training" } }) });
+      else if (m.urgency === "vet_soon" && !vet) out.push({ label: t("aiCtaVets"), go: () => router.push({ pathname: "/", params: { cat: "vet" } }) });
+    }
+    return out;
   };
+
+  const intro = (
+    <View style={{ gap: 10, marginBottom: 8 }}>
+      <View style={[S.card, { gap: 6 }]}>
+        <Text style={S.body}>{t("aiIntro")}</Text>
+        <Text style={[S.muted, { fontWeight: "600" }]}>🤖 {t("app_aiIsAI")}</Text>
+      </View>
+      <Pressable onPress={() => router.push("/emergency")} accessibilityRole="button"
+        style={[S.card, S.row, { gap: 8, backgroundColor: "#fef2f2", borderColor: "#fecaca" }]}>
+        <Text style={[S.body, { flex: 1, color: "#7f1d1d" }]}>🚨 {t("app_aiEmergencyLine")}</Text>
+        <Text style={{ color: C.danger, fontWeight: "700" }}>{t("emergencyBtn")} ›</Text>
+      </Pressable>
+      {dogs.length === 0 && (
+        <Pressable onPress={() => router.push({ pathname: "/dog/[id]", params: { id: "new" } })} accessibilityRole="button" style={[S.card, S.row, { gap: 8 }]}>
+          <Text style={{ fontSize: 22 }}>🐶</Text>
+          <Text style={[S.body, { flex: 1 }]}>{t("app_aiAddDog")}</Text>
+          <Text style={{ color: C.muted, fontSize: 20 }}>›</Text>
+        </Pressable>
+      )}
+      {messages.length === 0 && (
+        <View style={{ gap: 8 }}>
+          <Text style={S.muted}>{t("app_aiTryAsking")}</Text>
+          {starters(dog).map((k) => (
+            <Pressable key={k} onPress={() => setText(t(k))} accessibilityRole="button" style={[S.card, S.row, { gap: 8, paddingVertical: 10 }]}>
+              <Text>💬</Text>
+              <Text style={[S.body, { flex: 1 }]}>{t(k)}</Text>
+            </Pressable>
+          ))}
+        </View>
+      )}
+    </View>
+  );
 
   return (
     <KeyboardAvoidingView style={S.screen} behavior={Platform.OS === "ios" ? "padding" : undefined} keyboardVerticalOffset={90}>
       {dogs.length > 0 && (
-        <ScrollView horizontal style={{ flexGrow: 0, flexShrink: 0, minHeight: 58 }} contentContainerStyle={{ gap: 6, paddingHorizontal: 12, paddingVertical: 10, alignItems: "center" }} showsHorizontalScrollIndicator={false}>
-          <Text style={S.muted}>{t("app_askFor")}:</Text>
-          {[{ id: null as number | null, name: t("app_noDog") }].concat(dogs).map((d) => (
-            <Pressable key={String(d.id)} onPress={() => setDogId(d.id)}
-              style={{ paddingHorizontal: 10, paddingVertical: 6, borderRadius: 16, backgroundColor: dogId === d.id ? C.brand : C.chip }}>
-              <Text style={{ color: dogId === d.id ? "#fff" : C.text }}>{d.id != null ? "🐕 " : ""}{d.name}</Text>
-            </Pressable>
-          ))}
-        </ScrollView>
+        <View style={{ borderBottomWidth: 1, borderColor: C.line }}>
+          <ScrollView horizontal style={{ flexGrow: 0, flexShrink: 0 }} contentContainerStyle={{ gap: 6, paddingHorizontal: 12, paddingVertical: 10, alignItems: "center" }} showsHorizontalScrollIndicator={false}>
+            <Text style={S.muted}>{t("app_askFor")}:</Text>
+            {[{ id: null as number | null, name: t("app_noDog") }].concat(dogs).map((d) => (
+              <Pressable key={String(d.id)} onPress={() => setDogId(d.id)} accessibilityRole="radio" accessibilityState={{ selected: dogId === d.id }}
+                style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: 16, backgroundColor: dogId === d.id ? C.brandDark : C.chip }}>
+                <Text style={{ color: dogId === d.id ? "#fff" : C.text }}>{d.id != null ? "🐕 " : ""}{d.name}</Text>
+              </Pressable>
+            ))}
+          </ScrollView>
+          {/* What goes along with the question, switchable right here. */}
+          {dog && (
+            <View style={[S.row, { gap: 8, paddingHorizontal: 12, paddingBottom: 8 }]}>
+              <Text style={[S.muted, { flex: 1 }]}>{tf("app_aiUses", { name: dog.name })} · {t("app_shareWithAi")}</Text>
+              <Toggle value={shareFile} onValueChange={async (on) => { setShareFile(on); await setShareFileWithAi(dog.id, on); }} />
+            </View>
+          )}
+        </View>
       )}
       <FlatList
         ref={list}
         data={messages}
         keyExtractor={(m, i) => String(m.id ?? "x" + i)}
         contentContainerStyle={{ padding: 12, gap: 8 }}
-        onContentSizeChange={() => list.current?.scrollToEnd({ animated: true })}
-        ListHeaderComponent={<View style={[S.card, { marginBottom: 8 }]}><Text style={S.body}>{t("aiIntro")}</Text></View>}
+        onContentSizeChange={() => {
+          // A new answer: show its start (urgency first), not its end.
+          if (scrollTo.current != null) { list.current?.scrollToIndex({ index: scrollTo.current, viewPosition: 0, animated: true }); scrollTo.current = null; }
+          else list.current?.scrollToEnd({ animated: true });
+        }}
+        onScrollToIndexFailed={() => list.current?.scrollToEnd({ animated: true })}
+        ListHeaderComponent={intro}
         renderItem={({ item: m, index: i }) => {
-          const action = m.role === "assistant" ? cta(m) : null;
+          const next = m.role === "assistant" && !m.local ? actions(m) : [];
           return (
             <View style={{ alignSelf: m.role === "user" ? "flex-end" : "flex-start", maxWidth: "88%", gap: 6 }}>
               {m.urgency && m.urgency !== "unclear" && (
-                <Text style={{ fontWeight: "700", color: m.urgency === "emergency" ? C.danger : m.urgency === "vet_soon" ? C.warn : C.ok }}>
+                <Text style={{ fontWeight: "700", color: m.urgency === "emergency" ? C.danger : m.urgency === "vet_soon" ? C.warn : MONITOR }}>
                   {t("urgency_" + m.urgency)}
                 </Text>
               )}
-              <View style={{ backgroundColor: m.role === "user" ? C.brand : C.card, borderRadius: 14, padding: 10, borderWidth: m.role === "user" ? 0 : 1, borderColor: C.line }}>
+              <View style={{ backgroundColor: m.role === "user" ? C.brandDark : m.local ? "#fff7ed" : C.card, borderRadius: 14, padding: 10, borderWidth: m.role === "user" ? 0 : 1, borderColor: C.line }}>
                 <Text style={[S.body, { color: m.role === "user" ? "#fff" : C.text }]}>{m.content}</Text>
               </View>
-              {m.role === "assistant" && (
+              {m.role === "assistant" && !m.local && (
                 <View style={[S.row, { gap: 16, flexWrap: "wrap" }]}>
                   <Pressable onPress={() => toggleRead(i, m.content)} hitSlop={8} accessibilityRole="button"
                     accessibilityLabel={t(speaking === i ? "app_stopReading" : "app_readAloud")}>
                     <Text style={{ color: C.brandDark, fontWeight: "600" }}>{speaking === i ? "⏹ " + t("app_stopReading") : "🔊 " + t("app_readAloud")}</Text>
                   </Pressable>
                   {dog && m.urgency && (
-                    filed.has(i)
+                    filed.has(fileKey(m, i))
                       ? <Text style={{ color: C.ok, fontWeight: "600" }}>✓ {t("app_savedToFile")}</Text>
-                      : <Pressable onPress={() => saveToFile(i)} hitSlop={8} accessibilityRole="button">
+                      : <Pressable onPress={() => saveToFile(m, i)} hitSlop={8} accessibilityRole="button">
                           <Text style={{ color: C.brandDark, fontWeight: "600" }}>📁 {tf("app_saveToFile", { name: dog.name })}</Text>
                         </Pressable>
                   )}
                 </View>
               )}
-              {action && (
-                <Pressable style={[S.btn, m.urgency === "emergency" && { backgroundColor: C.danger }]} onPress={action.go}>
-                  <Text style={S.btnText}>{action.label}</Text>
+              {next.map((a) => (
+                <Pressable key={a.label} style={[S.btn, a.danger && { backgroundColor: C.danger }]} onPress={a.go} accessibilityRole="button">
+                  <Text style={S.btnText}>{a.label}</Text>
                 </Pressable>
-              )}
+              ))}
             </View>
           );
         }}
-        ListFooterComponent={busy ? <ActivityIndicator color={C.brand} style={{ marginTop: 8 }} /> : null}
+        ListFooterComponent={busy ? <ActivityIndicator color={C.brand} style={{ marginTop: 8 }} />
+          : lastUnanswered ? (
+            <Pressable style={[S.btnGhost, { alignSelf: "flex-start" }]} onPress={retry} accessibilityRole="button">
+              <Text style={S.btnGhostText}>↻ {t("app_retry")}</Text>
+            </Pressable>
+          ) : null}
       />
       <View style={{ padding: 12, gap: 6, borderTopWidth: 1, borderColor: C.line, backgroundColor: C.card }}>
-        {listening && <Text style={[S.muted, { color: C.danger, fontWeight: "700" }]}>🎙️ {t("app_voiceListening")}</Text>}
+        {listening && <Text style={[S.muted, { color: C.danger, fontWeight: "700" }]} accessibilityLiveRegion="polite">🎙️ {t("app_voiceListening")}</Text>}
         {!!voiceNote && <Text style={[S.muted, { color: C.warn }]}>{voiceNote}</Text>}
         <View style={[S.row, { gap: 8 }]}>
           <Pressable onPress={toggleListening} disabled={busy} accessibilityRole="button" accessibilityLabel={t(listening ? "app_voiceListening" : "app_voiceStart")}
@@ -178,12 +271,12 @@ export default function Ask() {
             <Text style={{ fontSize: 22 }}>{listening ? "⏹" : "🎙️"}</Text>
           </Pressable>
           <TextInput style={[S.input, { flex: 1, maxHeight: 120 }]} value={text} onChangeText={setText} placeholder={t("aiPlaceholder")} multiline maxLength={1000} />
-          <Pressable style={[S.btn, busy && { opacity: 0.5 }]} onPress={() => send()} disabled={busy} accessibilityRole="button"><Text style={S.btnText}>{t("aiSend")}</Text></Pressable>
+          <Pressable style={[S.btn, { backgroundColor: C.brandDark }, busy && { opacity: 0.5 }]} onPress={() => send()} disabled={busy} accessibilityRole="button"><Text style={S.btnText}>{t("aiSend")}</Text></Pressable>
         </View>
         <View style={[S.row, { justifyContent: "space-between" }]}>
           <Text style={[S.muted, { flex: 1 }]}>{t("aiDisclaimer")}</Text>
           {messages.length > 0 && (
-            <Pressable onPress={async () => { await clearChat(dogId); setMessages([]); }} hitSlop={8}>
+            <Pressable onPress={newChat} hitSlop={8} accessibilityRole="button">
               <Text style={{ color: C.brandDark, fontWeight: "600" }}>{t("app_newChat")}</Text>
             </Pressable>
           )}

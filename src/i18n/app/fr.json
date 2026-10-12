@@ -167,5 +167,13 @@
   "app_aiStarter3": "Mon chien a mangé quelque chose d'interdit. Que faire ?",
   "app_aiStarter4": "Comment apprendre la propreté à mon chiot ?",
   "app_aiStarter5": "Mon chien tire en laisse. Que puis-je faire ?",
-  "app_aiStarter6": "À quelle fréquence dois-je vermifuger mon chien ?"
+  "app_aiStarter6": "À quelle fréquence dois-je vermifuger mon chien ?",
+  "app_aiIsAI": "Vous discutez avec un assistant IA, pas avec un vétérinaire.",
+  "app_aiEmergencyLine": "Est-ce vraiment grave en ce moment ?",
+  "app_aiAddDog": "Ajoutez votre chien pour des conseils adaptés",
+  "app_aiTryAsking": "Vous pouvez par exemple demander :",
+  "app_aiUses": "Avec le profil de {name}",
+  "app_callMyVet": "Appeler {name}",
+  "app_newChatConfirm": "Supprimer cette conversation ? Cette action est irréversible.",
+  "app_retry": "Réessayer"
 }

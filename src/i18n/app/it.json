@@ -167,5 +167,13 @@
   "app_aiStarter3": "Il mio cane ha mangiato qualcosa che non doveva. E ora?",
   "app_aiStarter4": "Come insegno al mio cucciolo a non sporcare in casa?",
   "app_aiStarter5": "Il mio cane tira al guinzaglio. Cosa posso fare?",
-  "app_aiStarter6": "Ogni quanto devo sverminare il mio cane?"
+  "app_aiStarter6": "Ogni quanto devo sverminare il mio cane?",
+  "app_aiIsAI": "Stai chattando con un assistente IA, non con un veterinario.",
+  "app_aiEmergencyLine": "La situazione è davvero grave in questo momento?",
+  "app_aiAddDog": "Aggiungi il tuo cane per consigli su misura",
+  "app_aiTryAsking": "Potresti chiedere, per esempio:",
+  "app_aiUses": "Con il profilo di {name}",
+  "app_callMyVet": "Chiama {name}",
+  "app_newChatConfirm": "Eliminare questa conversazione? L'azione non può essere annullata.",
+  "app_retry": "Riprova"
 }

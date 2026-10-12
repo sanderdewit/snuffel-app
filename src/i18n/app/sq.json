@@ -163,5 +163,13 @@
   "app_aiStarter3": "Qeni im hëngri diçka që nuk duhej. Po tani?",
   "app_aiStarter4": "Si ta mësoj këlyshin të bëjë nevojat jashtë?",
   "app_aiStarter5": "Qeni im tërheq zinxhirin. Çfarë mund të bëj?",
-  "app_aiStarter6": "Sa shpesh duhet ta dehelmintoj qenin tim?"
+  "app_aiStarter6": "Sa shpesh duhet ta dehelmintoj qenin tim?",
+  "app_aiIsAI": "Po bisedon me një asistent AI, jo me një veteriner.",
+  "app_aiEmergencyLine": "A po shkon vërtet diçka keq tani?",
+  "app_aiAddDog": "Shto qenin tënd për këshilla të përshtatura",
+  "app_aiTryAsking": "Mund të pyesësh, për shembull:",
+  "app_aiUses": "Duke përdorur profilin e {name}",
+  "app_callMyVet": "Telefono {name}",
+  "app_newChatConfirm": "Ta fshish këtë bisedë? Ky veprim nuk mund të zhbëhet.",
+  "app_retry": "Provo përsëri"
 }

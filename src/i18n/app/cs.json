@@ -171,5 +171,13 @@
   "app_aiStarter3": "Můj pes snědl něco, co nemá. Co teď?",
   "app_aiStarter4": "Jak naučit štěně čistotnosti?",
   "app_aiStarter5": "Můj pes tahá na vodítku. Co s tím?",
-  "app_aiStarter6": "Jak často mám psa odčervovat?"
+  "app_aiStarter6": "Jak často mám psa odčervovat?",
+  "app_aiIsAI": "Chatujete s AI asistentem, ne s veterinářem.",
+  "app_aiEmergencyLine": "Je to opravdu vážné právě teď?",
+  "app_aiAddDog": "Přidejte svého psa a získejte rady na míru",
+  "app_aiTryAsking": "Můžete se zeptat například:",
+  "app_aiUses": "Používá se profil psa {name}",
+  "app_callMyVet": "Zavolat {name}",
+  "app_newChatConfirm": "Smazat tuto konverzaci? Tuto akci nelze vrátit.",
+  "app_retry": "Zkusit znovu"
 }

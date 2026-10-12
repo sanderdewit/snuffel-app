@@ -167,5 +167,13 @@
   "app_aiStarter3": "El meu gos s'ha menjat una cosa que no havia de menjar. Què faig?",
   "app_aiStarter4": "Com ensenyo el meu cadell a fer les necessitats fora?",
   "app_aiStarter5": "El meu gos estira la corretja. Què puc fer?",
-  "app_aiStarter6": "Cada quant he de desparasitar el meu gos?"
+  "app_aiStarter6": "Cada quant he de desparasitar el meu gos?",
+  "app_aiIsAI": "Estàs xatejant amb un assistent d'IA, no amb un veterinari.",
+  "app_aiEmergencyLine": "De debò va malament ara mateix?",
+  "app_aiAddDog": "Afegeix el teu gos per rebre consells a mida",
+  "app_aiTryAsking": "Pots preguntar, per exemple:",
+  "app_aiUses": "Amb el perfil de {name}",
+  "app_callMyVet": "Truca a {name}",
+  "app_newChatConfirm": "Vols suprimir aquesta conversa? No es pot desfer.",
+  "app_retry": "Torna-ho a provar"
 }

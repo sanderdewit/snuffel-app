@@ -163,5 +163,13 @@
   "app_aiStarter3": "Hundurinn minn borðaði eitthvað sem hann má ekki. Hvað nú?",
   "app_aiStarter4": "Hvernig venji ég hvolpinn minn á að gera þarfir sínar úti?",
   "app_aiStarter5": "Hundurinn minn togar í tauminn. Hvað get ég gert?",
-  "app_aiStarter6": "Hversu oft ætti ég að ormahreinsa hundinn minn?"
+  "app_aiStarter6": "Hversu oft ætti ég að ormahreinsa hundinn minn?",
+  "app_aiIsAI": "Þú ert að spjalla við gervigreindaraðstoð, ekki dýralækni.",
+  "app_aiEmergencyLine": "Er eitthvað virkilega að núna?",
+  "app_aiAddDog": "Bættu hundinum þínum við til að fá ráð sem passa",
+  "app_aiTryAsking": "Þú gætir til dæmis spurt:",
+  "app_aiUses": "Notar prófíl {name}",
+  "app_callMyVet": "Hringja í {name}",
+  "app_newChatConfirm": "Eyða þessu samtali? Ekki er hægt að afturkalla það.",
+  "app_retry": "Reyna aftur"
 }

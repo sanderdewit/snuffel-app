@@ -163,5 +163,13 @@
   "app_aiStarter3": "Min hund har spist noget, den ikke må. Hvad nu?",
   "app_aiStarter4": "Hvordan gør jeg min hvalp renlig?",
   "app_aiStarter5": "Min hund trækker i snoren. Hvad kan jeg gøre?",
-  "app_aiStarter6": "Hvor tit skal jeg give min hund ormekur?"
+  "app_aiStarter6": "Hvor tit skal jeg give min hund ormekur?",
+  "app_aiIsAI": "Du chatter med en AI-assistent, ikke en dyrlæge.",
+  "app_aiEmergencyLine": "Er det virkelig galt lige nu?",
+  "app_aiAddDog": "Tilføj din hund for at få råd, der passer",
+  "app_aiTryAsking": "Du kan f.eks. spørge:",
+  "app_aiUses": "Bruger {name}s profil",
+  "app_callMyVet": "Ring til {name}",
+  "app_newChatConfirm": "Slet denne samtale? Det kan ikke fortrydes.",
+  "app_retry": "Prøv igen"
 }

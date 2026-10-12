@@ -163,5 +163,13 @@
   "app_aiStarter3": "Hunden min har spist noe den ikke skulle. Hva nå?",
   "app_aiStarter4": "Hvordan får jeg valpen min renslig?",
   "app_aiStarter5": "Hunden min drar i båndet. Hva kan jeg gjøre?",
-  "app_aiStarter6": "Hvor ofte bør jeg gi hunden min ormekur?"
+  "app_aiStarter6": "Hvor ofte bør jeg gi hunden min ormekur?",
+  "app_aiIsAI": "Du chatter med en AI-assistent, ikke en veterinær.",
+  "app_aiEmergencyLine": "Er det virkelig galt akkurat nå?",
+  "app_aiAddDog": "Legg til hunden din for å få råd som passer",
+  "app_aiTryAsking": "Du kan for eksempel spørre:",
+  "app_aiUses": "Bruker profilen til {name}",
+  "app_callMyVet": "Ring {name}",
+  "app_newChatConfirm": "Slette denne samtalen? Dette kan ikke angres.",
+  "app_retry": "Prøv igjen"
 }

@@ -171,5 +171,13 @@
   "app_aiStarter3": "Mój pies zjadł coś, czego nie powinien. Co teraz?",
   "app_aiStarter4": "Jak nauczyć szczeniaka czystości?",
   "app_aiStarter5": "Mój pies ciągnie na smyczy. Co mogę zrobić?",
-  "app_aiStarter6": "Jak często mam odrobaczać mojego psa?"
+  "app_aiStarter6": "Jak często mam odrobaczać mojego psa?",
+  "app_aiIsAI": "Rozmawiasz z asystentem AI, nie z weterynarzem.",
+  "app_aiEmergencyLine": "Czy naprawdę dzieje się coś złego właśnie teraz?",
+  "app_aiAddDog": "Dodaj swojego psa, aby otrzymywać dopasowane porady",
+  "app_aiTryAsking": "Możesz zapytać na przykład:",
+  "app_aiUses": "Na podstawie profilu: {name}",
+  "app_callMyVet": "Zadzwoń: {name}",
+  "app_newChatConfirm": "Usunąć tę rozmowę? Tej operacji nie można cofnąć.",
+  "app_retry": "Spróbuj ponownie"
 }

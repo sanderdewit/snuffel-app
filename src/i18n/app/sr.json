@@ -167,5 +167,13 @@
   "app_aiStarter3": "Moj pas je pojeo nešto što ne sme. Šta sad?",
   "app_aiStarter4": "Kako da naučim štene da vrši nuždu napolju?",
   "app_aiStarter5": "Moj pas vuče na povocu. Šta mogu da uradim?",
-  "app_aiStarter6": "Koliko često treba da dajem psu sredstvo protiv glista?"
+  "app_aiStarter6": "Koliko često treba da dajem psu sredstvo protiv glista?",
+  "app_aiIsAI": "Razgovaraš sa AI asistentom, ne sa veterinarom.",
+  "app_aiEmergencyLine": "Da li je stvarno nešto ozbiljno upravo sada?",
+  "app_aiAddDog": "Dodaj svog psa za savete po meri",
+  "app_aiTryAsking": "Možeš da pitaš, na primer:",
+  "app_aiUses": "Koristi se profil psa {name}",
+  "app_callMyVet": "Pozovi {name}",
+  "app_newChatConfirm": "Obrisati ovaj razgovor? Ovo ne može da se opozove.",
+  "app_retry": "Pokušaj ponovo"
 }

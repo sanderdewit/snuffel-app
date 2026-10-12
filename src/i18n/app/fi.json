@@ -163,5 +163,13 @@
   "app_aiStarter3": "Koirani söi jotain, mitä ei saisi. Mitä nyt?",
   "app_aiStarter4": "Miten opetan pentuni sisäsiistiksi?",
   "app_aiStarter5": "Koirani vetää hihnassa. Mitä voin tehdä?",
-  "app_aiStarter6": "Kuinka usein koirani pitäisi madottaa?"
+  "app_aiStarter6": "Kuinka usein koirani pitäisi madottaa?",
+  "app_aiIsAI": "Keskustelet tekoälyavustajan kanssa, et eläinlääkärin.",
+  "app_aiEmergencyLine": "Onko nyt oikeasti hätä?",
+  "app_aiAddDog": "Lisää koirasi, niin saat siihen sopivia neuvoja",
+  "app_aiTryAsking": "Voit kysyä esimerkiksi:",
+  "app_aiUses": "Käytössä koiran {name} profiili",
+  "app_callMyVet": "Soita: {name}",
+  "app_newChatConfirm": "Poistetaanko tämä keskustelu? Toimintoa ei voi perua.",
+  "app_retry": "Yritä uudelleen"
 }

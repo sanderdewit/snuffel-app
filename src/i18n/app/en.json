@@ -163,5 +163,13 @@
   "app_aiStarter3": "My dog ate something he shouldn't have. What now?",
   "app_aiStarter4": "How do I house-train my puppy?",
   "app_aiStarter5": "My dog pulls on the lead. What can I do?",
-  "app_aiStarter6": "How often should I deworm my dog?"
+  "app_aiStarter6": "How often should I deworm my dog?",
+  "app_aiIsAI": "You're chatting with an AI assistant, not a vet.",
+  "app_aiEmergencyLine": "Is it really going wrong right now?",
+  "app_aiAddDog": "Add your dog for advice that fits",
+  "app_aiTryAsking": "You could ask, for example:",
+  "app_aiUses": "Using {name}'s profile",
+  "app_callMyVet": "Call {name}",
+  "app_newChatConfirm": "Delete this conversation? This can't be undone.",
+  "app_retry": "Try again"
 }

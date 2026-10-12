@@ -163,5 +163,13 @@
   "app_aiStarter3": "Mu koer sõi midagi, mida ei tohi. Mis nüüd?",
   "app_aiStarter4": "Kuidas õpetada kutsikat toas puhtust pidama?",
   "app_aiStarter5": "Mu koer tõmbab rihma otsas. Mida teha?",
-  "app_aiStarter6": "Kui tihti peaksin oma koerale ussirohtu andma?"
+  "app_aiStarter6": "Kui tihti peaksin oma koerale ussirohtu andma?",
+  "app_aiIsAI": "Sa vestled AI-assistendiga, mitte loomaarstiga.",
+  "app_aiEmergencyLine": "Kas praegu on tõesti midagi väga valesti?",
+  "app_aiAddDog": "Lisa oma koer, et saada just talle sobivaid nõuandeid",
+  "app_aiTryAsking": "Võid näiteks küsida:",
+  "app_aiUses": "Kasutab koera {name} profiili",
+  "app_callMyVet": "Helista: {name}",
+  "app_newChatConfirm": "Kas kustutada see vestlus? Seda ei saa tagasi võtta.",
+  "app_retry": "Proovi uuesti"
 }

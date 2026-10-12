@@ -167,5 +167,13 @@
   "app_aiStarter3": "Mi perro se ha comido algo que no debía. ¿Qué hago?",
   "app_aiStarter4": "¿Cómo enseño a mi cachorro a hacer sus necesidades fuera?",
   "app_aiStarter5": "Mi perro tira de la correa. ¿Qué puedo hacer?",
-  "app_aiStarter6": "¿Cada cuánto debo desparasitar a mi perro?"
+  "app_aiStarter6": "¿Cada cuánto debo desparasitar a mi perro?",
+  "app_aiIsAI": "Estás chateando con un asistente de IA, no con un veterinario.",
+  "app_aiEmergencyLine": "¿De verdad va mal ahora mismo?",
+  "app_aiAddDog": "Añade a tu perro para recibir consejos a medida",
+  "app_aiTryAsking": "Puedes preguntar, por ejemplo:",
+  "app_aiUses": "Con el perfil de {name}",
+  "app_callMyVet": "Llamar a {name}",
+  "app_newChatConfirm": "¿Eliminar esta conversación? No se puede deshacer.",
+  "app_retry": "Reintentar"
 }

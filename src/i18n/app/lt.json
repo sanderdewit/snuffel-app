@@ -171,5 +171,13 @@
   "app_aiStarter3": "Mano šuo suėdė tai, ko negalima. Ką daryti?",
   "app_aiStarter4": "Kaip išmokyti šuniuką tvarkytis lauke?",
   "app_aiStarter5": "Mano šuo tempia pavadėlį. Ką galiu padaryti?",
-  "app_aiStarter6": "Kaip dažnai turėčiau dehelmintizuoti savo šunį?"
+  "app_aiStarter6": "Kaip dažnai turėčiau dehelmintizuoti savo šunį?",
+  "app_aiIsAI": "Bendraujate su DI asistentu, ne su veterinaru.",
+  "app_aiEmergencyLine": "Ar tikrai dabar kažkas labai negerai?",
+  "app_aiAddDog": "Pridėkite savo šunį ir gaukite jam pritaikytus patarimus",
+  "app_aiTryAsking": "Galite paklausti, pavyzdžiui:",
+  "app_aiUses": "Naudojamas {name} profilis",
+  "app_callMyVet": "Skambinti: {name}",
+  "app_newChatConfirm": "Ištrinti šį pokalbį? To nebus galima atšaukti.",
+  "app_retry": "Bandyti dar kartą"
 }

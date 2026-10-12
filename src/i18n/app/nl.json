@@ -163,5 +163,13 @@
   "app_aiStarter3": "Mijn hond heeft iets gegeten dat niet mag. Wat nu?",
   "app_aiStarter4": "Hoe leer ik mijn puppy zindelijk te worden?",
   "app_aiStarter5": "Mijn hond trekt aan de lijn. Wat kan ik doen?",
-  "app_aiStarter6": "Hoe vaak moet ik mijn hond ontwormen?"
+  "app_aiStarter6": "Hoe vaak moet ik mijn hond ontwormen?",
+  "app_aiIsAI": "Je chat met een AI-assistent, geen dierenarts.",
+  "app_aiEmergencyLine": "Gaat het nu echt mis?",
+  "app_aiAddDog": "Voeg je hond toe voor advies op maat",
+  "app_aiTryAsking": "Je kunt bijvoorbeeld vragen:",
+  "app_aiUses": "Met het profiel van {name}",
+  "app_callMyVet": "Bel {name}",
+  "app_newChatConfirm": "Dit gesprek verwijderen? Dat kan niet ongedaan worden.",
+  "app_retry": "Opnieuw proberen"
 }

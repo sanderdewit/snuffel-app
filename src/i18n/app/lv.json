@@ -167,5 +167,13 @@
   "app_aiStarter3": "Mans suns apēda kaut ko, ko nedrīkst. Ko tagad darīt?",
   "app_aiStarter4": "Kā iemācīt kucēnam kārtot darīšanas ārā?",
   "app_aiStarter5": "Mans suns velk pavadu. Ko varu darīt?",
-  "app_aiStarter6": "Cik bieži man jāattārpo suns?"
+  "app_aiStarter6": "Cik bieži man jāattārpo suns?",
+  "app_aiIsAI": "Tu tērzē ar MI asistentu, nevis veterinārārstu.",
+  "app_aiEmergencyLine": "Vai tiešām tagad notiek kas nopietns?",
+  "app_aiAddDog": "Pievieno savu suni, lai saņemtu piemērotus padomus",
+  "app_aiTryAsking": "Tu vari jautāt, piemēram:",
+  "app_aiUses": "Izmanto {name} profilu",
+  "app_callMyVet": "Zvanīt: {name}",
+  "app_newChatConfirm": "Dzēst šo sarunu? To nevarēs atsaukt.",
+  "app_retry": "Mēģināt vēlreiz"
 }

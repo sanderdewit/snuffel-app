@@ -167,5 +167,13 @@
   "app_aiStarter3": "Câinele meu a mâncat ceva ce nu trebuia. Ce fac acum?",
   "app_aiStarter4": "Cum îmi învăț cățelul să-și facă nevoile afară?",
   "app_aiStarter5": "Câinele meu trage de lesă. Ce pot face?",
-  "app_aiStarter6": "Cât de des ar trebui să-mi deparazitez câinele?"
+  "app_aiStarter6": "Cât de des ar trebui să-mi deparazitez câinele?",
+  "app_aiIsAI": "Vorbești cu un asistent AI, nu cu un medic veterinar.",
+  "app_aiEmergencyLine": "Chiar e ceva grav chiar acum?",
+  "app_aiAddDog": "Adaugă-ți câinele pentru sfaturi potrivite lui",
+  "app_aiTryAsking": "Poți întreba, de exemplu:",
+  "app_aiUses": "Folosind profilul lui {name}",
+  "app_callMyVet": "Sună la {name}",
+  "app_newChatConfirm": "Ștergi această conversație? Acțiunea nu poate fi anulată.",
+  "app_retry": "Încearcă din nou"
 }

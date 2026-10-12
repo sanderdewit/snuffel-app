@@ -163,5 +163,13 @@
   "app_aiStarter3": "Min hund har ätit något den inte får. Vad gör jag nu?",
   "app_aiStarter4": "Hur gör jag min valp rumsren?",
   "app_aiStarter5": "Min hund drar i kopplet. Vad kan jag göra?",
-  "app_aiStarter6": "Hur ofta ska jag avmaska min hund?"
+  "app_aiStarter6": "Hur ofta ska jag avmaska min hund?",
+  "app_aiIsAI": "Du chattar med en AI-assistent, inte en veterinär.",
+  "app_aiEmergencyLine": "Är det verkligen akut just nu?",
+  "app_aiAddDog": "Lägg till din hund för råd som passar",
+  "app_aiTryAsking": "Du kan till exempel fråga:",
+  "app_aiUses": "Använder {name}s profil",
+  "app_callMyVet": "Ring {name}",
+  "app_newChatConfirm": "Radera den här konversationen? Det går inte att ångra.",
+  "app_retry": "Försök igen"
 }

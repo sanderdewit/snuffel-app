@@ -167,5 +167,13 @@
   "app_aiStarter3": "O meu cão comeu algo que não devia. E agora?",
   "app_aiStarter4": "Como ensino o meu cachorro a fazer as necessidades na rua?",
   "app_aiStarter5": "O meu cão puxa a trela. O que posso fazer?",
-  "app_aiStarter6": "Com que frequência devo desparasitar o meu cão?"
+  "app_aiStarter6": "Com que frequência devo desparasitar o meu cão?",
+  "app_aiIsAI": "Está a conversar com um assistente de IA, não com um veterinário.",
+  "app_aiEmergencyLine": "Algo está mesmo a correr mal neste momento?",
+  "app_aiAddDog": "Adicione o seu cão para receber conselhos adequados",
+  "app_aiTryAsking": "Pode perguntar, por exemplo:",
+  "app_aiUses": "A usar o perfil de {name}",
+  "app_callMyVet": "Ligar para {name}",
+  "app_newChatConfirm": "Eliminar esta conversa? Esta ação não pode ser anulada.",
+  "app_retry": "Tentar novamente"
 }
