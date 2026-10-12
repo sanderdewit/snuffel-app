@@ -52,7 +52,8 @@ function Screens() {
   return (
     <Stack screenOptions={{ headerTintColor: C.brandDark, contentStyle: { backgroundColor: C.bg }, headerBackButtonDisplayMode: "minimal" }}>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="welcome" options={{ headerShown: false, presentation: "fullScreenModal", gestureEnabled: false }} />
+      {/* A plain screen, not a modal: a full-screen modal got no top safe-area inset on iOS */}
+      <Stack.Screen name="welcome" options={{ headerShown: false, animation: "fade", gestureEnabled: false }} />
       <Stack.Screen name="place/[id]" options={{ title: "" }} />
       <Stack.Screen name="dog/[id]" options={{ title: t("app_editDog") }} />
       <Stack.Screen name="dog/file/[id]" options={{ title: t("app_dogFile") }} />
