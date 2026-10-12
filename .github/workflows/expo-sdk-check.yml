@@ -1,6 +1,9 @@
-# Weekly: is a newer Expo SDK *stable* (npm dist-tag "latest", not "next")?
-# Then open one issue with the upgrade steps. Betas are ignored on purpose:
-# no store release on a beta SDK. Dependabot skips Expo majors (dependabot.yml).
+# Weekly, for the packages Expo manages (Dependabot skips them, see dependabot.yml):
+#  1. is a newer Expo SDK *stable* (npm dist-tag "latest", not "next")? Then
+#     one issue with the upgrade steps. Betas are ignored on purpose: no store
+#     release on a beta SDK.
+#  2. are there patch/minor updates within our SDK (`expo install --check`)?
+#     Then one issue to run `npx expo install --fix`.
 name: expo-sdk-check
 
 on:
@@ -18,6 +21,27 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+
+      - name: Updates within our SDK
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund > /dev/null
+          # exits non-zero when packages are behind what this SDK expects
+          if npx expo install --check > check.txt 2>&1; then echo "Expo packages up to date"; exit 0; fi
+          cat check.txt
+          title="Expo package updates within SDK $(node -p "require('./package.json').dependencies.expo.replace(/^[^0-9]*/, '').split('.')[0]")"
+          if gh issue list --state open --search "in:title \"$title\"" --json number --jq 'length' | grep -qv '^0$'; then
+            echo "issue already open"; exit 0
+          fi
+          body=$(printf '%s\n' "Expo has newer versions of packages it manages:" "" '```' "$(head -40 check.txt)" '```' "" \
+            "Run \`npx expo install --fix\`, then \`npx expo-doctor\`, \`npx tsc --noEmit\`, \`npm test\` and let ci build both platforms.")
+          gh issue create --title "$title" --body "$body"
+
       - name: Compare with the stable Expo SDK
         env:
           GH_TOKEN: ${{ github.token }}

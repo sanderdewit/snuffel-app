@@ -1,9 +1,10 @@
 # Weekly update PRs: the pinned GitHub Actions (SHA + tag comment) and the npm
-# packages (one grouped PR).
-# Expo SDK upgrades (expo, expo-*, react, react-native...) move together and are
-# done on purpose with `npx expo install expo@<next> --fix` plus the migration
-# notes, so Dependabot never proposes their major versions; patch and minor
-# updates within the SDK still come through.
+# packages Expo does NOT manage (one grouped PR).
+# Packages Expo pins per SDK (expo, expo-*, react, react-native, their native
+# modules, TypeScript) are left alone: Dependabot doesn't know Expo's version
+# map, so its bumps fail expo-doctor. They're kept current by the weekly
+# expo-sdk-check workflow (`npx expo install --check`), updated together with
+# `npx expo install --fix`, and SDK upgrades go through `npx expo install expo@<next> --fix`.
 version: 2
 updates:
   - package-ecosystem: github-actions
@@ -19,20 +20,14 @@ updates:
         patterns: ["*"]
     ignore:
       - dependency-name: "expo"
-        update-types: ["version-update:semver-major"]
       - dependency-name: "expo-*"
-        update-types: ["version-update:semver-major"]
       - dependency-name: "@expo/*"
-        update-types: ["version-update:semver-major"]
       - dependency-name: "react"
-        update-types: ["version-update:semver-major", "version-update:semver-minor"]
       - dependency-name: "react-dom"
-        update-types: ["version-update:semver-major", "version-update:semver-minor"]
       - dependency-name: "react-native"
-        update-types: ["version-update:semver-major", "version-update:semver-minor"]
       - dependency-name: "react-native-*"
-        update-types: ["version-update:semver-major"]
       - dependency-name: "@react-native/*"
-        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: "@react-native-community/*"
+      - dependency-name: "typescript"
+      - dependency-name: "@types/react"
       - dependency-name: "@maplibre/maplibre-react-native"
-        update-types: ["version-update:semver-major"]
