@@ -12,7 +12,7 @@ import { PlaceMap } from "../../ui/PlaceMap";
 import { Toggle } from "../../ui/Toggle";
 import { C, S } from "../../ui/theme";
 
-const RADII = [1000, 3000, 5000, 10000, 25000];
+const RADII = [1000, 3000, 5000, 10000, 25000, 50000, 75000, 100000];
 
 export default function Find() {
   const { t, tf, lang } = useI18n();
@@ -79,11 +79,24 @@ export default function Find() {
   const showChains = chains.length > 0 && (!independentOnly || independents.length === 0);
   const shown = showChains ? independents.concat(chains) : independents;
 
-  type Row = { kind: "place"; p: Place } | { kind: "note"; text: string } | { kind: "divider" };
+  // "Search further: 25 km" when only chains (or nothing) are near.
+  const nextRadius = RADII.find((r) => r > radius);
+  const widen = () => { if (nextRadius) { setRadius(nextRadius); if (spot) load(spot, nextRadius); } };
+  const WidenButton = () => nextRadius ? (
+    <Pressable style={[S.btnGhost, { alignSelf: "flex-start", marginBottom: 8 }]} onPress={widen} accessibilityRole="button">
+      <Text style={S.btnGhostText}>🔍 {tf("widenSearch", { km: nextRadius / 1000 })}</Text>
+    </Pressable>
+  ) : null;
+
+  type Row = { kind: "place"; p: Place } | { kind: "note"; text: string } | { kind: "divider" } | { kind: "widen" };
   const rows: Row[] = independents.map((p) => ({ kind: "place" as const, p }));
-  if (independentOnly && !independents.length && chains.length) rows.push({ kind: "note", text: t("onlyChainsHidden") });
   if (showChains) {
-    rows.push(independents.length ? { kind: "divider" } : { kind: "note", text: t("chainOnlyNote") });
+    if (independents.length) rows.push({ kind: "divider" });
+    else {
+      // Only chains nearby: say so, offer a wider search, and show them below.
+      rows.push({ kind: "note", text: t("chainOnlyNote") });
+      if (independentOnly && nextRadius) rows.push({ kind: "widen" });
+    }
     chains.forEach((p) => rows.push({ kind: "place", p }));
   }
 
@@ -162,9 +175,10 @@ export default function Find() {
             data={rows}
             keyExtractor={(r, i) => (r.kind === "place" ? r.p.id : r.kind + i)}
             contentContainerStyle={{ padding: 16, paddingTop: 4 }}
-            ListEmptyComponent={<Text style={S.muted}>🐶 {t("noResults")} {t("noResultsHint")}</Text>}
+            ListEmptyComponent={<View style={{ gap: 8 }}><Text style={S.muted}>🐶 {t("noResults")} {t("noResultsHint")}</Text><WidenButton /></View>}
             renderItem={({ item }) =>
               item.kind === "place" ? <PlaceCard p={item.p} /> :
+              item.kind === "widen" ? <WidenButton /> :
               item.kind === "divider" ? <Text style={[S.h2, { marginVertical: 8 }]}>{t("chainsHeading")}</Text> :
               <Text style={[S.muted, { marginVertical: 8 }]}>{item.text}</Text>}
           />
