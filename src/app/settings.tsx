@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Linking, Pressable, ScrollView, Text, View } from "react-native";
 import Constants from "expo-constants";
+import { router } from "expo-router";
 import { LANGUAGES, useI18n } from "../i18n";
 import { CONFIG } from "../lib/config";
 import { kvGetJson } from "../lib/db";
@@ -66,6 +67,7 @@ export default function Settings() {
         <Text style={S.body}>{t("app_aboutText")}</Text>
         <Pressable onPress={() => Linking.openURL(CONFIG.website)}><Text style={{ color: C.brandDark, fontWeight: "600" }}>{t("website")} ↗</Text></Pressable>
         <Pressable onPress={() => Linking.openURL("https://www.openstreetmap.org/copyright")}><Text style={S.muted}>{t("footerProto")} ↗</Text></Pressable>
+        <Pressable onPress={() => router.push("/welcome")} accessibilityRole="button"><Text style={{ color: C.brandDark, fontWeight: "600" }}>🐾 {t("app_ob_replay")}</Text></Pressable>
         <Text style={S.muted}>{tf("app_version", { v: Constants.expoConfig?.version || "?" })}</Text>
       </View>
     </ScrollView>

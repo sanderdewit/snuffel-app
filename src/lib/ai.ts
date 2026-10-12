@@ -21,11 +21,12 @@ async function installId(): Promise<string> {
 export async function ask(history: ChatMessage[], lang: string, emergencyLabel: string, dog: Dog | null): Promise<AskResult> {
   const body: Record<string, unknown> = {
     lang, emergencyLabel,
-    messages: history.slice(-12).map((m) => ({ role: m.role, content: m.content }))
+    // The last 12 turns, but always the first question: it usually describes the problem.
+    messages: (history.length > 12 ? [history[0], ...history.slice(-11)] : history).map((m) => ({ role: m.role, content: m.content }))
   };
   if (dog) {
     body.dog = {
-      breed: dog.breed || undefined, ageMonths: ageMonths(dog.birth) ?? undefined, weightKg: dog.weight ?? undefined,
+      name: dog.name || undefined, breed: dog.breed || undefined, ageMonths: ageMonths(dog.birth) ?? undefined, weightKg: dog.weight ?? undefined,
       sex: dog.sex ?? undefined, neutered: dog.neutered ?? undefined,
       history: (await aiSummary(dog.id).catch(() => null)) ?? undefined   // only when the owner allows it for this dog
     };

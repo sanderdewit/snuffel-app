@@ -2,7 +2,8 @@
 // advice fits that dog. Each dog has its own conversation, kept on the phone.
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, FlatList, KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native";
-import { router, useFocusEffect } from "expo-router";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { kvGet, kvSet } from "../../lib/db";
 import { useI18n } from "../../i18n";
 import { addChat, ask, clearChat, loadChat, type ChatMessage } from "../../lib/ai";
 import { listDogs, today, type Dog } from "../../lib/dogs";
@@ -20,13 +21,26 @@ export default function Ask() {
   const [busy, setBusy] = useState(false);
   const list = useRef<FlatList<ChatMessage>>(null);
 
+  // ?q= fills in a question (not sent), ?dog= picks the dog: from the walkthrough.
+  const params = useLocalSearchParams<{ q?: string; dog?: string }>();
+  const appliedDogParam = useRef<string | undefined>(undefined);   // tab params stick: apply once
   useFocusEffect(useCallback(() => {
-    listDogs().then((d) => {
+    Promise.all([listDogs(), kvGet("askDog")]).then(([d, last]) => {
       setDogs(d);
-      setDogId((cur) => (cur != null && d.some((x) => x.id === cur) ? cur : d.length === 1 ? d[0].id : null));
+      const fromLink = params.dog && params.dog !== appliedDogParam.current ? Number(params.dog) : null;
+      appliedDogParam.current = params.dog;
+      // A dog asked for by a link, else the current one, else the last one used, else the only one.
+      setDogId((cur) => {
+        for (const id of [fromLink, cur, last ? Number(last) : null]) if (id != null && d.some((x) => x.id === id)) return id;
+        return d.length === 1 ? d[0].id : null;
+      });
     }).catch(() => undefined);
-  }, []));
-  useEffect(() => { loadChat(dogId).then(setMessages).catch(() => setMessages([])); }, [dogId]);
+  }, [params.dog]));
+  useEffect(() => { if (params.q) setText(String(params.q).slice(0, 1000)); }, [params.q]);
+  useEffect(() => {
+    loadChat(dogId).then(setMessages).catch(() => setMessages([]));
+    kvSet("askDog", dogId == null ? null : String(dogId)).catch(() => undefined);
+  }, [dogId]);
 
   const send = async (spoken?: string) => {
     const content = (spoken ?? text).trim().slice(0, 1000);

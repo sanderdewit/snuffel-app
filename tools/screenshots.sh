@@ -55,6 +55,13 @@ for L in ${LANGS[@]}; do
   shot "$L" 5-dog       "/dog/1" 8
   shot "$L" 6-file      "/dog/file/1" 8
   shot "$L" 7-saved     "/saved" 8
+  # First-run walkthrough, for review only (review/ is not uploaded to the store).
+  mkdir -p "$OUT/review"
+  for s in 0 1 2 3 4 5; do
+    launch "$L" "/welcome?step=$s"; sleep 6
+    xcrun simctl io "$UDID" screenshot "$OUT/review/$L-welcome-$s.png" > /dev/null
+  done
+  echo "  review/$L-welcome-0..5.png"
   # Diagnostics (not uploaded to the store): app log lines and crash reports.
   mkdir -p "$OUT/logs"
   xcrun simctl spawn "$UDID" log show --last 30m --style compact \

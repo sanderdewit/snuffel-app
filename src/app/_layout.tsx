@@ -4,7 +4,8 @@ import { StatusBar } from "expo-status-bar";
 import * as Notifications from "expo-notifications";
 import { I18nProvider, useI18n } from "../i18n";
 import { REMINDER_KINDS, rescheduleAll, setReminderTexts } from "../lib/dogs";
-import { seedDemo } from "../lib/demo";
+import { kvGet } from "../lib/db";
+import { isDemo, seedDemo } from "../lib/demo";
 import { C } from "../ui/theme";
 
 Notifications.setNotificationHandler({
@@ -37,11 +38,21 @@ function NotificationLinks() {
   return null;
 }
 
+// First launch: the walkthrough (src/app/welcome.tsx), once. Never in screenshot mode.
+function FirstRun() {
+  useEffect(() => {
+    if (isDemo()) return;
+    kvGet("onboarded").then((v) => { if (!v) router.push("/welcome"); }).catch(() => undefined);
+  }, []);
+  return null;
+}
+
 function Screens() {
   const { t } = useI18n();
   return (
     <Stack screenOptions={{ headerTintColor: C.brandDark, contentStyle: { backgroundColor: C.bg }, headerBackButtonDisplayMode: "minimal" }}>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="welcome" options={{ headerShown: false, presentation: "fullScreenModal", gestureEnabled: false }} />
       <Stack.Screen name="place/[id]" options={{ title: "" }} />
       <Stack.Screen name="dog/[id]" options={{ title: t("app_editDog") }} />
       <Stack.Screen name="dog/file/[id]" options={{ title: t("app_dogFile") }} />
@@ -57,6 +68,7 @@ export default function Root() {
       <ReminderTexts />
       <NotificationLinks />
       <Screens />
+      <FirstRun />
     </I18nProvider>
   );
 }
