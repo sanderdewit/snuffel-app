@@ -1,0 +1,52 @@
+# Weekly: is a newer Expo SDK *stable* (npm dist-tag "latest", not "next")?
+# Then open one issue with the upgrade steps. Betas are ignored on purpose:
+# no store release on a beta SDK. Dependabot skips Expo majors (dependabot.yml).
+name: expo-sdk-check
+
+on:
+  schedule:
+    - cron: "23 6 * * 1"          # Mondays 06:23 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Compare with the stable Expo SDK
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          ours=$(node -p "require('./package.json').dependencies.expo.replace(/^[^0-9]*/, '').split('.')[0]")
+          stable=$(npm view expo dist-tags.latest)
+          stable_major=${stable%%.*}
+          echo "our SDK: $ours, stable Expo: $stable" | tee -a "$GITHUB_STEP_SUMMARY"
+          [ "$stable_major" -gt "$ours" ] || { echo "up to date"; exit 0; }
+
+          title="Upgrade to Expo SDK $stable_major (now stable)"
+          if gh issue list --state open --search "in:title \"$title\"" --json number --jq 'length' | grep -qv '^0$'; then
+            echo "issue already open"; exit 0
+          fi
+
+          # Libraries without an Expo-matched release yet hold the upgrade back.
+          speech=$(npm view expo-speech-recognition version)
+          ready="yes"; [ "${speech%%.*}" -ge "$stable_major" ] || ready="not yet (latest $speech)"
+
+          body=$(printf '%s\n' \
+            "Expo SDK **$stable_major** is now the stable release (\`expo@$stable\`); we are on SDK $ours." \
+            "" \
+            "Upgrade while it is cheap (before/around a store release):" \
+            "" \
+            "1. Read the SDK $stable_major changelog and breaking changes on expo.dev/changelog." \
+            "2. \`npx expo install expo@^$stable_major.0.0 --fix\`, then \`npx expo-doctor\`." \
+            "3. Check the non-Expo native libraries: \`@maplibre/maplibre-react-native\`, \`expo-quick-actions\`, \`expo-speech-recognition\` (SDK $stable_major release: $ready)." \
+            "4. \`npx tsc --noEmit\`, \`npm test\`, then the ci (Android + iOS builds) and screenshots workflows." \
+            "5. Update the SDK version in docs/app-plan.md and the README.")
+          gh issue create --title "$title" --body "$body"
+          echo "opened: $title" >> "$GITHUB_STEP_SUMMARY"
