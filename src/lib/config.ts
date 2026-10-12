@@ -17,5 +17,5 @@ export const CONFIG = {
   countryCodes: "ad,al,at,ba,be,bg,ch,cy,cz,de,dk,ee,es,fi,fo,fr,gb,gg,gr,hr,hu,ie,im,is,it,je," +
     "li,lt,lu,lv,mc,md,me,mk,mt,nl,no,pl,pt,ro,rs,se,si,sk,sm,ua,va,xk",
   homeRadiusM: 15000,                                 // offline area around home
-  emergencySteps: [10000, 25000, 50000]               // metres, as on the website
+  emergencySteps: [10000, 25000, 50000, 100000]               // metres, as on the website
 };
