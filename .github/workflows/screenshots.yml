@@ -22,7 +22,7 @@ env:
 
 jobs:
   ios:
-    if: contains(inputs.platforms, 'ios')
+    if: contains(inputs.platforms, 'ios') || inputs.platforms == 'both'
     runs-on: macos-latest
     timeout-minutes: 120
     steps:
@@ -51,7 +51,7 @@ jobs:
           retention-days: 90
 
   android:
-    if: contains(inputs.platforms, 'android')
+    if: contains(inputs.platforms, 'android') || inputs.platforms == 'both'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
