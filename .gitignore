@@ -39,3 +39,6 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# signed bundles for a manual Play upload (never committed)
+release-upload/
