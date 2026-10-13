@@ -49,7 +49,7 @@ for L in ${LANGS[@]}; do
   sleep 30   # first start: place data, demo data incl. one AI answer
   echo "$L:"
   shot "$L" 1-find      "/?near=1&view=list" 16
-  shot "$L" 2-emergency "/emergency" 16
+  shot "$L" 2-emergency "/emergency" 25   # GPS + widening search; 16 s was sometimes too short
   shot "$L" 3-map       "/?near=1&view=map" 20
   shot "$L" 4-ask       "/ask" 8
   shot "$L" 5-dog       "/dog/1" 8
