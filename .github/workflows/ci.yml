@@ -38,6 +38,11 @@ jobs:
       - name: Tests
         run: npm test
       - name: Expo doctor
+        # Without its "packages match the SDK" check: Expo publishes patch versions
+        # often, and an upstream release shouldn't turn every build red. That drift
+        # is reported weekly as an issue by expo-sdk-check (npx expo install --fix).
+        env:
+          EXPO_DOCTOR_SKIP_DEPENDENCY_VERSION_CHECK: "1"
         run: npx expo-doctor
       - name: Bundle the JavaScript for both platforms
         run: npx expo export --platform android --platform ios --output-dir /tmp/export
