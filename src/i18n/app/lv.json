@@ -176,5 +176,10 @@
   "app_callMyVet": "Zvanīt: {name}",
   "app_newChatConfirm": "Dzēst šo sarunu? To nevarēs atsaukt.",
   "app_retry": "Mēģināt vēlreiz",
-  "app_passwordTooShort": "Izmanto paroli ar vismaz 10 rakstzīmēm."
+  "app_passwordTooShort": "Izmanto paroli ar vismaz 10 rakstzīmēm.",
+  "app_aiWatchFor": "Meklē palīdzību agrāk, ja:",
+  "app_aiFullAnswer": "Pilna atbilde",
+  "app_talkMode": "Saruna",
+  "app_talkOn": "Sarunas režīms: pēc katras atbildes es atkal klausos. Saki ‘stop’ vai pieskaries 🎧, lai beigtu.",
+  "app_voiceStopWords": "stop,beidz,paldies,liels paldies,tas ir viss,uz redzēšanos,atā,gatavs"
 }

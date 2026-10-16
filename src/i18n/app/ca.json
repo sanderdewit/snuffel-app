@@ -176,5 +176,10 @@
   "app_callMyVet": "Truca a {name}",
   "app_newChatConfirm": "Vols suprimir aquesta conversa? No es pot desfer.",
   "app_retry": "Torna-ho a provar",
-  "app_passwordTooShort": "Fes servir una contrasenya d'almenys 10 caràcters."
+  "app_passwordTooShort": "Fes servir una contrasenya d'almenys 10 caràcters.",
+  "app_aiWatchFor": "Demana ajuda abans si:",
+  "app_aiFullAnswer": "Resposta completa",
+  "app_talkMode": "Conversa",
+  "app_talkOn": "Mode conversa: torno a escoltar després de cada resposta. Digues ‘para’ o toca 🎧 per acabar.",
+  "app_voiceStopWords": "para,prou,gràcies,moltes gràcies,això és tot,adéu,ja està"
 }

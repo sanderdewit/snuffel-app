@@ -180,5 +180,10 @@
   "app_callMyVet": "Zadzwoń: {name}",
   "app_newChatConfirm": "Usunąć tę rozmowę? Tej operacji nie można cofnąć.",
   "app_retry": "Spróbuj ponownie",
-  "app_passwordTooShort": "Użyj hasła o długości co najmniej 10 znaków."
+  "app_passwordTooShort": "Użyj hasła o długości co najmniej 10 znaków.",
+  "app_aiWatchFor": "Szukaj pomocy wcześniej, jeśli:",
+  "app_aiFullAnswer": "Pełna odpowiedź",
+  "app_talkMode": "Rozmowa",
+  "app_talkOn": "Tryb rozmowy: po każdej odpowiedzi znów słucham. Powiedz ‘stop’ lub dotknij 🎧, aby zakończyć.",
+  "app_voiceStopWords": "stop,dziękuję,dzięki,to wszystko,do widzenia,koniec,wystarczy"
 }

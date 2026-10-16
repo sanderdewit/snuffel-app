@@ -176,5 +176,10 @@
   "app_callMyVet": "Appeler {name}",
   "app_newChatConfirm": "Supprimer cette conversation ? Cette action est irréversible.",
   "app_retry": "Réessayer",
-  "app_passwordTooShort": "Utilisez un mot de passe d'au moins 10 caractères."
+  "app_passwordTooShort": "Utilisez un mot de passe d'au moins 10 caractères.",
+  "app_aiWatchFor": "Demandez de l'aide plus tôt si :",
+  "app_aiFullAnswer": "Réponse complète",
+  "app_talkMode": "Conversation",
+  "app_talkOn": "Mode conversation : j'écoute à nouveau après chaque réponse. Dites ‘stop’ ou touchez 🎧 pour l'arrêter.",
+  "app_voiceStopWords": "stop,arrête,merci,merci beaucoup,c'est tout,au revoir,terminé"
 }

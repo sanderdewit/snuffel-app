@@ -172,5 +172,10 @@
   "app_callMyVet": "Hringja í {name}",
   "app_newChatConfirm": "Eyða þessu samtali? Ekki er hægt að afturkalla það.",
   "app_retry": "Reyna aftur",
-  "app_passwordTooShort": "Notaðu lykilorð með að minnsta kosti 10 stöfum."
+  "app_passwordTooShort": "Notaðu lykilorð með að minnsta kosti 10 stöfum.",
+  "app_aiWatchFor": "Leitaðu fyrr hjálpar ef:",
+  "app_aiFullAnswer": "Allt svarið",
+  "app_talkMode": "Samtal",
+  "app_talkOn": "Samtalshamur: ég hlusta aftur eftir hvert svar. Segðu ‘stopp’ eða ýttu á 🎧 til að hætta.",
+  "app_voiceStopWords": "stopp,takk,takk fyrir,takk kærlega,þetta er komið,bless,búið"
 }

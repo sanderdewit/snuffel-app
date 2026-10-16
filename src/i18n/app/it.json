@@ -176,5 +176,10 @@
   "app_callMyVet": "Chiama {name}",
   "app_newChatConfirm": "Eliminare questa conversazione? L'azione non può essere annullata.",
   "app_retry": "Riprova",
-  "app_passwordTooShort": "Usa una password di almeno 10 caratteri."
+  "app_passwordTooShort": "Usa una password di almeno 10 caratteri.",
+  "app_aiWatchFor": "Chiedi aiuto prima se:",
+  "app_aiFullAnswer": "Risposta completa",
+  "app_talkMode": "Conversazione",
+  "app_talkOn": "Modalità conversazione: dopo ogni risposta torno ad ascoltare. Di’ ‘stop’ o tocca 🎧 per terminare.",
+  "app_voiceStopWords": "stop,basta,grazie,grazie mille,è tutto,arrivederci,fine"
 }

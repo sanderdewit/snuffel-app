@@ -180,5 +180,10 @@
   "app_callMyVet": "Pokličite {name}",
   "app_newChatConfirm": "Želite izbrisati ta pogovor? Tega ni mogoče razveljaviti.",
   "app_retry": "Poskusite znova",
-  "app_passwordTooShort": "Uporabite geslo z vsaj 10 znaki."
+  "app_passwordTooShort": "Uporabite geslo z vsaj 10 znaki.",
+  "app_aiWatchFor": "Poiščite pomoč prej, če:",
+  "app_aiFullAnswer": "Celoten odgovor",
+  "app_talkMode": "Pogovor",
+  "app_talkOn": "Način pogovora: po vsakem odgovoru znova poslušam. Recite ‘stop’ ali tapnite 🎧 za konec.",
+  "app_voiceStopWords": "stop,ustavi,hvala,najlepša hvala,to je vse,nasvidenje,adijo,konec"
 }

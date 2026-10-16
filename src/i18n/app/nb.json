@@ -172,5 +172,10 @@
   "app_callMyVet": "Ring {name}",
   "app_newChatConfirm": "Slette denne samtalen? Dette kan ikke angres.",
   "app_retry": "Prøv igjen",
-  "app_passwordTooShort": "Bruk et passord på minst 10 tegn."
+  "app_passwordTooShort": "Bruk et passord på minst 10 tegn.",
+  "app_aiWatchFor": "Søk hjelp tidligere hvis:",
+  "app_aiFullAnswer": "Hele svaret",
+  "app_talkMode": "Samtale",
+  "app_talkOn": "Samtalemodus: Jeg lytter igjen etter hvert svar. Si ‘stopp’ eller trykk på 🎧 for å avslutte.",
+  "app_voiceStopWords": "stopp,takk,tusen takk,det var alt,ha det,ferdig,slutt"
 }

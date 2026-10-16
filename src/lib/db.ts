@@ -19,7 +19,9 @@ const MIGRATIONS = [
    CREATE INDEX IF NOT EXISTS records_dog ON records (dog_id, date);
    ALTER TABLE dogs ADD COLUMN share_file INTEGER NOT NULL DEFAULT 1;`,
   // v3: the server's signature on each answer, sent back with the conversation
-  `ALTER TABLE chats ADD COLUMN sig TEXT;`
+  `ALTER TABLE chats ADD COLUMN sig TEXT;`,
+  // v4: the structure of an answer (verdict, steps, signs, questions, spoken), JSON
+  `ALTER TABLE chats ADD COLUMN parts TEXT;`
 ];
 
 let ready: Promise<void> | null = null;

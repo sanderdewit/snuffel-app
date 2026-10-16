@@ -5,12 +5,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Alert, FlatList, KeyboardAvoidingView, Linking, Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useI18n } from "../../i18n";
-import { addChat, ask, clearChat, loadChat, type ChatMessage } from "../../lib/ai";
+import { addChat, ask, clearChat, loadChat, type AnswerParts, type ChatMessage } from "../../lib/ai";
 import { kvGet, kvSet } from "../../lib/db";
 import { ageMonths, listDogs, today, type Dog } from "../../lib/dogs";
 import { addRecord, setShareFileWithAi, shareFileWithAi } from "../../lib/dogfile";
 import { myVet, type SavedPlace } from "../../lib/saved";
 import { speak, startListening, stopListening, stopSpeaking } from "../../lib/voice";
+import { isStopPhrase } from "../../lib/talk";
 import { useSpeechRecognitionEvent } from "expo-speech-recognition";
 import { callUrl } from "../../ui/PlaceCard";
 import { Toggle } from "../../ui/Toggle";
@@ -24,6 +25,33 @@ function starters(dog: Dog | null): string[] {
   return months != null && months < 12
     ? ["app_aiStarter4", "app_aiStarter1", "app_aiStarter3", "app_aiStarter5"]
     : ["app_aiStarter1", "app_aiStarter3", "app_aiStarter2", "app_aiStarter5"];
+}
+
+// A structured answer: the verdict first (readable in five seconds), then the
+// steps, the signs to get help sooner, and the follow-up questions.
+function Answer({ parts, onFull }: { parts: AnswerParts; onFull: () => void }) {
+  const { t } = useI18n();
+  return (
+    <View style={{ gap: 8 }}>
+      {!!parts.summary && <Text style={[S.body, { fontWeight: "700" }]}>{parts.summary}</Text>}
+      {parts.steps.map((s, n) => (
+        <View key={n} style={[S.row, { gap: 8, alignItems: "flex-start" }]}>
+          <Text style={[S.body, { fontWeight: "700", color: C.brandDark, minWidth: 16 }]}>{n + 1}.</Text>
+          <Text style={[S.body, { flex: 1 }]}>{s}</Text>
+        </View>
+      ))}
+      {parts.watch_for.length > 0 && (
+        <View style={{ gap: 2, marginTop: 2 }}>
+          <Text style={[S.muted, { fontWeight: "700", color: C.warn }]}>⚠️ {t("app_aiWatchFor")}</Text>
+          {parts.watch_for.map((w, n) => <Text key={n} style={S.body}>• {w}</Text>)}
+        </View>
+      )}
+      {parts.questions.map((q, n) => <Text key={n} style={[S.body, { fontStyle: "italic" }]}>{q}</Text>)}
+      <Pressable onPress={onFull} hitSlop={8} accessibilityRole="button">
+        <Text style={[S.muted, { textDecorationLine: "underline" }]}>{t("app_aiFullAnswer")}</Text>
+      </Pressable>
+    </View>
+  );
 }
 
 export default function Ask() {
@@ -73,20 +101,33 @@ export default function Ask() {
     setBusy(false);
     const reply: ChatMessage = "error" in r
       ? { role: "assistant", local: true, content: t(r.error === "rate_limited" ? "aiRateLimited" : r.error === "unavailable" ? "aiReply" : "aiError") }
-      : { role: "assistant", content: r.reply, urgency: r.urgency, topic: r.topic, sig: r.sig };
+      : { role: "assistant", content: r.reply, urgency: r.urgency, topic: r.topic, sig: r.sig, parts: r.parts };
     if (!reply.local) await addChat(askedFor, reply);
     if (currentDog.current !== askedFor) return;   // the user switched dogs meanwhile: it's in that dog's thread
     scrollTo.current = history.length;
     setMessages(history.concat(reply));
-    // Asked by voice: answer by voice too (hands busy with the dog).
-    if (spoken && !reply.local) { setSpeaking(history.length); speak(reply.content, lang, () => setSpeaking(null)); }
+    // Asked by voice: answer by voice too (hands busy with the dog), with the
+    // short spoken version; in conversation mode, listen again afterwards.
+    if (spoken || talkRef.current) {
+      const say = reply.local ? reply.content : reply.parts?.spoken || reply.parts?.summary || reply.content;
+      setSpeaking(history.length);
+      speak(say, lang, () => {
+        setSpeaking(null);
+        if (talkRef.current && !reply.local) listen();
+        else if (reply.local) endTalk();
+      });
+    }
   };
-  const send = async (spoken?: string) => {
-    const content = (spoken ?? text).trim().slice(0, 1000);
+  const [expanded, setExpanded] = useState<Set<number>>(new Set());   // answers shown in full
+  useEffect(() => setExpanded(new Set()), [dogId]);
+  // spoken: said out loud (answer out loud too); tapped: a quick reply
+  const send = async (spoken?: string, tapped?: string) => {
+    const content = (spoken ?? tapped ?? text).trim().slice(0, 1000);
     if (!content || busy) return;
     const user: ChatMessage = { role: "user", content };
     const history = messages.filter((m) => !m.local).concat(user);
-    setMessages(history); setText("");
+    setMessages(history);
+    if (tapped == null) setText("");
     await addChat(dogId, user);
     await run(history, spoken != null);
   };
@@ -95,33 +136,56 @@ export default function Ask() {
   const retry = () => run(messages.filter((m) => !m.local), false);
 
   // ---- voice ----
+  // Conversation mode: after each spoken answer, listen again, until a stop
+  // phrase ("stop", "bedankt"), two silences in a row, or a tap on 🎧.
+  // Tapping 🎙️ while an answer is read out interrupts it and listens.
   const [listening, setListening] = useState(false);
   const [speaking, setSpeaking] = useState<number | null>(null);   // index of the message being read
   const [voiceNote, setVoiceNote] = useState<string | null>(null);
+  const [talk, setTalk] = useState(false);
+  const talkRef = useRef(false);
+  const silences = useRef(0);
+  const endTalk = () => { talkRef.current = false; setTalk(false); silences.current = 0; };
   useSpeechRecognitionEvent("result", (e) => {
     const said = e.results[0]?.transcript || "";
     setText(said);
-    if (e.isFinal && said.trim()) { setListening(false); send(said); }
+    if (!e.isFinal || !said.trim()) return;
+    setListening(false);
+    silences.current = 0;
+    if (talkRef.current && isStopPhrase(said, t("app_voiceStopWords"))) { endTalk(); setText(""); return; }
+    send(said);
   });
   useSpeechRecognitionEvent("end", () => setListening(false));
   useSpeechRecognitionEvent("error", (e) => {
     setListening(false);
-    if (e.error !== "no-speech" && e.error !== "aborted") setVoiceNote(t("app_voiceUnavailable"));
+    if (e.error === "no-speech" && talkRef.current) {
+      if (++silences.current >= 2) endTalk(); else listen();
+      return;
+    }
+    if (e.error !== "no-speech" && e.error !== "aborted") { setVoiceNote(t("app_voiceUnavailable")); endTalk(); }
   });
-  const toggleListening = async () => {
+  const listen = async () => {
     setVoiceNote(null);
-    if (listening) { stopListening(); return; }
     stopSpeaking(); setSpeaking(null);
     const problem = await startListening(lang);
-    if (problem) setVoiceNote(t(problem === "denied" ? "app_voiceDenied" : "app_voiceUnavailable"));
+    if (problem) { setVoiceNote(t(problem === "denied" ? "app_voiceDenied" : "app_voiceUnavailable")); endTalk(); }
     else { setText(""); setListening(true); }
+  };
+  const toggleListening = () => {
+    if (listening) { stopListening(); return; }
+    listen();
+  };
+  const toggleTalk = () => {
+    if (talkRef.current) { endTalk(); stopListening(); stopSpeaking(); setSpeaking(null); return; }
+    talkRef.current = true; setTalk(true); silences.current = 0;
+    listen();
   };
   const toggleRead = (i: number, content: string) => {
     if (speaking === i) { stopSpeaking(); setSpeaking(null); return; }
     setSpeaking(i);
     speak(content, lang, () => setSpeaking((cur) => (cur === i ? null : cur)));
   };
-  useFocusEffect(useCallback(() => () => { stopSpeaking(); stopListening(); }, []));
+  useFocusEffect(useCallback(() => () => { talkRef.current = false; setTalk(false); stopSpeaking(); stopListening(); }, []));
 
   // "Save to the dog's file": the question as title, the answer as details.
   // Keyed by message id, so a remount or dog switch can't save it twice.
@@ -130,7 +194,11 @@ export default function Ask() {
   const saveToFile = async (m: ChatMessage, i: number) => {
     if (!dog) return;
     const question = messages.slice(0, i).reverse().find((x) => x.role === "user");
-    await addRecord({ dogId: dog.id, kind: "ai", date: today(), title: (question ? question.content : t("app_rec_ai")).slice(0, 200), details: m.content, value: null });
+    // The verdict and steps read better in the file than the long answer.
+    const details = m.parts?.summary
+      ? [m.parts.summary, ...m.parts.steps.map((s, n) => `${n + 1}. ${s}`)].join("\n")
+      : m.content;
+    await addRecord({ dogId: dog.id, kind: "ai", date: today(), title: (question ? question.content : t("app_rec_ai")).slice(0, 200), details, value: null });
     setFiled((s) => new Set(s).add(fileKey(m, i)));
   };
 
@@ -230,8 +298,20 @@ export default function Ask() {
                 </Text>
               )}
               <View style={{ backgroundColor: m.role === "user" ? C.brandDark : m.local ? "#fff7ed" : C.card, borderRadius: 14, padding: 10, borderWidth: m.role === "user" ? 0 : 1, borderColor: C.line }}>
-                <Text style={[S.body, { color: m.role === "user" ? "#fff" : C.text }]}>{m.content}</Text>
+                {m.parts && !expanded.has(i) ? <Answer parts={m.parts} onFull={() => setExpanded((s) => new Set(s).add(i))} />
+                  : <Text style={[S.body, { color: m.role === "user" ? "#fff" : C.text }]}>{m.content}</Text>}
               </View>
+              {/* Tap-to-answer replies for the latest answer's first question */}
+              {m.role === "assistant" && i === messages.length - 1 && !busy && !!m.parts?.quick_replies.length && (
+                <View style={[S.row, { gap: 6, flexWrap: "wrap" }]}>
+                  {m.parts.quick_replies.map((q) => (
+                    <Pressable key={q} onPress={() => send(undefined, q)} accessibilityRole="button"
+                      style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: 16, borderWidth: 1, borderColor: C.brandDark, backgroundColor: C.card }}>
+                      <Text style={{ color: C.brandDark, fontWeight: "600" }}>{q}</Text>
+                    </Pressable>
+                  ))}
+                </View>
+              )}
               {m.role === "assistant" && !m.local && (
                 <View style={[S.row, { gap: 16, flexWrap: "wrap" }]}>
                   <Pressable onPress={() => toggleRead(i, m.content)} hitSlop={8} accessibilityRole="button"
@@ -263,12 +343,17 @@ export default function Ask() {
           ) : null}
       />
       <View style={{ padding: 12, gap: 6, borderTopWidth: 1, borderColor: C.line, backgroundColor: C.card }}>
+        {talk && <Text style={[S.muted, { color: C.brandDark, fontWeight: "600" }]} accessibilityLiveRegion="polite">🎧 {t("app_talkOn")}</Text>}
         {listening && <Text style={[S.muted, { color: C.danger, fontWeight: "700" }]} accessibilityLiveRegion="polite">🎙️ {t("app_voiceListening")}</Text>}
         {!!voiceNote && <Text style={[S.muted, { color: C.warn }]}>{voiceNote}</Text>}
         <View style={[S.row, { gap: 8 }]}>
           <Pressable onPress={toggleListening} disabled={busy} accessibilityRole="button" accessibilityLabel={t(listening ? "app_voiceListening" : "app_voiceStart")}
             style={{ width: 46, height: 46, borderRadius: 23, alignItems: "center", justifyContent: "center", backgroundColor: listening ? C.danger : C.chip, opacity: busy ? 0.5 : 1 }}>
             <Text style={{ fontSize: 22 }}>{listening ? "⏹" : "🎙️"}</Text>
+          </Pressable>
+          <Pressable onPress={toggleTalk} disabled={busy && !talk} accessibilityRole="switch" accessibilityState={{ checked: talk }} accessibilityLabel={t("app_talkMode")}
+            style={{ width: 46, height: 46, borderRadius: 23, alignItems: "center", justifyContent: "center", backgroundColor: talk ? C.brandDark : C.chip, opacity: busy && !talk ? 0.5 : 1 }}>
+            <Text style={{ fontSize: 20 }}>🎧</Text>
           </Pressable>
           <TextInput style={[S.input, { flex: 1, maxHeight: 120 }]} value={text} onChangeText={setText} placeholder={t("aiPlaceholder")} multiline maxLength={1000} />
           <Pressable style={[S.btn, { backgroundColor: C.brandDark }, busy && { opacity: 0.5 }]} onPress={() => send()} disabled={busy} accessibilityRole="button"><Text style={S.btnText}>{t("aiSend")}</Text></Pressable>

@@ -172,5 +172,10 @@
   "app_callMyVet": "Ring {name}",
   "app_newChatConfirm": "Radera den här konversationen? Det går inte att ångra.",
   "app_retry": "Försök igen",
-  "app_passwordTooShort": "Använd ett lösenord på minst 10 tecken."
+  "app_passwordTooShort": "Använd ett lösenord på minst 10 tecken.",
+  "app_aiWatchFor": "Sök hjälp tidigare om:",
+  "app_aiFullAnswer": "Hela svaret",
+  "app_talkMode": "Samtal",
+  "app_talkOn": "Samtalsläge: jag lyssnar igen efter varje svar. Säg ‘stopp’ eller tryck på 🎧 för att avsluta.",
+  "app_voiceStopWords": "stopp,tack,tack så mycket,det var allt,hej då,klar,sluta"
 }

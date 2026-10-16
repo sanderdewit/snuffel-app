@@ -1,6 +1,7 @@
 // Voice for the AI chat, entirely through the phone's own services: speech
 // recognition (Apple / Google; on the device itself where the phone supports it)
-// and text-to-speech. Snuffel never receives audio.
+// and text-to-speech with the phone's best voice. Snuffel never receives audio.
+// Conversation mode (ask.tsx) loops: speak the short answer, listen again.
 import * as Speech from "expo-speech";
 import { getLocales } from "expo-localization";
 import { ExpoSpeechRecognitionModule } from "expo-speech-recognition";
@@ -38,8 +39,29 @@ export async function startListening(lang: string): Promise<VoiceProblem | null>
 
 export const stopListening = () => ExpoSpeechRecognitionModule.stop();
 
+// The most natural voice the phone has for this language: an "Enhanced" one
+// (iOS premium / Android high-quality) in the phone's own region when possible.
+// Looked up once per locale; null = the system default.
+const voices = new Map<string, Promise<string | null>>();
+function bestVoice(locale: string): Promise<string | null> {
+  if (!voices.has(locale)) {
+    voices.set(locale, Speech.getAvailableVoicesAsync().then((all) => {
+      const norm = (l: string) => l.replace("_", "-").toLowerCase();
+      const lang = locale.split("-")[0].toLowerCase();
+      const fits = all.filter((v) => norm(v.language).split("-")[0] === lang);
+      const score = (v: Speech.Voice) => (v.quality === Speech.VoiceQuality.Enhanced ? 2 : 0) + (norm(v.language) === locale.toLowerCase() ? 1 : 0);
+      fits.sort((a, b) => score(b) - score(a));
+      return fits[0] ? fits[0].identifier : null;
+    }).catch(() => null));
+  }
+  return voices.get(locale)!;
+}
+
 export function speak(text: string, lang: string, onDone?: () => void) {
   Speech.stop();
-  Speech.speak(text, { language: speechLocale(lang), onDone, onStopped: onDone, onError: onDone });
+  const language = speechLocale(lang);
+  bestVoice(language).then((voice) =>
+    Speech.speak(text, { language, ...(voice ? { voice } : {}), onDone, onStopped: onDone, onError: onDone }));
 }
 export const stopSpeaking = () => Speech.stop();
+

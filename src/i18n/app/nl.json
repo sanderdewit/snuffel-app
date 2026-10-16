@@ -172,5 +172,10 @@
   "app_callMyVet": "Bel {name}",
   "app_newChatConfirm": "Dit gesprek verwijderen? Dat kan niet ongedaan worden.",
   "app_retry": "Opnieuw proberen",
-  "app_passwordTooShort": "Gebruik een wachtwoord van minstens 10 tekens."
+  "app_passwordTooShort": "Gebruik een wachtwoord van minstens 10 tekens.",
+  "app_aiWatchFor": "Neem eerder contact op als:",
+  "app_aiFullAnswer": "Volledig antwoord",
+  "app_talkMode": "Gesprek",
+  "app_talkOn": "Gespreksmodus: na elk antwoord luister ik weer. Zeg ‘stop’ of tik op 🎧 om te stoppen.",
+  "app_voiceStopWords": "stop,stoppen,bedankt,dank je,dank je wel,klaar,dat was het,tot ziens"
 }

@@ -176,5 +176,10 @@
   "app_callMyVet": "Pozovi {name}",
   "app_newChatConfirm": "Obrisati ovaj razgovor? Ovo ne može da se opozove.",
   "app_retry": "Pokušaj ponovo",
-  "app_passwordTooShort": "Koristi lozinku od najmanje 10 znakova."
+  "app_passwordTooShort": "Koristi lozinku od najmanje 10 znakova.",
+  "app_aiWatchFor": "Potraži pomoć ranije ako:",
+  "app_aiFullAnswer": "Ceo odgovor",
+  "app_talkMode": "Razgovor",
+  "app_talkOn": "Režim razgovora: posle svakog odgovora ponovo slušam. Reci ‘stop’ ili dodirni 🎧 za kraj.",
+  "app_voiceStopWords": "stop,stani,hvala,hvala ti,to je sve,doviđenja,gotovo,kraj"
 }

@@ -172,5 +172,10 @@
   "app_callMyVet": "Call {name}",
   "app_newChatConfirm": "Delete this conversation? This can't be undone.",
   "app_retry": "Try again",
-  "app_passwordTooShort": "Use a password of at least 10 characters."
+  "app_passwordTooShort": "Use a password of at least 10 characters.",
+  "app_aiWatchFor": "Get help sooner if:",
+  "app_aiFullAnswer": "Full answer",
+  "app_talkMode": "Conversation",
+  "app_talkOn": "Conversation mode: I listen again after each answer. Say ‘stop’ or tap 🎧 to end it.",
+  "app_voiceStopWords": "stop,thanks,thank you,that's all,goodbye,done"
 }

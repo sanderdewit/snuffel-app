@@ -176,5 +176,10 @@
   "app_callMyVet": "Ligar para {name}",
   "app_newChatConfirm": "Eliminar esta conversa? Esta ação não pode ser anulada.",
   "app_retry": "Tentar novamente",
-  "app_passwordTooShort": "Utilize uma palavra-passe com pelo menos 10 caracteres."
+  "app_passwordTooShort": "Utilize uma palavra-passe com pelo menos 10 caracteres.",
+  "app_aiWatchFor": "Procure ajuda mais cedo se:",
+  "app_aiFullAnswer": "Resposta completa",
+  "app_talkMode": "Conversa",
+  "app_talkOn": "Modo conversa: volto a ouvir depois de cada resposta. Diga ‘stop’ ou toque em 🎧 para terminar.",
+  "app_voiceStopWords": "stop,chega,obrigado,obrigada,muito obrigado,é tudo,adeus"
 }

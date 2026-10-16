@@ -172,5 +172,10 @@
   "app_callMyVet": "{name} hívása",
   "app_newChatConfirm": "Törlöd ezt a beszélgetést? Ez nem vonható vissza.",
   "app_retry": "Újra",
-  "app_passwordTooShort": "Használj legalább 10 karakterből álló jelszót."
+  "app_passwordTooShort": "Használj legalább 10 karakterből álló jelszót.",
+  "app_aiWatchFor": "Kérj hamarabb segítséget, ha:",
+  "app_aiFullAnswer": "Teljes válasz",
+  "app_talkMode": "Beszélgetés",
+  "app_talkOn": "Beszélgetés mód: minden válasz után újra figyelek. Mondd, hogy ‘állj’, vagy koppints a 🎧 ikonra a befejezéshez.",
+  "app_voiceStopWords": "állj,stop,köszönöm,köszi,ennyi,ennyi volt,viszlát,kész"
 }

@@ -176,5 +176,10 @@
   "app_callMyVet": "Llamar a {name}",
   "app_newChatConfirm": "¿Eliminar esta conversación? No se puede deshacer.",
   "app_retry": "Reintentar",
-  "app_passwordTooShort": "Usa una contraseña de al menos 10 caracteres."
+  "app_passwordTooShort": "Usa una contraseña de al menos 10 caracteres.",
+  "app_aiWatchFor": "Busca ayuda antes si:",
+  "app_aiFullAnswer": "Respuesta completa",
+  "app_talkMode": "Conversación",
+  "app_talkOn": "Modo conversación: vuelvo a escuchar después de cada respuesta. Di ‘basta’ o toca 🎧 para terminar.",
+  "app_voiceStopWords": "basta,stop,gracias,muchas gracias,eso es todo,adiós,ya está"
 }

@@ -172,5 +172,10 @@
   "app_callMyVet": "{name} anrufen",
   "app_newChatConfirm": "Diese Unterhaltung löschen? Das kann nicht rückgängig gemacht werden.",
   "app_retry": "Erneut versuchen",
-  "app_passwordTooShort": "Verwende ein Passwort mit mindestens 10 Zeichen."
+  "app_passwordTooShort": "Verwende ein Passwort mit mindestens 10 Zeichen.",
+  "app_aiWatchFor": "Hol dir früher Hilfe, wenn:",
+  "app_aiFullAnswer": "Ganze Antwort",
+  "app_talkMode": "Gespräch",
+  "app_talkOn": "Gesprächsmodus: Nach jeder Antwort höre ich wieder zu. Sag ‘stopp’ oder tippe auf 🎧, um ihn zu beenden.",
+  "app_voiceStopWords": "stopp,stop,danke,danke schön,das war's,tschüss,fertig,ende"
 }

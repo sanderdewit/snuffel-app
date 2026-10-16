@@ -172,5 +172,10 @@
   "app_callMyVet": "Helista: {name}",
   "app_newChatConfirm": "Kas kustutada see vestlus? Seda ei saa tagasi võtta.",
   "app_retry": "Proovi uuesti",
-  "app_passwordTooShort": "Kasuta vähemalt 10 märgi pikkust parooli."
+  "app_passwordTooShort": "Kasuta vähemalt 10 märgi pikkust parooli.",
+  "app_aiWatchFor": "Otsi abi varem, kui:",
+  "app_aiFullAnswer": "Kogu vastus",
+  "app_talkMode": "Vestlus",
+  "app_talkOn": "Vestlusrežiim: kuulan pärast iga vastust uuesti. Ütle ‘stopp’ või puuduta 🎧, et lõpetada.",
+  "app_voiceStopWords": "stopp,aitäh,tänan,suur aitäh,see on kõik,head aega,nägemist,lõpp"
 }

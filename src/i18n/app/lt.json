@@ -180,5 +180,10 @@
   "app_callMyVet": "Skambinti: {name}",
   "app_newChatConfirm": "Ištrinti šį pokalbį? To nebus galima atšaukti.",
   "app_retry": "Bandyti dar kartą",
-  "app_passwordTooShort": "Naudokite bent 10 simbolių slaptažodį."
+  "app_passwordTooShort": "Naudokite bent 10 simbolių slaptažodį.",
+  "app_aiWatchFor": "Kreipkitės pagalbos anksčiau, jei:",
+  "app_aiFullAnswer": "Visas atsakymas",
+  "app_talkMode": "Pokalbis",
+  "app_talkOn": "Pokalbio režimas: po kiekvieno atsakymo vėl klausausi. Pasakykite ‘stop’ arba bakstelėkite 🎧, kad baigtumėte.",
+  "app_voiceStopWords": "stop,sustok,ačiū,labai ačiū,viskas,tai viskas,viso gero,iki"
 }

@@ -80,7 +80,7 @@ export async function seedDemo(lang: string, emergencyLabel: string): Promise<vo
     const r = await ask([q], lang, emergencyLabel, { id: dogId, name: "Bobbie", breed, birth: "2019-05-12", weight: 6.5, sex: "female", neutered: true, photo: null });
     if (!("error" in r)) {
       await addChat(dogId, q);
-      await addChat(dogId, { role: "assistant", content: r.reply, urgency: r.urgency, topic: r.topic });
+      await addChat(dogId, { role: "assistant", content: r.reply, urgency: r.urgency, topic: r.topic, sig: r.sig, parts: r.parts });
     }
   }
   await kvSet("demoSeeded", lang);
