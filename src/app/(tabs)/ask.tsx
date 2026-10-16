@@ -12,6 +12,7 @@ import { addRecord, setShareFileWithAi, shareFileWithAi } from "../../lib/dogfil
 import { myVet, type SavedPlace } from "../../lib/saved";
 import { speak, startListening, stopListening, stopSpeaking } from "../../lib/voice";
 import { isStopPhrase } from "../../lib/talk";
+import { takeQuestion } from "../../lib/handoff";
 import { useSpeechRecognitionEvent } from "expo-speech-recognition";
 import { callUrl } from "../../ui/PlaceCard";
 import { Toggle } from "../../ui/Toggle";
@@ -84,9 +85,13 @@ export default function Ask() {
     }).catch(() => undefined);
   }, [params.dog]));
   useEffect(() => { if (params.q) setText(String(params.q).slice(0, 1000)); }, [params.q]);
+  // Whose conversation is on screen: a question handed over by the walkthrough
+  // is sent only once that conversation has loaded.
+  const [loadedFor, setLoadedFor] = useState<{ dog: number | null } | null>(null);
   useEffect(() => {
     currentDog.current = dogId;
-    loadChat(dogId).then(setMessages).catch(() => setMessages([]));
+    setLoadedFor(null);
+    loadChat(dogId).catch(() => [] as ChatMessage[]).then((m) => { setMessages(m); setLoadedFor({ dog: dogId }); });
     kvSet("askDog", dogId == null ? null : String(dogId)).catch(() => undefined);
     if (dogId != null) shareFileWithAi(dogId).then(setShareFile).catch(() => undefined);
   }, [dogId]);
@@ -131,6 +136,12 @@ export default function Ask() {
     await addChat(dogId, user);
     await run(history, spoken != null);
   };
+  useEffect(() => {
+    if (!loadedFor || loadedFor.dog !== dogId) return;
+    const q = takeQuestion(dogId);
+    if (q) send(undefined, q);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadedFor]);
   // The last question got no answer (an error, or the app was closed): ask again.
   const lastUnanswered = !busy && messages.length > 0 && (messages[messages.length - 1].role === "user" || !!messages[messages.length - 1].local);
   const retry = () => run(messages.filter((m) => !m.local), false);
@@ -214,10 +225,12 @@ export default function Ask() {
     if (health && (m.urgency === "emergency" || m.urgency === "vet_soon") && vet?.phone) {
       out.push({ label: "📞 " + tf("app_callMyVet", { name: vet.name || t("app_myVet") }), go: () => Linking.openURL(callUrl(vet.phone!)), danger: m.urgency === "emergency" });
     }
+    // Only when it's needed: home advice ("monitor") gets no referral buttons;
+    // its warning signs say when to get help.
     if (m.urgency === "emergency") out.push({ label: t("aiCtaEmergency"), go: () => router.push("/emergency"), danger: !vet?.phone });
-    else if (m.urgency === "vet_soon" || m.urgency === "monitor") {
+    else if (m.urgency === "vet_soon") {
       if (m.topic === "behaviour") out.push({ label: t("aiCtaTrainers"), go: () => router.push({ pathname: "/", params: { cat: "training" } }) });
-      else if (m.urgency === "vet_soon" && !vet) out.push({ label: t("aiCtaVets"), go: () => router.push({ pathname: "/", params: { cat: "vet" } }) });
+      else if (!vet) out.push({ label: t("aiCtaVets"), go: () => router.push({ pathname: "/", params: { cat: "vet" } }) });
     }
     return out;
   };
@@ -244,7 +257,7 @@ export default function Ask() {
         <View style={{ gap: 8 }}>
           <Text style={S.muted}>{t("app_aiTryAsking")}</Text>
           {starters(dog).map((k) => (
-            <Pressable key={k} onPress={() => setText(t(k))} accessibilityRole="button" style={[S.card, S.row, { gap: 8, paddingVertical: 10 }]}>
+            <Pressable key={k} onPress={() => send(undefined, t(k))} disabled={busy} accessibilityRole="button" style={[S.card, S.row, { gap: 8, paddingVertical: 10 }]}>
               <Text>💬</Text>
               <Text style={[S.body, { flex: 1 }]}>{t(k)}</Text>
             </Pressable>

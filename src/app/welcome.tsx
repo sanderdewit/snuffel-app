@@ -16,6 +16,8 @@ import { pinHomeArea, search, type Place } from "../lib/places";
 import { setMyVet } from "../lib/saved";
 import { ChainBadge, displayName } from "../ui/PlaceCard";
 import { C, S } from "../ui/theme";
+import { Toggle } from "../ui/Toggle";
+import { sendOnOpen } from "../lib/handoff";
 import icon from "../../assets/icon.png";
 
 const STEPS = 6;   // welcome, area, dog, vet, AI help, done
@@ -53,12 +55,13 @@ export default function Welcome() {
     // Searched by GPS: open Find around the phone right away.
     if (spot?.gps) setTimeout(() => router.navigate("/?near=1"), 300);
   };
-  // AI help step: an example question opens AI help with it filled in (not sent),
-  // for the dog just added.
+  // AI help step: an example question opens AI help and is sent right away,
+  // for the dog just added (handed over in memory, see lib/handoff.ts).
   const tryQuestion = async (q: string) => {
     await kvSet("onboarded", "1");
+    sendOnOpen(q, dogId);
     if (router.canGoBack()) router.back();
-    setTimeout(() => router.navigate({ pathname: "/ask", params: { q, ...(dogId != null ? { dog: String(dogId) } : {}) } }), 300);
+    setTimeout(() => router.navigate({ pathname: "/ask", params: dogId != null ? { dog: String(dogId) } : {} }), 300);
   };
   // A puppy (under a year) gets the house-training example.
   const puppy = !!birth && validDate(birth) && Date.now() - new Date(birth).getTime() < 365 * 864e5;
@@ -114,14 +117,17 @@ export default function Welcome() {
     setDogId(null); setName(""); setBreed(""); setBirth(""); setWeight(""); setPhoto(null);
   };
 
+  // Your own vet can be part of a chain: all vets nearest first (chains labelled),
+  // optionally independents only.
   const loadVets = async (s: { lat: number; lon: number }) => {
     try {
       const all = (await search(s.lat, s.lon, 10000)).filter((p) => p.cat === "vet" || p.cat === "hospital");
-      // independents first, then distance
-      all.sort((a, b) => (a.chain ? 1 : 0) - (b.chain ? 1 : 0) || a.dist - b.dist);
-      setVets(all.slice(0, 8));
+      all.sort((a, b) => a.dist - b.dist);
+      setVets(all);
     } catch { setVets([]); }
   };
+  const [vetIndependentOnly, setVetIndependentOnly] = useState(false);
+  const shownVets = (vets || []).filter((p) => !vetIndependentOnly || !p.chain).slice(0, 12);
   const chooseVet = async (p: Place) => { await setMyVet(p, true); setChosen(p.id); };
 
   const next = () => {
@@ -228,14 +234,19 @@ export default function Welcome() {
         {!spot ? <Text style={S.muted}>{t("app_ob_vetNeedsArea")}</Text>
           : vets == null ? <ActivityIndicator color={C.brand} />
           : !vets.length ? <Text style={S.muted}>{t("app_ob_vetNone")}</Text>
-          : vets.map((p) => (
+          : [
+            <View key="filter" style={[S.row, { gap: 8 }]}>
+              <Toggle value={vetIndependentOnly} onValueChange={setVetIndependentOnly} />
+              <Text style={S.body}>{t("independentOnly")}</Text>
+            </View>,
+            ...shownVets.map((p) => (
             <Pressable key={p.id} onPress={() => chooseVet(p)} accessibilityRole="radio" accessibilityState={{ checked: chosen === p.id }}
               style={[S.card, { gap: 2, borderColor: chosen === p.id ? C.brand : C.line, borderWidth: chosen === p.id ? 2 : 1 }]}>
               <Text style={S.h2}>{chosen === p.id ? "⭐ " : ""}{displayName(p, t)}</Text>
               <Text style={S.muted} numberOfLines={1}>{tf("distanceAway", { km: p.dist.toFixed(1) })}{p.address ? " · " + p.address : ""}</Text>
               <ChainBadge p={p} />
             </Pressable>
-          ))}
+          ))]}
       </View>
     );
     foot = footer({ label: t("app_ob_next"), onPress: next }, chosen ? undefined : { label: t("app_ob_later"), onPress: next });
