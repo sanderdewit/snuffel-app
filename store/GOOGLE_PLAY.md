@@ -25,13 +25,21 @@ artifact, 16:9 phone).
 ## 3. Signing: Play App Signing with our upload key
 
 Release → Setup → App signing: keep **Play App Signing** on (Google keeps the
-app signing key). Our **upload key** certificate: `C:\temp\snuffel-secrets\cert.pem`
-(SHA-256 in `upload-cert-sha256.txt`). The first upload registers it
-automatically when you upload a bundle signed with it.
+app signing key). Our **upload key** (`upload.p12`, alias `upload`, password
+and certificate) is in KeePass; its SHA-256 starts `34:08:56:A5` and ends
+`2B:41:BC`. In GitHub the key only lives in the protected `release`
+environment (approval required). The first upload registered it.
 
-**First release by hand:** Testing → Internal testing → Create release → upload
-the `.aab` from the latest green **ci** run (artifact `snuffel-android-<n>`,
-file `app-release.aab`, version code 1). Add yourself as tester (e-mail list).
+**A release by hand** (until the service account below exists): Actions →
+**release-android** → Run → approve in GitHub → download the artifact
+`snuffel-play-<n>` → Play Console: Testing → Internal testing → Create release →
+upload `app-release.aab`. Release name `0.1.0 (<version code>)`. The R8
+mapping file and native debug symbols travel **inside** the bundle; Play
+extracts them itself (nothing extra to upload). Testers: an e-mail list on the
+Testers tab; open its opt-in link on the device.
+
+No Android phone? Use an Android Studio emulator with a Google Play image, or
+the **Pre-launch report** (Google tests every release on real devices).
 
 ## 4. Automatic uploads afterwards
 
