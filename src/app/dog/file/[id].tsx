@@ -10,9 +10,11 @@ import {
 } from "../../../lib/dogfile";
 import { Toggle } from "../../../ui/Toggle";
 import { C, S } from "../../../ui/theme";
+import { DateField } from "../../../ui/DateField";
+import { formatDate } from "../../../lib/dates";
 
 export default function DogFile() {
-  const { t, tf } = useI18n();
+  const { t, tf, lang } = useI18n();
   const { id } = useLocalSearchParams<{ id: string }>();
   const dogId = Number(id);
   const [dog, setDog] = useState<Dog | null>(null);
@@ -94,7 +96,7 @@ export default function DogFile() {
             ))}
           </View>
           <Text style={S.muted}>{t("app_entryDate")}</Text>
-          <TextInput style={S.input} value={date} onChangeText={setDate} keyboardType="numbers-and-punctuation" maxLength={10} />
+          <DateField value={date} onChange={setDate} maximumDate={new Date()} accessibilityLabel={t("app_entryDate")} />
           {kind === "weight" ? (
             <>
               <Text style={S.muted}>{t("app_entryWeight")}</Text>
@@ -121,7 +123,7 @@ export default function DogFile() {
       {records.map((r) => (
         <Pressable key={r.id} onLongPress={() => remove(r)} style={[S.card, { gap: 4 }]}>
           <View style={[S.row, { justifyContent: "space-between" }]}>
-            <Text style={S.muted}>{icon(r.kind)} {kindLabel(r.kind)} · {r.date}</Text>
+            <Text style={S.muted}>{icon(r.kind)} {kindLabel(r.kind)} · {formatDate(r.date, lang)}</Text>
             <Pressable onPress={() => remove(r)} hitSlop={10} accessibilityRole="button" accessibilityLabel={t("app_delete")}>
               <Text style={{ color: C.muted }}>✕</Text>
             </Pressable>

@@ -24,7 +24,7 @@
   "app_noDogs": "Add your dog to get care reminders and advice that fits your dog.",
   "app_dogName": "Name",
   "app_breed": "Breed",
-  "app_birthDate": "Birth date (YYYY-MM-DD)",
+  "app_birthDate": "Birth date",
   "app_weight": "Weight (kg)",
   "app_sex": "Sex",
   "app_male": "Male",
@@ -94,7 +94,7 @@
   "app_entryKind": "Type",
   "app_entryTitle": "What",
   "app_entryDetails": "Details (optional)",
-  "app_entryDate": "Date (YYYY-MM-DD)",
+  "app_entryDate": "Date",
   "app_entryWeight": "Weight (kg)",
   "app_noEntries": "No entries yet.",
   "app_deleteEntryConfirm": "Delete this entry?",
@@ -178,5 +178,6 @@
   "app_talkMode": "Conversation",
   "app_talkOn": "Conversation mode: I listen again after each answer. Say ‘stop’ or tap 🎧 to end it.",
   "app_voiceStopWords": "stop,thanks,thank you,that's all,goodbye,done",
-  "app_aboutThanks": "Made for dog lovers, with thanks to Dyzio & Frodo for making it possible. 🐾"
+  "app_aboutThanks": "Made for dog lovers, with thanks to Dyzio & Frodo for making it possible. 🐾",
+  "app_pickDate": "Choose a date"
 }

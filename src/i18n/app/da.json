@@ -24,7 +24,7 @@
   "app_noDogs": "Tilføj din hund for at få påmindelser om pleje og råd, der passer til netop din hund.",
   "app_dogName": "Navn",
   "app_breed": "Race",
-  "app_birthDate": "Fødselsdato (ÅÅÅÅ-MM-DD)",
+  "app_birthDate": "Fødselsdato",
   "app_weight": "Vægt (kg)",
   "app_sex": "Køn",
   "app_male": "Han",
@@ -94,7 +94,7 @@
   "app_entryKind": "Type",
   "app_entryTitle": "Hvad",
   "app_entryDetails": "Detaljer (valgfrit)",
-  "app_entryDate": "Dato (ÅÅÅÅ-MM-DD)",
+  "app_entryDate": "Dato",
   "app_entryWeight": "Vægt (kg)",
   "app_noEntries": "Ingen poster endnu.",
   "app_deleteEntryConfirm": "Slet denne post?",
@@ -178,5 +178,6 @@
   "app_talkMode": "Samtale",
   "app_talkOn": "Samtaletilstand: Jeg lytter igen efter hvert svar. Sig ‘stop’ eller tryk på 🎧 for at afslutte.",
   "app_voiceStopWords": "stop,tak,mange tak,tusind tak,det var det,farvel,færdig",
-  "app_aboutThanks": "Lavet til hundeelskere – gjort mulig blandt andet takket være Dyzio & Frodo. 🐾"
+  "app_aboutThanks": "Lavet til hundeelskere – gjort mulig blandt andet takket være Dyzio & Frodo. 🐾",
+  "app_pickDate": "Vælg en dato"
 }

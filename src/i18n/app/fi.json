@@ -24,7 +24,7 @@
   "app_noDogs": "Lisää koirasi, niin saat hoitomuistutuksia ja juuri sille sopivia neuvoja.",
   "app_dogName": "Nimi",
   "app_breed": "Rotu",
-  "app_birthDate": "Syntymäpäivä (VVVV-KK-PP)",
+  "app_birthDate": "Syntymäpäivä",
   "app_weight": "Paino (kg)",
   "app_sex": "Sukupuoli",
   "app_male": "Uros",
@@ -94,7 +94,7 @@
   "app_entryKind": "Tyyppi",
   "app_entryTitle": "Mitä",
   "app_entryDetails": "Lisätiedot (valinnainen)",
-  "app_entryDate": "Päivämäärä (VVVV-KK-PP)",
+  "app_entryDate": "Päivämäärä",
   "app_entryWeight": "Paino (kg)",
   "app_noEntries": "Ei vielä merkintöjä.",
   "app_deleteEntryConfirm": "Poistetaanko tämä merkintä?",
@@ -178,5 +178,6 @@
   "app_talkMode": "Keskustelu",
   "app_talkOn": "Keskustelutila: kuuntelen uudelleen jokaisen vastauksen jälkeen. Sano ‘lopeta’ tai napauta 🎧 lopettaaksesi.",
   "app_voiceStopWords": "lopeta,stop,kiitos,kiitti,siinä kaikki,näkemiin,heippa,valmis",
-  "app_aboutThanks": "Tehty koiraihmisille – mahdolliseksi osaltaan Dyzion & Frodon ansiosta. 🐾"
+  "app_aboutThanks": "Tehty koiraihmisille – mahdolliseksi osaltaan Dyzion & Frodon ansiosta. 🐾",
+  "app_pickDate": "Valitse päivämäärä"
 }

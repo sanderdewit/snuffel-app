@@ -24,7 +24,7 @@
   "app_noDogs": "Adaugă-ți câinele ca să primești mementouri de îngrijire și sfaturi potrivite pentru el.",
   "app_dogName": "Nume",
   "app_breed": "Rasă",
-  "app_birthDate": "Data nașterii (AAAA-LL-ZZ)",
+  "app_birthDate": "Data nașterii",
   "app_weight": "Greutate (kg)",
   "app_sex": "Sex",
   "app_male": "Mascul",
@@ -98,7 +98,7 @@
   "app_entryKind": "Tip",
   "app_entryTitle": "Ce",
   "app_entryDetails": "Detalii (opțional)",
-  "app_entryDate": "Data (AAAA-LL-ZZ)",
+  "app_entryDate": "Data",
   "app_entryWeight": "Greutate (kg)",
   "app_noEntries": "Nicio înregistrare încă.",
   "app_deleteEntryConfirm": "Ștergi această înregistrare?",
@@ -182,5 +182,6 @@
   "app_talkMode": "Conversație",
   "app_talkOn": "Mod conversație: ascult din nou după fiecare răspuns. Spune ‘stop’ sau atinge 🎧 pentru a încheia.",
   "app_voiceStopWords": "stop,gata,mulțumesc,mersi,asta e tot,la revedere,pa",
-  "app_aboutThanks": "Creată pentru iubitorii de câini – posibilă și datorită lui Dyzio & Frodo. 🐾"
+  "app_aboutThanks": "Creată pentru iubitorii de câini – posibilă și datorită lui Dyzio & Frodo. 🐾",
+  "app_pickDate": "Alege o dată"
 }

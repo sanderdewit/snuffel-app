@@ -1,6 +1,6 @@
 // Run with:  node tests/dates.test.ts   (Node 23.6+ runs TypeScript directly)
 import assert from "node:assert";
-import { addMonths, ageMonths, validDate } from "../src/lib/dates.ts";
+import { addMonths, ageMonths, formatDate, validDate } from "../src/lib/dates.ts";
 
 let passed = 0, failed = 0;
 function test(name: string, fn: () => void) {
@@ -28,6 +28,14 @@ test("age in whole months", () => {
   assert.strictEqual(ageMonths("2014-10-10", now), 144);
   assert.strictEqual(ageMonths("2027-01-01", now), null);   // future
   assert.strictEqual(ageMonths(null, now), null);
+});
+
+test("dates are shown the local way, invalid input as given", () => {
+  assert.strictEqual(formatDate("2021-04-30", "nl"), "30 april 2021");
+  assert.strictEqual(formatDate("2021-04-30", "en"), "30 April 2021");
+  assert.strictEqual(formatDate("2021-04-30", "de"), "30. April 2021");
+  assert.strictEqual(formatDate("2021-02-30", "nl"), "2021-02-30");
+  assert.strictEqual(formatDate("", "nl"), "");
 });
 
 console.log(`\n${passed} passed, ${failed} failed`);

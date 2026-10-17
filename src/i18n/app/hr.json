@@ -24,7 +24,7 @@
   "app_noDogs": "Dodaj svog psa za podsjetnike o skrbi i savjete prilagođene tvom psu.",
   "app_dogName": "Ime",
   "app_breed": "Pasmina",
-  "app_birthDate": "Datum rođenja (GGGG-MM-DD)",
+  "app_birthDate": "Datum rođenja",
   "app_weight": "Težina (kg)",
   "app_sex": "Spol",
   "app_male": "Mužjak",
@@ -98,7 +98,7 @@
   "app_entryKind": "Vrsta",
   "app_entryTitle": "Što",
   "app_entryDetails": "Pojedinosti (neobavezno)",
-  "app_entryDate": "Datum (GGGG-MM-DD)",
+  "app_entryDate": "Datum",
   "app_entryWeight": "Težina (kg)",
   "app_noEntries": "Još nema unosa.",
   "app_deleteEntryConfirm": "Izbrisati ovaj unos?",
@@ -182,5 +182,6 @@
   "app_talkMode": "Razgovor",
   "app_talkOn": "Način razgovora: nakon svakog odgovora ponovno slušam. Reci ‘stop’ ili dodirni 🎧 za kraj.",
   "app_voiceStopWords": "stop,stani,hvala,hvala ti,to je sve,doviđenja,gotovo,kraj",
-  "app_aboutThanks": "Napravljeno za ljubitelje pasa – omogućeno i zahvaljujući Dyziju & Frodu. 🐾"
+  "app_aboutThanks": "Napravljeno za ljubitelje pasa – omogućeno i zahvaljujući Dyziju & Frodu. 🐾",
+  "app_pickDate": "Odaberi datum"
 }

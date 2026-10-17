@@ -9,11 +9,12 @@ import { router, useFocusEffect } from "expo-router";
 import { useI18n } from "../../i18n";
 import { ageMonths, listDogs, listReminders, REMINDER_KINDS, today, type Dog, type Reminder } from "../../lib/dogs";
 import { C, S } from "../../ui/theme";
+import { formatDate } from "../../lib/dates";
 
 type Row = Dog & { next: Reminder | null };
 
 export default function Dogs() {
-  const { t, tf } = useI18n();
+  const { t, tf, lang } = useI18n();
   const [dogs, setDogs] = useState<Row[]>([]);
   const withNext = async (): Promise<Row[]> => {
     const out: Row[] = [];
@@ -79,7 +80,7 @@ export default function Dogs() {
                 <Text style={S.muted}>{[d.breed, age(d), d.weight ? d.weight + " kg" : null].filter(Boolean).join(" · ")}</Text>
                 {d.next && (
                   <Text style={[S.muted, { color: d.next.due! < today() ? C.danger : C.text, marginTop: 2 }]}>
-                    {t(REMINDER_KINDS.find((k) => k.kind === d.next!.kind)!.key)}: {d.next.due! < today() ? t("app_overdue") : tf("app_nextDue", { date: d.next.due! })}
+                    {t(REMINDER_KINDS.find((k) => k.kind === d.next!.kind)!.key)}: {d.next.due! < today() ? t("app_overdue") : tf("app_nextDue", { date: formatDate(d.next.due!, lang) })}
                   </Text>
                 )}
               </View>

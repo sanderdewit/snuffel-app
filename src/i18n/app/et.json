@@ -24,7 +24,7 @@
   "app_noDogs": "Lisa oma koer, et saada hooldusmeeldetuletusi ja just sinu koerale sobivaid nõuandeid.",
   "app_dogName": "Nimi",
   "app_breed": "Tõug",
-  "app_birthDate": "Sünnikuupäev (AAAA-KK-PP)",
+  "app_birthDate": "Sünnikuupäev",
   "app_weight": "Kaal (kg)",
   "app_sex": "Sugu",
   "app_male": "Isane",
@@ -94,7 +94,7 @@
   "app_entryKind": "Liik",
   "app_entryTitle": "Mis",
   "app_entryDetails": "Üksikasjad (valikuline)",
-  "app_entryDate": "Kuupäev (AAAA-KK-PP)",
+  "app_entryDate": "Kuupäev",
   "app_entryWeight": "Kaal (kg)",
   "app_noEntries": "Kirjeid veel pole.",
   "app_deleteEntryConfirm": "Kas kustutada see kirje?",
@@ -178,5 +178,6 @@
   "app_talkMode": "Vestlus",
   "app_talkOn": "Vestlusrežiim: kuulan pärast iga vastust uuesti. Ütle ‘stopp’ või puuduta 🎧, et lõpetada.",
   "app_voiceStopWords": "stopp,aitäh,tänan,suur aitäh,see on kõik,head aega,nägemist,lõpp",
-  "app_aboutThanks": "Loodud koeraarmastajatele – võimalikuks tehtud muu hulgas tänu Dyziole & Frodole. 🐾"
+  "app_aboutThanks": "Loodud koeraarmastajatele – võimalikuks tehtud muu hulgas tänu Dyziole & Frodole. 🐾",
+  "app_pickDate": "Vali kuupäev"
 }

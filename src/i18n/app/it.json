@@ -24,7 +24,7 @@
   "app_noDogs": "Aggiungi il tuo cane per ricevere promemoria per la cura e consigli su misura.",
   "app_dogName": "Nome",
   "app_breed": "Razza",
-  "app_birthDate": "Data di nascita (AAAA-MM-GG)",
+  "app_birthDate": "Data di nascita",
   "app_weight": "Peso (kg)",
   "app_sex": "Sesso",
   "app_male": "Maschio",
@@ -98,7 +98,7 @@
   "app_entryKind": "Tipo",
   "app_entryTitle": "Cosa",
   "app_entryDetails": "Dettagli (facoltativo)",
-  "app_entryDate": "Data (AAAA-MM-GG)",
+  "app_entryDate": "Data",
   "app_entryWeight": "Peso (kg)",
   "app_noEntries": "Nessuna voce per ora.",
   "app_deleteEntryConfirm": "Eliminare questa voce?",
@@ -182,5 +182,6 @@
   "app_talkMode": "Conversazione",
   "app_talkOn": "Modalità conversazione: dopo ogni risposta torno ad ascoltare. Di’ ‘stop’ o tocca 🎧 per terminare.",
   "app_voiceStopWords": "stop,basta,grazie,grazie mille,è tutto,arrivederci,fine",
-  "app_aboutThanks": "Creata per chi ama i cani, resa possibile anche grazie a Dyzio & Frodo. 🐾"
+  "app_aboutThanks": "Creata per chi ama i cani, resa possibile anche grazie a Dyzio & Frodo. 🐾",
+  "app_pickDate": "Scegli una data"
 }

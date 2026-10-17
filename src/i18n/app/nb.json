@@ -24,7 +24,7 @@
   "app_noDogs": "Legg til hunden din for å få påminnelser om stell og råd som passer akkurat din hund.",
   "app_dogName": "Navn",
   "app_breed": "Rase",
-  "app_birthDate": "Fødselsdato (ÅÅÅÅ-MM-DD)",
+  "app_birthDate": "Fødselsdato",
   "app_weight": "Vekt (kg)",
   "app_sex": "Kjønn",
   "app_male": "Hann",
@@ -94,7 +94,7 @@
   "app_entryKind": "Type",
   "app_entryTitle": "Hva",
   "app_entryDetails": "Detaljer (valgfritt)",
-  "app_entryDate": "Dato (ÅÅÅÅ-MM-DD)",
+  "app_entryDate": "Dato",
   "app_entryWeight": "Vekt (kg)",
   "app_noEntries": "Ingen oppføringer ennå.",
   "app_deleteEntryConfirm": "Slette denne oppføringen?",
@@ -178,5 +178,6 @@
   "app_talkMode": "Samtale",
   "app_talkOn": "Samtalemodus: Jeg lytter igjen etter hvert svar. Si ‘stopp’ eller trykk på 🎧 for å avslutte.",
   "app_voiceStopWords": "stopp,takk,tusen takk,det var alt,ha det,ferdig,slutt",
-  "app_aboutThanks": "Laget for hundeelskere – gjort mulig blant annet takket være Dyzio & Frodo. 🐾"
+  "app_aboutThanks": "Laget for hundeelskere – gjort mulig blant annet takket være Dyzio & Frodo. 🐾",
+  "app_pickDate": "Velg en dato"
 }

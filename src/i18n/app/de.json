@@ -24,7 +24,7 @@
   "app_noDogs": "Füge deinen Hund hinzu, um Pflege-Erinnerungen und passende Ratschläge für ihn zu bekommen.",
   "app_dogName": "Name",
   "app_breed": "Rasse",
-  "app_birthDate": "Geburtsdatum (JJJJ-MM-TT)",
+  "app_birthDate": "Geburtsdatum",
   "app_weight": "Gewicht (kg)",
   "app_sex": "Geschlecht",
   "app_male": "Rüde",
@@ -94,7 +94,7 @@
   "app_entryKind": "Art",
   "app_entryTitle": "Was",
   "app_entryDetails": "Details (optional)",
-  "app_entryDate": "Datum (JJJJ-MM-TT)",
+  "app_entryDate": "Datum",
   "app_entryWeight": "Gewicht (kg)",
   "app_noEntries": "Noch keine Einträge.",
   "app_deleteEntryConfirm": "Diesen Eintrag löschen?",
@@ -178,5 +178,6 @@
   "app_talkMode": "Gespräch",
   "app_talkOn": "Gesprächsmodus: Nach jeder Antwort höre ich wieder zu. Sag ‘stopp’ oder tippe auf 🎧, um ihn zu beenden.",
   "app_voiceStopWords": "stopp,stop,danke,danke schön,das war's,tschüss,fertig,ende",
-  "app_aboutThanks": "Für Hundefreunde gemacht – möglich gemacht auch dank Dyzio & Frodo. 🐾"
+  "app_aboutThanks": "Für Hundefreunde gemacht – möglich gemacht auch dank Dyzio & Frodo. 🐾",
+  "app_pickDate": "Datum wählen"
 }

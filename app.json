@@ -144,7 +144,8 @@
         }
       ],
       "expo-image",
-      "./plugins/withR8Optimize"
+      "./plugins/withR8Optimize",
+      "@react-native-community/datetimepicker"
     ],
     "experiments": {
       "typedRoutes": true

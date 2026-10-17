@@ -12,9 +12,11 @@ import {
 } from "../../lib/dogs";
 import { Toggle } from "../../ui/Toggle";
 import { C, S } from "../../ui/theme";
+import { DateField } from "../../ui/DateField";
+import { formatDate } from "../../lib/dates";
 
 export default function DogScreen() {
-  const { t, tf } = useI18n();
+  const { t, tf, lang } = useI18n();
   const { id } = useLocalSearchParams<{ id: string }>();
   const [dogId, setDogId] = useState<number | null>(id && id !== "new" ? Number(id) : null);
   const [name, setName] = useState("");
@@ -25,8 +27,6 @@ export default function DogScreen() {
   const [neutered, setNeutered] = useState(false);
   const [photo, setPhoto] = useState<string | null>(null);
   const [reminders, setReminders] = useState<Reminder[]>([]);
-  const [editing, setEditing] = useState<ReminderKind | null>(null);
-  const [dateText, setDateText] = useState("");
   const [notifOff, setNotifOff] = useState(false);
 
   useEffect(() => {
@@ -63,7 +63,6 @@ export default function DogScreen() {
     if (due) setNotifOff(!(await notificationsAllowed(true)));
     await setReminder(idNow, kind, due);
     setReminders(await listReminders(idNow));
-    setEditing(null);
   };
 
   const remove = () => Alert.alert(tf("app_deleteDogConfirm", { name }), undefined, [
@@ -90,7 +89,7 @@ export default function DogScreen() {
 
       {field(t("app_dogName"), <TextInput style={S.input} value={name} onChangeText={setName} maxLength={40} />)}
       {field(t("app_breed"), <TextInput style={S.input} value={breed} onChangeText={setBreed} maxLength={40} />)}
-      {field(t("app_birthDate"), <TextInput style={S.input} value={birth} onChangeText={setBirth} placeholder="2021-04-30" keyboardType="numbers-and-punctuation" maxLength={10} />)}
+      {field(t("app_birthDate"), <DateField value={birth} onChange={setBirth} maximumDate={new Date()} accessibilityLabel={t("app_birthDate")} />)}
       {field(t("app_weight"), <TextInput style={S.input} value={weight} onChangeText={setWeight} keyboardType="decimal-pad" maxLength={5} />)}
       {field(t("app_sex"), (
         <View style={[S.row, { gap: 8 }]}>
@@ -134,23 +133,18 @@ export default function DogScreen() {
               <Text style={S.muted}>{tf("app_every", { n: r ? r.everyMonths : k.everyMonths })}</Text>
             </View>
             <Text style={[S.body, overdue && { color: C.danger, fontWeight: "700" }]}>
-              {r && r.due ? (overdue ? t("app_overdue") + " · " + r.due : tf("app_nextDue", { date: r.due })) : t("app_notSet")}
+              {r && r.due ? (overdue ? t("app_overdue") + " · " + formatDate(r.due, lang) : tf("app_nextDue", { date: formatDate(r.due, lang) })) : t("app_notSet")}
             </Text>
-            {editing === k.kind ? (
-              <View style={[S.row, { gap: 8 }]}>
-                <TextInput style={[S.input, { flex: 1 }]} value={dateText} onChangeText={setDateText} placeholder="2026-12-01" keyboardType="numbers-and-punctuation" maxLength={10} autoFocus />
-                <Pressable style={S.btn} onPress={() => saveReminder(k.kind, dateText)}><Text style={S.btnText}>OK</Text></Pressable>
-              </View>
-            ) : (
+            {(
               <View style={[S.row, { gap: 8, flexWrap: "wrap" }]}>
                 {r && r.due && (
                   <Pressable style={S.btnGhost} onPress={async () => { await markDone(r); setReminders(await listReminders(r.dogId)); }}>
                     <Text style={S.btnGhostText}>✓ {t("app_markDone")}</Text>
                   </Pressable>
                 )}
-                <Pressable style={S.btnGhost} onPress={() => { setEditing(k.kind); setDateText(r?.due || ""); }}>
-                  <Text style={S.btnGhostText}>📅 {t("app_setDate")}</Text>
-                </Pressable>
+                <DateField value={r?.due || ""} onChange={(iso) => saveReminder(k.kind, iso)} accessibilityLabel={t("app_setDate")}>
+                  <View style={S.btnGhost}><Text style={S.btnGhostText}>📅 {t("app_setDate")}</Text></View>
+                </DateField>
                 {r && r.due && (
                   <Pressable style={S.btnGhost} onPress={() => saveReminder(k.kind, null)}>
                     <Text style={S.btnGhostText}>{t("app_remove")}</Text>

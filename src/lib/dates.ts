@@ -14,6 +14,18 @@ export function validDate(s: string): boolean {
   return !isNaN(d.getTime()) && isoDate(d) === s;
 }
 
+/** A YYYY-MM-DD date as a local Date at noon (no time-zone day shifts). */
+export const fromIso = (iso: string) => new Date(iso + "T12:00:00");
+
+/** "30 april 2021" in the app language; invalid input is shown as given. */
+export function formatDate(iso: string, lang: string): string {
+  if (!validDate(iso)) return iso;
+  // The app's English is British ("30 April 2021", not "April 30, 2021").
+  const locale = lang === "en" ? "en-GB" : lang;
+  try { return fromIso(iso).toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric" }); }
+  catch { return iso; }
+}
+
 /** Same day n months later, clamped to the month's end (31 Jan + 1 = 28/29 Feb). */
 export function addMonths(iso: string, months: number): string {
   const d = new Date(iso + "T12:00:00");

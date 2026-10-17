@@ -24,7 +24,7 @@
   "app_noDogs": "Afegeix el teu gos per rebre recordatoris de cures i consells adaptats a ell.",
   "app_dogName": "Nom",
   "app_breed": "Raça",
-  "app_birthDate": "Data de naixement (AAAA-MM-DD)",
+  "app_birthDate": "Data de naixement",
   "app_weight": "Pes (kg)",
   "app_sex": "Sexe",
   "app_male": "Mascle",
@@ -98,7 +98,7 @@
   "app_entryKind": "Tipus",
   "app_entryTitle": "Què",
   "app_entryDetails": "Detalls (opcional)",
-  "app_entryDate": "Data (AAAA-MM-DD)",
+  "app_entryDate": "Data",
   "app_entryWeight": "Pes (kg)",
   "app_noEntries": "Encara no hi ha cap entrada.",
   "app_deleteEntryConfirm": "Vols suprimir aquesta entrada?",
@@ -182,5 +182,6 @@
   "app_talkMode": "Conversa",
   "app_talkOn": "Mode conversa: torno a escoltar després de cada resposta. Digues ‘para’ o toca 🎧 per acabar.",
   "app_voiceStopWords": "para,prou,gràcies,moltes gràcies,això és tot,adéu,ja està",
-  "app_aboutThanks": "Feta per als amants dels gossos, possible en part gràcies a Dyzio & Frodo. 🐾"
+  "app_aboutThanks": "Feta per als amants dels gossos, possible en part gràcies a Dyzio & Frodo. 🐾",
+  "app_pickDate": "Tria una data"
 }

@@ -24,7 +24,7 @@
   "app_noDogs": "Pridėkite savo šunį ir gaukite priežiūros priminimus bei jam pritaikytus patarimus.",
   "app_dogName": "Vardas",
   "app_breed": "Veislė",
-  "app_birthDate": "Gimimo data (MMMM-MM-DD)",
+  "app_birthDate": "Gimimo data",
   "app_weight": "Svoris (kg)",
   "app_sex": "Lytis",
   "app_male": "Patinas",
@@ -102,7 +102,7 @@
   "app_entryKind": "Tipas",
   "app_entryTitle": "Kas",
   "app_entryDetails": "Detalės (nebūtina)",
-  "app_entryDate": "Data (MMMM-MM-DD)",
+  "app_entryDate": "Data",
   "app_entryWeight": "Svoris (kg)",
   "app_noEntries": "Įrašų dar nėra.",
   "app_deleteEntryConfirm": "Ištrinti šį įrašą?",
@@ -186,5 +186,6 @@
   "app_talkMode": "Pokalbis",
   "app_talkOn": "Pokalbio režimas: po kiekvieno atsakymo vėl klausausi. Pasakykite ‘stop’ arba bakstelėkite 🎧, kad baigtumėte.",
   "app_voiceStopWords": "stop,sustok,ačiū,labai ačiū,viskas,tai viskas,viso gero,iki",
-  "app_aboutThanks": "Sukurta šunų mylėtojams – įmanoma ir Dyzio & Frodo dėka. 🐾"
+  "app_aboutThanks": "Sukurta šunų mylėtojams – įmanoma ir Dyzio & Frodo dėka. 🐾",
+  "app_pickDate": "Pasirinkite datą"
 }

@@ -24,7 +24,7 @@
   "app_noDogs": "Přidejte svého psa a dostávejte připomínky péče a rady na míru.",
   "app_dogName": "Jméno",
   "app_breed": "Plemeno",
-  "app_birthDate": "Datum narození (RRRR-MM-DD)",
+  "app_birthDate": "Datum narození",
   "app_weight": "Hmotnost (kg)",
   "app_sex": "Pohlaví",
   "app_male": "Pes",
@@ -102,7 +102,7 @@
   "app_entryKind": "Typ",
   "app_entryTitle": "Co",
   "app_entryDetails": "Podrobnosti (nepovinné)",
-  "app_entryDate": "Datum (RRRR-MM-DD)",
+  "app_entryDate": "Datum",
   "app_entryWeight": "Hmotnost (kg)",
   "app_noEntries": "Zatím žádné záznamy.",
   "app_deleteEntryConfirm": "Smazat tento záznam?",
@@ -186,5 +186,6 @@
   "app_talkMode": "Konverzace",
   "app_talkOn": "Režim konverzace: po každé odpovědi znovu poslouchám. Řekněte ‘stop’ nebo klepněte na 🎧 pro ukončení.",
   "app_voiceStopWords": "stop,konec,díky,děkuji,děkuju,to je vše,to je všechno,na shledanou",
-  "app_aboutThanks": "Vytvořeno pro milovníky psů – umožněno mimo jiné díky Dyziovi & Frodovi. 🐾"
+  "app_aboutThanks": "Vytvořeno pro milovníky psů – umožněno mimo jiné díky Dyziovi & Frodovi. 🐾",
+  "app_pickDate": "Vyberte datum"
 }

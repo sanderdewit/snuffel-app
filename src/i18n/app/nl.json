@@ -24,7 +24,7 @@
   "app_noDogs": "Voeg je hond toe voor zorgherinneringen en advies dat bij je hond past.",
   "app_dogName": "Naam",
   "app_breed": "Ras",
-  "app_birthDate": "Geboortedatum (JJJJ-MM-DD)",
+  "app_birthDate": "Geboortedatum",
   "app_weight": "Gewicht (kg)",
   "app_sex": "Geslacht",
   "app_male": "Reu",
@@ -94,7 +94,7 @@
   "app_entryKind": "Soort",
   "app_entryTitle": "Wat",
   "app_entryDetails": "Details (optioneel)",
-  "app_entryDate": "Datum (JJJJ-MM-DD)",
+  "app_entryDate": "Datum",
   "app_entryWeight": "Gewicht (kg)",
   "app_noEntries": "Nog niets toegevoegd.",
   "app_deleteEntryConfirm": "Dit item verwijderen?",
@@ -178,5 +178,6 @@
   "app_talkMode": "Gesprek",
   "app_talkOn": "Gespreksmodus: na elk antwoord luister ik weer. Zeg ‘stop’ of tik op 🎧 om te stoppen.",
   "app_voiceStopWords": "stop,stoppen,bedankt,dank je,dank je wel,klaar,dat was het,tot ziens",
-  "app_aboutThanks": "Deze app is gemaakt voor hondenliefhebbers, mede mogelijk gemaakt dankzij Dyzio & Frodo. 🐾"
+  "app_aboutThanks": "Deze app is gemaakt voor hondenliefhebbers, mede mogelijk gemaakt dankzij Dyzio & Frodo. 🐾",
+  "app_pickDate": "Kies een datum"
 }

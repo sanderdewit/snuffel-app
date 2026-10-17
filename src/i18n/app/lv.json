@@ -24,7 +24,7 @@
   "app_noDogs": "Pievieno savu suni, lai saņemtu aprūpes atgādinājumus un tieši viņam piemērotus padomus.",
   "app_dogName": "Vārds",
   "app_breed": "Šķirne",
-  "app_birthDate": "Dzimšanas datums (GGGG-MM-DD)",
+  "app_birthDate": "Dzimšanas datums",
   "app_weight": "Svars (kg)",
   "app_sex": "Dzimums",
   "app_male": "Tēviņš",
@@ -98,7 +98,7 @@
   "app_entryKind": "Veids",
   "app_entryTitle": "Kas",
   "app_entryDetails": "Sīkāka informācija (nav obligāta)",
-  "app_entryDate": "Datums (GGGG-MM-DD)",
+  "app_entryDate": "Datums",
   "app_entryWeight": "Svars (kg)",
   "app_noEntries": "Vēl nav ierakstu.",
   "app_deleteEntryConfirm": "Dzēst šo ierakstu?",
@@ -182,5 +182,6 @@
   "app_talkMode": "Saruna",
   "app_talkOn": "Sarunas režīms: pēc katras atbildes es atkal klausos. Saki ‘stop’ vai pieskaries 🎧, lai beigtu.",
   "app_voiceStopWords": "stop,beidz,paldies,liels paldies,tas ir viss,uz redzēšanos,atā,gatavs",
-  "app_aboutThanks": "Radīta suņu mīļotājiem – iespējama arī pateicoties Dyzio & Frodo. 🐾"
+  "app_aboutThanks": "Radīta suņu mīļotājiem – iespējama arī pateicoties Dyzio & Frodo. 🐾",
+  "app_pickDate": "Izvēlies datumu"
 }

@@ -24,7 +24,7 @@
   "app_noDogs": "Shto qenin tënd për të marrë kujtesa kujdesi dhe këshilla të përshtatura për të.",
   "app_dogName": "Emri",
   "app_breed": "Raca",
-  "app_birthDate": "Data e lindjes (VVVV-MM-DD)",
+  "app_birthDate": "Data e lindjes",
   "app_weight": "Pesha (kg)",
   "app_sex": "Gjinia",
   "app_male": "Mashkull",
@@ -94,7 +94,7 @@
   "app_entryKind": "Lloji",
   "app_entryTitle": "Çfarë",
   "app_entryDetails": "Detaje (opsionale)",
-  "app_entryDate": "Data (VVVV-MM-DD)",
+  "app_entryDate": "Data",
   "app_entryWeight": "Pesha (kg)",
   "app_noEntries": "Ende nuk ka regjistrime.",
   "app_deleteEntryConfirm": "Të fshihet ky regjistrim?",
@@ -178,5 +178,6 @@
   "app_talkMode": "Bisedë",
   "app_talkOn": "Modaliteti i bisedës: dëgjoj sërish pas çdo përgjigjeje. Thuaj ‘ndalo’ ose prek 🎧 për ta mbyllur.",
   "app_voiceStopWords": "ndalo,stop,faleminderit,rrofsh,kaq,mjaft,mirupafshim",
-  "app_aboutThanks": "Krijuar për dashamirësit e qenve – e mundur edhe falë Dyzio & Frodo. 🐾"
+  "app_aboutThanks": "Krijuar për dashamirësit e qenve – e mundur edhe falë Dyzio & Frodo. 🐾",
+  "app_pickDate": "Zgjidh një datë"
 }

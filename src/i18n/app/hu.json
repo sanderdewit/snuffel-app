@@ -24,7 +24,7 @@
   "app_noDogs": "Add hozzá a kutyádat, és kapj gondozási emlékeztetőket és rá szabott tanácsokat.",
   "app_dogName": "Név",
   "app_breed": "Fajta",
-  "app_birthDate": "Születési dátum (ÉÉÉÉ-HH-NN)",
+  "app_birthDate": "Születési dátum",
   "app_weight": "Testsúly (kg)",
   "app_sex": "Nem",
   "app_male": "Kan",
@@ -94,7 +94,7 @@
   "app_entryKind": "Típus",
   "app_entryTitle": "Mi",
   "app_entryDetails": "Részletek (nem kötelező)",
-  "app_entryDate": "Dátum (ÉÉÉÉ-HH-NN)",
+  "app_entryDate": "Dátum",
   "app_entryWeight": "Testsúly (kg)",
   "app_noEntries": "Még nincs bejegyzés.",
   "app_deleteEntryConfirm": "Törlöd ezt a bejegyzést?",
@@ -178,5 +178,6 @@
   "app_talkMode": "Beszélgetés",
   "app_talkOn": "Beszélgetés mód: minden válasz után újra figyelek. Mondd, hogy ‘állj’, vagy koppints a 🎧 ikonra a befejezéshez.",
   "app_voiceStopWords": "állj,stop,köszönöm,köszi,ennyi,ennyi volt,viszlát,kész",
-  "app_aboutThanks": "Kutyabarátoknak készült – részben Dyziónak & Frodónak köszönhetően. 🐾"
+  "app_aboutThanks": "Kutyabarátoknak készült – részben Dyziónak & Frodónak köszönhetően. 🐾",
+  "app_pickDate": "Válassz dátumot"
 }

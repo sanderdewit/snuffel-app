@@ -24,7 +24,7 @@
   "app_noDogs": "Bættu hundinum þínum við til að fá áminningar um umhirðu og ráð sem henta honum.",
   "app_dogName": "Nafn",
   "app_breed": "Tegund",
-  "app_birthDate": "Fæðingardagur (ÁÁÁÁ-MM-DD)",
+  "app_birthDate": "Fæðingardagur",
   "app_weight": "Þyngd (kg)",
   "app_sex": "Kyn",
   "app_male": "Rakki",
@@ -94,7 +94,7 @@
   "app_entryKind": "Tegund",
   "app_entryTitle": "Hvað",
   "app_entryDetails": "Nánar (valfrjálst)",
-  "app_entryDate": "Dagsetning (ÁÁÁÁ-MM-DD)",
+  "app_entryDate": "Dagsetning",
   "app_entryWeight": "Þyngd (kg)",
   "app_noEntries": "Engar færslur enn.",
   "app_deleteEntryConfirm": "Eyða þessari færslu?",
@@ -178,5 +178,6 @@
   "app_talkMode": "Samtal",
   "app_talkOn": "Samtalshamur: ég hlusta aftur eftir hvert svar. Segðu ‘stopp’ eða ýttu á 🎧 til að hætta.",
   "app_voiceStopWords": "stopp,takk,takk fyrir,takk kærlega,þetta er komið,bless,búið",
-  "app_aboutThanks": "Gert fyrir hundavini – meðal annars mögulegt þökk sé Dyzio & Frodo. 🐾"
+  "app_aboutThanks": "Gert fyrir hundavini – meðal annars mögulegt þökk sé Dyzio & Frodo. 🐾",
+  "app_pickDate": "Veldu dagsetningu"
 }

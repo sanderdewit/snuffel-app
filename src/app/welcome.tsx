@@ -18,6 +18,7 @@ import { ChainBadge, displayName } from "../ui/PlaceCard";
 import { C, S } from "../ui/theme";
 import { Toggle } from "../ui/Toggle";
 import { sendOnOpen } from "../lib/handoff";
+import { DateField } from "../ui/DateField";
 import icon from "../../assets/icon.png";
 
 const STEPS = 6;   // welcome, area, dog, vet, AI help, done
@@ -207,7 +208,7 @@ export default function Welcome() {
         <View style={[S.row, { gap: 8 }]}>
           <View style={{ flex: 1, gap: 4 }}>
             <Text style={S.muted}>{t("app_birthDate")}</Text>
-            <TextInput style={S.input} value={birth} onChangeText={setBirth} placeholder="2021-04-30" keyboardType="numbers-and-punctuation" maxLength={10} />
+            <DateField value={birth} onChange={setBirth} maximumDate={new Date()} accessibilityLabel={t("app_birthDate")} />
           </View>
           <View style={{ flex: 1, gap: 4 }}>
             <Text style={S.muted}>{t("app_weight")}</Text>

@@ -24,7 +24,7 @@
   "app_noDogs": "Lägg till din hund för att få skötselpåminnelser och råd som passar just din hund.",
   "app_dogName": "Namn",
   "app_breed": "Ras",
-  "app_birthDate": "Födelsedatum (ÅÅÅÅ-MM-DD)",
+  "app_birthDate": "Födelsedatum",
   "app_weight": "Vikt (kg)",
   "app_sex": "Kön",
   "app_male": "Hane",
@@ -94,7 +94,7 @@
   "app_entryKind": "Typ",
   "app_entryTitle": "Vad",
   "app_entryDetails": "Detaljer (valfritt)",
-  "app_entryDate": "Datum (ÅÅÅÅ-MM-DD)",
+  "app_entryDate": "Datum",
   "app_entryWeight": "Vikt (kg)",
   "app_noEntries": "Inga poster än.",
   "app_deleteEntryConfirm": "Radera den här posten?",
@@ -178,5 +178,6 @@
   "app_talkMode": "Samtal",
   "app_talkOn": "Samtalsläge: jag lyssnar igen efter varje svar. Säg ‘stopp’ eller tryck på 🎧 för att avsluta.",
   "app_voiceStopWords": "stopp,tack,tack så mycket,det var allt,hej då,klar,sluta",
-  "app_aboutThanks": "Gjord för hundälskare – möjlig bland annat tack vare Dyzio & Frodo. 🐾"
+  "app_aboutThanks": "Gjord för hundälskare – möjlig bland annat tack vare Dyzio & Frodo. 🐾",
+  "app_pickDate": "Välj ett datum"
 }

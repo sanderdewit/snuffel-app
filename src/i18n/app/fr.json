@@ -24,7 +24,7 @@
   "app_noDogs": "Ajoutez votre chien pour recevoir des rappels de soins et des conseils adaptés.",
   "app_dogName": "Nom",
   "app_breed": "Race",
-  "app_birthDate": "Date de naissance (AAAA-MM-JJ)",
+  "app_birthDate": "Date de naissance",
   "app_weight": "Poids (kg)",
   "app_sex": "Sexe",
   "app_male": "Mâle",
@@ -98,7 +98,7 @@
   "app_entryKind": "Type",
   "app_entryTitle": "Quoi",
   "app_entryDetails": "Détails (facultatif)",
-  "app_entryDate": "Date (AAAA-MM-JJ)",
+  "app_entryDate": "Date",
   "app_entryWeight": "Poids (kg)",
   "app_noEntries": "Aucune entrée pour l'instant.",
   "app_deleteEntryConfirm": "Supprimer cette entrée ?",
@@ -182,5 +182,6 @@
   "app_talkMode": "Conversation",
   "app_talkOn": "Mode conversation : j'écoute à nouveau après chaque réponse. Dites ‘stop’ ou touchez 🎧 pour l'arrêter.",
   "app_voiceStopWords": "stop,arrête,merci,merci beaucoup,c'est tout,au revoir,terminé",
-  "app_aboutThanks": "Conçue pour les amoureux des chiens, rendue possible notamment grâce à Dyzio & Frodo. 🐾"
+  "app_aboutThanks": "Conçue pour les amoureux des chiens, rendue possible notamment grâce à Dyzio & Frodo. 🐾",
+  "app_pickDate": "Choisissez une date"
 }
