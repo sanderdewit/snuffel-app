@@ -1,6 +1,7 @@
 // My dogs: profiles with their next care reminder.
 import { useCallback, useState } from "react";
-import { ActivityIndicator, Alert, FlatList, Image, Pressable, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Alert, FlatList, Pressable, Text, TextInput, View } from "react-native";
+import { Image } from "expo-image";
 import * as DocumentPicker from "expo-document-picker";
 import { File } from "expo-file-system";
 import { IMPORT_MAX_BYTES, importData, NeedsPasswordError } from "../../lib/dogfile";

@@ -1,9 +1,10 @@
 // Add / edit a dog, and its care reminders.
 import { useEffect, useState } from "react";
-import { Alert, Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { Alert, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import * as ImagePicker from "expo-image-picker";
-import { File, Paths } from "expo-file-system";
+import { Image } from "expo-image";
+import { File } from "expo-file-system";
+import { pickDogPhoto } from "../../lib/photo";
 import { useI18n } from "../../i18n";
 import {
   deleteDog, getDog, listReminders, markDone, notificationsAllowed, REMINDER_KINDS, saveDog, setReminder, today, validDate,
@@ -49,13 +50,10 @@ export default function DogScreen() {
   };
 
   const pickPhoto = async () => {
-    const r = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ["images"], allowsEditing: true, aspect: [1, 1], quality: 0.6 });
-    if (r.canceled || !r.assets[0]) return;
-    // Copy out of the picker's temporary cache so the photo survives.
-    const dest = new File(Paths.document, `dog-${Date.now()}.jpg`);
-    await new File(r.assets[0].uri).copy(dest);
+    const picked = await pickDogPhoto();   // 512 px, in the app's own storage
+    if (!picked) return;
     if (photo) { try { new File(photo).delete(); } catch { /* already gone */ } }
-    setPhoto(dest.uri);
+    setPhoto(picked);
   };
 
   const saveReminder = async (kind: ReminderKind, due: string | null) => {

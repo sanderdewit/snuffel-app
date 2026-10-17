@@ -3,11 +3,11 @@
 // (location) are asked in context, on the step that needs them. Shown once
 // (kv "onboarded"); Settings can replay it.
 import { useState } from "react";
-import { ActivityIndicator, Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as ImagePicker from "expo-image-picker";
-import { File, Paths } from "expo-file-system";
+import { Image } from "expo-image";
+import { pickDogPhoto } from "../lib/photo";
 import { useI18n } from "../i18n";
 import { kvSet } from "../lib/db";
 import { saveDog, validDate } from "../lib/dogs";
@@ -90,11 +90,8 @@ export default function Welcome() {
   };
 
   const pickPhoto = async () => {
-    const r = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ["images"], allowsEditing: true, aspect: [1, 1], quality: 0.6 });
-    if (r.canceled || !r.assets[0]) return;
-    const dest = new File(Paths.document, `dog-${Date.now()}.jpg`);
-    await new File(r.assets[0].uri).copy(dest);
-    setPhoto(dest.uri);
+    const picked = await pickDogPhoto();   // 512 px, in the app's own storage
+    if (picked) setPhoto(picked);
   };
   // Saves the form; false when there is nothing (valid) to save.
   const persistDog = async (): Promise<boolean> => {
