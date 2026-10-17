@@ -181,5 +181,6 @@
   "app_aiFullAnswer": "Réponse complète",
   "app_talkMode": "Conversation",
   "app_talkOn": "Mode conversation : j'écoute à nouveau après chaque réponse. Dites ‘stop’ ou touchez 🎧 pour l'arrêter.",
-  "app_voiceStopWords": "stop,arrête,merci,merci beaucoup,c'est tout,au revoir,terminé"
+  "app_voiceStopWords": "stop,arrête,merci,merci beaucoup,c'est tout,au revoir,terminé",
+  "app_aboutThanks": "Conçue pour les amoureux des chiens, rendue possible notamment grâce à Dyzio & Frodo. 🐾"
 }

@@ -181,5 +181,6 @@
   "app_aiFullAnswer": "Risposta completa",
   "app_talkMode": "Conversazione",
   "app_talkOn": "Modalità conversazione: dopo ogni risposta torno ad ascoltare. Di’ ‘stop’ o tocca 🎧 per terminare.",
-  "app_voiceStopWords": "stop,basta,grazie,grazie mille,è tutto,arrivederci,fine"
+  "app_voiceStopWords": "stop,basta,grazie,grazie mille,è tutto,arrivederci,fine",
+  "app_aboutThanks": "Creata per chi ama i cani, resa possibile anche grazie a Dyzio & Frodo. 🐾"
 }

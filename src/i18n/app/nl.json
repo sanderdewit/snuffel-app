@@ -177,5 +177,6 @@
   "app_aiFullAnswer": "Volledig antwoord",
   "app_talkMode": "Gesprek",
   "app_talkOn": "Gespreksmodus: na elk antwoord luister ik weer. Zeg ‘stop’ of tik op 🎧 om te stoppen.",
-  "app_voiceStopWords": "stop,stoppen,bedankt,dank je,dank je wel,klaar,dat was het,tot ziens"
+  "app_voiceStopWords": "stop,stoppen,bedankt,dank je,dank je wel,klaar,dat was het,tot ziens",
+  "app_aboutThanks": "Deze app is gemaakt voor hondenliefhebbers, mede mogelijk gemaakt dankzij Dyzio & Frodo. 🐾"
 }

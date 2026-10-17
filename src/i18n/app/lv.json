@@ -181,5 +181,6 @@
   "app_aiFullAnswer": "Pilna atbilde",
   "app_talkMode": "Saruna",
   "app_talkOn": "Sarunas režīms: pēc katras atbildes es atkal klausos. Saki ‘stop’ vai pieskaries 🎧, lai beigtu.",
-  "app_voiceStopWords": "stop,beidz,paldies,liels paldies,tas ir viss,uz redzēšanos,atā,gatavs"
+  "app_voiceStopWords": "stop,beidz,paldies,liels paldies,tas ir viss,uz redzēšanos,atā,gatavs",
+  "app_aboutThanks": "Radīta suņu mīļotājiem – iespējama arī pateicoties Dyzio & Frodo. 🐾"
 }

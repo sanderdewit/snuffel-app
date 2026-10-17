@@ -185,5 +185,6 @@
   "app_aiFullAnswer": "Celá odpoveď",
   "app_talkMode": "Rozhovor",
   "app_talkOn": "Režim rozhovoru: po každej odpovedi znova počúvam. Povedzte ‘stop’ alebo ťuknite na 🎧 na ukončenie.",
-  "app_voiceStopWords": "stop,koniec,ďakujem,vďaka,to je všetko,dovidenia,hotovo"
+  "app_voiceStopWords": "stop,koniec,ďakujem,vďaka,to je všetko,dovidenia,hotovo",
+  "app_aboutThanks": "Vytvorené pre milovníkov psov – umožnené aj vďaka Dyziovi & Frodovi. 🐾"
 }

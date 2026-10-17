@@ -181,5 +181,6 @@
   "app_aiFullAnswer": "Resposta completa",
   "app_talkMode": "Conversa",
   "app_talkOn": "Modo conversa: volto a ouvir depois de cada resposta. Diga ‘stop’ ou toque em 🎧 para terminar.",
-  "app_voiceStopWords": "stop,chega,obrigado,obrigada,muito obrigado,é tudo,adeus"
+  "app_voiceStopWords": "stop,chega,obrigado,obrigada,muito obrigado,é tudo,adeus",
+  "app_aboutThanks": "Feita para quem adora cães, tornada possível também graças ao Dyzio & Frodo. 🐾"
 }

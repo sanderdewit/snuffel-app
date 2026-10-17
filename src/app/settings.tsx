@@ -65,6 +65,7 @@ export default function Settings() {
       <View style={[S.card, { gap: 6 }]}>
         <Text style={S.h2}>🐾 {t("app_about")}</Text>
         <Text style={S.body}>{t("app_aboutText")}</Text>
+        <Text style={[S.body, { fontStyle: "italic" }]}>{t("app_aboutThanks")}</Text>
         <Pressable onPress={() => Linking.openURL(CONFIG.website)}><Text style={{ color: C.brandDark, fontWeight: "600" }}>{t("website")} ↗</Text></Pressable>
         <Pressable onPress={() => Linking.openURL("https://www.openstreetmap.org/copyright")}><Text style={S.muted}>{t("footerProto")} ↗</Text></Pressable>
         <Pressable onPress={() => router.push("/welcome")} accessibilityRole="button"><Text style={{ color: C.brandDark, fontWeight: "600" }}>🐾 {t("app_ob_replay")}</Text></Pressable>

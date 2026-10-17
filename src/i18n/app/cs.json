@@ -185,5 +185,6 @@
   "app_aiFullAnswer": "Celá odpověď",
   "app_talkMode": "Konverzace",
   "app_talkOn": "Režim konverzace: po každé odpovědi znovu poslouchám. Řekněte ‘stop’ nebo klepněte na 🎧 pro ukončení.",
-  "app_voiceStopWords": "stop,konec,díky,děkuji,děkuju,to je vše,to je všechno,na shledanou"
+  "app_voiceStopWords": "stop,konec,díky,děkuji,děkuju,to je vše,to je všechno,na shledanou",
+  "app_aboutThanks": "Vytvořeno pro milovníky psů – umožněno mimo jiné díky Dyziovi & Frodovi. 🐾"
 }

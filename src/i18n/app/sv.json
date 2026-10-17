@@ -177,5 +177,6 @@
   "app_aiFullAnswer": "Hela svaret",
   "app_talkMode": "Samtal",
   "app_talkOn": "Samtalsläge: jag lyssnar igen efter varje svar. Säg ‘stopp’ eller tryck på 🎧 för att avsluta.",
-  "app_voiceStopWords": "stopp,tack,tack så mycket,det var allt,hej då,klar,sluta"
+  "app_voiceStopWords": "stopp,tack,tack så mycket,det var allt,hej då,klar,sluta",
+  "app_aboutThanks": "Gjord för hundälskare – möjlig bland annat tack vare Dyzio & Frodo. 🐾"
 }

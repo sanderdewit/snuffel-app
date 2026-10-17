@@ -181,5 +181,6 @@
   "app_aiFullAnswer": "Resposta completa",
   "app_talkMode": "Conversa",
   "app_talkOn": "Mode conversa: torno a escoltar després de cada resposta. Digues ‘para’ o toca 🎧 per acabar.",
-  "app_voiceStopWords": "para,prou,gràcies,moltes gràcies,això és tot,adéu,ja està"
+  "app_voiceStopWords": "para,prou,gràcies,moltes gràcies,això és tot,adéu,ja està",
+  "app_aboutThanks": "Feta per als amants dels gossos, possible en part gràcies a Dyzio & Frodo. 🐾"
 }

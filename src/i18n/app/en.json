@@ -177,5 +177,6 @@
   "app_aiFullAnswer": "Full answer",
   "app_talkMode": "Conversation",
   "app_talkOn": "Conversation mode: I listen again after each answer. Say ‘stop’ or tap 🎧 to end it.",
-  "app_voiceStopWords": "stop,thanks,thank you,that's all,goodbye,done"
+  "app_voiceStopWords": "stop,thanks,thank you,that's all,goodbye,done",
+  "app_aboutThanks": "Made for dog lovers, with thanks to Dyzio & Frodo for making it possible. 🐾"
 }

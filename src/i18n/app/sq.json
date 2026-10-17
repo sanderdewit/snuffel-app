@@ -177,5 +177,6 @@
   "app_aiFullAnswer": "Përgjigja e plotë",
   "app_talkMode": "Bisedë",
   "app_talkOn": "Modaliteti i bisedës: dëgjoj sërish pas çdo përgjigjeje. Thuaj ‘ndalo’ ose prek 🎧 për ta mbyllur.",
-  "app_voiceStopWords": "ndalo,stop,faleminderit,rrofsh,kaq,mjaft,mirupafshim"
+  "app_voiceStopWords": "ndalo,stop,faleminderit,rrofsh,kaq,mjaft,mirupafshim",
+  "app_aboutThanks": "Krijuar për dashamirësit e qenve – e mundur edhe falë Dyzio & Frodo. 🐾"
 }

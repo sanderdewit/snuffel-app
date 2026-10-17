@@ -181,5 +181,6 @@
   "app_aiFullAnswer": "Răspuns complet",
   "app_talkMode": "Conversație",
   "app_talkOn": "Mod conversație: ascult din nou după fiecare răspuns. Spune ‘stop’ sau atinge 🎧 pentru a încheia.",
-  "app_voiceStopWords": "stop,gata,mulțumesc,mersi,asta e tot,la revedere,pa"
+  "app_voiceStopWords": "stop,gata,mulțumesc,mersi,asta e tot,la revedere,pa",
+  "app_aboutThanks": "Creată pentru iubitorii de câini – posibilă și datorită lui Dyzio & Frodo. 🐾"
 }

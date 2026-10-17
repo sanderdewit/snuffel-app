@@ -185,5 +185,6 @@
   "app_aiFullAnswer": "Visas atsakymas",
   "app_talkMode": "Pokalbis",
   "app_talkOn": "Pokalbio režimas: po kiekvieno atsakymo vėl klausausi. Pasakykite ‘stop’ arba bakstelėkite 🎧, kad baigtumėte.",
-  "app_voiceStopWords": "stop,sustok,ačiū,labai ačiū,viskas,tai viskas,viso gero,iki"
+  "app_voiceStopWords": "stop,sustok,ačiū,labai ačiū,viskas,tai viskas,viso gero,iki",
+  "app_aboutThanks": "Sukurta šunų mylėtojams – įmanoma ir Dyzio & Frodo dėka. 🐾"
 }

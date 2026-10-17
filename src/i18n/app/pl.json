@@ -185,5 +185,6 @@
   "app_aiFullAnswer": "Pełna odpowiedź",
   "app_talkMode": "Rozmowa",
   "app_talkOn": "Tryb rozmowy: po każdej odpowiedzi znów słucham. Powiedz ‘stop’ lub dotknij 🎧, aby zakończyć.",
-  "app_voiceStopWords": "stop,dziękuję,dzięki,to wszystko,do widzenia,koniec,wystarczy"
+  "app_voiceStopWords": "stop,dziękuję,dzięki,to wszystko,do widzenia,koniec,wystarczy",
+  "app_aboutThanks": "Stworzona dla miłośników psów – możliwa także dzięki Dyzio & Frodo. 🐾"
 }

@@ -177,5 +177,6 @@
   "app_aiFullAnswer": "Allt svarið",
   "app_talkMode": "Samtal",
   "app_talkOn": "Samtalshamur: ég hlusta aftur eftir hvert svar. Segðu ‘stopp’ eða ýttu á 🎧 til að hætta.",
-  "app_voiceStopWords": "stopp,takk,takk fyrir,takk kærlega,þetta er komið,bless,búið"
+  "app_voiceStopWords": "stopp,takk,takk fyrir,takk kærlega,þetta er komið,bless,búið",
+  "app_aboutThanks": "Gert fyrir hundavini – meðal annars mögulegt þökk sé Dyzio & Frodo. 🐾"
 }

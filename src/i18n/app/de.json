@@ -177,5 +177,6 @@
   "app_aiFullAnswer": "Ganze Antwort",
   "app_talkMode": "Gespräch",
   "app_talkOn": "Gesprächsmodus: Nach jeder Antwort höre ich wieder zu. Sag ‘stopp’ oder tippe auf 🎧, um ihn zu beenden.",
-  "app_voiceStopWords": "stopp,stop,danke,danke schön,das war's,tschüss,fertig,ende"
+  "app_voiceStopWords": "stopp,stop,danke,danke schön,das war's,tschüss,fertig,ende",
+  "app_aboutThanks": "Für Hundefreunde gemacht – möglich gemacht auch dank Dyzio & Frodo. 🐾"
 }

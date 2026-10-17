@@ -177,5 +177,6 @@
   "app_aiFullAnswer": "Teljes válasz",
   "app_talkMode": "Beszélgetés",
   "app_talkOn": "Beszélgetés mód: minden válasz után újra figyelek. Mondd, hogy ‘állj’, vagy koppints a 🎧 ikonra a befejezéshez.",
-  "app_voiceStopWords": "állj,stop,köszönöm,köszi,ennyi,ennyi volt,viszlát,kész"
+  "app_voiceStopWords": "állj,stop,köszönöm,köszi,ennyi,ennyi volt,viszlát,kész",
+  "app_aboutThanks": "Kutyabarátoknak készült – részben Dyziónak & Frodónak köszönhetően. 🐾"
 }

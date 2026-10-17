@@ -177,5 +177,6 @@
   "app_aiFullAnswer": "Kogu vastus",
   "app_talkMode": "Vestlus",
   "app_talkOn": "Vestlusrežiim: kuulan pärast iga vastust uuesti. Ütle ‘stopp’ või puuduta 🎧, et lõpetada.",
-  "app_voiceStopWords": "stopp,aitäh,tänan,suur aitäh,see on kõik,head aega,nägemist,lõpp"
+  "app_voiceStopWords": "stopp,aitäh,tänan,suur aitäh,see on kõik,head aega,nägemist,lõpp",
+  "app_aboutThanks": "Loodud koeraarmastajatele – võimalikuks tehtud muu hulgas tänu Dyziole & Frodole. 🐾"
 }

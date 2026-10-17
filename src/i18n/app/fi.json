@@ -177,5 +177,6 @@
   "app_aiFullAnswer": "Koko vastaus",
   "app_talkMode": "Keskustelu",
   "app_talkOn": "Keskustelutila: kuuntelen uudelleen jokaisen vastauksen jälkeen. Sano ‘lopeta’ tai napauta 🎧 lopettaaksesi.",
-  "app_voiceStopWords": "lopeta,stop,kiitos,kiitti,siinä kaikki,näkemiin,heippa,valmis"
+  "app_voiceStopWords": "lopeta,stop,kiitos,kiitti,siinä kaikki,näkemiin,heippa,valmis",
+  "app_aboutThanks": "Tehty koiraihmisille – mahdolliseksi osaltaan Dyzion & Frodon ansiosta. 🐾"
 }

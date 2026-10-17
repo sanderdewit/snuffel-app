@@ -181,5 +181,6 @@
   "app_aiFullAnswer": "Ceo odgovor",
   "app_talkMode": "Razgovor",
   "app_talkOn": "Režim razgovora: posle svakog odgovora ponovo slušam. Reci ‘stop’ ili dodirni 🎧 za kraj.",
-  "app_voiceStopWords": "stop,stani,hvala,hvala ti,to je sve,doviđenja,gotovo,kraj"
+  "app_voiceStopWords": "stop,stani,hvala,hvala ti,to je sve,doviđenja,gotovo,kraj",
+  "app_aboutThanks": "Napravljeno za ljubitelje pasa – omogućeno i zahvaljujući Dyziju & Frodu. 🐾"
 }
