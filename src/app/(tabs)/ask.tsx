@@ -138,8 +138,12 @@ export default function Ask() {
   };
   useEffect(() => {
     if (!loadedFor || loadedFor.dog !== dogId) return;
+    // An existing conversation opens at its latest message, not at the intro
+    // (onContentSizeChange can fire before the list has its final layout).
+    const timer = setTimeout(() => list.current?.scrollToEnd({ animated: false }), 250);
     const q = takeQuestion(dogId);
     if (q) send(undefined, q);
+    return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadedFor]);
   // The last question got no answer (an error, or the app was closed): ask again.
