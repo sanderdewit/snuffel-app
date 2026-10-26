@@ -1,8 +1,9 @@
 # Build, sign and upload the iOS app to App Store Connect / TestFlight
 # (started by hand). Signing is automatic through an App Store Connect API key:
 # Xcode creates and renews the certificate and profile itself, so there are no
-# certificate files to manage. Secrets: APPLE_TEAM_ID, ASC_KEY_ID,
-# ASC_ISSUER_ID, ASC_KEY_P8 (base64 of the .p8) - see store/APP_STORE.md.
+# certificate files to manage. Secrets in the protected "release" environment:
+# APPLE_TEAM_ID, ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_P8 (base64 of the .p8) -
+# see store/APP_STORE.md.
 name: release-ios
 
 on:
@@ -19,6 +20,7 @@ jobs:
   testflight:
     runs-on: macos-latest
     timeout-minutes: 120
+    environment: release        # main only, approval required; holds the App Store Connect key
     env:
       TEAM: ${{ secrets.APPLE_TEAM_ID }}
       KEY_ID: ${{ secrets.ASC_KEY_ID }}

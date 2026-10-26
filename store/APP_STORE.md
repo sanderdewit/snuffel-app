@@ -68,11 +68,15 @@ which is exempt. No questions at upload.
 
 ## Screenshots
 
-6.9" iPhone (1320 × 2868), made by the **screenshots** workflow: 6 per language
-(Find, Emergency, Map, Ask, My dogs, Saved). Apple scales them for smaller
+6.9" iPhone (1320 × 2868), made by the **screenshots** workflow: 7 per language
+(Find, Emergency, Map, AI help, Dog, Dog file, Saved). Apple scales them for smaller
 iPhones. No iPad version (iPhone only in version 1).
 
-## Secrets for the workflows (repository → Settings → Secrets → Actions)
+## Secrets for the workflows (in the protected `release` environment)
+
+The release-ios and store workflows run in the GitHub environment `release`
+(main branch only, your approval per run), so the App Store Connect key is not
+readable by other workflows. Set the secrets **with `--env release`**:
 
 | Secret | Where to get it |
 |---|---|
@@ -81,6 +85,12 @@ iPhones. No iPad version (iPhone only in version 1).
 | `ASC_ISSUER_ID` | Same page, above the key list |
 | `ASC_KEY_P8` | The downloaded `AuthKey_XXXX.p8`, base64 encoded |
 
-```bash
-base64 -i AuthKey_XXXX.p8 | gh secret set ASC_KEY_P8 -R sanderdewit/snuffel-app
+PowerShell, in the folder with the downloaded key (then keep the `.p8` in
+KeePass and delete it from disk; Apple lets you download it only once):
+
+```powershell
+[Convert]::ToBase64String([IO.File]::ReadAllBytes("$PWD\AuthKey_XXXX.p8")) | gh secret set ASC_KEY_P8 -R sanderdewit/snuffel-app --env release
+gh secret set ASC_KEY_ID -R sanderdewit/snuffel-app --env release --body XXXX
+gh secret set ASC_ISSUER_ID -R sanderdewit/snuffel-app --env release --body <issuer id>
+gh secret set APPLE_TEAM_ID -R sanderdewit/snuffel-app --env release --body <team id>
 ```
