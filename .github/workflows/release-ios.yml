@@ -49,15 +49,20 @@ jobs:
           echo "AUTH=-authenticationKeyPath $RUNNER_TEMP/AuthKey.p8 -authenticationKeyID $KEY_ID -authenticationKeyIssuerID $ISSUER" >> "$GITHUB_ENV"
       - name: Build number = run number
         run: /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${{ github.run_number }}" ios/Snuffel/Info.plist
-      - name: Archive (automatic signing)
+      # Archived unsigned: an automatically signed archive first wants a
+      # *development* profile, which Apple only issues for a team with a
+      # registered device. The App Store needs a *distribution* signature, which
+      # the export step below creates and applies itself (cloud-managed, via the
+      # API key).
+      - name: Archive (unsigned)
         working-directory: ios
         run: |
           set -o pipefail
           xcodebuild -workspace Snuffel.xcworkspace -scheme Snuffel -configuration Release \
             -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/Snuffel.xcarchive" \
-            DEVELOPMENT_TEAM="$TEAM" CODE_SIGN_STYLE=Automatic \
-            -allowProvisioningUpdates $AUTH archive | tail -n 40
-      - name: Export and upload to App Store Connect
+            DEVELOPMENT_TEAM="$TEAM" CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
+            archive | tail -n 40
+      - name: Sign for the App Store, export and upload to App Store Connect
         run: |
           set -o pipefail
           cat > "$RUNNER_TEMP/ExportOptions.plist" <<EOF
