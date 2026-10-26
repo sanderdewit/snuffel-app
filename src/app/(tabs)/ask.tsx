@@ -301,9 +301,12 @@ export default function Ask() {
         keyExtractor={(m, i) => String(m.id ?? "x" + i)}
         contentContainerStyle={{ padding: 12, gap: 8 }}
         onContentSizeChange={() => {
-          // A new answer: show its start (urgency first), not its end.
-          if (scrollTo.current != null) { list.current?.scrollToIndex({ index: scrollTo.current, viewPosition: 0, animated: true }); scrollTo.current = null; }
-          else list.current?.scrollToEnd({ animated: true });
+          // A new answer: show its start (urgency first), not its end. The size
+          // can also change before the answer is in the list (with voice, the
+          // "listening" line goes away): then wait, an index past the end crashes.
+          const at = scrollTo.current;
+          if (at != null && at < messages.length) { scrollTo.current = null; list.current?.scrollToIndex({ index: at, viewPosition: 0, animated: true }); }
+          else if (at == null) list.current?.scrollToEnd({ animated: true });
         }}
         onScrollToIndexFailed={() => list.current?.scrollToEnd({ animated: true })}
         ListHeaderComponent={intro}
