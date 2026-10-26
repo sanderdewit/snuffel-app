@@ -10,7 +10,7 @@ import { kvGet, kvSet } from "../../lib/db";
 import { ageMonths, listDogs, today, type Dog } from "../../lib/dogs";
 import { addRecord, setShareFileWithAi, shareFileWithAi } from "../../lib/dogfile";
 import { myVet, type SavedPlace } from "../../lib/saved";
-import { speak, startListening, stopListening, stopSpeaking } from "../../lib/voice";
+import { retryOnServer, speak, startListening, stopListening, stopSpeaking } from "../../lib/voice";
 import { isStopPhrase } from "../../lib/talk";
 import { takeQuestion } from "../../lib/handoff";
 import { useSpeechRecognitionEvent } from "expo-speech-recognition";
@@ -177,13 +177,15 @@ export default function Ask() {
       if (++silences.current >= 2) endTalk(); else listen();
       return;
     }
-    if (e.error !== "no-speech" && e.error !== "aborted") { setVoiceNote(t("app_voiceUnavailable")); endTalk(); }
+    if ((e.error === "language-not-supported" || e.error === "service-not-allowed") && retryOnServer()) { listen(); return; }
+    // The code helps when someone reports it ("not-allowed", "network", ...).
+    if (e.error !== "no-speech" && e.error !== "aborted") { setVoiceNote(`${t("app_voiceUnavailable")} (${e.error})`); endTalk(); }
   });
   const listen = async () => {
     setVoiceNote(null);
     stopSpeaking(); setSpeaking(null);
     const problem = await startListening(lang);
-    if (problem) { setVoiceNote(t(problem === "denied" ? "app_voiceDenied" : "app_voiceUnavailable")); endTalk(); }
+    if (problem) { setVoiceNote(problem === "denied" ? t("app_voiceDenied") : `${t("app_voiceUnavailable")} (unavailable)`); endTalk(); }
     else { setText(""); setListening(true); }
   };
   const toggleListening = () => {

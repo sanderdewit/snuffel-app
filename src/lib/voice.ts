@@ -21,17 +21,56 @@ export function speechLocale(lang: string): string {
 
 export type VoiceProblem = "unavailable" | "denied";
 
+// The locales the recognizer knows, and those it can run on the device itself
+// (looked up once). "nl_NL" and "nl-NL" are the same here.
+const norm = (l: string) => l.replace("_", "-").toLowerCase();
+let known: Promise<{ all: Map<string, string>; installed: Set<string> }> | null = null;
+function recognizerLocales() {
+  if (!known) {
+    known = ExpoSpeechRecognitionModule.getSupportedLocales({})
+      .then((r) => ({ all: new Map(r.locales.map((l) => [norm(l), l] as [string, string])), installed: new Set(r.installedLocales.map(norm)) }))
+      .catch(() => ({ all: new Map<string, string>(), installed: new Set<string>() }));
+  }
+  return known;
+}
+
+// A locale the recognizer supports: the phone's own region, then the usual
+// one, then any region of the language (an English phone set to the
+// Netherlands asks for "en-NL", which Apple doesn't recognise).
+async function pickLocale(lang: string): Promise<{ locale: string; onDevice: boolean }> {
+  const { all, installed } = await recognizerLocales();
+  const wanted = [speechLocale(lang), `${lang}-${REGION[lang] || lang.toUpperCase()}`];
+  const key = wanted.map(norm).find((k) => all.has(k))
+    || [...all.keys()].find((k) => k.split("-")[0] === lang);
+  const locale = key ? all.get(key)!.replace("_", "-") : wanted[0];
+  // On the device only when its model is there; otherwise Apple / Google's
+  // service. A locale whose on-device start failed once goes to the service.
+  const onDevice = ExpoSpeechRecognitionModule.supportsOnDeviceRecognition()
+    && installed.has(norm(locale)) && !serverOnly.has(norm(locale));
+  return { locale, onDevice };
+}
+const serverOnly = new Set<string>();
+let last: { locale: string; onDevice: boolean } | null = null;
+
+/** After an error: if the last start ran on the device, try the service next time. */
+export function retryOnServer(): boolean {
+  if (!last || !last.onDevice) return false;
+  serverOnly.add(norm(last.locale));
+  return true;
+}
+
 export async function startListening(lang: string): Promise<VoiceProblem | null> {
   if (!ExpoSpeechRecognitionModule.isRecognitionAvailable()) return "unavailable";
   const perm = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
   if (!perm.granted) return "denied";
   Speech.stop();
+  last = await pickLocale(lang);
   ExpoSpeechRecognitionModule.start({
-    lang: speechLocale(lang),
+    lang: last.locale,
     interimResults: true,
     continuous: false,
     addsPunctuation: true,
-    requiresOnDeviceRecognition: ExpoSpeechRecognitionModule.supportsOnDeviceRecognition(),
+    requiresOnDeviceRecognition: last.onDevice,
     contextualStrings: ["Snuffel", "dierenarts", "vet", "puppy"]
   });
   return null;
