@@ -26,7 +26,7 @@ is a fallback that keeps the brand first.
 | Field | Value |
 |---|---|
 | Privacy policy URL | https://snuffel.app/privacy (source: docs/privacy-*.md in the website repo) |
-| Support URL | https://github.com/sanderdewit/snuffel-app/issues (the privacy page also lists privacy@dewit-automatisering.nl) |
+| Support URL | https://github.com/sanderdewit/snuffel-app/issues (the privacy page also lists privacy@dewit-automatisering.nl). Entered per language on the version page (iOS App → 1.0), next to Description and Keywords; the store workflow fills it from `fastlane/metadata/*/support_url.txt` |
 | Marketing URL (optional) | https://snuffel.app/ |
 
 ## App Privacy ("nutrition label")
@@ -47,18 +47,37 @@ phone; Snuffel never receives it), usage data, diagnostics.
 
 ## Age rating questionnaire
 
-Answer **None** everywhere, except:
-- Medical or treatment-focused content: **Infrequent/Mild** (veterinary first aid information)
+First page (in-app controls and capabilities, 2026 format): **No** to all:
+Parental Controls, Age Assurance, Unrestricted Web Access (links open Safari),
+User-Generated Content (nothing is shared between users), Social Media, Social
+Media Disabled for Users Under 13 (not applicable), Messaging and Chat (the AI
+chat is not user-to-user), Advertising.
+
+Content pages: answer **None** / **No** everywhere (profanity, alcohol, violence
+and so on), except:
+- Medical or Wellness → Medical or Treatment Information: **Infrequent** (dog health
+  guidance only when the user asks the AI; most of the app is a directory)
+- Medical or Wellness → Health or Wellness Topics: **Yes** (care tips for the dog;
+  consistent with the health declaration on Google Play)
 - Unrestricted web access: **No** (links open the browser, the app has no web view)
 - User-generated content / messaging between users: **No**
 - AI chatbot / generative AI: **Yes**, if asked: answers are limited to dog health and behaviour, with safety rules
 
-Expected result: 4+ or 9+.
+Result: **13+** (calculated; mainly from the medical information). Override:
+**Not Applicable**; Age Suitability URL: empty.
+
+## Content Rights (App Information)
+
+"Does your app contain, show, or access third-party content?" **Yes**, and confirm
+you have the rights: place data and map tiles come from OpenStreetMap (ODbL), with
+the attribution shown in the app.
 
 ## Encryption / export compliance
 
 Already answered in the app (`ITSAppUsesNonExemptEncryption = false`): only HTTPS,
-which is exempt. No questions at upload.
+which is exempt. No questions at upload, and **no** encryption documentation:
+if App Store Connect opens "App Encryption Documentation", cancel it (that form is
+for apps with their own, non-exempt encryption).
 
 ## App Review information
 
