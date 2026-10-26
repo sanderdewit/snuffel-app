@@ -85,6 +85,7 @@
   "app_voiceStart": "Spyrja með rödd",
   "app_voiceListening": "Hlustar… ýttu til að stöðva",
   "app_voiceUnavailable": "Talgreining er ekki í boði í þessum síma núna.",
+  "app_lastCrash": "Snuffel lokaðist óvænt síðast. Tæknilegar upplýsingar (gagnlegar ef þú tilkynnir það):",
   "app_voiceDenied": "Leyfðu hljóðnema og talgreiningu til að spyrja með rödd.",
   "app_readAloud": "Lesa upphátt",
   "app_stopReading": "Hætta lestri",

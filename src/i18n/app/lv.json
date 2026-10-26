@@ -89,6 +89,7 @@
   "app_voiceStart": "Jautāt balsī",
   "app_voiceListening": "Klausos… pieskaries, lai apturētu",
   "app_voiceUnavailable": "Runas atpazīšana šajā tālrunī pašlaik nav pieejama.",
+  "app_lastCrash": "Pagājušajā reizē Snuffel negaidīti aizvērās. Tehniska informācija (noderīga, ja par to ziņojat):",
   "app_voiceDenied": "Atļauj mikrofonu un runas atpazīšanu, lai jautātu balsī.",
   "app_readAloud": "Lasīt skaļi",
   "app_stopReading": "Pārtraukt lasīšanu",

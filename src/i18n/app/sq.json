@@ -85,6 +85,7 @@
   "app_voiceStart": "Pyet me zë",
   "app_voiceListening": "Po dëgjoj… prek për ta ndalur",
   "app_voiceUnavailable": "Njohja e të folurit nuk është e disponueshme tani në këtë telefon.",
+  "app_lastCrash": "Snuffel u mbyll papritur herën e fundit. Detaje teknike (të dobishme nëse e raportoni):",
   "app_voiceDenied": "Lejo mikrofonin dhe njohjen e të folurit që të pyesësh me zë.",
   "app_readAloud": "Lexo me zë",
   "app_stopReading": "Ndalo leximin",

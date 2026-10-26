@@ -85,6 +85,7 @@
   "app_voiceStart": "Kérdezz hanggal",
   "app_voiceListening": "Figyelek… koppints a leállításhoz",
   "app_voiceUnavailable": "A beszédfelismerés most nem érhető el ezen a telefonon.",
+  "app_lastCrash": "A Snuffel legutóbb váratlanul leállt. Technikai részletek (hasznosak, ha jelented):",
   "app_voiceDenied": "Engedélyezd a mikrofont és a beszédfelismerést, hogy hanggal kérdezhess.",
   "app_readAloud": "Felolvasás",
   "app_stopReading": "Felolvasás leállítása",

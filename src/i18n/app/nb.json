@@ -85,6 +85,7 @@
   "app_voiceStart": "Spør med stemmen",
   "app_voiceListening": "Lytter… trykk for å stoppe",
   "app_voiceUnavailable": "Talegjenkjenning er ikke tilgjengelig på denne telefonen akkurat nå.",
+  "app_lastCrash": "Snuffel stoppet uventet forrige gang. Tekniske detaljer (nyttige hvis du melder fra):",
   "app_voiceDenied": "Gi tilgang til mikrofon og talegjenkjenning for å spørre med stemmen.",
   "app_readAloud": "Les høyt",
   "app_stopReading": "Stopp opplesning",

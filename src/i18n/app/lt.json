@@ -93,6 +93,7 @@
   "app_voiceStart": "Klausti balsu",
   "app_voiceListening": "Klausausi… bakstelėkite, kad sustabdytumėte",
   "app_voiceUnavailable": "Kalbos atpažinimas šiuo metu šiame telefone nepasiekiamas.",
+  "app_lastCrash": "Praėjusį kartą Snuffel netikėtai užsidarė. Techninė informacija (naudinga, jei apie tai pranešite):",
   "app_voiceDenied": "Leiskite naudoti mikrofoną ir kalbos atpažinimą, kad galėtumėte klausti balsu.",
   "app_readAloud": "Skaityti garsiai",
   "app_stopReading": "Nustoti skaityti",

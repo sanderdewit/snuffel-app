@@ -162,7 +162,7 @@ export default function Ask() {
   const silences = useRef(0);
   const endTalk = () => { talkRef.current = false; setTalk(false); silences.current = 0; };
   useSpeechRecognitionEvent("result", (e) => {
-    const said = e.results[0]?.transcript || "";
+    const said = e.results?.[0]?.transcript || "";
     setText(said);
     if (!e.isFinal || !said.trim()) return;
     setListening(false);

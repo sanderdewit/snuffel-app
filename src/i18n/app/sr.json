@@ -89,6 +89,7 @@
   "app_voiceStart": "Pitaj glasom",
   "app_voiceListening": "Slušam… dodirni da zaustaviš",
   "app_voiceUnavailable": "Prepoznavanje govora trenutno nije dostupno na ovom telefonu.",
+  "app_lastCrash": "Snuffel se prošli put neočekivano zatvorio. Tehnički detalji (korisni ako to prijavite):",
   "app_voiceDenied": "Dozvoli mikrofon i prepoznavanje govora za pitanja glasom.",
   "app_readAloud": "Čitaj naglas",
   "app_stopReading": "Zaustavi čitanje",

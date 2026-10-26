@@ -85,6 +85,7 @@
   "app_voiceStart": "Fråga med rösten",
   "app_voiceListening": "Lyssnar… tryck för att stoppa",
   "app_voiceUnavailable": "Taligenkänning är inte tillgänglig på den här telefonen just nu.",
+  "app_lastCrash": "Snuffel stängdes oväntat förra gången. Tekniska detaljer (användbara om du rapporterar det):",
   "app_voiceDenied": "Tillåt mikrofon och taligenkänning för att fråga med rösten.",
   "app_readAloud": "Läs upp",
   "app_stopReading": "Sluta läsa upp",

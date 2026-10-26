@@ -89,6 +89,7 @@
   "app_voiceStart": "Pregunta amb la veu",
   "app_voiceListening": "Escoltant… toca per aturar",
   "app_voiceUnavailable": "El reconeixement de veu no està disponible en aquest mòbil ara mateix.",
+  "app_lastCrash": "Snuffel es va aturar inesperadament l'última vegada. Detalls tècnics (útils si ho informes):",
   "app_voiceDenied": "Permet el micròfon i el reconeixement de veu per preguntar amb la veu.",
   "app_readAloud": "Llegeix en veu alta",
   "app_stopReading": "Deixa de llegir",

@@ -85,6 +85,7 @@
   "app_voiceStart": "Per Sprache fragen",
   "app_voiceListening": "Hört zu… zum Beenden tippen",
   "app_voiceUnavailable": "Die Spracherkennung ist auf diesem Handy gerade nicht verfügbar.",
+  "app_lastCrash": "Snuffel wurde beim letzten Mal unerwartet beendet. Technische Details (nützlich, wenn du es meldest):",
   "app_voiceDenied": "Erlaube Mikrofon und Spracherkennung, um per Sprache zu fragen.",
   "app_readAloud": "Vorlesen",
   "app_stopReading": "Vorlesen beenden",

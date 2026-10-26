@@ -89,6 +89,7 @@
   "app_voiceStart": "Preguntar por voz",
   "app_voiceListening": "Escuchando… toca para parar",
   "app_voiceUnavailable": "El reconocimiento de voz no está disponible en este móvil ahora mismo.",
+  "app_lastCrash": "Snuffel se cerró inesperadamente la última vez. Detalles técnicos (útiles si lo informas):",
   "app_voiceDenied": "Permite el micrófono y el reconocimiento de voz para preguntar por voz.",
   "app_readAloud": "Leer en voz alta",
   "app_stopReading": "Dejar de leer",

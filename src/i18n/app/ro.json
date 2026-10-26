@@ -89,6 +89,7 @@
   "app_voiceStart": "Întreabă vocal",
   "app_voiceListening": "Ascult… atinge pentru a opri",
   "app_voiceUnavailable": "Recunoașterea vocală nu este disponibilă acum pe acest telefon.",
+  "app_lastCrash": "Snuffel s-a oprit neașteptat data trecută. Detalii tehnice (utile dacă raportezi problema):",
   "app_voiceDenied": "Permite accesul la microfon și la recunoașterea vocală ca să poți întreba vocal.",
   "app_readAloud": "Citește cu voce tare",
   "app_stopReading": "Oprește citirea",

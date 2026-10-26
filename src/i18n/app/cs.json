@@ -93,6 +93,7 @@
   "app_voiceStart": "Zeptat se hlasem",
   "app_voiceListening": "Poslouchám… klepnutím zastavíte",
   "app_voiceUnavailable": "Rozpoznávání řeči teď v tomto telefonu není k dispozici.",
+  "app_lastCrash": "Snuffel se minule nečekaně ukončil. Technické podrobnosti (užitečné, pokud to nahlásíte):",
   "app_voiceDenied": "Povolte mikrofon a rozpoznávání řeči, abyste se mohli ptát hlasem.",
   "app_readAloud": "Přečíst nahlas",
   "app_stopReading": "Přestat číst",

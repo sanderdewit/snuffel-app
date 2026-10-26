@@ -85,6 +85,7 @@
   "app_voiceStart": "Vraag met je stem",
   "app_voiceListening": "Aan het luisteren… tik om te stoppen",
   "app_voiceUnavailable": "Spraakherkenning is nu niet beschikbaar op deze telefoon.",
+  "app_lastCrash": "Snuffel is de vorige keer onverwacht gestopt. Technische details (handig als je het meldt):",
   "app_voiceDenied": "Sta de microfoon en spraakherkenning toe om met je stem te vragen.",
   "app_readAloud": "Voorlezen",
   "app_stopReading": "Stoppen met voorlezen",

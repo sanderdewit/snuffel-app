@@ -85,6 +85,7 @@
   "app_voiceStart": "Ask by voice",
   "app_voiceListening": "Listening… tap to stop",
   "app_voiceUnavailable": "Speech recognition isn't available on this phone right now.",
+  "app_lastCrash": "Snuffel stopped unexpectedly last time. Technical details (useful if you report it):",
   "app_voiceDenied": "Allow the microphone and speech recognition to ask by voice.",
   "app_readAloud": "Read aloud",
   "app_stopReading": "Stop reading",

@@ -93,6 +93,7 @@
   "app_voiceStart": "Zapytaj głosem",
   "app_voiceListening": "Słucham… dotknij, aby zatrzymać",
   "app_voiceUnavailable": "Rozpoznawanie mowy jest teraz niedostępne w tym telefonie.",
+  "app_lastCrash": "Ostatnio Snuffel nieoczekiwanie się zamknął. Szczegóły techniczne (przydatne przy zgłoszeniu):",
   "app_voiceDenied": "Zezwól na dostęp do mikrofonu i rozpoznawania mowy, aby pytać głosem.",
   "app_readAloud": "Czytaj na głos",
   "app_stopReading": "Przestań czytać",

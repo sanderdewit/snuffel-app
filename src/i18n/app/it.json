@@ -89,6 +89,7 @@
   "app_voiceStart": "Chiedi a voce",
   "app_voiceListening": "In ascolto… tocca per fermare",
   "app_voiceUnavailable": "Il riconoscimento vocale non è disponibile su questo telefono al momento.",
+  "app_lastCrash": "L'ultima volta Snuffel si è chiuso inaspettatamente. Dettagli tecnici (utili se lo segnali):",
   "app_voiceDenied": "Consenti microfono e riconoscimento vocale per chiedere a voce.",
   "app_readAloud": "Leggi ad alta voce",
   "app_stopReading": "Interrompi lettura",

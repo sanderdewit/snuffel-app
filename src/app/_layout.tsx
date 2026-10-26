@@ -1,10 +1,12 @@
 import { useEffect } from "react";
+import { Alert } from "react-native";
 import { Stack, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as Notifications from "expo-notifications";
 import { I18nProvider, useI18n } from "../i18n";
 import { REMINDER_KINDS, rescheduleAll, setReminderTexts } from "../lib/dogs";
 import { kvGet } from "../lib/db";
+import { installCrashNote, takeCrashNote } from "../lib/crash";
 import { isDemo, seedDemo } from "../lib/demo";
 import { C } from "../ui/theme";
 
@@ -47,6 +49,17 @@ function FirstRun() {
   return null;
 }
 
+// After a crash: show what it was, once (see src/lib/crash.ts).
+installCrashNote();
+function CrashNote() {
+  const { t } = useI18n();
+  useEffect(() => {
+    takeCrashNote().then((note) => { if (note) Alert.alert("Snuffel", `${t("app_lastCrash")}\n\n${note}`); }).catch(() => undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return null;
+}
+
 function Screens() {
   const { t } = useI18n();
   return (
@@ -70,6 +83,7 @@ export default function Root() {
       <NotificationLinks />
       <Screens />
       <FirstRun />
+      <CrashNote />
     </I18nProvider>
   );
 }

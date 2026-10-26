@@ -85,6 +85,7 @@
   "app_voiceStart": "Kysy äänellä",
   "app_voiceListening": "Kuuntelee… lopeta napauttamalla",
   "app_voiceUnavailable": "Puheentunnistus ei ole juuri nyt käytettävissä tässä puhelimessa.",
+  "app_lastCrash": "Snuffel sulkeutui viime kerralla odottamatta. Tekniset tiedot (hyödyllisiä, jos ilmoitat siitä):",
   "app_voiceDenied": "Salli mikrofoni ja puheentunnistus, niin voit kysyä äänellä.",
   "app_readAloud": "Lue ääneen",
   "app_stopReading": "Lopeta lukeminen",

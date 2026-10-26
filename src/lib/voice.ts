@@ -99,7 +99,10 @@ function bestVoice(locale: string): Promise<string | null> {
 export function speak(text: string, lang: string, onDone?: () => void) {
   Speech.stop();
   const language = speechLocale(lang);
-  bestVoice(language).then((voice) =>
+  // The voice list can take seconds on iOS (it waits on Accessibility): don't
+  // keep the answer waiting, the default voice will do the first time.
+  const quick = new Promise<null>((done) => setTimeout(() => done(null), 1500));
+  Promise.race([bestVoice(language), quick]).then((voice) =>
     Speech.speak(text, { language, ...(voice ? { voice } : {}), onDone, onStopped: onDone, onError: onDone }));
 }
 export const stopSpeaking = () => Speech.stop();

@@ -85,6 +85,7 @@
   "app_voiceStart": "Küsi häälega",
   "app_voiceListening": "Kuulan… puuduta lõpetamiseks",
   "app_voiceUnavailable": "Kõnetuvastus pole selles telefonis praegu saadaval.",
+  "app_lastCrash": "Snuffel sulgus eelmisel korral ootamatult. Tehnilised üksikasjad (kasulikud, kui sellest teatad):",
   "app_voiceDenied": "Luba mikrofon ja kõnetuvastus, et häälega küsida.",
   "app_readAloud": "Loe ette",
   "app_stopReading": "Lõpeta ettelugemine",

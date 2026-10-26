@@ -89,6 +89,7 @@
   "app_voiceStart": "Demander à voix haute",
   "app_voiceListening": "À l'écoute… touchez pour arrêter",
   "app_voiceUnavailable": "La reconnaissance vocale n'est pas disponible sur ce téléphone pour le moment.",
+  "app_lastCrash": "Snuffel s'est arrêté de manière inattendue la dernière fois. Détails techniques (utiles si vous le signalez) :",
   "app_voiceDenied": "Autorisez le micro et la reconnaissance vocale pour poser vos questions à voix haute.",
   "app_readAloud": "Lire à voix haute",
   "app_stopReading": "Arrêter la lecture",
