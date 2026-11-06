@@ -120,7 +120,7 @@
         "expo-image-picker",
         {
           "photosPermission": "Choose a photo for your dog's profile. It stays on this phone.",
-          "cameraPermission": false
+          "cameraPermission": "Snuffel does not use the camera."
         }
       ],
       "./plugins/withReleaseSigning",
