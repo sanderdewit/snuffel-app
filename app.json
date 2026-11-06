@@ -88,7 +88,9 @@
         "com.oppo.launcher.permission.READ_SETTINGS",
         "com.oppo.launcher.permission.WRITE_SETTINGS",
         "me.everything.badger.permission.BADGE_COUNT_READ",
-        "me.everything.badger.permission.BADGE_COUNT_WRITE"
+        "me.everything.badger.permission.BADGE_COUNT_WRITE",
+        "android.permission.CAMERA",
+        "android.permission.BLUETOOTH"
       ],
       "predictiveBackGestureEnabled": false,
       "versionCode": 1
@@ -125,7 +127,7 @@
       [
         "expo-speech-recognition",
         {
-          "microphonePermission": "Ask Snuffel's AI assistant a question by voice. Audio is not stored or sent to Snuffel.",
+          "microphonePermission": "Ask Snuffel's AI assistant by voice. Spoken questions are turned into text on your phone; only in the AI voice conversation (beta) does audio go to Snuffel's AI service in the EU, and it is not stored.",
           "speechRecognitionPermission": "Your phone turns your spoken question into text for Snuffel's AI assistant.",
           "androidSpeechServicePackages": [
             "com.google.android.googlequicksearchbox"
@@ -145,7 +147,14 @@
       ],
       "expo-image",
       "./plugins/withR8Optimize",
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      [
+        "@config-plugins/react-native-webrtc",
+        {
+          "microphonePermission": "Ask Snuffel's AI assistant by voice. Spoken questions are turned into text on your phone; only in the AI voice conversation (beta) does audio go to Snuffel's AI service in the EU, and it is not stored.",
+          "cameraPermission": "Snuffel does not use the camera."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

@@ -1,14 +1,70 @@
-// Settings: language, offline home area, privacy and about.
+// Settings: language, offline home area, beta features, privacy and about.
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Linking, Pressable, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, Linking, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import Constants from "expo-constants";
 import { router } from "expo-router";
 import { LANGUAGES, useI18n } from "../i18n";
+import { useBeta } from "../lib/beta";
 import { CONFIG } from "../lib/config";
+import { Toggle } from "../ui/Toggle";
 import { kvGetJson } from "../lib/db";
 import { currentPosition, LocationDeniedError } from "../lib/geo";
 import { pinHomeArea } from "../lib/places";
 import { C, S } from "../ui/theme";
+
+// Beta features: enter a code (checked by the server), then switch the AI voice
+// conversation on or off. Leaving the beta forgets the code.
+function BetaCard() {
+  const { t } = useI18n();
+  const beta = useBeta();
+  const [code, setCode] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+
+  const join = async () => {
+    if (!code.trim() || busy) return;
+    setBusy(true); setMsg(null);
+    const r = await beta.join(code);
+    setBusy(false);
+    if (r === "ok") setCode("");
+    else setMsg(t(r === "wrong" ? "app_betaWrong" : r === "rate_limited" ? "app_betaTooMany" : "app_errLoad"));
+  };
+
+  if (!beta.ready) return null;
+  return (
+    <View style={[S.card, { gap: 10 }]}>
+      <Text style={S.h2}>🧪 {t("app_beta")}</Text>
+      {!beta.joined ? (
+        <>
+          <Text style={S.body}>{t("app_betaText")}</Text>
+          <View style={[S.row, { gap: 8 }]}>
+            <TextInput style={[S.input, { flex: 1 }]} value={code} onChangeText={(v) => { setCode(v); setMsg(null); }}
+              placeholder={t("app_betaCode")} autoCapitalize="characters" autoCorrect={false} autoComplete="off"
+              maxLength={64} returnKeyType="done" onSubmitEditing={join} accessibilityLabel={t("app_betaCode")} />
+            <Pressable style={[S.btn, (busy || !code.trim()) && { opacity: 0.5 }]} onPress={join} disabled={busy || !code.trim()} accessibilityRole="button">
+              {busy ? <ActivityIndicator color="#fff" /> : <Text style={S.btnText}>{t("app_betaJoin")}</Text>}
+            </Pressable>
+          </View>
+          {!!msg && <Text style={[S.muted, { color: C.warn }]}>{msg}</Text>}
+        </>
+      ) : (
+        <>
+          <Text style={[S.body, { color: C.ok, fontWeight: "600" }]}>✓ {t("app_betaJoined")}</Text>
+          <View style={[S.row, { gap: 12 }]}>
+            <View style={{ flex: 1, gap: 4 }}>
+              <Text style={[S.body, { fontWeight: "700" }]}>🎧 {t("app_betaVoice")}</Text>
+              <Text style={S.muted}>{t("app_betaVoiceText")}</Text>
+            </View>
+            <Toggle value={beta.voiceOn} label={t("app_betaVoice")} onValueChange={(on) => { beta.setVoiceOn(on).catch(() => undefined); }} />
+          </View>
+          <Pressable onPress={() => { beta.leave().catch(() => undefined); }} hitSlop={8} accessibilityRole="button">
+            <Text style={S.muted}>{t("app_betaLeave")}</Text>
+          </Pressable>
+        </>
+      )}
+    </View>
+  );
+}
 
 export default function Settings() {
   const { t, tf, choice, setLanguage } = useI18n();
@@ -55,6 +111,8 @@ export default function Settings() {
         {!!msg && <Text style={S.muted}>{msg}</Text>}
         {!msg && home && <Text style={S.muted}>✓ {new Date(home.at).toLocaleDateString()}</Text>}
       </View>
+
+      <BetaCard />
 
       <View style={[S.card, { gap: 6 }]}>
         <Text style={S.h2}>🔒 {t("app_privacy")}</Text>

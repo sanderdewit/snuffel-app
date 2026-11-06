@@ -9,7 +9,8 @@ across Europe, and see which places belong to large chains. One codebase
 | **Find** | Address or GPS search, 8 categories, "independents only", map (self-hosted Protomaps basemap) or list |
 | **Emergency** | One tap, or the home-screen shortcut: vets and animal hospitals open *now*, nearest first; closed ones hidden; the search widens until there are options; your own vet on top |
 | **My dogs** | Profiles (breed, age, weight, photo) with care reminders (vaccination, deworming, flea & tick, check-up) as local notifications |
-| **Ask** | AI vet & behaviour help that knows the chosen dog; one conversation per dog, kept on the phone |
+| **Ask** | AI vet & behaviour help that knows the chosen dog, typed or spoken (the phone's own speech recognition and voice); one conversation per dog, kept on the phone |
+| **AI voice** (beta) | A live spoken conversation with the AI (realtime model over WebRTC). Only with a beta code: Settings → Beta features → enter the code; then Ask shows "AI voice conversation" |
 | **Saved** | Favourites and "my vet", available offline |
 | **Offline** | Places within 15 km of home are kept on the phone |
 | **Languages** | 29, following the phone (or chosen in Settings) |
@@ -27,9 +28,18 @@ questions go to Azure OpenAI in the EU and are not used for training.
 - **Data** — the monthly snuffel-data build publishes places (0.25° cells),
   chain reference data and the Europe basemap to Azure Storage; the app reads
   them directly and keeps a copy in SQLite.
-- **AI** — the website's `/api/chat` function. The app sends a random install
-  ID (rate limits per install: phones on mobile data often share one IP) and,
-  when chosen, the dog's breed / age / weight / sex.
+- **AI** — `snuffel.app/api/chat`, app only (the website has no AI). The app
+  sends a random install ID (rate limits per install: phones on mobile data
+  often share one IP) and, when chosen, the dog's breed / age / weight / sex.
+- **AI voice (beta)** — `snuffel.app/api/voice` with `react-native-webrtc`
+  (`src/lib/realtime.ts`, `src/app/voice.tsx`): the app sends its WebRTC offer
+  and the **beta code** (`X-Snuffel-Beta`, checked against the server's
+  `BETA_CODES`, first via `/api/beta` when entered in Settings); the server
+  sets up the session with Azure OpenAI (`gpt-realtime-2.1`, EU data zone) and
+  returns the answer, so the app never holds a key. Audio goes phone ↔ Azure;
+  10 minutes per conversation, 6 per day. A code the server no longer accepts
+  switches the feature off until a new one is entered (`src/lib/beta.tsx`).
+  Native module: needs a development build, not Expo Go.
 
 ## Development
 
