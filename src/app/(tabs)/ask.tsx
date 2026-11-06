@@ -6,6 +6,8 @@ import { ActivityIndicator, Alert, FlatList, KeyboardAvoidingView, Linking, Plat
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useI18n } from "../../i18n";
 import { addChat, ask, clearChat, loadChat, type AnswerParts, type ChatMessage } from "../../lib/ai";
+import { useBeta } from "../../lib/beta";
+import { CONFIG } from "../../lib/config";
 import { kvGet, kvSet } from "../../lib/db";
 import { ageMonths, listDogs, today, type Dog } from "../../lib/dogs";
 import { addRecord, setShareFileWithAi, shareFileWithAi } from "../../lib/dogfile";
@@ -57,6 +59,7 @@ function Answer({ parts, onFull }: { parts: AnswerParts; onFull: () => void }) {
 
 export default function Ask() {
   const { t, tf, lang } = useI18n();
+  const beta = useBeta();
   const [dogs, setDogs] = useState<Dog[]>([]);
   const [dogId, setDogId] = useState<number | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -102,7 +105,7 @@ export default function Ask() {
   const run = async (history: ChatMessage[], spoken: boolean) => {
     const askedFor = dogId;
     setBusy(true);
-    const r = await ask(history.filter((m) => !m.local), lang, t("emergencyBtn"), dog);
+    const r = await ask(history.filter((m) => !m.local), lang, { emergency: t("emergencyBtn"), lost: t("lostTitle") }, dog);
     setBusy(false);
     const reply: ChatMessage = "error" in r
       ? { role: "assistant", local: true, content: t(r.error === "rate_limited" ? "aiRateLimited" : r.error === "unavailable" ? "aiReply" : "aiError") }
@@ -234,6 +237,8 @@ export default function Ask() {
     // Only when it's needed: home advice ("monitor") gets no referral buttons;
     // its warning signs say when to get help.
     if (m.urgency === "emergency") out.push({ label: t("aiCtaEmergency"), go: () => router.push("/emergency"), danger: !vet?.phone });
+    // A lost or found dog: the first steps and official registers on the website.
+    else if (m.topic === "lost") out.push({ label: t("aiCtaLost"), go: () => Linking.openURL(CONFIG.website + "#lost") });
     else if (m.urgency === "vet_soon") {
       if (m.topic === "behaviour") out.push({ label: t("aiCtaTrainers"), go: () => router.push({ pathname: "/", params: { cat: "training" } }) });
       else if (!vet) out.push({ label: t("aiCtaVets"), go: () => router.push({ pathname: "/", params: { cat: "vet" } }) });
@@ -365,6 +370,13 @@ export default function Ask() {
           ) : null}
       />
       <View style={{ padding: 12, gap: 6, borderTopWidth: 1, borderColor: C.line, backgroundColor: C.card }}>
+        {/* Beta: a live spoken conversation with the AI itself (Settings → Beta features) */}
+        {beta.voice && !talk && !listening && (
+          <Pressable onPress={() => router.push({ pathname: "/voice", params: dogId != null ? { dog: String(dogId) } : {} })} disabled={busy}
+            accessibilityRole="button" style={[S.btnGhost, { flexDirection: "row", justifyContent: "center", gap: 6 }]}>
+            <Text style={S.btnGhostText}>🎧 {t("app_voiceAiStart")}</Text>
+          </Pressable>
+        )}
         {talk && <Text style={[S.muted, { color: C.brandDark, fontWeight: "600" }]} accessibilityLiveRegion="polite">🎧 {t("app_talkOn")}</Text>}
         {listening && <Text style={[S.muted, { color: C.danger, fontWeight: "700" }]} accessibilityLiveRegion="polite">🎙️ {t("app_voiceListening")}</Text>}
         {!!voiceNote && <Text style={[S.muted, { color: C.warn }]}>{voiceNote}</Text>}

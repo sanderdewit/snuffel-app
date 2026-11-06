@@ -7,7 +7,9 @@ export const CONFIG = {
   pmtiles: SITE + "/tiles/snuffel.pmtiles",         // Protomaps basemap (Europe, z14)
   glyphs: "https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf",
   sprite: "https://protomaps.github.io/basemaps-assets/sprites/v4/light",
-  chatApi: SITE + "/api/chat",
+  chatApi: SITE + "/api/chat",                       // AI help (app only)
+  voiceApi: SITE + "/api/voice",                     // AI voice conversation (beta code)
+  betaApi: SITE + "/api/beta",                       // checks a beta code (Settings)
   website: SITE + "/",
   privacy: SITE + "/privacy",
   nominatim: "https://nominatim.openstreetmap.org",

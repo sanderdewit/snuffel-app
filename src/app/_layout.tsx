@@ -4,6 +4,7 @@ import { Stack, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as Notifications from "expo-notifications";
 import { I18nProvider, useI18n } from "../i18n";
+import { BetaProvider } from "../lib/beta";
 import { REMINDER_KINDS, rescheduleAll, setReminderTexts } from "../lib/dogs";
 import { kvGet } from "../lib/db";
 import { installCrashNote, takeCrashNote } from "../lib/crash";
@@ -71,6 +72,7 @@ function Screens() {
       <Stack.Screen name="dog/[id]" options={{ title: t("app_editDog") }} />
       <Stack.Screen name="dog/file/[id]" options={{ title: t("app_dogFile") }} />
       <Stack.Screen name="settings" options={{ title: t("app_settings") }} />
+      <Stack.Screen name="voice" options={{ title: t("app_betaVoice"), gestureEnabled: false }} />
     </Stack>
   );
 }
@@ -78,12 +80,14 @@ function Screens() {
 export default function Root() {
   return (
     <I18nProvider>
-      <StatusBar style="dark" />
-      <ReminderTexts />
-      <NotificationLinks />
-      <Screens />
-      <FirstRun />
-      <CrashNote />
+      <BetaProvider>
+        <StatusBar style="dark" />
+        <ReminderTexts />
+        <NotificationLinks />
+        <Screens />
+        <FirstRun />
+        <CrashNote />
+      </BetaProvider>
     </I18nProvider>
   );
 }

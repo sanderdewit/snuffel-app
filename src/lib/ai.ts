@@ -1,14 +1,14 @@
-// The same /api/chat service as the website. The app adds a random install ID
-// (rate limiting per install: phones on mobile data often share one IP) and,
-// when a dog is chosen, its profile so advice fits that dog.
-import * as Crypto from "expo-crypto";
+// Snuffel's /api/chat (app only: the website has no AI). The app sends a random
+// install ID (rate limiting per install: phones on mobile data often share one
+// IP) and, when a dog is chosen, its profile so advice fits that dog.
 import { CONFIG } from "./config";
-import { db, dbReady, kvGet, kvSet } from "./db";
+import { db, dbReady } from "./db";
 import { ageMonths, type Dog } from "./dogs";
 import { aiSummary } from "./dogfile";
+import { installId } from "./install";
 
 export type Urgency = "emergency" | "vet_soon" | "monitor" | "unclear";
-export type Topic = "health" | "behaviour" | "other";
+export type Topic = "health" | "behaviour" | "lost" | "other";   // lost: a lost or found dog
 // The structure of an answer: verdict, steps, signs to watch, follow-up questions,
 // tap-to-answer replies and a short version to say out loud (empty when absent).
 export interface AnswerParts { summary: string; steps: string[]; watch_for: string[]; questions: string[]; quick_replies: string[]; spoken: string }
@@ -17,16 +17,10 @@ export interface AnswerParts { summary: string; steps: string[]; watch_for: stri
 export interface ChatMessage { id?: number; role: "user" | "assistant"; content: string; urgency?: Urgency; topic?: Topic; local?: boolean; sig?: string; parts?: AnswerParts }
 export type AskResult = { reply: string; urgency: Urgency; topic: Topic; sig?: string; parts?: AnswerParts } | { error: "rate_limited" | "unavailable" | "failed" };
 
-async function installId(): Promise<string> {
-  let id = await kvGet("installId");
-  if (!id) { id = Crypto.randomUUID(); await kvSet("installId", id); }
-  return id;
-}
-
-export async function ask(all: ChatMessage[], lang: string, emergencyLabel: string, dog: Dog | null): Promise<AskResult> {
+export async function ask(all: ChatMessage[], lang: string, labels: { emergency: string; lost: string }, dog: Dog | null): Promise<AskResult> {
   const history = all.filter((m) => !m.local);
   const body: Record<string, unknown> = {
-    lang, emergencyLabel,
+    lang, emergencyLabel: labels.emergency, lostLabel: labels.lost,
     // The last 12 turns, but always the first question: it usually describes the problem.
     messages: (history.length > 12 ? [history[0], ...history.slice(-11)] : history).map((m) => (m.role === "assistant" ? { role: m.role, content: m.content, sig: m.sig } : { role: m.role, content: m.content }))
   };
