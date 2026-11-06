@@ -4,7 +4,9 @@
 // answer; the app never holds a key. Audio then flows directly between the
 // phone and Azure; the data channel only carries transcripts and speech events
 // (the server asks for webrtcfilter=on), which the screen shows.
-import { mediaDevices, MediaStream, RTCPeerConnection } from "react-native-webrtc";
+import { Platform } from "react-native";
+// LiveKit's maintained fork of react-native-webrtc: same API, supports the New Architecture.
+import { AudioDeviceModule, mediaDevices, MediaStream, RTCPeerConnection } from "@livekit/react-native-webrtc";
 import { CONFIG } from "./config";
 import { betaCode } from "./beta";
 import { ageMonths, type Dog } from "./dogs";
@@ -38,6 +40,18 @@ export async function startVoice(lang: string, labels: { emergency: string; lost
   };
 
   h.onState("connecting");
+  // iPhone: a voice-chat session plays through the earpiece by default; this is a
+  // conversation with the phone in hand or on the table, so use the speaker
+  // (headphones and Bluetooth still take over).
+  if (Platform.OS === "ios") {
+    try {
+      AudioDeviceModule.setAutomaticAudioSessionConfiguration({
+        recording: { audioCategory: "playAndRecord", audioMode: "voiceChat", audioCategoryOptions: ["defaultToSpeaker", "allowBluetooth", "allowBluetoothA2DP"] },
+        playout: { audioCategory: "playback", audioMode: "spokenAudio" },
+        deactivateOnStop: true
+      });
+    } catch { /* older native module: default routing */ }
+  }
   try {
     mic = await mediaDevices.getUserMedia({ audio: true, video: false });
   } catch {

@@ -31,7 +31,7 @@ questions go to Azure OpenAI in the EU and are not used for training.
 - **AI** — `snuffel.app/api/chat`, app only (the website has no AI). The app
   sends a random install ID (rate limits per install: phones on mobile data
   often share one IP) and, when chosen, the dog's breed / age / weight / sex.
-- **AI voice (beta)** — `snuffel.app/api/voice` with `react-native-webrtc`
+- **AI voice (beta)** — `snuffel.app/api/voice` with `@livekit/react-native-webrtc` (maintained fork, New Architecture)
   (`src/lib/realtime.ts`, `src/app/voice.tsx`): the app sends its WebRTC offer
   and the **beta code** (`X-Snuffel-Beta`, checked against the server's
   `BETA_CODES`, first via `/api/beta` when entered in Settings); the server
