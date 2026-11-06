@@ -154,7 +154,8 @@
           "microphonePermission": "Ask Snuffel's AI assistant by voice. Spoken questions are turned into text on your phone; only in the AI voice conversation (beta) does audio go to Snuffel's AI service in the EU, and it is not stored.",
           "cameraPermission": "Snuffel does not use the camera."
         }
-      ]
+      ],
+      "./plugins/withoutScreenShareService"
     ],
     "experiments": {
       "typedRoutes": true

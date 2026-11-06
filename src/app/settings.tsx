@@ -24,8 +24,8 @@ function BetaCard() {
   const join = async () => {
     if (!code.trim() || busy) return;
     setBusy(true); setMsg(null);
-    const r = await beta.join(code);
-    setBusy(false);
+    let r: Awaited<ReturnType<typeof beta.join>> = "failed";
+    try { r = await beta.join(code); } catch { /* storing failed: shown as an error */ } finally { setBusy(false); }
     if (r === "ok") setCode("");
     else setMsg(t(r === "wrong" ? "app_betaWrong" : r === "rate_limited" ? "app_betaTooMany" : "app_errLoad"));
   };

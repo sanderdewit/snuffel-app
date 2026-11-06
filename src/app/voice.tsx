@@ -27,22 +27,25 @@ export default function Voice() {
   const scroll = useRef<ScrollView>(null);
 
   useEffect(() => {
-    let gone = false;
+    // Everything for this run stays local, so a second run can never lose a handle.
+    let gone = false, stopped = false;
+    let handle: VoiceCall | null = null;
+    // "Hang up" works from the first moment, also while the dog is still loading.
+    call.current = { hangUp: () => { stopped = true; if (handle) handle.hangUp(); else if (!gone) setEnded("done"); } };
     (async () => {
       const dog: Dog | null = dogParam ? await getDog(Number(dogParam)).catch(() => null) : null;
-      if (gone) return;
-      call.current = await startVoice(lang, { emergency: t("emergencyBtn"), lost: t("lostTitle") }, dog, {
+      if (gone || stopped) return;
+      handle = startVoice(lang, { emergency: t("emergencyBtn"), lost: t("lostTitle") }, dog, {
         onState: (s) => { if (!gone) setState(s); },
         onLines: (l) => { if (!gone) setLines(l); },
+        onConnected: (maxSeconds) => { if (!gone) setLeft(maxSeconds); },
         onEnd: (reason) => {
           if (reason === "beta") beta.leave().catch(() => undefined);   // code taken out of the beta
           if (!gone) setEnded(reason);
         }
       });
-      if (gone) call.current?.hangUp();
-      else if (call.current) setLeft(call.current.maxSeconds);
     })();
-    return () => { gone = true; call.current?.hangUp(); };
+    return () => { gone = true; stopped = true; handle?.hangUp(); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
