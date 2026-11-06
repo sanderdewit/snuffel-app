@@ -8,7 +8,7 @@
 // isn't available in the EU data zone.
 import { AppState, Platform } from "react-native";
 // LiveKit's maintained fork of react-native-webrtc: same API, supports the New Architecture.
-import { AudioDeviceModule, mediaDevices, MediaStream, RTCPeerConnection } from "@livekit/react-native-webrtc";
+import { AudioDeviceModule, audioDeviceModuleEvents, mediaDevices, MediaStream, RTCPeerConnection } from "@livekit/react-native-webrtc";
 import { CONFIG } from "./config";
 import { betaCode } from "./beta";
 import { ageMonths, type Dog } from "./dogs";
@@ -62,6 +62,11 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
     // (headphones and Bluetooth still take over).
     if (Platform.OS === "ios") {
       try {
+        // Tells the native side which engine hooks have a JS handler (none here).
+        // Without it every hook counts as handled: the audio engine waits 2 s for
+        // JS, then starts without the configuration below, and the microphone
+        // never opens. registerGlobals() would do this too; we don't use globals.
+        audioDeviceModuleEvents.setupListeners();
         AudioDeviceModule.setAutomaticAudioSessionConfiguration({
           recording: { audioCategory: "playAndRecord", audioMode: "voiceChat", audioCategoryOptions: ["defaultToSpeaker", "allowBluetooth", "allowBluetoothA2DP"] },
           playout: { audioCategory: "playback", audioMode: "spokenAudio" },
