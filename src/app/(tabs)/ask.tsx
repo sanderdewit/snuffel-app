@@ -367,7 +367,7 @@ export default function Ask() {
             <Pressable style={[S.btnGhost, { alignSelf: "flex-start" }]} onPress={retry} accessibilityRole="button">
               <Text style={S.btnGhostText}>↻ {t("app_retry")}</Text>
             </Pressable>
-          ) : null}
+          ) : undefined}
       />
       <View style={{ padding: 12, gap: 6, borderTopWidth: 1, borderColor: C.line, backgroundColor: C.card }}>
         {/* Beta: a live spoken conversation with the AI itself (Settings → Beta features) */}

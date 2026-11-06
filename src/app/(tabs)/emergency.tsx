@@ -86,7 +86,7 @@ export default function Emergency() {
             </>
           );
         }}
-        ListFooterComponent={places && places.length ? <Text style={[S.muted, { textAlign: "center" }]}>{t("app_callFirst")}</Text> : null}
+        ListFooterComponent={places && places.length ? <Text style={[S.muted, { textAlign: "center" }]}>{t("app_callFirst")}</Text> : undefined}
       />
     </View>
   );

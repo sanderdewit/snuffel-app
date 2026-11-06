@@ -2,7 +2,7 @@
 // dog. Starts when the screen opens, ends with "Hang up", after the time limit,
 // or when the screen closes. The transcript is shown, not stored.
 import { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, ScrollView, type ScrollViewInstance, Text, View } from "react-native";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useI18n } from "../i18n";
 import { useBeta } from "../lib/beta";
@@ -24,7 +24,7 @@ export default function Voice() {
   const [ended, setEnded] = useState<VoiceEnd | null>(null);
   const [left, setLeft] = useState<number | null>(null);
   const call = useRef<VoiceCall | null>(null);
-  const scroll = useRef<ScrollView>(null);
+  const scroll = useRef<ScrollViewInstance>(null);
 
   useEffect(() => {
     // Everything for this run stays local, so a second run can never lose a handle.
