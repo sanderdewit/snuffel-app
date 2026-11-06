@@ -121,7 +121,8 @@ export default function Ask() {
       setSpeaking(history.length);
       speak(say, lang, () => {
         setSpeaking(null);
-        if (talkRef.current && !reply.local) listen();
+        // A moment for the phone to switch from speaker to microphone
+        if (talkRef.current && !reply.local) setTimeout(() => { if (talkRef.current) listen(); }, 400);
         else if (reply.local) endTalk();
       });
     }
@@ -173,6 +174,9 @@ export default function Ask() {
     if (talkRef.current && isStopPhrase(said, t("app_voiceStopWords"))) { endTalk(); setText(""); return; }
     send(said);
   });
+  // Listening follows the recognizer's own events: starting a new session first
+  // ends the previous one (iOS), and that "end" arrives after start() returns.
+  useSpeechRecognitionEvent("start", () => setListening(true));
   useSpeechRecognitionEvent("end", () => setListening(false));
   useSpeechRecognitionEvent("error", (e) => {
     setListening(false);
@@ -189,7 +193,7 @@ export default function Ask() {
     stopSpeaking(); setSpeaking(null);
     const problem = await startListening(lang);
     if (problem) { setVoiceNote(problem === "denied" ? t("app_voiceDenied") : `${t("app_voiceUnavailable")} (unavailable)`); endTalk(); }
-    else { setText(""); setListening(true); }
+    else setText("");
   };
   const toggleListening = () => {
     if (listening) { stopListening(); return; }
