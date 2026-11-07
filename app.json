@@ -156,7 +156,8 @@
           "cameraPermission": "Snuffel does not use the camera."
         }
       ],
-      "./plugins/withoutScreenShareService"
+      "./plugins/withoutScreenShareService",
+      "expo-status-bar"
     ],
     "experiments": {
       "typedRoutes": true

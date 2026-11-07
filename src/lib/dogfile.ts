@@ -81,11 +81,11 @@ async function buildExport(dogId: number): Promise<ExportV1> {
   };
 }
 
-function shareText(name: string, body: string | Uint8Array, mimeType: string, UTI: string) {
+async function shareText(name: string, body: string | Uint8Array, mimeType: string, UTI: string) {
   const file = new File(Paths.cache, name);
   if (file.exists) file.delete();
   file.create();
-  file.write(body);
+  await file.write(body);
   return Sharing.shareAsync(file.uri, { mimeType, UTI });
 }
 
@@ -117,7 +117,7 @@ export async function importData(text: string, password: string | null): Promise
     // Only a real JPEG or PNG is kept; anything else is dropped, the rest of the dog still comes in.
     try {
       const bytes = b64.dec(d.dog.photoJpegBase64), type = imageType(bytes);
-      if (type) { const f = new File(Paths.document, `dog-${Date.now()}.${type}`); f.create(); f.write(bytes); photo = f.uri; }
+      if (type) { const f = new File(Paths.document, `dog-${Date.now()}.${type}`); f.create(); await f.write(bytes); photo = f.uri; }
     } catch { photo = null; }
   }
   const str = (v: unknown, n: number) => (typeof v === "string" ? v.slice(0, n) : null);

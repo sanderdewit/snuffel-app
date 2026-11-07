@@ -8,7 +8,7 @@
 // isn't available in the EU data zone.
 import { AppState, Platform } from "react-native";
 // LiveKit's maintained fork of react-native-webrtc: same API, supports the New Architecture.
-import { AudioDeviceModule, mediaDevices, MediaStream, RTCPeerConnection } from "@livekit/react-native-webrtc";
+import { AudioDeviceModule, audioDeviceModuleEvents, mediaDevices, MediaStream, RTCPeerConnection } from "@livekit/react-native-webrtc";
 import { CONFIG } from "./config";
 import { betaCode } from "./beta";
 import { ageMonths, type Dog } from "./dogs";
@@ -62,6 +62,11 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
     // (headphones and Bluetooth still take over).
     if (Platform.OS === "ios") {
       try {
+        // Tells the native side which engine hooks have a JS handler (none here).
+        // Without it every hook counts as handled: the audio engine waits 2 s for
+        // JS, then starts without the configuration below, and the microphone
+        // never opens. registerGlobals() would do this too; we don't use globals.
+        audioDeviceModuleEvents.setupListeners();
         AudioDeviceModule.setAutomaticAudioSessionConfiguration({
           recording: { audioCategory: "playAndRecord", audioMode: "voiceChat", audioCategoryOptions: ["defaultToSpeaker", "allowBluetooth", "allowBluetoothA2DP"] },
           playout: { audioCategory: "playback", audioMode: "spokenAudio" },
@@ -81,11 +86,16 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
       pc = new RTCPeerConnection();
       mic.getAudioTracks().forEach((t) => pc!.addTrack(t, mic!));   // the AI's voice arrives as a remote track and plays by itself
       const events = pc.createDataChannel("oai-events");
-      // The model never speaks first by itself: ask for its greeting once the channel is open.
-      events.addEventListener("open", () => { try { events.send(JSON.stringify({ type: "response.create" })); } catch { /* closed */ } });
+      // The model never speaks first by itself: ask for its greeting once the
+      // channel is open. A request that arrives before the session is ready is
+      // dropped, so ask once more if neither side has spoken a few seconds later.
+      let heard = false;
+      const greet = () => { if (!heard && !ended) try { events.send(JSON.stringify({ type: "response.create" })); } catch { /* closed */ } };
+      events.addEventListener("open", () => { greet(); setTimeout(greet, 4000); });
       events.addEventListener("message", (e: { data?: unknown }) => {
         let m: { type?: string; item_id?: string; transcript?: string; delta?: string };
         try { m = JSON.parse(String(e.data)); } catch { return; }
+        if (m.type === "input_audio_buffer.speech_started" || m.type === "output_audio_buffer.started" || m.type === "response.output_audio_transcript.delta") heard = true;
         const line = (role: VoiceLine["role"]) => {
           const id = m.item_id || "x" + order.length;
           let l = byItem.get(id);
