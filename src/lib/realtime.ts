@@ -8,7 +8,8 @@
 // isn't available in the EU data zone.
 import { AppState, Platform } from "react-native";
 // LiveKit's maintained fork of react-native-webrtc: same API, supports the New Architecture.
-import { AudioDeviceModule, audioDeviceModuleEvents, mediaDevices, MediaStream, RTCPeerConnection } from "@livekit/react-native-webrtc";
+import { AudioDeviceModule, audioDeviceModuleEvents, type AutomaticAppleAudioConfiguration, mediaDevices, MediaStream, RTCPeerConnection } from "@livekit/react-native-webrtc";
+import { ExpoSpeechRecognitionModule } from "expo-speech-recognition";
 import { CONFIG } from "./config";
 import { betaCode } from "./beta";
 import { ageMonths, type Dog } from "./dogs";
@@ -67,12 +68,17 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
         // JS, then starts without the configuration below, and the microphone
         // never opens. registerGlobals() would do this too; we don't use globals.
         audioDeviceModuleEvents.setupListeners();
-        AudioDeviceModule.setAutomaticAudioSessionConfiguration({
-          recording: { audioCategory: "playAndRecord", audioMode: "voiceChat", audioCategoryOptions: ["defaultToSpeaker", "allowBluetooth", "allowBluetoothA2DP"] },
-          playout: { audioCategory: "playback", audioMode: "spokenAudio" },
-          deactivateOnStop: true
-        });
+        // Record-and-play throughout: a playback-only session while the AI speaks
+        // (the engine starts with playout) left the microphone closed.
+        const duplex: AutomaticAppleAudioConfiguration = { audioCategory: "playAndRecord", audioMode: "voiceChat", audioCategoryOptions: ["defaultToSpeaker", "allowBluetooth", "allowBluetoothA2DP"] };
+        AudioDeviceModule.setAutomaticAudioSessionConfiguration({ recording: duplex, playout: duplex, deactivateOnStop: true });
       } catch { /* older native module: default routing */ }
+      // And set it up front, as speech-to-text does: the microphone only opened
+      // after 🎙️ had been used once, i.e. when the session was already record-and-play.
+      try {
+        ExpoSpeechRecognitionModule.setCategoryIOS({ category: "playAndRecord", categoryOptions: ["defaultToSpeaker", "allowBluetooth", "allowBluetoothA2DP"], mode: "voiceChat" });
+        ExpoSpeechRecognitionModule.setAudioSessionActiveIOS(true);
+      } catch { /* the WebRTC engine configures it itself */ }
     }
     try {
       mic = await mediaDevices.getUserMedia({ audio: true, video: false });
@@ -86,11 +92,22 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
       pc = new RTCPeerConnection();
       mic.getAudioTracks().forEach((t) => pc!.addTrack(t, mic!));   // the AI's voice arrives as a remote track and plays by itself
       const events = pc.createDataChannel("oai-events");
-      // The model never speaks first by itself: ask for its greeting once the
-      // channel is open. A request that arrives before the session is ready is
-      // dropped, so ask once more if neither side has spoken a few seconds later.
-      let heard = false;
-      const greet = () => { if (!heard && !ended) try { events.send(JSON.stringify({ type: "response.create" })); } catch { /* closed */ } };
+      // The model never speaks first by itself, and a bare response.create on an
+      // empty conversation isn't reliably answered: open the call with a short
+      // turn (as Microsoft's WebRTC sample does), then ask for the greeting the
+      // instructions describe. Once more if neither side spoke a few seconds later.
+      let heard = false, opened = false;
+      const greet = () => {
+        if (heard || ended) return;
+        try {
+          if (!opened) {
+            opened = true;
+            events.send(JSON.stringify({ type: "conversation.item.create",
+              item: { type: "message", role: "user", content: [{ type: "input_text", text: "(The call has started.)" }] } }));
+          }
+          events.send(JSON.stringify({ type: "response.create" }));
+        } catch { /* closed */ }
+      };
       events.addEventListener("open", () => { greet(); setTimeout(greet, 4000); });
       events.addEventListener("message", (e: { data?: unknown }) => {
         let m: { type?: string; item_id?: string; transcript?: string; delta?: string };
