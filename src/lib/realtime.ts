@@ -27,13 +27,19 @@ export interface VoiceHandlers {
 }
 
 /** A conversation being set up or running; hangUp works at any moment. */
-export interface VoiceCall { hangUp(): void }
+export interface VoiceCall {
+  hangUp(): void;
+  /** Beta: a one-line snapshot of the audio state, shown on the screen while the iPhone audio is being sorted out. */
+  debug?(): string;
+}
 
 /** Starts a conversation right away and returns its handle at once. */
 export function startVoice(lang: string, labels: { emergency: string; lost: string }, dog: Dog | null, h: VoiceHandlers): VoiceCall {
   let ended = false, timer: ReturnType<typeof setTimeout> | null = null;
   let pc: RTCPeerConnection | null = null, mic: MediaStream | null = null;
   const request = new AbortController();
+  const notes: string[] = [];                          // setup steps that failed (debug line)
+  let remoteTracks = 0;
   // The AI's transcript, one line per conversation item (deltas and "done" of
   // one answer carry the same item_id; an interrupted answer just stops).
   const order: string[] = [];
@@ -72,13 +78,13 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
         // (the engine starts with playout) left the microphone closed.
         const duplex: AutomaticAppleAudioConfiguration = { audioCategory: "playAndRecord", audioMode: "voiceChat", audioCategoryOptions: ["defaultToSpeaker", "allowBluetooth", "allowBluetoothA2DP"] };
         AudioDeviceModule.setAutomaticAudioSessionConfiguration({ recording: duplex, playout: duplex, deactivateOnStop: true });
-      } catch { /* older native module: default routing */ }
+      } catch (e) { notes.push("adm:" + String((e as Error)?.message || e).slice(0, 60)); }
       // And set it up front, as speech-to-text does: the microphone only opened
       // after 🎙️ had been used once, i.e. when the session was already record-and-play.
       try {
         ExpoSpeechRecognitionModule.setCategoryIOS({ category: "playAndRecord", categoryOptions: ["defaultToSpeaker", "allowBluetooth", "allowBluetoothA2DP"], mode: "voiceChat" });
         ExpoSpeechRecognitionModule.setAudioSessionActiveIOS(true);
-      } catch { /* the WebRTC engine configures it itself */ }
+      } catch (e) { notes.push("session:" + String((e as Error)?.message || e).slice(0, 60)); }
     }
     try {
       mic = await mediaDevices.getUserMedia({ audio: true, video: false });
@@ -91,6 +97,7 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
     try {
       pc = new RTCPeerConnection();
       mic.getAudioTracks().forEach((t) => pc!.addTrack(t, mic!));   // the AI's voice arrives as a remote track and plays by itself
+      pc.addEventListener("track", () => { remoteTracks++; });
       const events = pc.createDataChannel("oai-events");
       // The model never speaks first by itself, and a bare response.create on an
       // empty conversation isn't reliably answered: open the call with a short
@@ -172,5 +179,23 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
     }
   })();
 
-  return { hangUp: () => end("done") };
+  const debug = () => {
+    const part = (label: string, f: () => unknown) => { try { return `${label} ${String(f())}`; } catch { return `${label} ?`; } };
+    const ios = Platform.OS === "ios";
+    return [
+      ios && part("session", () => { const s = ExpoSpeechRecognitionModule.getAudioSessionCategoryAndOptionsIOS(); return `${s.category}/${s.mode}/${s.categoryOptions.join("+")}`; }),
+      ios && part("engine", () => AudioDeviceModule.isEngineRunning() ? "on" : "off"),
+      ios && part("play", () => AudioDeviceModule.isPlaying() ? "yes" : "no"),
+      ios && part("rec", () => AudioDeviceModule.isRecording() ? "yes" : "no"),
+      ios && part("muted", () => AudioDeviceModule.isMicrophoneMuted() ? "yes" : "no"),
+      ios && part("vp", () => AudioDeviceModule.isVoiceProcessingEnabled() ? "on" : "off"),
+      ios && part("avail", () => { const a = AudioDeviceModule.getEngineAvailability(); return `${a.isInputAvailable ? "in" : "-"}${a.isOutputAvailable ? "out" : "-"}`; }),
+      part("pc", () => `${pc?.connectionState}/${pc?.iceConnectionState}`),
+      part("mic", () => { const t = mic?.getAudioTracks()[0]; return t ? `${t.readyState}${t.enabled ? "" : ",off"}${t.muted ? ",muted" : ""}` : "none"; }),
+      part("remote", () => remoteTracks),
+      notes.length > 0 && notes.join(" ")
+    ].filter(Boolean).join(" · ");
+  };
+
+  return { hangUp: () => end("done"), debug };
 }

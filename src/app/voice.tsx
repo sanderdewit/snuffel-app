@@ -31,7 +31,8 @@ export default function Voice() {
     let gone = false, stopped = false;
     let handle: VoiceCall | null = null;
     // "Hang up" works from the first moment, also while the dog is still loading.
-    call.current = { hangUp: () => { stopped = true; if (handle) handle.hangUp(); else if (!gone) setEnded("done"); } };
+    call.current = { hangUp: () => { stopped = true; if (handle) handle.hangUp(); else if (!gone) setEnded("done"); },
+      debug: () => handle?.debug?.() ?? "" };
     (async () => {
       const dog: Dog | null = dogParam ? await getDog(Number(dogParam)).catch(() => null) : null;
       if (gone || stopped) return;
@@ -55,6 +56,14 @@ export default function Voice() {
     const tick = setInterval(() => setLeft((s) => (s == null ? s : Math.max(0, s - 1))), 1000);
     return () => clearInterval(tick);
   }, [left == null, ended]);
+
+  // Beta: the audio state, for a screenshot when the iPhone stays silent.
+  const [audio, setAudio] = useState("");
+  useEffect(() => {
+    if (ended) return;
+    const tick = setInterval(() => setAudio(call.current?.debug?.() || ""), 1000);
+    return () => clearInterval(tick);
+  }, [ended]);
 
   const status = ended ? null
     : state === "connecting" ? t("app_voiceAiConnecting")
@@ -88,6 +97,7 @@ export default function Voice() {
         ))}
       </ScrollView>
 
+      {!!audio && <Text style={[S.muted, { fontSize: 11 }]} selectable>{audio}</Text>}
       <Text style={S.muted}>🤖 {t("app_aiIsAI")} {t("app_voiceAiNote")}</Text>
       {ended ? (
         <Pressable style={S.btn} onPress={() => router.back()} accessibilityRole="button"><Text style={S.btnText}>{t("close")}</Text></Pressable>
