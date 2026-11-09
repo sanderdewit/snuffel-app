@@ -64,7 +64,7 @@ function CrashNote() {
 function Screens() {
   const { t } = useI18n();
   return (
-    <Stack screenOptions={{ headerTintColor: C.brandDark, contentStyle: { backgroundColor: C.bg }, headerBackButtonDisplayMode: "minimal" }}>
+    <Stack screenOptions={{ headerTransparent: false, headerTintColor: C.brandDark, contentStyle: { backgroundColor: C.bg }, headerBackButtonDisplayMode: "minimal" }}>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       {/* A plain screen, not a modal: a full-screen modal got no top safe-area inset on iOS */}
       <Stack.Screen name="welcome" options={{ headerShown: false, animation: "fade", gestureEnabled: false }} />
