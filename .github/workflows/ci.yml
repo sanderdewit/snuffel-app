@@ -9,7 +9,10 @@
 name: ci
 
 on:
+  # Branches are checked through their pull request; a push trigger for every
+  # branch ran each PR commit twice.
   push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
