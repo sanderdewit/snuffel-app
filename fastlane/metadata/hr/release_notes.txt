@@ -1,1 +1,3 @@
+Novo: vodič korak po korak za izgubljenog ili pronađenog psa, s grupama za potragu u tvojoj blizini. A gumbom „Sve” brže biraš jednu kategoriju.
+
 AI glasovni razgovor (beta) sada radi na svakom iPhoneu: AI te prvi pozdravlja i govori tvojim jezikom. U AI chatu glasovni način nakon svakog izgovorenog odgovora ponovno sluša. Snuffel je sada u App Storeu dostupan i na 29 jezika.

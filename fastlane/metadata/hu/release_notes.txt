@@ -1,1 +1,3 @@
+Újdonság: lépésről lépésre útmutató elveszett vagy talált kutyához, a közeledben lévő keresőcsoportokkal. A „Mind” gombbal pedig gyorsabban választasz ki egy kategóriát.
+
 Az MI-hangbeszélgetés (béta) mostantól minden iPhone-on működik: az MI köszön először, és a te nyelveden beszél. Az MI-csevegésben a hangmód minden kimondott válasz után tovább figyel. A Snuffel mostantól 29 nyelven érhető el az App Store-ban.

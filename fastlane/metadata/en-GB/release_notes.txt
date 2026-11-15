@@ -1,1 +1,3 @@
+New: a step-by-step guide for a lost or found dog, with search groups near you. And with the 'All' chip you pick a single category faster.
+
 The AI voice conversation (beta) now works on every iPhone: the AI greets you first and speaks your language. In the AI chat, voice mode keeps listening after each spoken answer. Snuffel is now also available in 29 languages on the App Store.

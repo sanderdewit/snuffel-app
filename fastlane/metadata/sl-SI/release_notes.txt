@@ -1,1 +1,3 @@
+Novo: vodnik po korakih za izgubljenega ali najdenega psa, s skupinami za iskanje v vaši bližini. Z gumbom »Vse« pa hitreje izberete eno kategorijo.
+
 Glasovni pogovor z UI (beta) zdaj deluje v vsakem iPhonu: UI vas najprej pozdravi in govori vaš jezik. V klepetu Pomoč UI glasovni način po vsakem izgovorjenem odgovoru znova posluša. Snuffel je zdaj v App Store na voljo tudi v 29 jezikih.

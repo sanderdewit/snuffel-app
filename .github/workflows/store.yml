@@ -1,6 +1,6 @@
 # Upload the App Store texts (fastlane/metadata) and the screenshots from a
-# screenshots run to App Store Connect (started by hand). Does not upload a
-# build and does not submit for review: that stays a click in App Store Connect.
+# screenshots run to App Store Connect (started by hand). Never uploads a build;
+# with build_number it attaches that TestFlight build and submits it for review.
 name: store
 
 on:
@@ -12,6 +12,9 @@ on:
       app_version:
         description: "App Store version to fill, e.g. 1.0.1 (created when it doesn't exist yet)"
         required: true
+      build_number:
+        description: "Build to attach and submit for review, e.g. 17 (empty = texts only, no submission)"
+        default: ""
 
 permissions:
   contents: read
@@ -57,11 +60,17 @@ jobs:
         env:
           RUN_ID: ${{ inputs.screenshots_run }}
           APP_VERSION: ${{ inputs.app_version }}
+          BUILD: ${{ inputs.build_number }}
         run: |
           [[ "$APP_VERSION" =~ ^[0-9]+(\.[0-9]+){1,2}$ ]] || { echo "::error::app_version must look like 1.0.1"; exit 1; }
+          [[ -z "$BUILD" || "$BUILD" =~ ^[0-9]+$ ]] || { echo "::error::build_number must be digits"; exit 1; }
           if [ -n "$RUN_ID" ]; then SHOTS=true SKIP=false; else SHOTS=false SKIP=true; fi
+          # With a build: attach it and submit for review; released automatically once approved.
+          SUBMIT=(--submit_for_review false)
+          [ -n "$BUILD" ] && SUBMIT=(--build_number "$BUILD" --submit_for_review true --automatic_release true \
+            --submission_information '{"add_id_info_uses_idfa": false, "export_compliance_uses_encryption": false}')
           fastlane deliver --api_key_path "$RUNNER_TEMP/asc.json" --app_identifier app.snuffel --app_version "$APP_VERSION" \
-            --skip_binary_upload --skip_app_version_update false --force --submit_for_review false \
+            --skip_binary_upload --skip_app_version_update false --force "${SUBMIT[@]}" \
             --overwrite_screenshots "$SHOTS" \
             --skip_screenshots "$SKIP" \
             --precheck_include_in_app_purchases false --run_precheck_before_submit false
