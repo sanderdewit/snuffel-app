@@ -72,6 +72,7 @@ function Screens() {
       <Stack.Screen name="dog/[id]" options={{ title: t("app_editDog") }} />
       <Stack.Screen name="dog/file/[id]" options={{ title: t("app_dogFile") }} />
       <Stack.Screen name="settings" options={{ title: t("app_settings") }} />
+      <Stack.Screen name="lost" options={{ title: t("lostTitle").replace(/^\S+\s/, "") /* without the 🔎 */ }} />
       <Stack.Screen name="voice" options={{ title: t("app_betaVoice"), gestureEnabled: false }} />
     </Stack>
   );

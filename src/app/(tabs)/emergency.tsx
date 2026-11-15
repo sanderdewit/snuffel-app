@@ -4,7 +4,7 @@
 // with a call button.
 import { useCallback, useRef, useState } from "react";
 import { ActivityIndicator, FlatList, Linking, Pressable, Text, View } from "react-native";
-import { useFocusEffect } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useI18n } from "../../i18n";
 import { currentPosition, LocationDeniedError } from "../../lib/geo";
 import { emergency, emergencyRank, NotCoveredError, type Place } from "../../lib/places";
@@ -68,6 +68,9 @@ export default function Emergency() {
             </Pressable>
             {busy && <ActivityIndicator size="large" color={C.danger} />}
             {!!error && <Text style={[S.body, { color: C.danger }]}>{error}</Text>}
+            <Pressable style={S.btnGhost} onPress={() => router.push("/lost")} accessibilityRole="button">
+              <Text style={S.btnGhostText}>{t("lostOpen")}</Text>
+            </Pressable>
             {!busy && places && radiusM > 10000 && <Text style={S.muted}>{tf("emergencyRadiusNote", { km: Math.round(radiusM / 1000) })}</Text>}
             {!busy && places && !anyOpen && <Text style={[S.body, { color: C.warn }]}>{t("emergencyNone")}</Text>}
             {!busy && places && !places.length && <Text style={S.muted}>🐶 {t("noResults")}</Text>}
