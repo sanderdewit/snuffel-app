@@ -31,3 +31,6 @@ updates:
       - dependency-name: "typescript"
       - dependency-name: "@types/react"
       - dependency-name: "@maplibre/maplibre-react-native"
+      # 150.1.1 needs a CocoaPods pod that was never published (iOS pod install fails); later versions are proposed again
+      - dependency-name: "@livekit/react-native-webrtc"
+        versions: ["150.1.1"]
