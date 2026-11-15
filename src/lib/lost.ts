@@ -52,7 +52,8 @@ export function defaultLostCountry(): LostCountry {
   return (LOST_COUNTRIES as string[]).includes(region) ? (region as LostCountry) : "EU";
 }
 
-export const LOST_GROUPS_FORM = "https://github.com/sanderdewit/snuffel-data/issues/new?template=lost-group.yml";
+// The suggestion form under the website's guide (no account needed).
+export const LOST_GROUPS_FORM = CONFIG.website + "#lost-suggest";
 
 export interface LostGroup { id: string; name: string; url: string; country: string; region?: string; lat?: number; lon?: number; radiusKm?: number }
 
