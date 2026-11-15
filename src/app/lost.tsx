@@ -20,13 +20,33 @@ function Chip({ on, label, onPress }: { on: boolean; label: string; onPress: () 
   );
 }
 
+// Name and website on one line: a step with two links stays short.
 function LinkButton({ label, sub, url }: { label: string; sub: string; url: string }) {
   return (
     <Pressable onPress={() => Linking.openURL(url)} accessibilityRole="link"
-      style={{ borderWidth: 1, borderColor: C.line, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 8, backgroundColor: C.card }}>
-      <Text style={{ fontWeight: "600", color: C.text }}>{label} ↗</Text>
-      <Text style={[S.muted, { fontSize: 12 }]}>{sub}</Text>
+      style={{ borderWidth: 1, borderColor: C.line, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 7, backgroundColor: C.chip }}>
+      <Text style={{ fontWeight: "700", color: C.text }}>{label} ↗  <Text style={[S.muted, { fontSize: 12, fontWeight: "500" }]}>{sub}</Text></Text>
     </Pressable>
+  );
+}
+
+// Local search groups, inside the step about sharing locally / reporting a found dog.
+function Groups({ groups, t }: { groups: LostGroup[] | null; t: (k: string) => string }) {
+  return (
+    <View style={{ gap: 8 }}>
+      {groups && (
+        <Text style={S.muted}><Text style={{ fontWeight: "700", color: C.text }}>{t("lostGroupsTitle")}. </Text>
+          {t(groups.length ? "lostGroupsNote" : "lostGroupsNone")}</Text>
+      )}
+      {!!groups && groups.length > 0 && (
+        <View style={[S.row, { gap: 8, flexWrap: "wrap" }]}>
+          {groups.map((g) => <LinkButton key={g.id} label={g.name} sub={g.region || host(g.url)} url={g.url} />)}
+        </View>
+      )}
+      <Pressable onPress={() => Linking.openURL(LOST_GROUPS_FORM)} accessibilityRole="link" hitSlop={8}>
+        <Text style={{ color: C.brandDark, fontWeight: "600" }}>{t("lostGroupsAdd")} ↗</Text>
+      </Pressable>
+    </View>
   );
 }
 
@@ -69,6 +89,7 @@ export default function Lost() {
               {(s.links || []).map((k) => links[k] && <LinkButton key={k} label={t(links[k]!.key)} sub={host(links[k]!.url)} url={links[k]!.url} />)}
             </View>
           )}
+          {(s.key === "lostStep4" || s.key === "foundStep3") && <Groups groups={groups} t={t} />}
           {s.emergency && (
             <Pressable style={[S.btn, { backgroundColor: C.danger }]} onPress={() => router.navigate("/(tabs)/emergency")} accessibilityRole="button">
               <Text style={S.btnText}>{t("aiCtaEmergency")}</Text>
@@ -77,19 +98,6 @@ export default function Lost() {
         </View>
       ))}
       {country === "EU" && <Text style={S.muted}>{t("lostOtherNote")}</Text>}
-
-      <View style={{ gap: 8, marginTop: 4 }}>
-        <Text style={S.h2}>{t("lostGroupsTitle")}</Text>
-        {groups && <Text style={S.muted}>{t(groups.length ? "lostGroupsNote" : "lostGroupsNone")}</Text>}
-        {!!groups && groups.length > 0 && (
-          <View style={[S.row, { gap: 8, flexWrap: "wrap" }]}>
-            {groups.map((g) => <LinkButton key={g.id} label={g.name} sub={g.region || host(g.url)} url={g.url} />)}
-          </View>
-        )}
-        <Pressable onPress={() => Linking.openURL(LOST_GROUPS_FORM)} accessibilityRole="link" hitSlop={8}>
-          <Text style={{ color: C.brandDark, fontWeight: "600" }}>{t("lostGroupsAdd")} ↗</Text>
-        </Pressable>
-      </View>
     </ScrollView>
   );
 }
