@@ -1,0 +1,24 @@
+Snuffel vám pomůže najít tu nejlepší péči pro vašeho psa, nablízku a nezávisle. Veterináři, veterinární kliniky, psí salony, chovatelské potřeby, cvičitelé, psí hotely a výběhy pro psy po celé Evropě. A ukážeme vám, která místa patří velkým sítím.
+
+POHOTOVOST: OTEVŘENÝ VETERINÁŘ NA JEDNO KLEPNUTÍ
+Otevřete kartu Pohotovost (nebo podržte prst na ikoně aplikace) a Snuffel hned ukáže veterináře a veterinární kliniky, které mají právě otevřeno, nejbližší jako první. Zavřené ordinace se skryjí, a pokud v okolí nic otevřeno není, Snuffel hledá dál. Hned můžete zavolat nebo spustit navigaci. Váš vlastní veterinář je vždy nahoře.
+
+NEZÁVISLÁ ORDINACE, NEBO SÍŤ?
+Mnoho ordinací v posledních letech koupily velké sítě, často beze změny názvu. Snuffel je pozná podle seznamů klinik samotných sítí, jejich webů a dat z OpenStreetMap a nezávislé ordinace zobrazuje jako první.
+
+VÁŠ PES, VAŠE PŘIPOMÍNKY
+Vytvořte profil svého psa (plemeno, věk, hmotnost, fotka) a dostávejte včas připomínky očkování, odčervení, ochrany proti blechám a klíšťatům a každoroční prohlídky.
+
+KARTA VAŠEHO PSA
+Mějte návštěvy u veterináře, diagnózy, léky, alergie, hmotnost a chování na jednom místě. Kartu můžete exportovat jako PDF pro nového veterináře nebo hlídače, nebo ji přenést do jiného telefonu (volitelně chráněnou heslem).
+
+POMOC AI SE ZDRAVÍM A CHOVÁNÍM
+Zeptejte se na příznaky nebo chování, třeba štěkání, úzkost, tahání na vodítku nebo výchovu štěněte, písemně nebo hlasem. Asistent zná profil vašeho psa a, pokud chcete, i nejdůležitější body z jeho karty. Pomůže vám odhadnout, jak naléhavá situace je, a navrhne první kroky založené na odměňování. Jde o obecné informace, které nenahrazují veterináře ani etologa.
+
+FUNGUJE I BEZ SIGNÁLU
+Vaše uložená místa, váš veterinář a všechna místa do 15 km od domova fungují i offline.
+
+SOUKROMÍ
+Žádný účet, žádné sledování, žádné reklamy. Vaši psi, připomínky, uložená místa a konverzace zůstávají ve vašem telefonu. Vaše poloha slouží jen k vyhledávání a neukládá se.
+
+Zdarma, ve 29 jazycích. Data o místech © přispěvatelé OpenStreetMap.

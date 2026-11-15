@@ -1,0 +1,24 @@
+Snuffel vám pomôže nájsť najlepšiu starostlivosť pre vášho psa, blízko a nezávisle. Veterinári, veterinárne kliniky, psie salóny, chovateľské potreby, tréneri, psie hotely a výbehy po celej Európe – a ukážeme vám, ktoré miesta patria veľkým reťazcom.
+
+POHOTOVOSŤ: OTVORENÝ VETERINÁR NA JEDNO ŤUKNUTIE
+Otvorte kartu Pohotovosť (alebo podržte ikonu aplikácie) a Snuffel hneď ukáže veterinárov a veterinárne kliniky, ktoré majú práve otvorené, od najbližších. Zatvorené ambulancie sa skryjú, a ak v okolí nemá nič otvorené, Snuffel hľadá ďalej. Zavolať alebo spustiť navigáciu môžete hneď. Váš veterinár je vždy navrchu.
+
+NEZÁVISLÝ ALEBO REŤAZEC?
+Mnohé ambulancie v posledných rokoch kúpili veľké reťazce, často bez zmeny názvu. Snuffel ich rozpozná podľa vlastných zoznamov kliník reťazcov, ich webových stránok a OpenStreetMap a nezávislé ambulancie zobrazí ako prvé.
+
+VÁŠ PES, VAŠE PRIPOMIENKY
+Vytvorte profil svojho psa (plemeno, vek, hmotnosť, fotka) a dostávajte včas pripomienky na očkovanie, odčervenie, ochranu proti blchám a kliešťom a ročnú prehliadku.
+
+KARTA VÁŠHO PSA
+Návštevy u veterinára, diagnózy, lieky, alergie, hmotnosť a správanie na jednom mieste. Exportujte kartu do PDF pre nového veterinára alebo opatrovateľa, alebo ju preneste do iného telefónu (voliteľne chránenú heslom).
+
+POMOC AI SO ZDRAVÍM A SPRÁVANÍM
+Pýtajte sa na príznaky alebo správanie, napríklad štekanie, úzkosť, ťahanie na vôdzke či výchovu šteniatka – písaním alebo hlasom. Asistent pozná profil vášho psa a, ak chcete, aj hlavné body z jeho karty. Pomôže vám odhadnúť, aké naliehavé niečo je, a navrhne prvé kroky založené na odmeňovaní. Ide o všeobecné informácie, nie o náhradu veterinára ani etológa.
+
+FUNGUJE AJ BEZ SIGNÁLU
+Uložené miesta, váš veterinár a všetky miesta do 15 km od domova fungujú aj offline.
+
+SÚKROMIE
+Žiadny účet, žiadne sledovanie, žiadne reklamy. Vaše psy, pripomienky, uložené miesta a chaty zostávajú vo vašom telefóne. Vaša poloha sa používa iba na vyhľadávanie a neukladá sa.
+
+Zadarmo, v 29 jazykoch. Údaje o miestach © prispievatelia OpenStreetMap.

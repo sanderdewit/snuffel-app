@@ -1,0 +1,24 @@
+Snuffel vous aide à trouver les meilleurs soins pour votre chien, près de chez vous et en toute indépendance. Vétérinaires, hôpitaux animaliers, toiletteurs, animaleries, éducateurs canins, pensions et espaces de liberté pour chiens dans toute l'Europe, et nous vous indiquons quels lieux appartiennent à de grandes chaînes.
+
+URGENCE : UN VÉTÉRINAIRE OUVERT EN UN GESTE
+Ouvrez l'onglet Urgence (ou appuyez longuement sur l'icône de l'app) et Snuffel affiche aussitôt les vétérinaires et hôpitaux animaliers ouverts maintenant, du plus proche au plus loin. Les cabinets fermés sont masqués et, si rien n'est ouvert à proximité, Snuffel élargit la recherche. Appelez ou lancez l'itinéraire en un instant. Votre propre vétérinaire apparaît toujours en premier.
+
+INDÉPENDANT OU CHAÎNE ?
+Ces dernières années, de nombreux cabinets ont été rachetés par de grandes chaînes, souvent sans changer de nom. Snuffel les repère grâce aux listes de cliniques des chaînes elles-mêmes, à leurs sites web et à OpenStreetMap, et affiche d'abord les cabinets indépendants.
+
+VOTRE CHIEN, VOS RAPPELS
+Créez un profil pour votre chien (race, âge, poids, photo) et recevez des rappels au bon moment pour les vaccins, la vermifugation, le traitement antipuces et antitiques et le bilan annuel.
+
+LE DOSSIER DE VOTRE CHIEN
+Regroupez les visites chez le vétérinaire, diagnostics, médicaments, allergies, poids et comportement au même endroit. Exportez le dossier en PDF pour un nouveau vétérinaire ou un pet-sitter, ou transférez-le vers un autre téléphone (protégé par mot de passe si vous le souhaitez).
+
+AIDE IA POUR LA SANTÉ ET LE COMPORTEMENT
+Posez vos questions sur des symptômes ou un comportement, comme les aboiements, l'anxiété, le chien qui tire en laisse ou l'éducation du chiot, par écrit ou à la voix. L'assistant connaît le profil de votre chien et, si vous le souhaitez, les points clés de son dossier. Il vous aide à évaluer l'urgence d'une situation et propose de premières étapes fondées sur la récompense. Informations générales, qui ne remplacent pas un vétérinaire ou un comportementaliste.
+
+FONCTIONNE SANS RÉSEAU
+Vos lieux enregistrés, votre propre vétérinaire et tous les lieux à moins de 15 km de chez vous fonctionnent aussi hors ligne.
+
+CONFIDENTIALITÉ
+Pas de compte, pas de pistage, pas de publicité. Vos chiens, rappels, lieux enregistrés et conversations restent sur votre téléphone. Votre position sert uniquement à la recherche et n'est pas conservée.
+
+Gratuit, en 29 langues. Données des lieux © contributeurs OpenStreetMap.

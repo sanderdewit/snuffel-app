@@ -1,0 +1,24 @@
+Snuffel hjælper dig med at finde den bedste pleje til din hund, tæt på og uafhængigt. Dyrlæger, dyrehospitaler, hundefrisører, dyrehandlere, hundetrænere, hundepensioner og hundeskove i hele Europa, og vi viser, hvilke steder der hører til store kæder.
+
+AKUT: EN ÅBEN DYRLÆGE MED ÉT TRYK
+Åbn fanen Akut (eller hold fingeren på app-ikonet), og Snuffel viser straks de dyrlæger og dyrehospitaler, der har åbent nu, nærmeste først. Lukkede klinikker skjules, og hvis intet har åbent i nærheden, søger Snuffel længere væk. Ring eller start rutevejledning med det samme. Din egen dyrlæge står altid øverst.
+
+UAFHÆNGIG ELLER KÆDE?
+Mange klinikker er i de senere år blevet købt af store kæder, ofte uden at skifte navn. Snuffel genkender dem ud fra kædernes egne kliniklister, deres hjemmesider og OpenStreetMap og viser de uafhængige klinikker først.
+
+DIN HUND, DINE PÅMINDELSER
+Opret en profil for din hund (race, alder, vægt, foto), og få påmindelser i god tid om vaccinationer, ormekur, loppe- og flåtbehandling og det årlige helbredstjek.
+
+DIN HUNDS JOURNAL
+Saml dyrlægebesøg, diagnoser, medicin, allergier, vægt og adfærd ét sted. Eksportér journalen som PDF til en ny dyrlæge eller en hundepasser, eller flyt den til en anden telefon (eventuelt beskyttet med adgangskode).
+
+AI-HJÆLP TIL SUNDHED OG ADFÆRD
+Spørg om symptomer eller adfærd, som gøen, angst, at trække i snoren eller hvalpetræning, på skrift eller med stemmen. Assistenten kender din hunds profil og, hvis du vil, de vigtigste punkter fra journalen. Den hjælper dig med at vurdere, hvor akut noget er, og foreslår belønningsbaserede første skridt. Generel information, ikke en erstatning for en dyrlæge eller adfærdsbehandler.
+
+VIRKER UDEN SIGNAL
+Dine gemte steder, din egen dyrlæge og alle steder inden for 15 km fra dit hjem virker også offline.
+
+PRIVATLIV
+Ingen konto, ingen tracking, ingen reklamer. Dine hunde, påmindelser, gemte steder og samtaler bliver på din telefon. Din placering bruges kun til at søge og gemmes ikke.
+
+Gratis, på 29 sprog. Stedsdata © OpenStreetMap-bidragydere.

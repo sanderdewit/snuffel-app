@@ -1,0 +1,24 @@
+A Snuffel segít megtalálni a legjobb ellátást a kutyádnak, a közelben és függetlenül. Állatorvosok, állatkórházak, kutyakozmetikák, állatfelszerelés-boltok, kutyakiképzők, kutyapanziók és kutyafuttatók egész Európában, és megmutatjuk, mely helyek tartoznak nagy láncokhoz.
+
+VÉSZHELYZET: NYITVA TARTÓ ÁLLATORVOS EGY ÉRINTÉSSEL
+Nyisd meg a Vészhelyzet fület (vagy nyomd hosszan az alkalmazás ikonját), és a Snuffel azonnal megmutatja a most nyitva tartó állatorvosokat és állatkórházakat, a legközelebbieket elöl. A zárva tartó rendelők rejtve maradnak, és ha a közelben semmi sincs nyitva, a Snuffel távolabb is keres. Azonnal telefonálhatsz, vagy indíthatod az útvonaltervezést. A saját állatorvosod mindig legfelül van.
+
+FÜGGETLEN VAGY LÁNC?
+Az elmúlt években sok rendelőt felvásároltak a nagy láncok, gyakran úgy, hogy a nevük nem változott. A Snuffel a láncok saját klinikalistái, weboldalai és az OpenStreetMap adatai alapján felismeri őket, és a független rendelőket mutatja előre.
+
+A KUTYÁD, A TE EMLÉKEZTETŐID
+Készíts profilt a kutyádnak (fajta, kor, testsúly, fotó), és kapj időben emlékeztetőt az oltásokról, a féregtelenítésről, a bolha- és kullancs elleni kezelésről és az éves ellenőrzésről.
+
+A KUTYÁD NAPLÓJA
+Tartsd egy helyen az állatorvosi látogatásokat, diagnózisokat, gyógyszereket, allergiákat, a testsúlyt és a viselkedést. Exportáld a naplót PDF-be egy új állatorvosnak vagy a kutyaszitternek, vagy vidd át egy másik telefonra (ha szeretnéd, jelszóval védve).
+
+MI-SEGÍTSÉG EGÉSZSÉGHEZ ÉS VISELKEDÉSHEZ
+Kérdezz tünetekről vagy viselkedésről, például ugatásról, szorongásról, pórázhúzásról vagy kölyökkutya-nevelésről, gépelve vagy hanggal. Az asszisztens ismeri a kutyád profilját, és ha szeretnéd, a naplója legfontosabb pontjait is. Segít felmérni, mennyire sürgős valami, és jutalmazásra épülő első lépéseket javasol. Általános tájékoztatás, nem helyettesíti az állatorvost vagy a viselkedésterapeutát.
+
+TÉRERŐ NÉLKÜL IS MŰKÖDIK
+A mentett helyeid, a saját állatorvosod és az otthonodtól 15 km-en belüli összes hely internet nélkül is elérhető.
+
+ADATVÉDELEM
+Nincs fiók, nincs követés, nincsenek hirdetések. A kutyáid, az emlékeztetőid, a mentett helyeid és a beszélgetéseid a telefonodon maradnak. A helyadataidat csak a kereséshez használjuk, és nem tároljuk.
+
+Ingyenes, 29 nyelven. Helyadatok © OpenStreetMap-közreműködők.
