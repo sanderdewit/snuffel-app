@@ -13,6 +13,7 @@ import { Toggle } from "../../ui/Toggle";
 import { C, S } from "../../ui/theme";
 
 const RADII = [1000, 3000, 5000, 10000, 25000, 50000, 75000, 100000];
+const allCats = (on: boolean) => Object.fromEntries(CATEGORY_ORDER.map((c) => [c, on])) as Record<Category, boolean>;
 
 export default function Find() {
   const { t, tf, lang } = useI18n();
@@ -24,7 +25,7 @@ export default function Find() {
   const [error, setError] = useState<string | null>(null);
   const [view, setView] = useState<"list" | "map">("list");
   const [independentOnly, setIndependentOnly] = useState(true);
-  const [cats, setCats] = useState<Record<Category, boolean>>(() => Object.fromEntries(CATEGORY_ORDER.map((c) => [c, true])) as Record<Category, boolean>);
+  const [cats, setCats] = useState<Record<Category, boolean>>(() => allCats(true));
 
   const load = useCallback(async (s: Spot, r: number) => {
     setBusy(true); setError(null);
@@ -74,6 +75,7 @@ export default function Find() {
   }, [params.cat, params.near, params.view]);
 
   const filtered = useMemo(() => places.filter((p) => cats[p.cat]), [places, cats]);
+  const all = CATEGORY_ORDER.every((c) => cats[c]);
   const independents = filtered.filter((p) => !p.chain);
   const chains = filtered.filter((p) => p.chain);
   const showChains = chains.length > 0 && (!independentOnly || independents.length === 0);
@@ -117,13 +119,26 @@ export default function Find() {
           <Pressable style={S.btn} onPress={byAddress} accessibilityRole="button"><Text style={S.btnText}>{t("search")}</Text></Pressable>
         </View>
         <Pressable style={S.btnGhost} onPress={nearMe} accessibilityRole="button"><Text style={S.btnGhostText}>📍 {t("useLocation")}</Text></Pressable>
+        {/* "All" plus the categories. With everything shown, tapping a category shows
+            only that one; after that, taps add or remove. None left, or "All": everything. */}
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6 }}>
-          {CATEGORY_ORDER.map((c) => (
-            <Pressable key={c} onPress={() => setCats((s) => ({ ...s, [c]: !s[c] }))} accessibilityRole="checkbox" accessibilityState={{ checked: cats[c] }}
-              style={{ paddingHorizontal: 10, paddingVertical: 6, borderRadius: 16, backgroundColor: cats[c] ? CATEGORIES[c].color + "22" : C.chip, borderWidth: 1, borderColor: cats[c] ? CATEGORIES[c].color : C.line }}>
-              <Text style={{ color: C.text, opacity: cats[c] ? 1 : 0.5 }}>{CATEGORIES[c].icon} {t(CATEGORIES[c].key)}</Text>
-            </Pressable>
-          ))}
+          <Pressable onPress={() => setCats(allCats(true))} accessibilityRole="button" accessibilityState={{ selected: all }}
+            style={{ paddingHorizontal: 12, paddingVertical: 6, borderRadius: 16, backgroundColor: all ? C.brandDark : C.chip, borderWidth: 1, borderColor: all ? C.brandDark : C.line }}>
+            <Text style={{ color: all ? "#fff" : C.text, fontWeight: "600" }}>{t("filterAll")}</Text>
+          </Pressable>
+          {CATEGORY_ORDER.map((c) => {
+            const on = !all && cats[c];
+            return (
+              <Pressable key={c} onPress={() => setCats((s) => {
+                if (CATEGORY_ORDER.every((k) => s[k])) return { ...allCats(false), [c]: true };
+                const next = { ...s, [c]: !s[c] };
+                return CATEGORY_ORDER.some((k) => next[k]) ? next : allCats(true);
+              })} accessibilityRole="checkbox" accessibilityState={{ checked: on }}
+                style={{ paddingHorizontal: 10, paddingVertical: 6, borderRadius: 16, backgroundColor: on ? CATEGORIES[c].color + "22" : C.chip, borderWidth: 1, borderColor: on ? CATEGORIES[c].color : C.line }}>
+                <Text style={{ color: C.text }}>{CATEGORIES[c].icon} {t(CATEGORIES[c].key)}</Text>
+              </Pressable>
+            );
+          })}
         </ScrollView>
         <View style={[S.row, { justifyContent: "space-between" }]}>
           <View style={[S.row, { gap: 6 }]}>
