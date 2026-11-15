@@ -1,0 +1,13 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Snuffel",
+    "NSLocationWhenInUseUsageDescription": "Snuffel kasutab sinu asukohta, et leida sinu lähedal loomaarste ja koerateenuseid. Sinu asukohta ei salvestata.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "Snuffel kasutab sinu asukohta ainult siis, kui rakendus on avatud, et leida lähedal loomaarste ja koerateenuseid. Sinu asukohta ei salvestata.",
+    "NSLocationAlwaysUsageDescription": "Snuffel kasutab sinu asukohta ainult siis, kui rakendus on avatud, et leida lähedal loomaarste ja koerateenuseid. Sinu asukohta ei salvestata.",
+    "NSPhotoLibraryUsageDescription": "Vali oma koera profiilile foto. Foto jääb sellesse telefoni.",
+    "NSMicrophoneUsageDescription": "Esita Snuffeli AI-assistendile oma küsimus häälega. Suulised küsimused muudetakse sinu telefonis tekstiks; ainult AI-häälvestluses (beeta) saadetakse heli Snuffeli ELis asuvale AI-teenusele ja seda ei salvestata.",
+    "NSSpeechRecognitionUsageDescription": "Sinu telefon muudab sinu suulise küsimuse Snuffeli AI-assistendi jaoks tekstiks.",
+    "NSMotionUsageDescription": "Snuffel ei kasuta liikumisandmeid.",
+    "NSCameraUsageDescription": "Snuffel ei kasuta kaamerat."
+  }
+}

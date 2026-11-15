@@ -1,0 +1,13 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Snuffel",
+    "NSLocationWhenInUseUsageDescription": "Snuffel përdor vendndodhjen tënde për të gjetur veterinerë dhe shërbime për qen pranë teje. Vendndodhja jote nuk ruhet.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "Snuffel e përdor vendndodhjen tënde vetëm kur aplikacioni është i hapur, për të gjetur veterinerë dhe shërbime për qen në afërsi. Vendndodhja jote nuk ruhet.",
+    "NSLocationAlwaysUsageDescription": "Snuffel e përdor vendndodhjen tënde vetëm kur aplikacioni është i hapur, për të gjetur veterinerë dhe shërbime për qen në afërsi. Vendndodhja jote nuk ruhet.",
+    "NSPhotoLibraryUsageDescription": "Zgjidh një foto për profilin e qenit tënd. Fotoja mbetet në këtë telefon.",
+    "NSMicrophoneUsageDescription": "Bëji pyetjen asistentit AI të Snuffel me zë. Pyetjet e folura kthehen në tekst në telefonin tënd; vetëm në bisedën me zë me AI (beta) audioja dërgohet te shërbimi AI i Snuffel në BE dhe nuk ruhet.",
+    "NSSpeechRecognitionUsageDescription": "Telefoni yt e kthen pyetjen tënde të folur në tekst për asistentin AI të Snuffel.",
+    "NSMotionUsageDescription": "Snuffel nuk përdor të dhëna lëvizjeje.",
+    "NSCameraUsageDescription": "Snuffel nuk përdor kamerën."
+  }
+}

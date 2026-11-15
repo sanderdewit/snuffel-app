@@ -1,0 +1,13 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Snuffel",
+    "NSLocationWhenInUseUsageDescription": "A Snuffel a helyadataidat használja, hogy állatorvosokat és kutyás szolgáltatásokat találjon a közeledben. A helyadataidat nem tároljuk.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "A Snuffel csak akkor használja a helyadataidat, amikor az app meg van nyitva, hogy állatorvosokat és kutyás szolgáltatásokat találjon a közelben. A helyadataidat nem tároljuk.",
+    "NSLocationAlwaysUsageDescription": "A Snuffel csak akkor használja a helyadataidat, amikor az app meg van nyitva, hogy állatorvosokat és kutyás szolgáltatásokat találjon a közelben. A helyadataidat nem tároljuk.",
+    "NSPhotoLibraryUsageDescription": "Válassz egy fotót a kutyád profiljához. A fotó ezen a telefonon marad.",
+    "NSMicrophoneUsageDescription": "Tedd fel a kérdésed hanggal a Snuffel MI-asszisztensének. A kimondott kérdéseket a telefonod alakítja szöveggé; csak az MI-hangbeszélgetésben (béta) kerül hang a Snuffel EU-ban működő MI-szolgáltatásához, és azt nem tároljuk.",
+    "NSSpeechRecognitionUsageDescription": "A telefonod szöveggé alakítja a kimondott kérdésedet a Snuffel MI-asszisztense számára.",
+    "NSMotionUsageDescription": "A Snuffel nem használ mozgásadatokat.",
+    "NSCameraUsageDescription": "A Snuffel nem használja a kamerát."
+  }
+}

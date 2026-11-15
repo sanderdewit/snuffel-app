@@ -1,0 +1,13 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Snuffel",
+    "NSLocationWhenInUseUsageDescription": "Snuffel koristi tvoju lokaciju da pronađe veterinare i usluge za pse u tvojoj blizini. Tvoja lokacija se ne čuva.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "Snuffel koristi tvoju lokaciju samo dok je aplikacija otvorena, da pronađe veterinare i usluge za pse u blizini. Tvoja lokacija se ne čuva.",
+    "NSLocationAlwaysUsageDescription": "Snuffel koristi tvoju lokaciju samo dok je aplikacija otvorena, da pronađe veterinare i usluge za pse u blizini. Tvoja lokacija se ne čuva.",
+    "NSPhotoLibraryUsageDescription": "Izaberi fotografiju za profil svog psa. Fotografija ostaje na ovom telefonu.",
+    "NSMicrophoneUsageDescription": "Postavi pitanje AI asistentu Snuffela glasom. Izgovorena pitanja se pretvaraju u tekst na tvom telefonu; samo u AI glasovnom razgovoru (beta) zvuk se šalje AI usluzi Snuffela u EU i ne čuva se.",
+    "NSSpeechRecognitionUsageDescription": "Tvoj telefon pretvara tvoje izgovoreno pitanje u tekst za AI asistenta Snuffela.",
+    "NSMotionUsageDescription": "Snuffel ne koristi podatke o kretanju.",
+    "NSCameraUsageDescription": "Snuffel ne koristi kameru."
+  }
+}

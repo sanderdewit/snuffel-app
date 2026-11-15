@@ -1,0 +1,13 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Snuffel",
+    "NSLocationWhenInUseUsageDescription": "Snuffel naudoja jūsų buvimo vietą, kad rastų netoliese esančius veterinarus ir paslaugas šunims. Jūsų buvimo vieta nėra saugoma.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "Snuffel naudoja jūsų buvimo vietą tik tada, kai programėlė atidaryta, kad rastų netoliese esančius veterinarus ir paslaugas šunims. Jūsų buvimo vieta nėra saugoma.",
+    "NSLocationAlwaysUsageDescription": "Snuffel naudoja jūsų buvimo vietą tik tada, kai programėlė atidaryta, kad rastų netoliese esančius veterinarus ir paslaugas šunims. Jūsų buvimo vieta nėra saugoma.",
+    "NSPhotoLibraryUsageDescription": "Pasirinkite nuotrauką savo šuns profiliui. Nuotrauka lieka šiame telefone.",
+    "NSMicrophoneUsageDescription": "Užduokite klausimą Snuffel DI asistentui balsu. Ištarti klausimai paverčiami tekstu jūsų telefone; tik DI balso pokalbyje (beta) garsas siunčiamas į Snuffel DI paslaugą ES, ir jis nėra saugomas.",
+    "NSSpeechRecognitionUsageDescription": "Jūsų telefonas paverčia ištartą klausimą tekstu Snuffel DI asistentui.",
+    "NSMotionUsageDescription": "Snuffel nenaudoja judesio duomenų.",
+    "NSCameraUsageDescription": "Snuffel nenaudoja kameros."
+  }
+}

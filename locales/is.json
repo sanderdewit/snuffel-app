@@ -1,0 +1,13 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Snuffel",
+    "NSLocationWhenInUseUsageDescription": "Snuffel notar staðsetningu þína til að finna dýralækna og hundaþjónustu nálægt þér. Staðsetningin þín er ekki vistuð.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "Snuffel notar staðsetningu þína aðeins á meðan appið er opið, til að finna dýralækna og hundaþjónustu í nágrenninu. Staðsetningin þín er ekki vistuð.",
+    "NSLocationAlwaysUsageDescription": "Snuffel notar staðsetningu þína aðeins á meðan appið er opið, til að finna dýralækna og hundaþjónustu í nágrenninu. Staðsetningin þín er ekki vistuð.",
+    "NSPhotoLibraryUsageDescription": "Veldu mynd fyrir prófíl hundsins þíns. Myndin verður áfram í þessum síma.",
+    "NSMicrophoneUsageDescription": "Spurðu gervigreindaraðstoð Snuffel með röddinni. Töluðum spurningum er breytt í texta í símanum þínum; aðeins í raddsamtali við gervigreind (beta) fer hljóð til gervigreindarþjónustu Snuffel innan ESB, og það er ekki vistað.",
+    "NSSpeechRecognitionUsageDescription": "Síminn þinn breytir töluðu spurningunni þinni í texta fyrir gervigreindaraðstoð Snuffel.",
+    "NSMotionUsageDescription": "Snuffel notar ekki hreyfigögn.",
+    "NSCameraUsageDescription": "Snuffel notar ekki myndavélina."
+  }
+}

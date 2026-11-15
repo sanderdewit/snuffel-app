@@ -1,0 +1,13 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Snuffel",
+    "NSLocationWhenInUseUsageDescription": "Snuffel käyttää sijaintiasi löytääkseen eläinlääkäreitä ja koirapalveluja läheltäsi. Sijaintiasi ei tallenneta.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "Snuffel käyttää sijaintiasi vain, kun sovellus on auki, löytääkseen eläinlääkäreitä ja koirapalveluja läheltä. Sijaintiasi ei tallenneta.",
+    "NSLocationAlwaysUsageDescription": "Snuffel käyttää sijaintiasi vain, kun sovellus on auki, löytääkseen eläinlääkäreitä ja koirapalveluja läheltä. Sijaintiasi ei tallenneta.",
+    "NSPhotoLibraryUsageDescription": "Valitse kuva koirasi profiiliin. Kuva pysyy tässä puhelimessa.",
+    "NSMicrophoneUsageDescription": "Kysy Snuffelin tekoälyavustajalta äänelläsi. Puhutut kysymykset muutetaan tekstiksi puhelimessasi; vain tekoälypuhelussa (beeta) ääni lähetetään Snuffelin tekoälypalveluun EU:ssa, eikä sitä tallenneta.",
+    "NSSpeechRecognitionUsageDescription": "Puhelimesi muuttaa puhutun kysymyksesi tekstiksi Snuffelin tekoälyavustajalle.",
+    "NSMotionUsageDescription": "Snuffel ei käytä liiketietoja.",
+    "NSCameraUsageDescription": "Snuffel ei käytä kameraa."
+  }
+}

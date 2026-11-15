@@ -1,1 +1,1 @@
-De eerste versie van Snuffel. Laat ons weten wat je ervan vindt!
+Het AI-spraakgesprek (bèta) werkt nu op elke iPhone: de AI begroet je zelf en spreekt je taal. In de AI-chat blijft de spraakmodus na elk gesproken antwoord weer luisteren. Snuffel is nu ook in 29 talen beschikbaar in de App Store.

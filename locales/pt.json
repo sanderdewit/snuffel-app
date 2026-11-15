@@ -1,0 +1,13 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Snuffel",
+    "NSLocationWhenInUseUsageDescription": "O Snuffel usa a sua localização para encontrar veterinários e serviços para cães perto de si. A sua localização não é guardada.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "O Snuffel só usa a sua localização enquanto a app está aberta, para encontrar veterinários e serviços para cães nas proximidades. A sua localização não é guardada.",
+    "NSLocationAlwaysUsageDescription": "O Snuffel só usa a sua localização enquanto a app está aberta, para encontrar veterinários e serviços para cães nas proximidades. A sua localização não é guardada.",
+    "NSPhotoLibraryUsageDescription": "Escolha uma fotografia para o perfil do seu cão. A fotografia fica neste telemóvel.",
+    "NSMicrophoneUsageDescription": "Faça a sua pergunta ao assistente de IA do Snuffel por voz. As perguntas faladas são convertidas em texto no seu telemóvel; só na conversa de voz com IA (beta) o áudio é enviado para o serviço de IA do Snuffel na UE, e não é guardado.",
+    "NSSpeechRecognitionUsageDescription": "O seu telemóvel converte a sua pergunta falada em texto para o assistente de IA do Snuffel.",
+    "NSMotionUsageDescription": "O Snuffel não usa dados de movimento.",
+    "NSCameraUsageDescription": "O Snuffel não usa a câmara."
+  }
+}

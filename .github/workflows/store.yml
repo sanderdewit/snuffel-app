@@ -9,6 +9,9 @@ on:
       screenshots_run:
         description: "Run ID of a successful 'screenshots' run (empty = texts only)"
         default: ""
+      app_version:
+        description: "App Store version to fill, e.g. 1.0.1 (created when it doesn't exist yet)"
+        required: true
 
 permissions:
   contents: read
@@ -53,9 +56,11 @@ jobs:
       - name: Upload texts and screenshots
         env:
           RUN_ID: ${{ inputs.screenshots_run }}
+          APP_VERSION: ${{ inputs.app_version }}
         run: |
+          [[ "$APP_VERSION" =~ ^[0-9]+(\.[0-9]+){1,2}$ ]] || { echo "::error::app_version must look like 1.0.1"; exit 1; }
           if [ -n "$RUN_ID" ]; then SHOTS=true SKIP=false; else SHOTS=false SKIP=true; fi
-          fastlane deliver --api_key_path "$RUNNER_TEMP/asc.json" --app_identifier app.snuffel \
+          fastlane deliver --api_key_path "$RUNNER_TEMP/asc.json" --app_identifier app.snuffel --app_version "$APP_VERSION" \
             --skip_binary_upload --skip_app_version_update false --force --submit_for_review false \
             --overwrite_screenshots "$SHOTS" \
             --skip_screenshots "$SKIP" \

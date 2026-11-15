@@ -1,0 +1,13 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Snuffel",
+    "NSLocationWhenInUseUsageDescription": "Snuffel izmanto tavu atrašanās vietu, lai atrastu veterinārārstus un suņu pakalpojumus tavā tuvumā. Tava atrašanās vieta netiek saglabāta.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "Snuffel izmanto tavu atrašanās vietu tikai tad, kad lietotne ir atvērta, lai atrastu veterinārārstus un suņu pakalpojumus tuvumā. Tava atrašanās vieta netiek saglabāta.",
+    "NSLocationAlwaysUsageDescription": "Snuffel izmanto tavu atrašanās vietu tikai tad, kad lietotne ir atvērta, lai atrastu veterinārārstus un suņu pakalpojumus tuvumā. Tava atrašanās vieta netiek saglabāta.",
+    "NSPhotoLibraryUsageDescription": "Izvēlies foto sava suņa profilam. Foto paliek šajā tālrunī.",
+    "NSMicrophoneUsageDescription": "Uzdod savu jautājumu Snuffel MI asistentam ar balsi. Izrunātie jautājumi tiek pārvērsti tekstā tavā tālrunī; tikai MI balss sarunā (beta) skaņa tiek nosūtīta uz Snuffel MI pakalpojumu ES, un tā netiek saglabāta.",
+    "NSSpeechRecognitionUsageDescription": "Tavs tālrunis pārvērš tavu izrunāto jautājumu tekstā Snuffel MI asistentam.",
+    "NSMotionUsageDescription": "Snuffel neizmanto kustību datus.",
+    "NSCameraUsageDescription": "Snuffel neizmanto kameru."
+  }
+}

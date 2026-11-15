@@ -1,0 +1,13 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Snuffel",
+    "NSLocationWhenInUseUsageDescription": "Snuffel bruker posisjonen din til å finne veterinærer og hundetjenester i nærheten av deg. Posisjonen din lagres ikke.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "Snuffel bruker bare posisjonen din mens appen er åpen, for å finne veterinærer og hundetjenester i nærheten. Posisjonen din lagres ikke.",
+    "NSLocationAlwaysUsageDescription": "Snuffel bruker bare posisjonen din mens appen er åpen, for å finne veterinærer og hundetjenester i nærheten. Posisjonen din lagres ikke.",
+    "NSPhotoLibraryUsageDescription": "Velg et bilde til hundens profil. Bildet blir værende på denne telefonen.",
+    "NSMicrophoneUsageDescription": "Still spørsmålet ditt til Snuffels AI-assistent med stemmen. Talte spørsmål gjøres om til tekst på telefonen din; bare i AI-talesamtale (beta) sendes lyd til Snuffels AI-tjeneste i EU, og den lagres ikke.",
+    "NSSpeechRecognitionUsageDescription": "Telefonen din gjør om det talte spørsmålet ditt til tekst for Snuffels AI-assistent.",
+    "NSMotionUsageDescription": "Snuffel bruker ikke bevegelsesdata.",
+    "NSCameraUsageDescription": "Snuffel bruker ikke kameraet."
+  }
+}
