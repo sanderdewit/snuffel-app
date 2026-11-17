@@ -9,24 +9,63 @@ import * as Crypto from "expo-crypto";
 import { File, Paths } from "expo-file-system";
 import { db, dbReady } from "./db";
 import { getDog, listReminders, saveDog, setReminder, validDate, type Dog, type ReminderKind } from "./dogs";
-import { RECORD_KINDS, summarise, type DogRecord, type RecordKind } from "./dogsummary";
+import { RECORD_KINDS, recurring, signCategory, summarise, type DogRecord, type RecordKind, type SignCategory } from "./dogsummary";
 import { acceptedParams, b64, imageType, seal, unseal, WrongPasswordError, type Sealed } from "./seal";
 
-export { RECORD_KINDS, summarise, type DogRecord, type RecordKind };
+export { RECORD_KINDS, recurring, summarise, type DogRecord, type RecordKind, type SignCategory };
 export { IMPORT_MAX_BYTES, PASSWORD_MIN, PasswordTooShortError } from "./seal";
 
-const toRecord = (r: any): DogRecord => ({ id: r.id, dogId: r.dog_id, kind: r.kind, date: r.date, title: r.title, details: r.details, value: r.value });
+const toRecord = (r: any): DogRecord => ({ id: r.id, dogId: r.dog_id, kind: r.kind, date: r.date, title: r.title, details: r.details, value: r.value,
+  category: r.category ? signCategory(r.category) : null });
 
 export async function listRecords(dogId: number): Promise<DogRecord[]> {
   await dbReady();
   return (await db.getAllAsync("SELECT * FROM records WHERE dog_id = ? ORDER BY date DESC, id DESC", dogId)).map(toRecord);
 }
 
-export async function addRecord(r: Omit<DogRecord, "id">): Promise<void> {
+export async function addRecord(r: Omit<DogRecord, "id">): Promise<number> {
   await dbReady();
-  await db.runAsync("INSERT INTO records (dog_id, kind, date, title, details, value, created) VALUES (?, ?, ?, ?, ?, ?, ?)",
-    r.dogId, r.kind, r.date, r.title.trim().slice(0, 200), r.details ? r.details.trim().slice(0, 4000) : null, r.value, Date.now());
+  const res = await db.runAsync("INSERT INTO records (dog_id, kind, date, title, details, value, created, category) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+    r.dogId, r.kind, r.date, r.title.trim().slice(0, 200), r.details ? r.details.trim().slice(0, 4000) : null, r.value, Date.now(),
+    r.kind === "symptom" ? signCategory(r.category) : null);
   if (r.kind === "weight" && r.value) await syncWeight(r.dogId);
+  return res.lastInsertRowId;
+}
+
+/** A sign noted by the AI chat, as it comes back from the server. */
+export interface Observation { date: string; category: SignCategory; title: string; details: string }
+
+// Follow-up answers about the same sign refine one entry instead of adding new ones:
+// an entry of the same category filed from the chat in the last 12 hours is updated.
+const SAME_EPISODE_MS = 12 * 3600 * 1000;
+/** Files an observation for the dog; returns the entry's id. */
+export async function fileObservation(dogId: number, o: Observation): Promise<number> {
+  await dbReady();
+  const recent = await db.getFirstAsync<{ id: number }>(
+    "SELECT id FROM records WHERE dog_id = ? AND kind = 'symptom' AND category = ? AND created > ? ORDER BY id DESC",
+    dogId, signCategory(o.category), Date.now() - SAME_EPISODE_MS);
+  if (recent) {
+    await db.runAsync("UPDATE records SET date = ?, title = ?, details = ? WHERE id = ?",
+      o.date, o.title.trim().slice(0, 200), o.details.trim().slice(0, 4000) || null, recent.id);
+    return recent.id;
+  }
+  return addRecord({ dogId, kind: "symptom", date: o.date, title: o.title, details: o.details || null, value: null, category: o.category });
+}
+
+export async function deleteRecordById(id: number): Promise<void> {
+  await dbReady();
+  await db.runAsync("DELETE FROM records WHERE id = ? AND kind = 'symptom'", id);
+}
+
+/** Whether the AI chat files observed signs in this dog's file by itself (default on). */
+export async function autoFile(dogId: number): Promise<boolean> {
+  await dbReady();
+  const r = await db.getFirstAsync<{ auto_file: number }>("SELECT auto_file FROM dogs WHERE id = ?", dogId);
+  return !r || !!r.auto_file;
+}
+export async function setAutoFile(dogId: number, on: boolean): Promise<void> {
+  await dbReady();
+  await db.runAsync("UPDATE dogs SET auto_file = ? WHERE id = ?", on ? 1 : 0, dogId);
 }
 
 // The latest weight entry keeps the profile's weight current.
@@ -130,7 +169,7 @@ export async function importData(text: string, password: string | null): Promise
   const kinds = new Set(RECORD_KINDS.map((k) => k.kind));
   for (const r of Array.isArray(d.records) ? d.records.slice(0, 2000) : []) {
     if (!r || !kinds.has(r.kind) || !validDate(String(r.date)) || typeof r.title !== "string") continue;
-    await addRecord({ dogId, kind: r.kind, date: r.date, title: r.title, details: str(r.details, 4000), value: num(r.value, 0.3, 150) });
+    await addRecord({ dogId, kind: r.kind, date: r.date, title: r.title, details: str(r.details, 4000), value: num(r.value, 0.3, 150), category: r.category ?? null });
   }
   for (const r of Array.isArray(d.reminders) ? d.reminders : []) {
     if (r && ["vaccination", "deworming", "flea_tick", "checkup"].includes(r.kind) && r.due && validDate(r.due)) await setReminder(dogId, r.kind, r.due);
@@ -148,7 +187,10 @@ export async function exportPdf(dogId: number, t: (k: string) => string, tf: (k:
   const reminders = (await listReminders(dogId)).filter((r) => r.due);
   let photo = "";
   if (dog.photo) { try { photo = `<img src="data:image/${dog.photo.endsWith(".png") ? "png" : "jpeg"};base64,${await new File(dog.photo).base64()}" />`; } catch { /* no photo */ } }
-  const kindLabel = (k: RecordKind) => t(RECORD_KINDS.find((x) => x.kind === k)!.key);
+  const kindName = (k: RecordKind) => t(RECORD_KINDS.find((x) => x.kind === k)!.key);
+  const kindLabel = (k: RecordKind, c?: SignCategory | null) => kindName(k) + (k === "symptom" && c ? " · " + t("app_sign_" + c) : "");
+  // Signs that came back, on top: what the vet should see first.
+  const again = recurring(records);
   const facts = [
     dog.breed && [t("app_breed"), dog.breed], dog.birth && [t("app_born"), dog.birth],
     dog.weight && [t("app_weight"), dog.weight + " kg"],
@@ -164,8 +206,9 @@ export async function exportPdf(dogId: number, t: (k: string) => string, tf: (k:
     <div class="head">${photo}<div><h1>${esc(tf("app_pdfTitle", { name: dog.name }))}</h1>
       ${facts.map(([k, v]) => `<div>${esc(k)}: <b>${esc(String(v))}</b></div>`).join("")}</div></div>
     ${reminders.length ? `<h2>${esc(t("app_reminders"))}</h2><table>${reminders.map((r) => `<tr><td class="d">${esc(String(r.due))}</td><td>${esc(t("app_rem_" + r.kind))}</td></tr>`).join("")}</table>` : ""}
+    ${again.length ? `<h2>${esc(t("app_recurring"))}</h2><table>${again.map((g) => `<tr><td class="k">${esc(t("app_sign_" + g.category))}</td><td>${esc(tf("app_recurringTimes", { n: g.dates.length }))}: ${g.dates.map(esc).join(", ")}</td></tr>`).join("")}</table>` : ""}
     <h2>${esc(t("app_dogFile"))}</h2>
-    ${records.length ? `<table>${records.map((r) => `<tr><td class="d">${esc(r.date)}</td><td class="k">${esc(kindLabel(r.kind))}</td><td><b>${esc(r.title)}</b>${r.value ? ` ${esc(String(r.value))} kg` : ""}${r.details ? `<br>${esc(r.details).replace(/\n/g, "<br>")}` : ""}</td></tr>`).join("")}</table>` : `<p class="muted">${esc(t("app_noEntries"))}</p>`}
+    ${records.length ? `<table>${records.map((r) => `<tr><td class="d">${esc(r.date)}</td><td class="k">${esc(kindLabel(r.kind, r.category))}</td><td><b>${esc(r.title)}</b>${r.value ? ` ${esc(String(r.value))} kg` : ""}${r.details ? `<br>${esc(r.details).replace(/\n/g, "<br>")}` : ""}</td></tr>`).join("")}</table>` : `<p class="muted">${esc(t("app_noEntries"))}</p>`}
     <p class="muted" style="margin-top:28px">${esc(tf("app_pdfGenerated", { date: new Date().toISOString().slice(0, 10) }))}</p>
   </body></html>`;
   const { uri } = await Print.printToFileAsync({ html });

@@ -6,7 +6,7 @@ import { gcm } from "@noble/ciphers/aes.js";
 import { utf8ToBytes } from "@noble/ciphers/utils.js";
 import { scryptAsync } from "@noble/hashes/scrypt.js";
 import { b64, BadSealError, imageType, PasswordTooShortError, seal, SCRYPT, unseal, WrongPasswordError } from "../src/lib/seal.ts";
-import { summarise, SUMMARY_MAX, type DogRecord } from "../src/lib/dogsummary.ts";
+import { recurring, signCategory, summarise, SUMMARY_MAX, type DogRecord } from "../src/lib/dogsummary.ts";
 
 let passed = 0, failed = 0;
 async function test(name: string, fn: () => Promise<void> | void) {
@@ -95,6 +95,34 @@ await test("summary stays short and empty files send nothing", () => {
   assert.strictEqual(summarise([]), null);
   const many = Array.from({ length: 300 }, (_, i) => rec("diagnosis", "2026-01-01", "Diagnose " + i + " " + "x".repeat(90)));
   assert.ok(summarise(many)!.length <= SUMMARY_MAX);
+});
+
+await test("summary: observed signs with date and category, so the AI sees patterns", () => {
+  const now = new Date("2026-11-24T12:00:00Z");
+  const s = summarise([
+    rec("symptom", "2026-11-24", "Niet gegeten", { category: "appetite", details: "Drinkt wel. Stiller." }),
+    rec("symptom", "2026-11-03", "Niet gegeten", { category: "appetite", details: "Drinkt wel." }),
+    rec("symptom", "2025-06-01", "Oud", { category: "skin" })
+  ], now)!;
+  assert.match(s, /Observed signs: 2026-11-24 \[appetite\] Niet gegeten \(Drinkt wel\. Stiller\.\); 2026-11-03 \[appetite\] Niet gegeten/);
+  assert.ok(!s.includes("Oud"), "older than a year left out");
+});
+
+await test("recurring signs: twice or more in half a year, per category, 'other' never", () => {
+  const now = new Date("2026-11-24T12:00:00Z");
+  const g = recurring([
+    rec("symptom", "2026-11-24", "Niet gegeten", { category: "appetite" }),
+    rec("symptom", "2026-11-24", "Niet gegeten", { category: "appetite" }),   // same day counts once
+    rec("symptom", "2026-11-03", "Eet slecht", { category: "appetite" }),
+    rec("symptom", "2026-10-01", "Gebraakt", { category: "vomiting" }),
+    rec("symptom", "2026-09-01", "Iets", { category: "other" }),
+    rec("symptom", "2026-08-01", "Iets", { category: "other" }),
+    rec("symptom", "2025-01-01", "Gebraakt", { category: "vomiting" }),        // too old
+    rec("note", "2026-11-01", "Niet gegeten", { category: "appetite" })        // not a sign entry
+  ], now);
+  assert.deepStrictEqual(g, [{ category: "appetite", dates: ["2026-11-03", "2026-11-24"] }]);
+  assert.strictEqual(signCategory("robot"), "other");
+  assert.strictEqual(signCategory("stool"), "stool");
 });
 
 console.log(`\n${passed} passed, ${failed} failed`);

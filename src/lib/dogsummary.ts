@@ -1,8 +1,9 @@
 // Types of the dog file and the short summary sent with AI questions.
 // No app imports, so tests/dogsummary.test.ts runs in plain Node.
 
-export type RecordKind = "visit" | "diagnosis" | "medication" | "allergy" | "weight" | "behaviour" | "note" | "ai";
+export type RecordKind = "symptom" | "visit" | "diagnosis" | "medication" | "allergy" | "weight" | "behaviour" | "note" | "ai";
 export const RECORD_KINDS: { kind: RecordKind; icon: string; key: string }[] = [
+  { kind: "symptom", icon: "🌡️", key: "app_rec_symptom" },
   { kind: "visit", icon: "🩺", key: "app_rec_visit" },
   { kind: "diagnosis", icon: "📋", key: "app_rec_diagnosis" },
   { kind: "medication", icon: "💊", key: "app_rec_medication" },
@@ -12,9 +13,33 @@ export const RECORD_KINDS: { kind: RecordKind; icon: string; key: string }[] = [
   { kind: "note", icon: "📝", key: "app_rec_note" },
   { kind: "ai", icon: "💬", key: "app_rec_ai" }
 ];
-export interface DogRecord { id: number; dogId: number; kind: RecordKind; date: string; title: string; details: string | null; value: number | null }
+// Categories of an observed sign ("symptom" entries), as the AI chat returns them.
+export const SIGN_CATEGORIES = ["appetite", "drinking", "vomiting", "stool", "urination", "skin", "eyes_ears", "mobility", "breathing", "energy", "behaviour", "injury", "other"] as const;
+export type SignCategory = (typeof SIGN_CATEGORIES)[number];
+export const signCategory = (v: unknown): SignCategory => (SIGN_CATEGORIES as readonly string[]).includes(String(v)) ? (v as SignCategory) : "other";
+
+export interface DogRecord { id: number; dogId: number; kind: RecordKind; date: string; title: string; details: string | null; value: number | null; category?: SignCategory | null }
 
 export const SUMMARY_MAX = 1400;
+
+/**
+ * Signs that came back: per category, the dates of the last `days` days when it
+ * occurred at least twice (oldest date first). Newest category first.
+ */
+export function recurring(records: DogRecord[], now = new Date(), days = 183): { category: SignCategory; dates: string[] }[] {
+  const from = new Date(now.getTime() - days * 864e5).toISOString().slice(0, 10);
+  const by = new Map<SignCategory, Set<string>>();
+  for (const r of records) {
+    if (r.kind !== "symptom" || r.date < from) continue;
+    const c = signCategory(r.category);
+    if (c === "other") continue;   // too mixed to call it a pattern
+    if (!by.has(c)) by.set(c, new Set());
+    by.get(c)!.add(r.date);
+  }
+  return [...by.entries()].filter(([, d]) => d.size >= 2)
+    .map(([category, d]) => ({ category, dates: [...d].sort() }))
+    .sort((a, b) => (a.dates[a.dates.length - 1] < b.dates[b.dates.length - 1] ? 1 : -1));
+}
 
 /**
  * A short summary for the AI (English labels; the model answers in the user's
@@ -37,6 +62,9 @@ export function summarise(records: DogRecord[], now = new Date()): string | null
   if (meds.length) parts.push("Medication (last 6 months): " + meds.map(line).join("; "));
   const weights = records.filter((r) => r.kind === "weight" && r.value).reverse();   // oldest first
   if (weights.length > 1) parts.push(`Weight: ${weights[0].value} kg (${weights[0].date}) -> ${weights[weights.length - 1].value} kg (${weights[weights.length - 1].date})`);
+  // Observed signs with their dates: the AI can then say "the second time in three weeks".
+  const signs = records.filter((r) => r.kind === "symptom" && r.date >= year).slice(0, 12);
+  if (signs.length) parts.push("Observed signs: " + signs.map((r) => `${r.date} [${signCategory(r.category)}] ${clean(r.title, 60)}${r.details ? " (" + clean(r.details, 90) + ")" : ""}`).join("; "));
   const label: Partial<Record<RecordKind, string>> = { ai: "asked AI: ", behaviour: "behaviour: ", visit: "vet visit: " };
   const events = records.filter((r) => ["visit", "behaviour", "note", "ai"].includes(r.kind) && r.date >= year).slice(0, 8);
   if (events.length) parts.push("Recent: " + events.map((r) => (label[r.kind] || "") + line(r)).join("; "));

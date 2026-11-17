@@ -21,7 +21,10 @@ const MIGRATIONS = [
   // v3: the server's signature on each answer, sent back with the conversation
   `ALTER TABLE chats ADD COLUMN sig TEXT;`,
   // v4: the structure of an answer (verdict, steps, signs, questions, spoken), JSON
-  `ALTER TABLE chats ADD COLUMN parts TEXT;`
+  `ALTER TABLE chats ADD COLUMN parts TEXT;`,
+  // v5: observed signs from the AI chat (category per entry), filed automatically per dog unless switched off
+  `ALTER TABLE records ADD COLUMN category TEXT;
+   ALTER TABLE dogs ADD COLUMN auto_file INTEGER NOT NULL DEFAULT 1;`
 ];
 
 let ready: Promise<void> | null = null;

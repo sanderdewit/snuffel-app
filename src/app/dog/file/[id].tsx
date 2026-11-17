@@ -5,8 +5,8 @@ import { Stack, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useI18n } from "../../../i18n";
 import { getDog, today, validDate, type Dog } from "../../../lib/dogs";
 import {
-  addRecord, deleteRecord, exportData, exportPdf, listRecords, PASSWORD_MIN, PasswordTooShortError, RECORD_KINDS, setShareFileWithAi, shareFileWithAi,
-  type DogRecord, type RecordKind
+  addRecord, autoFile, deleteRecord, exportData, exportPdf, listRecords, PASSWORD_MIN, PasswordTooShortError, RECORD_KINDS, recurring, setAutoFile,
+  setShareFileWithAi, shareFileWithAi, type DogRecord, type RecordKind
 } from "../../../lib/dogfile";
 import { Toggle } from "../../../ui/Toggle";
 import { C, S } from "../../../ui/theme";
@@ -20,6 +20,7 @@ export default function DogFile() {
   const [dog, setDog] = useState<Dog | null>(null);
   const [records, setRecords] = useState<DogRecord[]>([]);
   const [share, setShare] = useState(true);
+  const [auto, setAuto] = useState(true);
   const [adding, setAdding] = useState(false);
   const [kind, setKind] = useState<RecordKind>("visit");
   const [date, setDate] = useState(today());
@@ -35,7 +36,9 @@ export default function DogFile() {
     setDog(await getDog(dogId));
     setRecords(await listRecords(dogId));
     setShare(await shareFileWithAi(dogId));
+    setAuto(await autoFile(dogId));
   }, [dogId]);
+  const again = recurring(records);
   useFocusEffect(useCallback(() => { reload().catch(() => undefined); }, [reload]));
 
   const kindLabel = (k: RecordKind) => t(RECORD_KINDS.find((x) => x.kind === k)!.key);
@@ -82,7 +85,25 @@ export default function DogFile() {
           <Toggle value={share} label={t("app_shareWithAi")} onValueChange={async (v) => { setShare(v); await setShareFileWithAi(dogId, v); }} />
         </View>
         <Text style={S.muted}>{t("app_shareWithAiText")}</Text>
+        <View style={[S.row, { justifyContent: "space-between", gap: 10, marginTop: 6 }]}>
+          <Text style={[S.body, { flex: 1, fontWeight: "600" }]}>🌡️ {t("app_autoFile")}</Text>
+          <Toggle value={auto} label={t("app_autoFile")} onValueChange={async (v) => { setAuto(v); await setAutoFile(dogId, v); }} />
+        </View>
+        <Text style={S.muted}>{t("app_autoFileText")}</Text>
       </View>
+
+      {/* Signs that came back: the first thing a vet wants to know */}
+      {again.length > 0 && (
+        <View style={[S.card, { gap: 6, borderColor: C.warn }]}>
+          <Text style={S.h2}>🔁 {t("app_recurring")}</Text>
+          {again.map((g) => (
+            <Text key={g.category} style={S.body}>
+              <Text style={{ fontWeight: "700" }}>{t("app_sign_" + g.category)}</Text> ({tf("app_recurringTimes", { n: g.dates.length })}): {g.dates.map((d) => formatDate(d, lang)).join(", ")}
+            </Text>
+          ))}
+          <Text style={S.muted}>{t("app_recurringText")}</Text>
+        </View>
+      )}
 
       {adding ? (
         <View style={[S.card, { gap: 8 }]}>
@@ -123,7 +144,7 @@ export default function DogFile() {
       {records.map((r) => (
         <Pressable key={r.id} onLongPress={() => remove(r)} style={[S.card, { gap: 4 }]}>
           <View style={[S.row, { justifyContent: "space-between" }]}>
-            <Text style={S.muted}>{icon(r.kind)} {kindLabel(r.kind)} · {formatDate(r.date, lang)}</Text>
+            <Text style={S.muted}>{icon(r.kind)} {kindLabel(r.kind)}{r.kind === "symptom" && r.category && r.category !== "other" ? " · " + t("app_sign_" + r.category) : ""} · {formatDate(r.date, lang)}</Text>
             <Pressable onPress={() => remove(r)} hitSlop={10} accessibilityRole="button" accessibilityLabel={t("app_delete")}>
               <Text style={{ color: C.muted }}>✕</Text>
             </Pressable>

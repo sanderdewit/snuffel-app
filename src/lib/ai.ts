@@ -3,15 +3,17 @@
 // IP) and, when a dog is chosen, its profile so advice fits that dog.
 import { CONFIG } from "./config";
 import { db, dbReady } from "./db";
-import { ageMonths, type Dog } from "./dogs";
-import { aiSummary } from "./dogfile";
+import { ageMonths, today, type Dog } from "./dogs";
+import { aiSummary, type Observation } from "./dogfile";
+import { signCategory } from "./dogsummary";
 import { installId } from "./install";
 
 export type Urgency = "emergency" | "vet_soon" | "monitor" | "unclear";
 export type Topic = "health" | "behaviour" | "lost" | "other";   // lost: a lost or found dog
 // The structure of an answer: verdict, steps, signs to watch, follow-up questions,
 // tap-to-answer replies and a short version to say out loud (empty when absent).
-export interface AnswerParts { summary: string; steps: string[]; watch_for: string[]; questions: string[]; quick_replies: string[]; spoken: string }
+// observation: a factual note for the dog's file when the owner reported a sign.
+export interface AnswerParts { summary: string; steps: string[]; watch_for: string[]; questions: string[]; quick_replies: string[]; spoken: string; observation?: Observation }
 // local: shown on screen only (an error message); never stored, never sent to the model.
 // sig: the server's signature on an answer; only signed answers count as history.
 export interface ChatMessage { id?: number; role: "user" | "assistant"; content: string; urgency?: Urgency; topic?: Topic; local?: boolean; sig?: string; parts?: AnswerParts }
@@ -20,7 +22,7 @@ export type AskResult = { reply: string; urgency: Urgency; topic: Topic; sig?: s
 export async function ask(all: ChatMessage[], lang: string, labels: { emergency: string; lost: string }, dog: Dog | null): Promise<AskResult> {
   const history = all.filter((m) => !m.local);
   const body: Record<string, unknown> = {
-    lang, emergencyLabel: labels.emergency, lostLabel: labels.lost,
+    lang, emergencyLabel: labels.emergency, lostLabel: labels.lost, today: today(),   // the phone's date: "yesterday" in an observation
     // The last 12 turns, but always the first question: it usually describes the problem.
     messages: (history.length > 12 ? [history[0], ...history.slice(-11)] : history).map((m) => (m.role === "assistant" ? { role: m.role, content: m.content, sig: m.sig } : { role: m.role, content: m.content }))
   };
@@ -79,5 +81,13 @@ export function answerParts(d: unknown): AnswerParts | undefined {
     steps: strs(o.steps, 3), watch_for: strs(o.watch_for, 4), questions: strs(o.questions, 2),
     quick_replies: strs(o.quick_replies, 4), spoken: typeof o.spoken === "string" ? o.spoken : ""
   };
+  const obs = observationOf(o.observation);
+  if (obs) p.observation = obs;
   return p.summary || p.steps.length || p.spoken ? p : undefined;
+}
+
+function observationOf(v: unknown): Observation | undefined {
+  const o = (v && typeof v === "object" ? v : null) as Record<string, unknown> | null;
+  if (!o || typeof o.title !== "string" || !o.title.trim() || typeof o.date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(o.date)) return undefined;
+  return { date: o.date, category: signCategory(o.category), title: o.title.trim().slice(0, 80), details: typeof o.details === "string" ? o.details.trim().slice(0, 300) : "" };
 }

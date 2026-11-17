@@ -10,7 +10,8 @@ import { useBeta } from "../../lib/beta";
 import { CONFIG } from "../../lib/config";
 import { kvGet, kvSet } from "../../lib/db";
 import { ageMonths, listDogs, today, type Dog } from "../../lib/dogs";
-import { addRecord, setShareFileWithAi, shareFileWithAi } from "../../lib/dogfile";
+import { addRecord, autoFile, deleteRecordById, fileObservation, setShareFileWithAi, shareFileWithAi, type Observation } from "../../lib/dogfile";
+import { formatDate } from "../../lib/dates";
 import { myVet, type SavedPlace } from "../../lib/saved";
 import { retryOnServer, speak, startListening, stopListening, stopSpeaking } from "../../lib/voice";
 import { isStopPhrase } from "../../lib/talk";
@@ -111,6 +112,15 @@ export default function Ask() {
       ? { role: "assistant", local: true, content: t(r.error === "rate_limited" ? "aiRateLimited" : r.error === "unavailable" ? "aiReply" : "aiError") }
       : { role: "assistant", content: r.reply, urgency: r.urgency, topic: r.topic, sig: r.sig, parts: r.parts };
     if (!reply.local) await addChat(askedFor, reply);
+    // A sign the owner reported goes into the dog's file (by itself unless switched
+    // off for this dog, or undone for this kind of sign in this conversation).
+    const obs = reply.parts?.observation;
+    if (obs && askedFor != null) {
+      const key = `${askedFor}:${history.length}`;
+      const auto = !undoneCats.current.has(`${askedFor}:${obs.category}`) && (await autoFile(askedFor).catch(() => false));
+      const id = auto ? await fileObservation(askedFor, obs).catch(() => null) : null;
+      setObsState((m) => new Map(m).set(key, { obs, id }));
+    }
     if (currentDog.current !== askedFor) return;   // the user switched dogs meanwhile: it's in that dog's thread
     scrollTo.current = history.length;
     setMessages(history.concat(reply));
@@ -226,9 +236,27 @@ export default function Ask() {
     setFiled((s) => new Set(s).add(fileKey(m, i)));
   };
 
+  // Observations of this session's answers, by `${dogId}:${index}`: id = the file entry, null = not filed.
+  const [obsState, setObsState] = useState<Map<string, { obs: Observation; id: number | null }>>(new Map());
+  const undoneCats = useRef<Set<string>>(new Set());
+  const undoObs = async (key: string) => {
+    const s = obsState.get(key);
+    if (!s || s.id == null || dogId == null) return;
+    await deleteRecordById(s.id).catch(() => undefined);
+    undoneCats.current.add(`${dogId}:${s.obs.category}`);
+    setObsState((m) => new Map(m).set(key, { ...s, id: null }));
+  };
+  const addObs = async (key: string) => {
+    const s = obsState.get(key);
+    if (!s || dogId == null) return;
+    undoneCats.current.delete(`${dogId}:${s.obs.category}`);
+    const id = await fileObservation(dogId, s.obs).catch(() => null);
+    setObsState((m) => new Map(m).set(key, { ...s, id }));
+  };
+
   const newChat = () => Alert.alert(t("app_newChatConfirm"), undefined, [
     { text: t("app_cancel"), style: "cancel" },
-    { text: t("app_newChat"), style: "destructive", onPress: async () => { await clearChat(dogId); setMessages([]); } }
+    { text: t("app_newChat"), style: "destructive", onPress: async () => { await clearChat(dogId); setMessages([]); setObsState(new Map()); } }
   ]);
 
   // What to do next: call your own vet first, then find one / a trainer.
@@ -343,6 +371,21 @@ export default function Ask() {
                   ))}
                 </View>
               )}
+              {/* The sign noted for the dog's file: filed (undo) or ready to add */}
+              {dog && (() => {
+                const key = `${dogId}:${i}`, s = obsState.get(key);
+                if (!s) return null;
+                return (
+                  <View style={[S.card, S.row, { gap: 8, paddingVertical: 8, backgroundColor: C.chip }]}>
+                    <Text style={[S.muted, { flex: 1 }]} numberOfLines={2}>
+                      {s.id != null ? "✓ " + tf("app_obsFiled", { name: dog.name }) : "📝 " + tf("app_obsAdd", { name: dog.name })}: <Text style={{ fontWeight: "700", color: C.text }}>{s.obs.title}</Text> · {formatDate(s.obs.date, lang)}
+                    </Text>
+                    <Pressable onPress={() => (s.id != null ? undoObs(key) : addObs(key))} hitSlop={8} accessibilityRole="button">
+                      <Text style={{ color: C.brandDark, fontWeight: "600" }}>{t(s.id != null ? "app_undo" : "app_add")}</Text>
+                    </Pressable>
+                  </View>
+                );
+              })()}
               {m.role === "assistant" && !m.local && (
                 <View style={[S.row, { gap: 16, flexWrap: "wrap" }]}>
                   <Pressable onPress={() => toggleRead(i, m.content)} hitSlop={8} accessibilityRole="button"
