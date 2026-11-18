@@ -14,7 +14,7 @@ export const RECORD_KINDS: { kind: RecordKind; icon: string; key: string }[] = [
   { kind: "ai", icon: "💬", key: "app_rec_ai" }
 ];
 // Categories of an observed sign ("symptom" entries), as the AI chat returns them.
-export const SIGN_CATEGORIES = ["appetite", "drinking", "vomiting", "stool", "urination", "skin", "eyes_ears", "mobility", "breathing", "energy", "behaviour", "injury", "other"] as const;
+export const SIGN_CATEGORIES = ["appetite", "drinking", "vomiting", "stool", "urination", "skin", "eyes_ears", "mouth", "mobility", "neuro", "breathing", "energy", "behaviour", "injury", "other"] as const;
 export type SignCategory = (typeof SIGN_CATEGORIES)[number];
 export const signCategory = (v: unknown): SignCategory => (SIGN_CATEGORIES as readonly string[]).includes(String(v)) ? (v as SignCategory) : "other";
 
