@@ -18,7 +18,9 @@ concurrency:
 
 jobs:
   testflight:
-    runs-on: macos-latest
+    # Xcode 27 (iOS 27 SDK): required for App Store uploads from April 2027 (ITMS-90725).
+    # GitHub's "xcode-27" image (public preview), also used by ci.yml's iOS build.
+    runs-on: xcode-27
     timeout-minutes: 120
     environment: release        # main only, approval required; holds the App Store Connect key
     env:
@@ -26,6 +28,7 @@ jobs:
       KEY_ID: ${{ secrets.ASC_KEY_ID }}
       ISSUER: ${{ secrets.ASC_ISSUER_ID }}
     steps:
+      - run: xcodebuild -version
       - name: Secrets present
         run: |
           for v in TEAM KEY_ID ISSUER; do [ -n "${!v}" ] || { echo "::error::secret for $v is missing (see store/APP_STORE.md)"; exit 1; }; done
