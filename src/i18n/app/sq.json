@@ -108,6 +108,8 @@
   "app_rec_note": "Shënim",
   "app_rec_ai": "Këshillë AI",
   "app_rec_symptom": "Simptomë",
+  "app_urgency_vet_today": "Sot te veterineri",
+  "app_aiUnreliable": "Nuk munda ta vlerësoj këtë në mënyrë të besueshme tani. Nëse je i shqetësuar ose përkeqësohet, telefono veterinerin tënd ose përdor butonin e urgjencës. Ose provo sërish pas pak.",
   "app_sign_appetite": "Oreksi",
   "app_sign_drinking": "Pirja",
   "app_sign_vomiting": "Të vjellat",

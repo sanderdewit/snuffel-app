@@ -108,6 +108,8 @@
   "app_rec_note": "Märkus",
   "app_rec_ai": "AI nõuanne",
   "app_rec_symptom": "Sümptom",
+  "app_urgency_vet_today": "Täna loomaarsti juurde",
+  "app_aiUnreliable": "Ma ei suutnud seda praegu usaldusväärselt hinnata. Kui oled mures või läheb hullemaks, helista oma loomaarstile või kasuta hädaabinuppu. Või proovi hetke pärast uuesti.",
   "app_sign_appetite": "Isu",
   "app_sign_drinking": "Joomine",
   "app_sign_vomiting": "Oksendamine",

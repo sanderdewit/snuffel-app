@@ -116,6 +116,8 @@
   "app_rec_note": "Notatka",
   "app_rec_ai": "Porada AI",
   "app_rec_symptom": "Objaw",
+  "app_urgency_vet_today": "Do weterynarza dziś",
+  "app_aiUnreliable": "Nie udało mi się teraz wiarygodnie tego ocenić. Jeśli się martwisz lub jest gorzej, zadzwoń do weterynarza albo użyj przycisku nagłego wypadku. Albo spróbuj ponownie za chwilę.",
   "app_sign_appetite": "Apetyt",
   "app_sign_drinking": "Picie",
   "app_sign_vomiting": "Wymioty",

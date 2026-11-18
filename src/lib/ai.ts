@@ -8,24 +8,33 @@ import { aiSummary, type Observation } from "./dogfile";
 import { signCategory } from "./dogsummary";
 import { installId } from "./install";
 
-export type Urgency = "emergency" | "vet_soon" | "monitor" | "unclear";
+export type Urgency = "emergency" | "vet_today" | "vet_soon" | "monitor" | "unclear";
 export type Topic = "health" | "behaviour" | "lost" | "other";   // lost: a lost or found dog
 // The structure of an answer: verdict, steps, signs to watch, follow-up questions,
 // tap-to-answer replies and a short version to say out loud (empty when absent).
 // observation: a factual note for the dog's file when the owner reported a sign.
-export interface AnswerParts { summary: string; steps: string[]; watch_for: string[]; questions: string[]; quick_replies: string[]; spoken: string; observation?: Observation }
+// intake / intake_sig: the server's signed notes on the current complaint (question
+// budget, facts so far); sent back unchanged with the next question.
+export interface AnswerParts { summary: string; steps: string[]; watch_for: string[]; questions: string[]; quick_replies: string[]; spoken: string; observation?: Observation; intake?: unknown; intake_sig?: string }
 // local: shown on screen only (an error message); never stored, never sent to the model.
 // sig: the server's signature on an answer; only signed answers count as history.
 export interface ChatMessage { id?: number; role: "user" | "assistant"; content: string; urgency?: Urgency; topic?: Topic; local?: boolean; sig?: string; parts?: AnswerParts }
-export type AskResult = { reply: string; urgency: Urgency; topic: Topic; sig?: string; parts?: AnswerParts } | { error: "rate_limited" | "unavailable" | "failed" };
+// unreliable: no trustworthy assessment this time; urgency "emergency" when the conversation already was one.
+export type AskResult = { reply: string; urgency: Urgency; topic: Topic; sig?: string; parts?: AnswerParts }
+  | { error: "rate_limited" | "unavailable" | "failed" | "unreliable"; urgency?: "emergency" };
+const URGENCIES: Urgency[] = ["emergency", "vet_today", "vet_soon", "monitor", "unclear"];
 
 export async function ask(all: ChatMessage[], lang: string, labels: { emergency: string; lost: string }, dog: Dog | null): Promise<AskResult> {
   const history = all.filter((m) => !m.local);
   const body: Record<string, unknown> = {
     lang, emergencyLabel: labels.emergency, lostLabel: labels.lost, today: today(),   // the phone's date: "yesterday" in an observation
+    features: ["vet_today"],   // this app shows "see a vet today"; older apps get vet_soon instead
     // The last 12 turns, but always the first question: it usually describes the problem.
     messages: (history.length > 12 ? [history[0], ...history.slice(-11)] : history).map((m) => (m.role === "assistant" ? { role: m.role, content: m.content, sig: m.sig } : { role: m.role, content: m.content }))
   };
+  // The notes of the latest answer continue its intake (the server checks their signature).
+  const lastAnswer = [...history].reverse().find((m) => m.role === "assistant");
+  if (lastAnswer?.parts?.intake && lastAnswer.parts.intake_sig) { body.intake = lastAnswer.parts.intake; body.intake_sig = lastAnswer.parts.intake_sig; }
   if (dog) {
     body.dog = {
       name: dog.name || undefined, breed: dog.breed || undefined, ageMonths: ageMonths(dog.birth) ?? undefined, weightKg: dog.weight ?? undefined,
@@ -43,10 +52,15 @@ export async function ask(all: ChatMessage[], lang: string, labels: { emergency:
       signal: ctrl.signal
     });
     if (r.status === 429) return { error: "rate_limited" };
-    if (!r.ok) return { error: "failed" };
+    if (!r.ok) {
+      // A failed assessment never hides an emergency the conversation already had.
+      const e = await r.json().catch(() => null);
+      const urgency = e && e.urgency === "emergency" ? "emergency" as const : undefined;
+      return { error: e && (e.error === "unreliable" || e.error === "upstream" || e.error === "exception") ? "unreliable" : "failed", urgency };
+    }
     const d = await r.json();
     if (!d.configured) return { error: "unavailable" };
-    return { reply: d.reply, urgency: d.urgency, topic: d.topic, sig: typeof d.sig === "string" ? d.sig : undefined, parts: answerParts(d) };
+    return { reply: d.reply, urgency: URGENCIES.includes(d.urgency) ? d.urgency : "unclear", topic: d.topic, sig: typeof d.sig === "string" ? d.sig : undefined, parts: answerParts(d) };
   } catch {
     return { error: "failed" };
   } finally { clearTimeout(timer); }
@@ -83,6 +97,7 @@ export function answerParts(d: unknown): AnswerParts | undefined {
   };
   const obs = observationOf(o.observation);
   if (obs) p.observation = obs;
+  if (o.intake && typeof o.intake === "object" && typeof o.intake_sig === "string") { p.intake = o.intake; p.intake_sig = o.intake_sig; }
   return p.summary || p.steps.length || p.spoken ? p : undefined;
 }
 

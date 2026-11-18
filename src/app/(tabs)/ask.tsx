@@ -22,6 +22,7 @@ import { Toggle } from "../../ui/Toggle";
 import { C, S } from "../../ui/theme";
 
 const MONITOR = "#1d4ed8";   // "keep an eye on it": not green, which reads as "all fine"
+const VET_TODAY = "#c2410c";  // between the warning amber (vet soon) and the emergency red
 
 // Example questions for an empty conversation; a puppy gets house-training first.
 function starters(dog: Dog | null): string[] {
@@ -108,8 +109,10 @@ export default function Ask() {
     setBusy(true);
     const r = await ask(history.filter((m) => !m.local), lang, { emergency: t("emergencyBtn"), lost: t("lostTitle") }, dog);
     setBusy(false);
+    // An error is never an assessment; after an emergency it keeps the emergency (and its button).
     const reply: ChatMessage = "error" in r
-      ? { role: "assistant", local: true, content: t(r.error === "rate_limited" ? "aiRateLimited" : r.error === "unavailable" ? "aiReply" : "aiError") }
+      ? { role: "assistant", local: true, urgency: r.urgency,
+          content: t(r.error === "rate_limited" ? "aiRateLimited" : r.error === "unavailable" ? "aiReply" : r.error === "unreliable" ? "app_aiUnreliable" : "aiError") }
       : { role: "assistant", content: r.reply, urgency: r.urgency, topic: r.topic, sig: r.sig, parts: r.parts };
     if (!reply.local) await addChat(askedFor, reply);
     // A sign the owner reported goes into the dog's file (by itself unless switched
@@ -263,7 +266,7 @@ export default function Ask() {
   const actions = (m: ChatMessage) => {
     const out: { label: string; go: () => void; danger?: boolean }[] = [];
     const health = m.topic !== "behaviour";
-    if (health && (m.urgency === "emergency" || m.urgency === "vet_soon") && vet?.phone) {
+    if (health && (m.urgency === "emergency" || m.urgency === "vet_today" || m.urgency === "vet_soon") && vet?.phone) {
       out.push({ label: "📞 " + tf("app_callMyVet", { name: vet.name || t("app_myVet") }), go: () => Linking.openURL(callUrl(vet.phone!)), danger: m.urgency === "emergency" });
     }
     // Only when it's needed: home advice ("monitor") gets no referral buttons;
@@ -271,7 +274,7 @@ export default function Ask() {
     if (m.urgency === "emergency") out.push({ label: t("aiCtaEmergency"), go: () => router.push("/emergency"), danger: !vet?.phone });
     // A lost or found dog: the first steps and official registers on the website.
     else if (m.topic === "lost") out.push({ label: t("aiCtaLost"), go: () => Linking.openURL(CONFIG.website + "#lost") });
-    else if (m.urgency === "vet_soon") {
+    else if (m.urgency === "vet_soon" || m.urgency === "vet_today") {
       if (m.topic === "behaviour") out.push({ label: t("aiCtaTrainers"), go: () => router.push({ pathname: "/", params: { cat: "training" } }) });
       else if (!vet) out.push({ label: t("aiCtaVets"), go: () => router.push({ pathname: "/", params: { cat: "vet" } }) });
     }
@@ -348,12 +351,12 @@ export default function Ask() {
         onScrollToIndexFailed={() => list.current?.scrollToEnd({ animated: true })}
         ListHeaderComponent={intro}
         renderItem={({ item: m, index: i }) => {
-          const next = m.role === "assistant" && !m.local ? actions(m) : [];
+          const next = m.role === "assistant" && (!m.local || m.urgency === "emergency") ? actions(m) : [];
           return (
             <View style={{ alignSelf: m.role === "user" ? "flex-end" : "flex-start", maxWidth: "88%", gap: 6 }}>
               {m.urgency && m.urgency !== "unclear" && (
-                <Text style={{ fontWeight: "700", color: m.urgency === "emergency" ? C.danger : m.urgency === "vet_soon" ? C.warn : MONITOR }}>
-                  {t("urgency_" + m.urgency)}
+                <Text style={{ fontWeight: "700", color: m.urgency === "emergency" ? C.danger : m.urgency === "vet_today" ? VET_TODAY : m.urgency === "vet_soon" ? C.warn : MONITOR }}>
+                  {t(m.urgency === "vet_today" ? "app_urgency_vet_today" : "urgency_" + m.urgency)}
                 </Text>
               )}
               <View style={{ backgroundColor: m.role === "user" ? C.brandDark : m.local ? "#fff7ed" : C.card, borderRadius: 14, padding: 10, borderWidth: m.role === "user" ? 0 : 1, borderColor: C.line }}>

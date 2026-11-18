@@ -108,6 +108,8 @@
   "app_rec_note": "Notiz",
   "app_rec_ai": "KI-Rat",
   "app_rec_symptom": "Symptom",
+  "app_urgency_vet_today": "Heute zur Tierarztpraxis",
+  "app_aiUnreliable": "Ich konnte das gerade nicht zuverlässig einschätzen. Wenn du dir Sorgen machst oder es schlimmer wird, ruf deine Tierarztpraxis an oder nutze die Notfall-Taste. Oder versuch es gleich noch einmal.",
   "app_sign_appetite": "Appetit",
   "app_sign_drinking": "Trinken",
   "app_sign_vomiting": "Erbrechen",

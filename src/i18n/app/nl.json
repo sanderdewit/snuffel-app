@@ -108,6 +108,8 @@
   "app_rec_note": "Notitie",
   "app_rec_ai": "AI-advies",
   "app_rec_symptom": "Klacht",
+  "app_urgency_vet_today": "Vandaag naar de dierenarts",
+  "app_aiUnreliable": "Ik kon dit nu niet betrouwbaar beoordelen. Maak je je zorgen of wordt het erger, bel dan je dierenarts of gebruik de Spoed-knop. Of probeer het zo nog eens.",
   "app_sign_appetite": "Eetlust",
   "app_sign_drinking": "Drinken",
   "app_sign_vomiting": "Braken",

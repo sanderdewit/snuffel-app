@@ -108,6 +108,8 @@
   "app_rec_note": "Anteckning",
   "app_rec_ai": "AI-råd",
   "app_rec_symptom": "Symtom",
+  "app_urgency_vet_today": "Till veterinären i dag",
+  "app_aiUnreliable": "Jag kunde inte bedöma det här tillförlitligt just nu. Är du orolig eller blir det värre, ring din veterinär eller använd nödknappen. Eller försök igen om en stund.",
   "app_sign_appetite": "Aptit",
   "app_sign_drinking": "Dricka",
   "app_sign_vomiting": "Kräkningar",

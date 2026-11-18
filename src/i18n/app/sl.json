@@ -116,6 +116,8 @@
   "app_rec_note": "Opomba",
   "app_rec_ai": "Nasvet UI",
   "app_rec_symptom": "Znak",
+  "app_urgency_vet_today": "Danes k veterinarju",
+  "app_aiUnreliable": "Tega trenutno nisem mogel zanesljivo oceniti. Če vas skrbi ali se slabša, pokličite veterinarja ali uporabite gumb za nujne primere. Ali pa poskusite znova čez trenutek.",
   "app_sign_appetite": "Apetit",
   "app_sign_drinking": "Pitje",
   "app_sign_vomiting": "Bruhanje",

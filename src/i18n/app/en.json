@@ -108,6 +108,8 @@
   "app_rec_note": "Note",
   "app_rec_ai": "AI advice",
   "app_rec_symptom": "Sign",
+  "app_urgency_vet_today": "See a vet today",
+  "app_aiUnreliable": "I couldn't assess this reliably just now. If you're worried or it gets worse, call your vet, or use the emergency button. Or try again in a moment.",
   "app_sign_appetite": "Appetite",
   "app_sign_drinking": "Drinking",
   "app_sign_vomiting": "Vomiting",

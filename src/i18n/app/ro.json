@@ -112,6 +112,8 @@
   "app_rec_note": "Notă",
   "app_rec_ai": "Sfat AI",
   "app_rec_symptom": "Simptom",
+  "app_urgency_vet_today": "Azi la veterinar",
+  "app_aiUnreliable": "Nu am putut evalua asta în mod fiabil acum. Dacă ești îngrijorat sau se agravează, sună-ți medicul veterinar sau folosește butonul de urgență. Sau încearcă din nou peste puțin timp.",
   "app_sign_appetite": "Apetit",
   "app_sign_drinking": "Băut",
   "app_sign_vomiting": "Vărsături",

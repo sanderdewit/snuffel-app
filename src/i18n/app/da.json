@@ -108,6 +108,8 @@
   "app_rec_note": "Note",
   "app_rec_ai": "AI-råd",
   "app_rec_symptom": "Symptom",
+  "app_urgency_vet_today": "Til dyrlægen i dag",
+  "app_aiUnreliable": "Jeg kunne ikke vurdere det pålideligt lige nu. Er du bekymret, eller bliver det værre, så ring til din dyrlæge eller brug nødknappen. Eller prøv igen om lidt.",
   "app_sign_appetite": "Appetit",
   "app_sign_drinking": "Drikke",
   "app_sign_vomiting": "Opkast",

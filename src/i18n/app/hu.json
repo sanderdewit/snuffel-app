@@ -108,6 +108,8 @@
   "app_rec_note": "Jegyzet",
   "app_rec_ai": "MI-tanács",
   "app_rec_symptom": "Tünet",
+  "app_urgency_vet_today": "Ma állatorvoshoz",
+  "app_aiUnreliable": "Ezt most nem tudtam megbízhatóan felmérni. Ha aggódsz, vagy rosszabb lesz, hívd fel az állatorvosodat, vagy használd a sürgősségi gombot. Vagy próbáld újra egy kicsit később.",
   "app_sign_appetite": "Étvágy",
   "app_sign_drinking": "Ivás",
   "app_sign_vomiting": "Hányás",

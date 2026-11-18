@@ -108,6 +108,8 @@
   "app_rec_note": "Muistiinpano",
   "app_rec_ai": "Tekoälyn neuvo",
   "app_rec_symptom": "Oire",
+  "app_urgency_vet_today": "Eläinlääkäriin tänään",
+  "app_aiUnreliable": "En pystynyt arvioimaan tätä luotettavasti juuri nyt. Jos olet huolissasi tai tilanne pahenee, soita eläinlääkärille tai käytä hätäpainiketta. Tai yritä hetken päästä uudelleen.",
   "app_sign_appetite": "Ruokahalu",
   "app_sign_drinking": "Juominen",
   "app_sign_vomiting": "Oksentelu",

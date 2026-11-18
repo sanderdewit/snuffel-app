@@ -112,6 +112,8 @@
   "app_rec_note": "Bilješka",
   "app_rec_ai": "AI savjet",
   "app_rec_symptom": "Simptom",
+  "app_urgency_vet_today": "Danas veterinaru",
+  "app_aiUnreliable": "Ovo trenutno nisam mogao pouzdano procijeniti. Ako se brineš ili je sve gore, nazovi svog veterinara ili upotrijebi gumb za hitne slučajeve. Ili pokušaj ponovno za trenutak.",
   "app_sign_appetite": "Apetit",
   "app_sign_drinking": "Pijenje",
   "app_sign_vomiting": "Povraćanje",

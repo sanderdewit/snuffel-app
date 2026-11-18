@@ -116,6 +116,8 @@
   "app_rec_note": "Poznámka",
   "app_rec_ai": "Rada AI",
   "app_rec_symptom": "Príznak",
+  "app_urgency_vet_today": "Dnes k veterinárovi",
+  "app_aiUnreliable": "Teraz som to nedokázal spoľahlivo posúdiť. Ak máte obavy alebo sa to zhoršuje, zavolajte veterinárovi alebo použite tlačidlo pohotovosti. Alebo to skúste o chvíľu znova.",
   "app_sign_appetite": "Chuť do jedla",
   "app_sign_drinking": "Pitie",
   "app_sign_vomiting": "Vracanie",

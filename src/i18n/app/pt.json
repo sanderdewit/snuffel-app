@@ -112,6 +112,8 @@
   "app_rec_note": "Nota",
   "app_rec_ai": "Conselho de IA",
   "app_rec_symptom": "Sintoma",
+  "app_urgency_vet_today": "Ao veterinário hoje",
+  "app_aiUnreliable": "Não consegui avaliar isto de forma fiável agora. Se estiver preocupado ou piorar, ligue ao seu veterinário ou use o botão de urgência. Ou tente de novo daqui a pouco.",
   "app_sign_appetite": "Apetite",
   "app_sign_drinking": "Beber",
   "app_sign_vomiting": "Vómitos",

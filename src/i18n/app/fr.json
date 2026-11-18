@@ -112,6 +112,8 @@
   "app_rec_note": "Note",
   "app_rec_ai": "Conseil IA",
   "app_rec_symptom": "Symptôme",
+  "app_urgency_vet_today": "Voir un vétérinaire aujourd'hui",
+  "app_aiUnreliable": "Je n'ai pas pu évaluer cela de façon fiable pour le moment. Si vous êtes inquiet ou si cela s'aggrave, appelez votre vétérinaire ou utilisez le bouton d'urgence. Ou réessayez dans un instant.",
   "app_sign_appetite": "Appétit",
   "app_sign_drinking": "Boisson",
   "app_sign_vomiting": "Vomissements",

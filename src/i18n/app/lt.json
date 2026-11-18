@@ -116,6 +116,8 @@
   "app_rec_note": "Pastaba",
   "app_rec_ai": "DI patarimas",
   "app_rec_symptom": "Simptomas",
+  "app_urgency_vet_today": "Šiandien pas veterinarą",
+  "app_aiUnreliable": "Šiuo metu negalėjau to patikimai įvertinti. Jei nerimaujate ar blogėja, skambinkite savo veterinarui arba naudokite skubios pagalbos mygtuką. Arba pabandykite dar kartą po akimirkos.",
   "app_sign_appetite": "Apetitas",
   "app_sign_drinking": "Gėrimas",
   "app_sign_vomiting": "Vėmimas",

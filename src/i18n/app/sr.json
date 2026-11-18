@@ -112,6 +112,8 @@
   "app_rec_note": "Beleška",
   "app_rec_ai": "AI savet",
   "app_rec_symptom": "Simptom",
+  "app_urgency_vet_today": "Danas kod veterinara",
+  "app_aiUnreliable": "Ovo trenutno nisam mogao pouzdano da procenim. Ako se brineš ili je sve gore, pozovi svog veterinara ili upotrebi dugme za hitne slučajeve. Ili pokušaj ponovo za trenutak.",
   "app_sign_appetite": "Apetit",
   "app_sign_drinking": "Pijenje",
   "app_sign_vomiting": "Povraćanje",

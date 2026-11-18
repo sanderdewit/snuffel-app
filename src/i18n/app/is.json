@@ -108,6 +108,8 @@
   "app_rec_note": "Athugasemd",
   "app_rec_ai": "Ráð gervigreindar",
   "app_rec_symptom": "Einkenni",
+  "app_urgency_vet_today": "Til dýralæknis í dag",
+  "app_aiUnreliable": "Ég gat ekki metið þetta áreiðanlega rétt í þessu. Ef þú hefur áhyggjur eða þetta versnar, hringdu í dýralækninn þinn eða notaðu neyðarhnappinn. Eða reyndu aftur eftir smástund.",
   "app_sign_appetite": "Matarlyst",
   "app_sign_drinking": "Drykkja",
   "app_sign_vomiting": "Uppköst",

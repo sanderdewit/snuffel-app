@@ -112,6 +112,8 @@
   "app_rec_note": "Piezīme",
   "app_rec_ai": "MI padoms",
   "app_rec_symptom": "Simptoms",
+  "app_urgency_vet_today": "Šodien pie veterinārārsta",
+  "app_aiUnreliable": "Pašlaik es to nevarēju droši novērtēt. Ja uztraucaties vai kļūst sliktāk, zvaniet savam veterinārārstam vai izmantojiet ārkārtas pogu. Vai mēģiniet vēlreiz pēc brīža.",
   "app_sign_appetite": "Apetīte",
   "app_sign_drinking": "Dzeršana",
   "app_sign_vomiting": "Vemšana",

@@ -112,6 +112,8 @@
   "app_rec_note": "Nota",
   "app_rec_ai": "Consell d'IA",
   "app_rec_symptom": "Símptoma",
+  "app_urgency_vet_today": "Al veterinari avui",
+  "app_aiUnreliable": "Ara no ho he pogut valorar de manera fiable. Si et preocupa o empitjora, truca al teu veterinari o fes servir el botó d'urgències. O torna-ho a provar d'aquí a un moment.",
   "app_sign_appetite": "Gana",
   "app_sign_drinking": "Beure",
   "app_sign_vomiting": "Vòmits",
