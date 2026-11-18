@@ -1,3 +1,3 @@
-Nytt: en steg-för-steg-guide för en bortsprungen eller hittad hund, med sökgrupper nära dig. Och med knappen ”Alla” väljer du snabbare en enda kategori.
+Smartare AI-assistent: den ställer först de frågor som en djursjukskötare också skulle ställa, och säger nu också när din hund behöver till veterinären redan i dag. Testad på 1 000 situationer på 29 språk.
 
-AI-röstsamtal (beta) fungerar nu på alla iPhone: AI:n hälsar på dig först och talar ditt språk. I AI-chatten fortsätter röstläget att lyssna efter varje uppläst svar. Snuffel finns nu också på 29 språk i App Store.
+Nytt: tecken från AI-chatten sparas i din hunds journal. Du kan ångra det eller stänga av det för varje hund. Om något återkommer ser du det i journalen och i PDF:en.

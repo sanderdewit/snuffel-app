@@ -1,3 +1,3 @@
-Nowość: przewodnik krok po kroku, gdy pies zaginie lub go znajdziesz, z grupami poszukiwawczymi w pobliżu. A przyciskiem „Wszystko” szybciej wybierzesz jedną kategorię.
+Mądrzejszy asystent AI: najpierw zadaje pytania, które zadałby technik weterynarii, a teraz mówi ci też, kiedy twój pies powinien jeszcze dziś trafić do weterynarza. Przetestowany na 1000 sytuacjach w 29 językach.
 
-Rozmowa głosowa z AI (beta) działa teraz na każdym iPhonie: AI wita się pierwsza i mówi w twoim języku. W czacie Pomocy AI tryb głosowy po każdej odpowiedzi wypowiedzianej na głos znów nasłuchuje. Snuffel jest teraz dostępny w App Store także w 29 językach.
+Nowość: objawy z czatu z AI trafiają do karty twojego psa. Możesz to cofnąć albo wyłączyć dla każdego psa osobno. Jeśli coś się powtarza, zobaczysz to w karcie i w pliku PDF.

@@ -1,0 +1,3 @@
+Fiksumpi tekoälyavustaja: se kysyy ensin samat asiat kuin eläinhoitaja kysyisi, ja kertoo nyt myös, milloin koirasi pitää viedä eläinlääkäriin jo tänään. Testattu 1 000 tilanteella 29 kielellä.
+
+Uutta: tekoälychatissa esiin tulleet oireet tallentuvat koirasi kansioon. Voit perua tallennuksen tai poistaa sen käytöstä koirakohtaisesti. Jos jokin toistuu, näet sen kansiossa ja PDF:ssä.

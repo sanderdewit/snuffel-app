@@ -1,3 +1,3 @@
-Novetat: una guia pas a pas per a un gos perdut o trobat, amb grups de cerca a prop teu. I amb el botó «Tot» tries una sola categoria més ràpid.
+Assistent d’IA més intel·ligent: primer fa les preguntes que faria un auxiliar veterinari, i ara també et diu quan el teu gos ha d’anar al veterinari avui mateix. Provat en 1.000 situacions en 29 llengües.
 
-La conversa de veu amb IA (beta) ara funciona a tots els iPhone: la IA et saluda primer i parla el teu idioma. Al xat d'IA, el mode de veu continua escoltant després de cada resposta parlada. Snuffel ara també està disponible en 29 idiomes a l'App Store.
+Novetat: els senyals que surten al xat d’IA es desen a la fitxa del teu gos. Pots desfer-ho o desactivar-ho per a cada gos. Si alguna cosa es repeteix, ho veuràs a la fitxa i al PDF.

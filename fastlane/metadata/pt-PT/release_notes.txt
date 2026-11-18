@@ -1,3 +1,3 @@
-Novidade: um guia passo a passo para um cão perdido ou encontrado, com grupos de busca perto de si. E com o botão «Tudo» escolhe mais depressa uma só categoria.
+Assistente de IA mais inteligente: faz primeiro as perguntas que um auxiliar veterinário faria, e agora indica-lhe também quando o seu cão deve ir ao veterinário ainda hoje. Testado em 1000 situações em 29 línguas.
 
-A Conversa de voz com IA (beta) já funciona em todos os iPhone: a IA cumprimenta-o primeiro e fala a sua língua. No chat da Ajuda IA, o modo de voz volta a ouvir depois de cada resposta falada. O Snuffel está agora também disponível em 29 línguas na App Store.
+Novidade: os sinais detetados no chat de IA ficam registados no processo do seu cão. Pode anular o registo ou desativá-lo para cada cão. Se algo se repetir, vê-o no processo e no PDF.
