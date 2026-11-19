@@ -12,6 +12,7 @@ import { AudioDeviceModule, audioDeviceModuleEvents, type AutomaticAppleAudioCon
 import { ExpoSpeechRecognitionModule } from "expo-speech-recognition";
 import { CONFIG } from "./config";
 import { betaCode } from "./beta";
+import { clock } from "./dates";
 import { ageMonths, type Dog } from "./dogs";
 import { installId } from "./install";
 
@@ -143,7 +144,7 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
         method: "POST",
         headers: { "Content-Type": "application/json", "X-Snuffel-Install": await installId(), "X-Snuffel-Beta": (await betaCode()) || "" },
         body: JSON.stringify({
-          sdp: offer.sdp, lang, emergencyLabel: labels.emergency, lostLabel: labels.lost,
+          sdp: offer.sdp, lang, emergencyLabel: labels.emergency, lostLabel: labels.lost, time: clock(),
           dog: dog ? { name: dog.name || undefined, breed: dog.breed || undefined, ageMonths: ageMonths(dog.birth) ?? undefined,
             weightKg: dog.weight ?? undefined, sex: dog.sex ?? undefined, neutered: dog.neutered ?? undefined } : undefined
         }),

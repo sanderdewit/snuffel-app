@@ -8,6 +8,9 @@ export function isoDate(d: Date): string {
 }
 export const today = () => isoDate(new Date());
 
+/** The local time as "HH:MM" (the AI uses it: "today" at 23:00 means the out-of-hours vet now). */
+export const clock = (d = new Date()) => `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+
 export function validDate(s: string): boolean {
   if (!DATE.test(s)) return false;
   const d = new Date(s + "T12:00:00");

@@ -1,6 +1,6 @@
 // Run with:  node tests/dates.test.ts   (Node 23.6+ runs TypeScript directly)
 import assert from "node:assert";
-import { addMonths, ageMonths, formatDate, validDate } from "../src/lib/dates.ts";
+import { addMonths, ageMonths, clock, formatDate, validDate } from "../src/lib/dates.ts";
 
 let passed = 0, failed = 0;
 function test(name: string, fn: () => void) {
@@ -36,6 +36,11 @@ test("dates are shown the local way, invalid input as given", () => {
   assert.strictEqual(formatDate("2021-04-30", "de"), "30. April 2021");
   assert.strictEqual(formatDate("2021-02-30", "nl"), "2021-02-30");
   assert.strictEqual(formatDate("", "nl"), "");
+});
+
+test("local time as HH:MM", () => {
+  assert.strictEqual(clock(new Date(2026, 10, 19, 7, 5)), "07:05");
+  assert.strictEqual(clock(new Date(2026, 10, 19, 23, 45)), "23:45");
 });
 
 console.log(`\n${passed} passed, ${failed} failed`);

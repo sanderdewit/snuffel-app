@@ -3,6 +3,7 @@
 // IP) and, when a dog is chosen, its profile so advice fits that dog.
 import { CONFIG } from "./config";
 import { db, dbReady } from "./db";
+import { clock } from "./dates";
 import { ageMonths, today, type Dog } from "./dogs";
 import { aiSummary, type Observation } from "./dogfile";
 import { signCategory } from "./dogsummary";
@@ -28,6 +29,7 @@ export async function ask(all: ChatMessage[], lang: string, labels: { emergency:
   const history = all.filter((m) => !m.local);
   const body: Record<string, unknown> = {
     lang, emergencyLabel: labels.emergency, lostLabel: labels.lost, today: today(),   // the phone's date: "yesterday" in an observation
+    time: clock(),   // the phone's time: in the evening "today" means the out-of-hours vet now
     features: ["vet_today"],   // this app shows "see a vet today"; older apps get vet_soon instead
     // The last 12 turns, but always the first question: it usually describes the problem.
     messages: (history.length > 12 ? [history[0], ...history.slice(-11)] : history).map((m) => (m.role === "assistant" ? { role: m.role, content: m.content, sig: m.sig } : { role: m.role, content: m.content }))
