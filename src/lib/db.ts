@@ -1,6 +1,7 @@
 // Everything the app remembers lives in one SQLite file on the phone: dogs,
 // reminders, saved places, chats, settings and the offline copy of place data.
-// Nothing is sent anywhere (see the privacy text).
+// Nothing is sent anywhere (see the privacy text), except a conversation the owner
+// chooses to send after a thumbs down (src/lib/feedback.ts).
 import * as SQLite from "expo-sqlite";
 
 const db = SQLite.openDatabaseSync("snuffel.db");
@@ -24,7 +25,11 @@ const MIGRATIONS = [
   `ALTER TABLE chats ADD COLUMN parts TEXT;`,
   // v5: observed signs from the AI chat (category per entry), filed automatically per dog unless switched off
   `ALTER TABLE records ADD COLUMN category TEXT;
-   ALTER TABLE dogs ADD COLUMN auto_file INTEGER NOT NULL DEFAULT 1;`
+   ALTER TABLE dogs ADD COLUMN auto_file INTEGER NOT NULL DEFAULT 1;`,
+  // v6: thumbs up/down per AI answer (chat_id = chats.id); code = the removal code of a
+  // conversation the owner sent after a thumbs down (kept when the chat is cleared).
+  // IF NOT EXISTS: safe in any order next to other migrations.
+  `CREATE TABLE IF NOT EXISTS ratings (chat_id INTEGER PRIMARY KEY, vote TEXT NOT NULL, code TEXT, title TEXT, at INTEGER NOT NULL);`
 ];
 
 let ready: Promise<void> | null = null;

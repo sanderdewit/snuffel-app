@@ -7,6 +7,7 @@ import { LANGUAGES, useI18n } from "../i18n";
 import { useBeta } from "../lib/beta";
 import { CONFIG } from "../lib/config";
 import { Toggle } from "../ui/Toggle";
+import { SentReports } from "../ui/Rating";
 import { kvGetJson } from "../lib/db";
 import { currentPosition, LocationDeniedError } from "../lib/geo";
 import { pinHomeArea } from "../lib/places";
@@ -117,6 +118,8 @@ export default function Settings() {
       <View style={[S.card, { gap: 6 }]}>
         <Text style={S.h2}>🔒 {t("app_privacy")}</Text>
         <Text style={S.body}>{t("app_privacyText")}</Text>
+        <Text style={S.body}>{t("app_fbPrivacy")}</Text>
+        <SentReports />
         <Pressable onPress={() => Linking.openURL(CONFIG.privacy)}><Text style={{ color: C.brandDark, fontWeight: "600" }}>{t("app_privacy")} ↗</Text></Pressable>
       </View>
 

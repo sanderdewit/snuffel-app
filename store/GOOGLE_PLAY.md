@@ -88,7 +88,7 @@ Data types (all **not shared**, **not for ads/analytics**, purpose **App functio
 | Data type | Collected | Processed ephemerally | Required | Why |
 |---|---|---|---|---|
 | Location → Precise location | Yes | Yes | Optional (an address can be typed) | Address lookup via OpenStreetMap Nominatim |
-| App activity → Other user-generated content | Yes | No | Optional | AI questions (and, if enabled, a summary of the dog's file) to Azure OpenAI in the EU; Microsoft may keep them up to 30 days for abuse monitoring |
+| App activity → Other user-generated content | Yes | No | Optional | AI questions (and, if enabled, a summary of the dog's file) to Azure OpenAI in the EU; Microsoft may keep them up to 30 days for abuse monitoring. Since 1.0.3 also **Analytics**: a conversation the user chooses to send after a thumbs down (consent screen; dog's name removed), kept 12 months to improve the assistant |
 | Device or other IDs | Yes | Yes | Required for the AI | Random install ID for the AI rate limit, in memory for 10 minutes |
 
 Not collected: name, e-mail, contacts, photos (stay on the phone), audio (speech

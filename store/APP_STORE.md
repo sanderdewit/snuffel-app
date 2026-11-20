@@ -38,7 +38,7 @@ services we use. Declare these conservatively:
 | Data type | Purpose | Linked to user | Tracking | Why |
 |---|---|---|---|---|
 | Location: precise location | App Functionality | No | No | Coordinates go to OpenStreetMap Nominatim (address lookup), which keeps server logs for a short time |
-| User content: other user content | App Functionality | No | No | AI questions go to Azure OpenAI (EU), which may keep them up to 30 days for abuse monitoring |
+| User content: other user content | App Functionality, Other Purposes | No | No | AI questions go to Azure OpenAI (EU), which may keep them up to 30 days for abuse monitoring. Other Purposes (since 1.0.3): a conversation the user chooses to send after a thumbs down (consent screen; dog's name removed) is kept 12 months to improve the assistant |
 | Identifiers: device ID | App Functionality | No | No | Random per-install ID for the AI rate limit, held in memory for 10 minutes |
 
 Not collected: contact info, health (the dog's details only reach the AI as part
