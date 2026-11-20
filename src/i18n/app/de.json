@@ -124,6 +124,7 @@
   "app_sign_energy": "Energie",
   "app_sign_behaviour": "Verhalten",
   "app_sign_injury": "Verletzung",
+  "app_sign_reproductive": "Geschlechtsorgane und Fortpflanzung",
   "app_sign_other": "Sonstiges",
   "app_autoFile": "Symptome aus dem KI-Chat notieren",
   "app_autoFileText": "Wenn du dem KI-Assistenten ein Symptom nennst (frisst nicht, erbricht, lahmt), wird es hier mit Datum notiert. Im Chat kannst du das rückgängig machen.",

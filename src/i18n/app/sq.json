@@ -124,6 +124,7 @@
   "app_sign_energy": "Energjia",
   "app_sign_behaviour": "Sjellja",
   "app_sign_injury": "Lëndim",
+  "app_sign_reproductive": "Organet gjenitale dhe riprodhimi",
   "app_sign_other": "Tjetër",
   "app_autoFile": "Shëno simptomat nga biseda me AI",
   "app_autoFileText": "Kur i tregon asistentit AI për një simptomë (nuk ha, vjell, çalon), ajo shënohet këtu me datë. Mund ta anulosh në bisedë.",

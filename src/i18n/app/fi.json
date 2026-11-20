@@ -124,6 +124,7 @@
   "app_sign_energy": "Vireys",
   "app_sign_behaviour": "Käytös",
   "app_sign_injury": "Vamma",
+  "app_sign_reproductive": "Sukuelimet ja lisääntyminen",
   "app_sign_other": "Muu",
   "app_autoFile": "Kirjaa oireet tekoälychatista",
   "app_autoFileText": "Kun kerrot tekoälyavustajalle oireesta (ei syö, oksentaa, ontuu), se kirjataan tänne päivämäärän kanssa. Voit perua sen chatissa.",

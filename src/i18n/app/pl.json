@@ -132,6 +132,7 @@
   "app_sign_energy": "Energia",
   "app_sign_behaviour": "Zachowanie",
   "app_sign_injury": "Uraz",
+  "app_sign_reproductive": "Narządy płciowe i rozród",
   "app_sign_other": "Inne",
   "app_autoFile": "Zapisuj objawy z czatu AI",
   "app_autoFileText": "Gdy opowiesz asystentowi AI o objawie (nie je, wymiotuje, kuleje), zostanie on tu zapisany z datą. Możesz to cofnąć w czacie.",

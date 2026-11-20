@@ -128,6 +128,7 @@
   "app_sign_energy": "Energija",
   "app_sign_behaviour": "Ponašanje",
   "app_sign_injury": "Povreda",
+  "app_sign_reproductive": "Polni organi i razmnožavanje",
   "app_sign_other": "Ostalo",
   "app_autoFile": "Beleži simptome iz AI četa",
   "app_autoFileText": "Kad AI asistentu kažeš za simptom (ne jede, povraća, šepa), ovde se beleži sa datumom. U četu to možeš poništiti.",

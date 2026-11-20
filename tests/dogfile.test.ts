@@ -1,12 +1,13 @@
 // Run with:  node tests/dogfile.test.ts
 // Password-protected export round trip, and the summary sent to the AI.
 import assert from "node:assert";
+import fs from "node:fs";
 import { webcrypto } from "node:crypto";
 import { gcm } from "@noble/ciphers/aes.js";
 import { utf8ToBytes } from "@noble/ciphers/utils.js";
 import { scryptAsync } from "@noble/hashes/scrypt.js";
 import { b64, BadSealError, imageType, PasswordTooShortError, seal, SCRYPT, unseal, WrongPasswordError } from "../src/lib/seal.ts";
-import { recurring, signCategory, summarise, SUMMARY_MAX, type DogRecord } from "../src/lib/dogsummary.ts";
+import { recurring, SIGN_CATEGORIES, signCategory, summarise, SUMMARY_MAX, type DogRecord } from "../src/lib/dogsummary.ts";
 
 let passed = 0, failed = 0;
 async function test(name: string, fn: () => Promise<void> | void) {
@@ -123,6 +124,21 @@ await test("recurring signs: twice or more in half a year, per category, 'other'
   assert.deepStrictEqual(g, [{ category: "appetite", dates: ["2026-11-03", "2026-11-24"] }]);
   assert.strictEqual(signCategory("robot"), "other");
   assert.strictEqual(signCategory("stool"), "stool");
+});
+
+await test("sign category 'reproductive': kept, labelled in every language, and a pattern like the others", () => {
+  assert.strictEqual(signCategory("reproductive"), "reproductive");
+  const dir = new URL("../src/i18n/app/", import.meta.url);
+  for (const f of fs.readdirSync(dir).filter((x) => x.endsWith(".json"))) {
+    const pack = JSON.parse(fs.readFileSync(new URL(f, dir), "utf8"));
+    for (const c of SIGN_CATEGORIES) assert.ok(typeof pack["app_sign_" + c] === "string" && pack["app_sign_" + c].trim(), `${f}: app_sign_${c}`);
+  }
+  const now = new Date("2026-11-24T12:00:00Z");
+  assert.deepStrictEqual(recurring([
+    rec("symptom", "2026-11-20", "Zwelling bij tepel", { category: "reproductive" }),
+    rec("symptom", "2026-10-02", "Zwelling bij tepel", { category: "reproductive" })
+  ], now), [{ category: "reproductive", dates: ["2026-10-02", "2026-11-20"] }]);
+  assert.match(summarise([rec("symptom", "2026-11-20", "Afscheiding", { category: "reproductive" })], now)!, /\[reproductive\] Afscheiding/);
 });
 
 console.log(`\n${passed} passed, ${failed} failed`);

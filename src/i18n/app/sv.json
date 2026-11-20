@@ -124,6 +124,7 @@
   "app_sign_energy": "Energi",
   "app_sign_behaviour": "Beteende",
   "app_sign_injury": "Skada",
+  "app_sign_reproductive": "Könsorgan och fortplantning",
   "app_sign_other": "Övrigt",
   "app_autoFile": "Anteckna symtom från AI-chatten",
   "app_autoFileText": "När du berättar om ett symtom för AI-assistenten (äter inte, kräks, haltar) antecknas det här med datum. Du kan ångra det i chatten.",

@@ -124,6 +124,7 @@
   "app_sign_energy": "Orka",
   "app_sign_behaviour": "Hegðun",
   "app_sign_injury": "Meiðsli",
+  "app_sign_reproductive": "Kynfæri og æxlun",
   "app_sign_other": "Annað",
   "app_autoFile": "Skrá einkenni úr gervigreindarspjallinu",
   "app_autoFileText": "Þegar þú segir gervigreindaraðstoðinni frá einkenni (borðar ekki, kastar upp, haltrar) er það skráð hér með dagsetningu. Þú getur afturkallað það í spjallinu.",

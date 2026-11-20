@@ -124,6 +124,7 @@
   "app_sign_energy": "Energy",
   "app_sign_behaviour": "Behaviour",
   "app_sign_injury": "Injury",
+  "app_sign_reproductive": "Genitals and reproduction",
   "app_sign_other": "Other",
   "app_autoFile": "Note signs from the AI chat",
   "app_autoFileText": "When you tell the AI assistant about a sign (not eating, vomiting, limping), it is noted here with the date. You can undo it in the chat.",

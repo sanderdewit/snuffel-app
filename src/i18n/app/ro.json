@@ -128,6 +128,7 @@
   "app_sign_energy": "Energie",
   "app_sign_behaviour": "Comportament",
   "app_sign_injury": "Rană",
+  "app_sign_reproductive": "Organe genitale și reproducere",
   "app_sign_other": "Altele",
   "app_autoFile": "Notează simptomele din chatul AI",
   "app_autoFileText": "Când îi spui asistentului AI despre un simptom (nu mănâncă, vomită, șchiopătează), este notat aici cu data. Poți anula în chat.",

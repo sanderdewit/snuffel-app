@@ -124,6 +124,7 @@
   "app_sign_energy": "Energi",
   "app_sign_behaviour": "Adfærd",
   "app_sign_injury": "Skade",
+  "app_sign_reproductive": "Kønsorganer og forplantning",
   "app_sign_other": "Andet",
   "app_autoFile": "Notér symptomer fra AI-chatten",
   "app_autoFileText": "Når du fortæller AI-assistenten om et symptom (spiser ikke, kaster op, halter), noteres det her med dato. Du kan fortryde det i chatten.",

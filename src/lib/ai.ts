@@ -30,7 +30,9 @@ export async function ask(all: ChatMessage[], lang: string, labels: { emergency:
   const body: Record<string, unknown> = {
     lang, emergencyLabel: labels.emergency, lostLabel: labels.lost, today: today(),   // the phone's date: "yesterday" in an observation
     time: clock(),   // the phone's time: in the evening "today" means the out-of-hours vet now
-    features: ["vet_today"],   // this app shows "see a vet today"; older apps get vet_soon instead
+    // This app shows "see a vet today" and files the sign category "reproductive";
+    // older apps get vet_soon and "other" instead.
+    features: ["vet_today", "reproductive"],
     // The last 12 turns, but always the first question: it usually describes the problem.
     messages: (history.length > 12 ? [history[0], ...history.slice(-11)] : history).map((m) => (m.role === "assistant" ? { role: m.role, content: m.content, sig: m.sig } : { role: m.role, content: m.content }))
   };

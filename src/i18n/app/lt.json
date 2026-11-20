@@ -132,6 +132,7 @@
   "app_sign_energy": "Energija",
   "app_sign_behaviour": "Elgesys",
   "app_sign_injury": "Sužeidimas",
+  "app_sign_reproductive": "Lytiniai organai ir dauginimasis",
   "app_sign_other": "Kita",
   "app_autoFile": "Užrašyti simptomus iš DI pokalbio",
   "app_autoFileText": "Kai papasakojate DI asistentui apie simptomą (neėda, vemia, šlubuoja), jis užrašomas čia su data. Pokalbyje galite tai atšaukti.",

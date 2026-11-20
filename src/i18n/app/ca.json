@@ -128,6 +128,7 @@
   "app_sign_energy": "Energia",
   "app_sign_behaviour": "Comportament",
   "app_sign_injury": "Ferida",
+  "app_sign_reproductive": "Genitals i reproducció",
   "app_sign_other": "Altres",
   "app_autoFile": "Anotar símptomes del xat d'IA",
   "app_autoFileText": "Quan expliques un símptoma a l'assistent d'IA (no menja, vomita, coixeja), s'anota aquí amb la data. Ho pots desfer al xat.",

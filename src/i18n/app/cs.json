@@ -132,6 +132,7 @@
   "app_sign_energy": "Energie",
   "app_sign_behaviour": "Chování",
   "app_sign_injury": "Zranění",
+  "app_sign_reproductive": "Pohlavní orgány a rozmnožování",
   "app_sign_other": "Jiné",
   "app_autoFile": "Zapisovat příznaky z AI chatu",
   "app_autoFileText": "Když AI asistentovi popíšete příznak (nežere, zvrací, kulhá), zapíše se sem s datem. V chatu to můžete vrátit zpět.",

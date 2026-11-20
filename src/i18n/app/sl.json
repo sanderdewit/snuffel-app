@@ -132,6 +132,7 @@
   "app_sign_energy": "Energija",
   "app_sign_behaviour": "Vedenje",
   "app_sign_injury": "Poškodba",
+  "app_sign_reproductive": "Spolovila in razmnoževanje",
   "app_sign_other": "Drugo",
   "app_autoFile": "Beleži znake iz klepeta z UI",
   "app_autoFileText": "Ko pomočniku UI poveste za znak (ne je, bruha, šepa), se tukaj zabeleži z datumom. V klepetu lahko to razveljavite.",

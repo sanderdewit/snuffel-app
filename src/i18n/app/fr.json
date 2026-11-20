@@ -128,6 +128,7 @@
   "app_sign_energy": "Énergie",
   "app_sign_behaviour": "Comportement",
   "app_sign_injury": "Blessure",
+  "app_sign_reproductive": "Organes génitaux et reproduction",
   "app_sign_other": "Autre",
   "app_autoFile": "Noter les symptômes du chat IA",
   "app_autoFileText": "Quand vous signalez un symptôme à l'assistant IA (ne mange pas, vomit, boite), il est noté ici avec la date. Vous pouvez l'annuler dans le chat.",

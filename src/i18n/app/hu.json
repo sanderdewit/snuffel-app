@@ -124,6 +124,7 @@
   "app_sign_energy": "Energia",
   "app_sign_behaviour": "Viselkedés",
   "app_sign_injury": "Sérülés",
+  "app_sign_reproductive": "Nemi szervek és szaporodás",
   "app_sign_other": "Egyéb",
   "app_autoFile": "Tünetek rögzítése az MI-csevegésből",
   "app_autoFileText": "Ha elmondasz egy tünetet az MI-asszisztensnek (nem eszik, hány, sántít), itt rögzítjük dátummal. A csevegésben visszavonhatod.",

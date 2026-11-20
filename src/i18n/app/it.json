@@ -128,6 +128,7 @@
   "app_sign_energy": "Energia",
   "app_sign_behaviour": "Comportamento",
   "app_sign_injury": "Ferita",
+  "app_sign_reproductive": "Genitali e riproduzione",
   "app_sign_other": "Altro",
   "app_autoFile": "Annota i sintomi dalla chat IA",
   "app_autoFileText": "Quando racconti un sintomo all'assistente IA (non mangia, vomita, zoppica), viene annotato qui con la data. Puoi annullarlo nella chat.",

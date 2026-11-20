@@ -128,6 +128,7 @@
   "app_sign_energy": "Enerģija",
   "app_sign_behaviour": "Uzvedība",
   "app_sign_injury": "Trauma",
+  "app_sign_reproductive": "Dzimumorgāni un vairošanās",
   "app_sign_other": "Cits",
   "app_autoFile": "Pierakstīt simptomus no MI tērzēšanas",
   "app_autoFileText": "Kad pastāstāt MI asistentam par simptomu (neēd, vemj, klibo), tas tiek pierakstīts šeit ar datumu. Tērzēšanā to var atsaukt.",
