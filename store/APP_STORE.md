@@ -26,7 +26,7 @@ is a fallback that keeps the brand first.
 | Field | Value |
 |---|---|
 | Privacy policy URL | https://snuffel.app/privacy (source: docs/privacy-*.md in the website repo) |
-| Support URL | https://github.com/sanderdewit/snuffel-app/issues (the privacy page also lists privacy@dewit-automatisering.nl). Entered per language on the version page (iOS App → 1.0), next to Description and Keywords; the store workflow fills it from `fastlane/metadata/*/support_url.txt` |
+| Support URL | https://github.com/sanderdewit/snuffel-app/issues (the privacy page lists privacy@snuffel.app; general support: support@snuffel.app). Entered per language on the version page (iOS App → 1.0), next to Description and Keywords; the store workflow fills it from `fastlane/metadata/*/support_url.txt` |
 | Marketing URL (optional) | https://snuffel.app/ |
 
 ## App Privacy ("nutrition label")

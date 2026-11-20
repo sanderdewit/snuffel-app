@@ -80,7 +80,7 @@ been published once, `completed` afterwards).
 |---|---|
 | Does the app collect or share user data? | Yes (collects; nothing is shared or sold) |
 | Encrypted in transit? | Yes (HTTPS only) |
-| Users can request deletion? | Yes: personal data is on the phone (delete in the app or uninstall); other requests via privacy@dewit-automatisering.nl |
+| Users can request deletion? | Yes: personal data is on the phone (delete in the app or uninstall); other requests via privacy@snuffel.app |
 | Account creation | None |
 
 Data types (all **not shared**, **not for ads/analytics**, purpose **App functionality**):
@@ -116,7 +116,7 @@ Expected: PEGI 3 / Everyone.
 | Feature graphic (1024 × 500) | `…/images/featureGraphic.png` |
 | Phone screenshots (2-8) | `screenshots-android` artifact |
 | Category | Lifestyle |
-| Contact e-mail | your support address (e.g. support@snuffel.app via Cloudflare Email Routing) |
+| Contact e-mail | support@snuffel.app |
 | Website | https://snuffel.app |
 
 Countries: **the Netherlands** only for now (the data covers 45 countries, so
