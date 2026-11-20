@@ -74,6 +74,7 @@ function Screens() {
       <Stack.Screen name="settings" options={{ title: t("app_settings") }} />
       <Stack.Screen name="lost" options={{ title: t("lostTitle").replace(/^\S+\s/, "") /* without the 🔎 */ }} />
       <Stack.Screen name="voice" options={{ title: t("app_betaVoice"), gestureEnabled: false }} />
+      <Stack.Screen name="feedback" options={{ title: t("app_fbTitle") }} />
     </Stack>
   );
 }

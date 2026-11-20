@@ -76,10 +76,12 @@ export async function loadChat(dogId: number | null): Promise<ChatMessage[]> {
   return rows.map((r) => ({ id: r.id, role: r.role, content: r.content, urgency: r.urgency || undefined, topic: r.topic || undefined, sig: r.sig || undefined,
     parts: r.parts ? answerParts(safeJson(r.parts)) : undefined }));
 }
-export async function addChat(dogId: number | null, m: ChatMessage): Promise<void> {
+/** Stores a message; returns its id (thumbs up/down are kept per id). */
+export async function addChat(dogId: number | null, m: ChatMessage): Promise<number> {
   await dbReady();
-  await db.runAsync("INSERT INTO chats (dog_id, role, content, urgency, topic, sig, parts, at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+  const r = await db.runAsync("INSERT INTO chats (dog_id, role, content, urgency, topic, sig, parts, at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
     dogId, m.role, m.content, m.urgency || null, m.topic || null, m.sig || null, m.parts ? JSON.stringify(m.parts) : null, Date.now());
+  return r.lastInsertRowId;
 }
 export async function clearChat(dogId: number | null): Promise<void> {
   await dbReady();

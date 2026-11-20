@@ -10,6 +10,7 @@ export const CONFIG = {
   chatApi: SITE + "/api/chat",                       // AI help (app only)
   voiceApi: SITE + "/api/voice",                     // AI voice conversation (beta code)
   betaApi: SITE + "/api/beta",                       // checks a beta code (Settings)
+  feedbackApi: SITE + "/api/feedback",               // a conversation sent after a thumbs down, with consent
   website: SITE + "/",
   privacy: SITE + "/privacy",
   nominatim: "https://nominatim.openstreetmap.org",

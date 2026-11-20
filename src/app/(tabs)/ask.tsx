@@ -18,6 +18,7 @@ import { isStopPhrase } from "../../lib/talk";
 import { takeQuestion } from "../../lib/handoff";
 import { useSpeechRecognitionEvent } from "expo-speech-recognition";
 import { callUrl } from "../../ui/PlaceCard";
+import { Rating } from "../../ui/Rating";
 import { Toggle } from "../../ui/Toggle";
 import { C, S } from "../../ui/theme";
 
@@ -114,7 +115,7 @@ export default function Ask() {
       ? { role: "assistant", local: true, urgency: r.urgency,
           content: t(r.error === "rate_limited" ? "aiRateLimited" : r.error === "unavailable" ? "aiReply" : r.error === "unreliable" ? "app_aiUnreliable" : "aiError") }
       : { role: "assistant", content: r.reply, urgency: r.urgency, topic: r.topic, sig: r.sig, parts: r.parts };
-    if (!reply.local) await addChat(askedFor, reply);
+    if (!reply.local) reply.id = await addChat(askedFor, reply);   // the id: thumbs up/down right away
     // A sign the owner reported goes into the dog's file (by itself unless switched
     // off for this dog, or undone for this kind of sign in this conversation).
     const obs = reply.parts?.observation;
@@ -402,6 +403,7 @@ export default function Ask() {
                           <Text style={{ color: C.brandDark, fontWeight: "600" }}>📁 {tf("app_saveToFile", { name: dog.name })}</Text>
                         </Pressable>
                   )}
+                  {m.id != null && <Rating id={m.id} />}
                 </View>
               )}
               {next.map((a) => (
