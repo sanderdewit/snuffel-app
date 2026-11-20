@@ -6,6 +6,7 @@ import Constants from "expo-constants";
 import { CONFIG } from "./config";
 import { db, dbReady } from "./db";
 import { ageMonths, getDog, listDogs, type Dog } from "./dogs";
+import { breedForServer, breeds } from "./breeds";
 import { installId } from "./install";
 import { loadChat, type ChatMessage } from "./ai";
 import type { Report, ReportInput } from "./feedbackReport";
@@ -53,7 +54,7 @@ export function reportInput(draft: { turns: ChatMessage[]; dog: Dog | null; name
   const d = draft.dog;
   return {
     turns: draft.turns.map((m) => ({ role: m.role, content: m.content, urgency: m.urgency })),
-    dog: d ? { breed: d.breed, ageMonths: ageMonths(d.birth), weightKg: d.weight, sex: d.sex, neutered: d.neutered } : null,
+    dog: d ? { breed: breedForServer(breeds(), d).breed ?? null, ageMonths: ageMonths(d.birth), weightKg: d.weight, sex: d.sex, neutered: d.neutered } : null,
     names: draft.names, comment, lang,
     appVersion: Constants.expoConfig?.version || "0.0.0"
   };
