@@ -8,6 +8,7 @@ import { IMPORT_MAX_BYTES, importData, NeedsPasswordError } from "../../lib/dogf
 import { router, useFocusEffect } from "expo-router";
 import { useI18n } from "../../i18n";
 import { ageMonths, listDogs, listReminders, REMINDER_KINDS, today, type Dog, type Reminder } from "../../lib/dogs";
+import { breedLabel, breeds } from "../../lib/breeds";
 import { C, S } from "../../ui/theme";
 import { formatDate } from "../../lib/dates";
 
@@ -77,7 +78,7 @@ export default function Dogs() {
                 : <View style={{ width: 56, height: 56, borderRadius: 28, backgroundColor: C.chip, alignItems: "center", justifyContent: "center" }}><Text style={{ fontSize: 28 }}>🐶</Text></View>}
               <View style={{ flex: 1 }}>
                 <Text style={S.h2}>{d.name}</Text>
-                <Text style={S.muted}>{[d.breed, age(d), d.weight ? d.weight + " kg" : null].filter(Boolean).join(" · ")}</Text>
+                <Text style={S.muted}>{[breedLabel(breeds(), d, lang, t, tf), age(d), d.weight ? d.weight + " kg" : null].filter(Boolean).join(" · ")}</Text>
                 {d.next && (
                   <Text style={[S.muted, { color: d.next.due! < today() ? C.danger : C.text, marginTop: 2 }]}>
                     {t(REMINDER_KINDS.find((k) => k.kind === d.next!.kind)!.key)}: {d.next.due! < today() ? t("app_overdue") : tf("app_nextDue", { date: formatDate(d.next.due!, lang) })}

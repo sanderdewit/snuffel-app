@@ -29,7 +29,12 @@ const MIGRATIONS = [
   // v6: thumbs up/down per AI answer (chat_id = chats.id); code = the removal code of a
   // conversation the owner sent after a thumbs down (kept when the chat is cleared).
   // IF NOT EXISTS: safe in any order next to other migrations.
-  `CREATE TABLE IF NOT EXISTS ratings (chat_id INTEGER PRIMARY KEY, vote TEXT NOT NULL, code TEXT, title TEXT, at INTEGER NOT NULL);`
+  `CREATE TABLE IF NOT EXISTS ratings (chat_id INTEGER PRIMARY KEY, vote TEXT NOT NULL, code TEXT, title TEXT, at INTEGER NOT NULL);`,
+  // v7: the breed from the picker (an id of breeds.json), with size and "mainly" (ids, comma separated)
+  // for a mix; `breed` keeps the owner's own words for "other". Old free-text breeds get an id in lib/dogs.ts.
+  `ALTER TABLE dogs ADD COLUMN breed_id TEXT;
+   ALTER TABLE dogs ADD COLUMN breed_size TEXT;
+   ALTER TABLE dogs ADD COLUMN breed_mix TEXT;`
 ];
 
 let ready: Promise<void> | null = null;

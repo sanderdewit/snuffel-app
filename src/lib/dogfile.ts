@@ -11,6 +11,7 @@ import { db, dbReady } from "./db";
 import { getDog, listReminders, saveDog, setReminder, validDate, type Dog, type ReminderKind } from "./dogs";
 import { RECORD_KINDS, recurring, signCategory, summarise, type DogRecord, type RecordKind, type SignCategory } from "./dogsummary";
 import { acceptedParams, b64, imageType, seal, unseal, WrongPasswordError, type Sealed } from "./seal";
+import { breedForServer, breedLabel, breeds, cleanChoice, matchFreeText } from "./breeds";
 
 export { RECORD_KINDS, recurring, summarise, type DogRecord, type RecordKind, type SignCategory };
 export { IMPORT_MAX_BYTES, PASSWORD_MIN, PasswordTooShortError } from "./seal";
@@ -114,7 +115,8 @@ async function buildExport(dogId: number): Promise<ExportV1> {
   const { id: _id, photo: _p, ...rest } = dog;
   return {
     format: "snuffel-dog", version: 1, exported: new Date().toISOString(),
-    dog: { ...rest, photoJpegBase64: photo },
+    // breed: also the English name, for apps from before the breed picker (they only read this)
+    dog: { ...rest, breed: rest.breed ?? breedForServer(breeds(), rest).breed ?? null, photoJpegBase64: photo },
     records: (await listRecords(dogId)).map(({ id: _i, dogId: _d, ...r }) => r),
     reminders: (await listReminders(dogId)).map((r) => ({ kind: r.kind, due: r.due }))
   };
@@ -161,8 +163,12 @@ export async function importData(text: string, password: string | null): Promise
   }
   const str = (v: unknown, n: number) => (typeof v === "string" ? v.slice(0, n) : null);
   const num = (v: unknown, lo: number, hi: number) => (typeof v === "number" && v >= lo && v <= hi ? v : null);
+  // breedId and the rest since 1.0.3; an older file's free text is matched like an old profile
+  const breed = d.dog.breedId ? cleanChoice(breeds(), { breedId: str(d.dog.breedId, 60), breed: str(d.dog.breed, 40), breedSize: d.dog.breedSize,
+    breedMix: Array.isArray(d.dog.breedMix) ? d.dog.breedMix.filter((m: unknown): m is string => typeof m === "string") : [] })
+    : matchFreeText(breeds(), str(d.dog.breed, 40)) || cleanChoice(breeds(), {});
   const dogId = await saveDog({
-    name: str(d.dog.name, 40) || "?", breed: str(d.dog.breed, 40), birth: d.dog.birth && validDate(d.dog.birth) ? d.dog.birth : null,
+    name: str(d.dog.name, 40) || "?", ...breed, birth: d.dog.birth && validDate(d.dog.birth) ? d.dog.birth : null,
     weight: num(d.dog.weight, 0.3, 150), sex: d.dog.sex === "male" || d.dog.sex === "female" ? d.dog.sex : null,
     neutered: typeof d.dog.neutered === "boolean" ? d.dog.neutered : null, photo
   });
@@ -180,7 +186,7 @@ export async function importData(text: string, password: string | null): Promise
 // ---- PDF ----
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]!));
 
-export async function exportPdf(dogId: number, t: (k: string) => string, tf: (k: string, v: Record<string, string | number>) => string): Promise<void> {
+export async function exportPdf(dogId: number, t: (k: string) => string, tf: (k: string, v: Record<string, string | number>) => string, lang = "en"): Promise<void> {
   const dog = await getDog(dogId);
   if (!dog) return;
   const records = await listRecords(dogId);
@@ -192,7 +198,7 @@ export async function exportPdf(dogId: number, t: (k: string) => string, tf: (k:
   // Signs that came back, on top: what the vet should see first.
   const again = recurring(records);
   const facts = [
-    dog.breed && [t("app_breed"), dog.breed], dog.birth && [t("app_born"), dog.birth],
+    (dog.breedId || dog.breed) && [t("app_breed"), breedLabel(breeds(), dog, lang, t, tf)], dog.birth && [t("app_born"), dog.birth],
     dog.weight && [t("app_weight"), dog.weight + " kg"],
     dog.sex && [t("app_sex"), t(dog.sex === "male" ? "app_male" : "app_female") + (dog.neutered ? ", " + t("app_neutered").toLowerCase() : "")]
   ].filter(Boolean) as string[][];

@@ -22,6 +22,7 @@ import { ageMonths, type Dog } from "./dogs";
 import { signCategory } from "./dogsummary";
 import { installId } from "./install";
 import { parseVoiceNote, type VoiceNote } from "./voicenote";
+import { breedForServer, breeds } from "./breeds";
 
 export type VoiceState = "connecting" | "listening" | "thinking" | "speaking" | "ended";
 export type VoiceEnd = "done" | "time" | "beta" | "rate_limited" | "unavailable" | "mic" | "failed";
@@ -221,7 +222,7 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
         body: JSON.stringify({
           sdp: offer.sdp, lang, emergencyLabel: labels.emergency, lostLabel: labels.lost,
           today: today(), time: clock(),   // the phone's date and time: "yesterday" in the note, the out-of-hours vet in the evening
-          dog: dog ? { name: dog.name || undefined, breed: dog.breed || undefined, ageMonths: ageMonths(dog.birth) ?? undefined,
+          dog: dog ? { name: dog.name || undefined, ...breedForServer(breeds(), dog), ageMonths: ageMonths(dog.birth) ?? undefined,
             weightKg: dog.weight ?? undefined, sex: dog.sex ?? undefined, neutered: dog.neutered ?? undefined } : undefined
         }),
         signal: request.signal

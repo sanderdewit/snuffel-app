@@ -70,7 +70,7 @@ export default function DogFile() {
   };
   const doPdf = async () => {
     setBusy(true);
-    try { await exportPdf(dogId, t, tf); } catch { Alert.alert(t("app_errLoad")); } finally { setBusy(false); }
+    try { await exportPdf(dogId, t, tf, lang); } catch { Alert.alert(t("app_errLoad")); } finally { setBusy(false); }
   };
 
   return (

@@ -3,11 +3,15 @@
 import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
 import { db, dbReady } from "./db";
+import { breeds, cleanChoice, matchFreeText, type MixSize } from "./breeds";
 
 export interface Dog {
   id: number;
   name: string;
-  breed: string | null;
+  breedId: string | null;    // the picker's choice: an id of breeds.json (fci-166, x-labradoodle, mixed, other)
+  breed: string | null;      // the owner's own words: "other", or a profile from before the picker
+  breedSize: MixSize | null; // mixed only
+  breedMix: string[];        // mixed only: mainly these breeds (ids, at most two)
   birth: string | null;      // YYYY-MM-DD
   weight: number | null;     // kg
   sex: "male" | "female" | null;
@@ -28,28 +32,51 @@ export const REMINDER_KINDS: { kind: ReminderKind; everyMonths: number; key: str
 import { addMonths, today } from "./dates";
 export { addMonths, ageMonths, isoDate, today, validDate } from "./dates";
 
-const rowToDog = (r: any): Dog => ({ id: r.id, name: r.name, breed: r.breed, birth: r.birth, weight: r.weight,
+const rowToDog = (r: any): Dog => ({ id: r.id, name: r.name,
+  ...cleanChoice(breeds(), { breedId: r.breed_id, breed: r.breed, breedSize: r.breed_size, breedMix: r.breed_mix ? String(r.breed_mix).split(",") : [] }),
+  birth: r.birth, weight: r.weight,
   sex: r.sex === "male" || r.sex === "female" ? r.sex : null, neutered: r.neutered == null ? null : !!r.neutered, photo: r.photo });
 const rowToReminder = (r: any): Reminder => ({ id: r.id, dogId: r.dog_id, kind: r.kind, due: r.due, everyMonths: r.every_months, notifId: r.notif_id });
 
+// Profiles from before the breed picker have free text ("labardor", "Duitse Herder ",
+// "Teckelmix"): after the update it is matched to an id once; what doesn't match
+// becomes "other" with the text kept.
+let breedsMatched: Promise<void> | null = null;
+function matchOldBreeds(): Promise<void> {
+  if (!breedsMatched) {
+    breedsMatched = (async () => {
+      await dbReady();
+      const rows = await db.getAllAsync<{ id: number; breed: string }>("SELECT id, breed FROM dogs WHERE breed_id IS NULL AND breed IS NOT NULL AND TRIM(breed) <> ''");
+      for (const r of rows) {
+        const c = matchFreeText(breeds(), r.breed);
+        if (c) await db.runAsync("UPDATE dogs SET breed_id = ?, breed = ?, breed_size = ?, breed_mix = ? WHERE id = ?",
+          c.breedId, c.breedId === "other" ? c.breed : r.breed, c.breedSize, c.breedMix.join(",") || null, r.id);
+      }
+    })().catch(() => { breedsMatched = null; });   // try again next time
+  }
+  return breedsMatched;
+}
+
 export async function listDogs(): Promise<Dog[]> {
-  await dbReady();
+  await matchOldBreeds();
   return (await db.getAllAsync("SELECT * FROM dogs ORDER BY id")).map(rowToDog);
 }
 export async function getDog(id: number): Promise<Dog | null> {
-  await dbReady();
+  await matchOldBreeds();
   const r = await db.getFirstAsync("SELECT * FROM dogs WHERE id = ?", id);
   return r ? rowToDog(r) : null;
 }
 export async function saveDog(d: Omit<Dog, "id"> & { id?: number }): Promise<number> {
   await dbReady();
-  const vals = [d.name.trim(), d.breed || null, d.birth || null, d.weight ?? null, d.sex, d.neutered == null ? null : d.neutered ? 1 : 0, d.photo || null] as const;
+  const b = cleanChoice(breeds(), d);
+  const vals = [d.name.trim(), b.breed, b.breedId, b.breedSize, b.breedMix.join(",") || null, d.birth || null, d.weight ?? null, d.sex,
+    d.neutered == null ? null : d.neutered ? 1 : 0, d.photo || null] as const;
   if (d.id) {
-    await db.runAsync("UPDATE dogs SET name = ?, breed = ?, birth = ?, weight = ?, sex = ?, neutered = ?, photo = ? WHERE id = ?", ...vals, d.id);
+    await db.runAsync("UPDATE dogs SET name = ?, breed = ?, breed_id = ?, breed_size = ?, breed_mix = ?, birth = ?, weight = ?, sex = ?, neutered = ?, photo = ? WHERE id = ?", ...vals, d.id);
     await rescheduleDog(d.id);   // the name is in the notification text
     return d.id;
   }
-  const r = await db.runAsync("INSERT INTO dogs (name, breed, birth, weight, sex, neutered, photo) VALUES (?, ?, ?, ?, ?, ?, ?)", ...vals);
+  const r = await db.runAsync("INSERT INTO dogs (name, breed, breed_id, breed_size, breed_mix, birth, weight, sex, neutered, photo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", ...vals);
   return r.lastInsertRowId;
 }
 export async function deleteDog(id: number): Promise<void> {
