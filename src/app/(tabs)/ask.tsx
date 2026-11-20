@@ -12,7 +12,7 @@ import { kvGet, kvSet } from "../../lib/db";
 import { ageMonths, listDogs, today, type Dog } from "../../lib/dogs";
 import { addRecord, autoFile, deleteRecordById, fileObservation, setShareFileWithAi, shareFileWithAi, type Observation } from "../../lib/dogfile";
 import { formatDate } from "../../lib/dates";
-import { lastQuestion, otherDogOptions } from "../../lib/dogchoice";
+import { lastQuestion, openingDog, otherDogOptions, storedDog } from "../../lib/dogchoice";
 import { myVet, type SavedPlace } from "../../lib/saved";
 import { retryOnServer, speak, startListening, stopListening, stopSpeaking } from "../../lib/voice";
 import { isStopPhrase } from "../../lib/talk";
@@ -86,6 +86,7 @@ export default function Ask() {
   // ?q= fills in a question (not sent), ?dog= picks the dog: from the walkthrough.
   const params = useLocalSearchParams<{ q?: string; dog?: string }>();
   const appliedDogParam = useRef<string | undefined>(undefined);   // tab params stick: apply once
+  const dogResolved = useRef(false);   // the opening dog is known (dogs and the last choice read)
   useFocusEffect(useCallback(() => {
     myVet().then(setVet).catch(() => undefined);
     Promise.all([listDogs(), kvGet("askDog")]).then(([d, last]) => {
@@ -93,11 +94,10 @@ export default function Ask() {
       setDogsLoaded(true);
       const fromLink = params.dog && params.dog !== appliedDogParam.current ? Number(params.dog) : null;
       appliedDogParam.current = params.dog;
-      // A dog asked for by a link, else the current one, else the last one used, else the only one.
-      setDogId((cur) => {
-        for (const id of [fromLink, cur, last ? Number(last) : null]) if (id != null && d.some((x) => x.id === id)) return id;
-        return d.length === 1 ? d[0].id : null;
-      });
+      // A dog asked for by a link, else the current one, else the last choice (also
+      // "no specific dog"), else, for an owner who never chose, the only one.
+      dogResolved.current = true;
+      setDogId((cur) => openingDog(d, fromLink, cur, last));
     }).catch(() => undefined);
   }, [params.dog]));
   useEffect(() => { if (params.q) setText(String(params.q).slice(0, 1000)); }, [params.q]);
@@ -110,7 +110,8 @@ export default function Ask() {
     setOtherDogAt(null);
     setChoosingDog(false);
     loadChat(dogId).catch(() => [] as ChatMessage[]).then((m) => { setMessages(m); setLoadedFor({ dog: dogId }); });
-    kvSet("askDog", dogId == null ? null : String(dogId)).catch(() => undefined);
+    // Remembered once the opening dog is known: the first render's "no dog" is no choice.
+    if (dogResolved.current) kvSet("askDog", storedDog(dogId)).catch(() => undefined);
     if (dogId != null) shareFileWithAi(dogId).then(setShareFile).catch(() => undefined);
   }, [dogId]);
 
