@@ -225,6 +225,8 @@
   "app_voiceAiThinking": "Thinking…",
   "app_voiceAiSpeaking": "Speaking…",
   "app_voiceAiHangUp": "Hang up",
+  "app_voiceNoteWait": "Checking for anything to note in {name}'s file…",
+  "app_voiceNoteAsk": "Add to {name}'s file?",
   "app_voiceAiEnded": "The conversation has ended.",
   "app_voiceAiTime": "The 10 minutes are up. You can start a new conversation.",
   "app_voiceAiLimit": "That's enough conversations for today. Try again tomorrow, or type your question.",

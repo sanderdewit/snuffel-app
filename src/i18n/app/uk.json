@@ -233,6 +233,8 @@
   "app_voiceAiThinking": "Думаю…",
   "app_voiceAiSpeaking": "Говорю…",
   "app_voiceAiHangUp": "Завершити",
+  "app_voiceNoteWait": "Перевіряю, чи є що записати в картку: {name}…",
+  "app_voiceNoteAsk": "Додати в картку: {name}?",
   "app_voiceAiEnded": "Розмову завершено.",
   "app_voiceAiTime": "10 хвилин минуло. Можна почати нову розмову.",
   "app_voiceAiLimit": "На сьогодні розмов досить. Спробуйте ще раз завтра або напишіть своє запитання.",

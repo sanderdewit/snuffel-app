@@ -229,6 +229,8 @@
   "app_voiceAiThinking": "Sto pensando…",
   "app_voiceAiSpeaking": "Sto parlando…",
   "app_voiceAiHangUp": "Riaggancia",
+  "app_voiceNoteWait": "Sto controllando se c'è qualcosa da annotare nel fascicolo di {name}…",
+  "app_voiceNoteAsk": "Aggiungere al fascicolo di {name}?",
   "app_voiceAiEnded": "La conversazione è terminata.",
   "app_voiceAiTime": "I 10 minuti sono finiti. Puoi iniziare una nuova conversazione.",
   "app_voiceAiLimit": "Basta conversazioni per oggi. Riprova domani, oppure scrivi la tua domanda.",

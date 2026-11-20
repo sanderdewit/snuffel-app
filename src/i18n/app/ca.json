@@ -229,6 +229,8 @@
   "app_voiceAiThinking": "Pensant…",
   "app_voiceAiSpeaking": "Parlant…",
   "app_voiceAiHangUp": "Penja",
+  "app_voiceNoteWait": "Comprovant si hi ha res per anotar a l'expedient de {name}…",
+  "app_voiceNoteAsk": "Vols afegir-ho a l'expedient de {name}?",
   "app_voiceAiEnded": "La conversa ha acabat.",
   "app_voiceAiTime": "S'han acabat els 10 minuts. Pots començar una conversa nova.",
   "app_voiceAiLimit": "Prou converses per avui. Torna-ho a provar demà o escriu la teva pregunta.",

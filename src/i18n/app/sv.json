@@ -225,6 +225,8 @@
   "app_voiceAiThinking": "Tänker…",
   "app_voiceAiSpeaking": "Pratar…",
   "app_voiceAiHangUp": "Lägg på",
+  "app_voiceNoteWait": "Letar efter något att anteckna i {name}s journal…",
+  "app_voiceNoteAsk": "Lägga till i {name}s journal?",
   "app_voiceAiEnded": "Samtalet har avslutats.",
   "app_voiceAiTime": "De 10 minuterna är slut. Du kan starta ett nytt samtal.",
   "app_voiceAiLimit": "Det räcker med samtal för i dag. Försök igen i morgon, eller skriv din fråga.",

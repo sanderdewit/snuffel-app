@@ -6,15 +6,22 @@
 // events (the server asks for webrtcfilter=on), which the screen shows. The
 // owner's own words are not transcribed: that needs a transcription model that
 // isn't available in the EU data zone.
+// When the owner hangs up (or the time is up) with a dog chosen, the microphone
+// and the AI's voice stop at once, and the same session is asked for one text
+// answer outside the conversation: a note for the dog's file (voicenote.ts),
+// made from what the model already heard. The connection stays up only for
+// that answer, at most NOTE_WAIT_MS.
 import { AppState, Platform } from "react-native";
 // LiveKit's maintained fork of react-native-webrtc: same API, supports the New Architecture.
 import { AudioDeviceModule, audioDeviceModuleEvents, type AutomaticAppleAudioConfiguration, mediaDevices, MediaStream, RTCPeerConnection } from "@livekit/react-native-webrtc";
 import { ExpoSpeechRecognitionModule } from "expo-speech-recognition";
 import { CONFIG } from "./config";
 import { betaCode } from "./beta";
-import { clock } from "./dates";
+import { clock, today } from "./dates";
 import { ageMonths, type Dog } from "./dogs";
+import { signCategory } from "./dogsummary";
 import { installId } from "./install";
+import { parseVoiceNote, type VoiceNote } from "./voicenote";
 
 export type VoiceState = "connecting" | "listening" | "thinking" | "speaking" | "ended";
 export type VoiceEnd = "done" | "time" | "beta" | "rate_limited" | "unavailable" | "mic" | "failed";
@@ -24,37 +31,92 @@ export interface VoiceHandlers {
   onState(s: VoiceState): void;
   onLines(lines: VoiceLine[]): void;          // the transcript so far
   onConnected(maxSeconds: number): void;      // the conversation is live
-  onEnd(reason: VoiceEnd): void;              // once
+  onEnd(reason: VoiceEnd, noting: boolean): void;   // once; noting: the note for the dog's file is on its way (onNote follows)
+  onNote?(note: VoiceNote | null): void;      // after onEnd(_, true): the note, or null (nothing to note, or no answer in time)
 }
 
-/** A conversation being set up or running; hangUp works at any moment. */
-export interface VoiceCall { hangUp(): void }
+/**
+ * A conversation being set up or running; both work at any moment.
+ * hangUp: the owner ends it (with a dog chosen, the note follows); close: ends it at once, without a note.
+ */
+export interface VoiceCall { hangUp(): void; close(): void }
+
+const NOTE_WAIT_MS = 8000;
+// The request for the note: a system message, answered as the session's instructions
+// (set by /api/voice) describe. response.create gets no `instructions`: they would
+// replace the session's for that answer, and with them the file note rules, the
+// date, the language and the dog.
+const NOTE_REQUEST = "(The call has ended. Reply only with the JSON note for the dog's file, as described under FILE NOTE AT THE END OF THE CALL.)";
 
 /** Starts a conversation right away and returns its handle at once. */
 export function startVoice(lang: string, labels: { emergency: string; lost: string }, dog: Dog | null, h: VoiceHandlers): VoiceCall {
-  let ended = false, timer: ReturnType<typeof setTimeout> | null = null;
+  let ended = false, closed = false, noting = false;
+  let timer: ReturnType<typeof setTimeout> | null = null, noteTimer: ReturnType<typeof setTimeout> | null = null;
   let pc: RTCPeerConnection | null = null, mic: MediaStream | null = null;
+  let events: ReturnType<RTCPeerConnection["createDataChannel"]> | null = null;
+  const send = (m: object) => { try { events?.send(JSON.stringify(m)); } catch { /* closed */ } };
   const request = new AbortController();
   // The AI's transcript, one line per conversation item (deltas and "done" of
   // one answer carry the same item_id; an interrupted answer just stops).
   const order: string[] = [];
   const byItem = new Map<string, VoiceLine>();
   const publish = () => h.onLines(order.map((id) => byItem.get(id)!).filter((l) => l.text.trim()));
-  // The app going to the background ends the call: no audio left running, and
-  // the time limit can't be outlived by a suspended timer.
+  // The app going to the background ends the call at once, without a note: no
+  // audio left running, and the time limit can't be outlived by a suspended timer.
   // Only "background": iOS reports "inactive" while the microphone prompt is shown.
   const appState = AppState.addEventListener("change", (s) => { if (s === "background") end("done"); });
 
-  function end(reason: VoiceEnd) {
-    if (ended) return;
-    ended = true;
+  // Releases everything: microphone, connection, timers.
+  function close() {
+    if (closed) return;
+    closed = true;
     if (timer) clearTimeout(timer);
+    if (noteTimer) clearTimeout(noteTimer);
     appState.remove();
     request.abort();                                   // a session still being set up
     mic?.getTracks().forEach((t) => t.stop());
     try { pc?.close(); } catch { /* already closed */ }
+  }
+
+  // The call is over. note: the owner hung up or the time is up, so a note may follow
+  // (only with a dog and a live data channel). Ending again while the note is on its
+  // way (the screen closes, the app goes to the background, the connection drops)
+  // stops waiting for it.
+  function end(reason: VoiceEnd, note = false) {
+    if (ended) { noteDone(null); return; }
+    ended = true;
+    if (timer) clearTimeout(timer);
+    noting = note && !!dog && !!h.onNote && events?.readyState === "open";
+    if (noting) { silence(); askNote(); } else close();
     h.onState("ended");
-    h.onEnd(reason);
+    h.onEnd(reason, noting);
+  }
+
+  // Microphone and the AI's voice stop at once; the connection stays up for the note.
+  function silence() {
+    mic?.getTracks().forEach((t) => t.stop());        // nothing more is sent
+    try { pc?.getSenders().forEach((s) => { void s.replaceTrack(null); }); } catch { /* closed */ }
+    if (Platform.OS === "ios") {
+      try { if (AudioDeviceModule.isRecording()) AudioDeviceModule.stopRecording().catch(() => undefined); } catch { /* older native module */ }
+    }
+    try { pc?.getReceivers().forEach((r) => { if (r.track) r.track.enabled = false; }); } catch { /* closed */ }   // muted here at once
+    send({ type: "response.cancel" });                // and stopped there: cancel first, then clear (WebRTC)
+    send({ type: "output_audio_buffer.clear" });
+    send({ type: "input_audio_buffer.clear" });
+  }
+
+  // One text-only answer outside the default conversation, made from the conversation so far.
+  function askNote() {
+    send({ type: "conversation.item.create", item: { type: "message", role: "system", content: [{ type: "input_text", text: NOTE_REQUEST }] } });
+    send({ type: "response.create", response: { conversation: "none", output_modalities: ["text"], metadata: { snuffel: "file_note" }, max_output_tokens: 1000 } });
+    noteTimer = setTimeout(() => noteDone(null), NOTE_WAIT_MS);
+  }
+
+  function noteDone(answer: string | null) {
+    if (!noting) { close(); return; }
+    noting = false;
+    close();
+    h.onNote?.(answer == null ? null : parseVoiceNote(answer, today(), signCategory));
   }
 
   (async () => {
@@ -92,7 +154,8 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
     try {
       pc = new RTCPeerConnection();
       mic.getAudioTracks().forEach((t) => pc!.addTrack(t, mic!));   // the AI's voice arrives as a remote track and plays by itself
-      const events = pc.createDataChannel("oai-events");
+      const channel = pc.createDataChannel("oai-events");
+      events = channel;
       // The model never speaks first by itself, and a bare response.create on an
       // empty conversation isn't reliably answered: open the call with a short
       // turn (as Microsoft's WebRTC sample does), then ask for the greeting the
@@ -103,16 +166,28 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
         try {
           if (!opened) {
             opened = true;
-            events.send(JSON.stringify({ type: "conversation.item.create",
+            channel.send(JSON.stringify({ type: "conversation.item.create",
               item: { type: "message", role: "user", content: [{ type: "input_text", text: "(The call has started.)" }] } }));
           }
-          events.send(JSON.stringify({ type: "response.create" }));
+          channel.send(JSON.stringify({ type: "response.create" }));
         } catch { /* closed */ }
       };
-      events.addEventListener("open", () => { greet(); setTimeout(greet, 4000); });
-      events.addEventListener("message", (e: { data?: unknown }) => {
-        let m: { type?: string; item_id?: string; transcript?: string; delta?: string };
+      channel.addEventListener("open", () => { greet(); setTimeout(greet, 4000); });
+      channel.addEventListener("message", (e: { data?: unknown }) => {
+        let m: { type?: string; item_id?: string; transcript?: string; delta?: string; text?: string;
+          response?: { metadata?: Record<string, unknown> | null; output?: { content?: { text?: unknown }[] }[] } };
         try { m = JSON.parse(String(e.data)); } catch { return; }
+        if (ended) {
+          // Only the note is still awaited. The call's own answers are audio, so text
+          // output is the note (webrtcfilter=on passes response.output_text.*, not
+          // response.done with its metadata; that one counts too, should it come).
+          if (m.type === "response.output_text.done") noteDone(typeof m.text === "string" ? m.text : null);
+          else if (m.type === "response.done" && m.response?.metadata?.snuffel === "file_note") {
+            const text = (m.response.output || []).flatMap((o) => o.content || []).find((c) => typeof c.text === "string")?.text;
+            noteDone(typeof text === "string" ? text : null);
+          }
+          return;
+        }
         if (m.type === "input_audio_buffer.speech_started" || m.type === "output_audio_buffer.started" || m.type === "response.output_audio_transcript.delta") heard = true;
         const line = (role: VoiceLine["role"]) => {
           const id = m.item_id || "x" + order.length;
@@ -144,7 +219,8 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
         method: "POST",
         headers: { "Content-Type": "application/json", "X-Snuffel-Install": await installId(), "X-Snuffel-Beta": (await betaCode()) || "" },
         body: JSON.stringify({
-          sdp: offer.sdp, lang, emergencyLabel: labels.emergency, lostLabel: labels.lost, time: clock(),
+          sdp: offer.sdp, lang, emergencyLabel: labels.emergency, lostLabel: labels.lost,
+          today: today(), time: clock(),   // the phone's date and time: "yesterday" in the note, the out-of-hours vet in the evening
           dog: dog ? { name: dog.name || undefined, breed: dog.breed || undefined, ageMonths: ageMonths(dog.birth) ?? undefined,
             weightKg: dog.weight ?? undefined, sex: dog.sex ?? undefined, neutered: dog.neutered ?? undefined } : undefined
         }),
@@ -165,7 +241,7 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
       if (ended) return;
 
       const maxSeconds = Number(d.maxSeconds) > 0 ? Number(d.maxSeconds) : 600;
-      timer = setTimeout(() => end("time"), maxSeconds * 1000);
+      timer = setTimeout(() => end("time", true), maxSeconds * 1000);
       h.onConnected(maxSeconds);
       h.onState("listening");
     } catch {
@@ -173,5 +249,5 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
     }
   })();
 
-  return { hangUp: () => end("done") };
+  return { hangUp: () => end("done", true), close: () => end("done") };
 }

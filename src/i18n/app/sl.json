@@ -233,6 +233,8 @@
   "app_voiceAiThinking": "Razmišljam …",
   "app_voiceAiSpeaking": "Govorim …",
   "app_voiceAiHangUp": "Prekini",
+  "app_voiceNoteWait": "Preverjam, ali je kaj za zapis v mapo: {name} …",
+  "app_voiceNoteAsk": "Želite dodati v mapo: {name}?",
   "app_voiceAiEnded": "Pogovor je končan.",
   "app_voiceAiTime": "10 minut je minilo. Lahko začnete nov pogovor.",
   "app_voiceAiLimit": "Za danes je pogovorov dovolj. Poskusite znova jutri ali vpišite svoje vprašanje.",

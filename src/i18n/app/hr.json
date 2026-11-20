@@ -229,6 +229,8 @@
   "app_voiceAiThinking": "Razmišlja…",
   "app_voiceAiSpeaking": "Govori…",
   "app_voiceAiHangUp": "Prekini",
+  "app_voiceNoteWait": "Provjerava ima li nešto za dosje: {name}…",
+  "app_voiceNoteAsk": "Dodati u dosje: {name}?",
   "app_voiceAiEnded": "Razgovor je završen.",
   "app_voiceAiTime": "Isteklo je 10 minuta. Možeš započeti novi razgovor.",
   "app_voiceAiLimit": "Dosta razgovora za danas. Pokušaj ponovno sutra ili napiši svoje pitanje.",

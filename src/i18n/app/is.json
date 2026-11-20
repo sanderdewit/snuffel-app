@@ -225,6 +225,8 @@
   "app_voiceAiThinking": "Hugsar…",
   "app_voiceAiSpeaking": "Talar…",
   "app_voiceAiHangUp": "Leggja á",
+  "app_voiceNoteWait": "Athugar hvort eitthvað eigi heima í skrá {name}…",
+  "app_voiceNoteAsk": "Bæta við skrá {name}?",
   "app_voiceAiEnded": "Samtalinu er lokið.",
   "app_voiceAiTime": "10 mínúturnar eru liðnar. Þú getur hafið nýtt samtal.",
   "app_voiceAiLimit": "Nóg af samtölum í dag. Reyndu aftur á morgun eða skrifaðu spurninguna.",
