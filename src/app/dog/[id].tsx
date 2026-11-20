@@ -11,6 +11,8 @@ import {
   type Reminder, type ReminderKind
 } from "../../lib/dogs";
 import { Toggle } from "../../ui/Toggle";
+import { BreedPicker, NO_BREED } from "../../ui/BreedPicker";
+import type { BreedChoice } from "../../lib/breeds";
 import { C, S } from "../../ui/theme";
 import { DateField } from "../../ui/DateField";
 import { formatDate } from "../../lib/dates";
@@ -20,7 +22,7 @@ export default function DogScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [dogId, setDogId] = useState<number | null>(id && id !== "new" ? Number(id) : null);
   const [name, setName] = useState("");
-  const [breed, setBreed] = useState("");
+  const [breed, setBreed] = useState<BreedChoice>(NO_BREED);
   const [birth, setBirth] = useState("");
   const [weight, setWeight] = useState("");
   const [sex, setSex] = useState<"male" | "female" | null>(null);
@@ -33,7 +35,7 @@ export default function DogScreen() {
     if (!dogId) return;
     getDog(dogId).then((d) => {
       if (!d) return;
-      setName(d.name); setBreed(d.breed || ""); setBirth(d.birth || ""); setWeight(d.weight != null ? String(d.weight) : "");
+      setName(d.name); setBreed({ breedId: d.breedId, breed: d.breed, breedSize: d.breedSize, breedMix: d.breedMix }); setBirth(d.birth || ""); setWeight(d.weight != null ? String(d.weight) : "");
       setSex(d.sex); setNeutered(!!d.neutered); setPhoto(d.photo);
     });
     listReminders(dogId).then(setReminders);
@@ -43,7 +45,7 @@ export default function DogScreen() {
     if (!name.trim()) { Alert.alert(t("app_nameRequired")); return null; }
     if (birth && !validDate(birth)) { Alert.alert(t("app_invalidDate")); return null; }
     const kg = weight ? Number(weight.replace(",", ".")) : null;
-    const newId = await saveDog({ id: dogId ?? undefined, name, breed: breed.trim() || null, birth: birth || null,
+    const newId = await saveDog({ id: dogId ?? undefined, name, ...breed, birth: birth || null,
       weight: kg != null && kg > 0 && kg < 150 ? kg : null, sex, neutered: sex ? neutered : null, photo });
     setDogId(newId);
     return newId;
@@ -88,7 +90,7 @@ export default function DogScreen() {
       </Pressable>
 
       {field(t("app_dogName"), <TextInput style={S.input} value={name} onChangeText={setName} maxLength={40} />)}
-      {field(t("app_breed"), <TextInput style={S.input} value={breed} onChangeText={setBreed} maxLength={40} />)}
+      {field(t("app_breed"), <BreedPicker value={breed} onChange={setBreed} />)}
       {field(t("app_birthDate"), <DateField value={birth} onChange={setBirth} maximumDate={new Date()} accessibilityLabel={t("app_birthDate")} />)}
       {field(t("app_weight"), <TextInput style={S.input} value={weight} onChangeText={setWeight} keyboardType="decimal-pad" maxLength={5} />)}
       {field(t("app_sex"), (

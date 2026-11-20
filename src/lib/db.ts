@@ -24,7 +24,12 @@ const MIGRATIONS = [
   `ALTER TABLE chats ADD COLUMN parts TEXT;`,
   // v5: observed signs from the AI chat (category per entry), filed automatically per dog unless switched off
   `ALTER TABLE records ADD COLUMN category TEXT;
-   ALTER TABLE dogs ADD COLUMN auto_file INTEGER NOT NULL DEFAULT 1;`
+   ALTER TABLE dogs ADD COLUMN auto_file INTEGER NOT NULL DEFAULT 1;`,
+  // v6: the breed from the picker (an id of breeds.json), with size and "mainly" (ids, comma separated)
+  // for a mix; `breed` keeps the owner's own words for "other". Old free-text breeds get an id in lib/dogs.ts.
+  `ALTER TABLE dogs ADD COLUMN breed_id TEXT;
+   ALTER TABLE dogs ADD COLUMN breed_size TEXT;
+   ALTER TABLE dogs ADD COLUMN breed_mix TEXT;`
 ];
 
 let ready: Promise<void> | null = null;

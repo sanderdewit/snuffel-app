@@ -15,6 +15,7 @@ import { betaCode } from "./beta";
 import { clock } from "./dates";
 import { ageMonths, type Dog } from "./dogs";
 import { installId } from "./install";
+import { breedForServer, breeds } from "./breeds";
 
 export type VoiceState = "connecting" | "listening" | "thinking" | "speaking" | "ended";
 export type VoiceEnd = "done" | "time" | "beta" | "rate_limited" | "unavailable" | "mic" | "failed";
@@ -145,7 +146,7 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
         headers: { "Content-Type": "application/json", "X-Snuffel-Install": await installId(), "X-Snuffel-Beta": (await betaCode()) || "" },
         body: JSON.stringify({
           sdp: offer.sdp, lang, emergencyLabel: labels.emergency, lostLabel: labels.lost, time: clock(),
-          dog: dog ? { name: dog.name || undefined, breed: dog.breed || undefined, ageMonths: ageMonths(dog.birth) ?? undefined,
+          dog: dog ? { name: dog.name || undefined, ...breedForServer(breeds(), dog), ageMonths: ageMonths(dog.birth) ?? undefined,
             weightKg: dog.weight ?? undefined, sex: dog.sex ?? undefined, neutered: dog.neutered ?? undefined } : undefined
         }),
         signal: request.signal

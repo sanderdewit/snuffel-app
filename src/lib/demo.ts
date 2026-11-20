@@ -58,8 +58,8 @@ async function demoPhoto(): Promise<string | null> {
 
 export async function seedDemo(lang: string, emergencyLabel: string): Promise<void> {
   if (!isDemo() || (await kvGet("demoSeeded")) === lang) return;
-  const breed = lang === "nl" ? "Dwergpoedel" : "Miniature poodle";
-  const dogId = await saveDog({ name: "Bobbie", breed, birth: "2019-05-12", weight: 6.5, sex: "female", neutered: true, photo: await demoPhoto() });
+  const breed = { breedId: "fci-172-miniature", breed: null, breedSize: null, breedMix: [] };   // miniature poodle
+  const dogId = await saveDog({ name: "Bobbie", ...breed, birth: "2019-05-12", weight: 6.5, sex: "female", neutered: true, photo: await demoPhoto() });
   await setReminder(dogId, "vaccination", addMonths(today(), 1));
   await setReminder(dogId, "deworming", addMonths(today(), 2));
   await setReminder(dogId, "flea_tick", isoDate(new Date(Date.now() + 9 * 24 * 3600 * 1000)));
@@ -77,7 +77,7 @@ export async function seedDemo(lang: string, emergencyLabel: string): Promise<vo
   if (vets[0]) await setMyVet(vets[0], true);
   if (!(await loadChat(dogId)).length) {
     const q = { role: "user" as const, content: QUESTION[lang] || QUESTION.en };
-    const r = await ask([q], lang, { emergency: emergencyLabel, lost: "" }, { id: dogId, name: "Bobbie", breed, birth: "2019-05-12", weight: 6.5, sex: "female", neutered: true, photo: null });
+    const r = await ask([q], lang, { emergency: emergencyLabel, lost: "" }, { id: dogId, name: "Bobbie", ...breed, birth: "2019-05-12", weight: 6.5, sex: "female", neutered: true, photo: null });
     if (!("error" in r)) {
       await addChat(dogId, q);
       await addChat(dogId, { role: "assistant", content: r.reply, urgency: r.urgency, topic: r.topic, sig: r.sig, parts: r.parts });

@@ -1,27 +1,33 @@
 #!/usr/bin/env node
 // Copies the shared core from the public snuffel-data repository:
 //   lib/{chains,classify,hours}.js  -> src/core/
+//   breeds/breeds.json (breed list)  -> src/core/breeds.json
 //   i18n/*.json (29 language packs) -> src/i18n/packs/
 // and regenerates src/i18n/packs.ts (static imports, as the bundler needs them).
 //
 //   node tools/sync-core.mjs            update the copies from snuffel-data@main
 //   node tools/sync-core.mjs --check    CI: fail when a copy differs
 //   SNUFFEL_DATA_REF=<tag|sha>          pin another version
+//   SNUFFEL_DATA_DIR=<path>             a local snuffel-data checkout instead (to try a change before it is pushed there)
 import fs from "node:fs";
 import path from "node:path";
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Z]:)/, "$1")), "..");
 const REF = process.env.SNUFFEL_DATA_REF || "main";
+const DIR = process.env.SNUFFEL_DATA_DIR ? path.resolve(process.env.SNUFFEL_DATA_DIR) : null;
 const BASE = `https://raw.githubusercontent.com/sanderdewit/snuffel-data/${REF}/`;
+const SOURCE = DIR || "snuffel-data@" + REF;
 const CHECK = process.argv.includes("--check");
 
 async function get(p) {
+  if (DIR) return fs.readFileSync(path.join(DIR, p), "utf8").replace(/\r\n/g, "\n");   // git stores LF; a Windows checkout may not
   const r = await fetch(BASE + p);
   if (!r.ok) throw new Error(`${r.status} ${BASE + p}`);
   return r.text();
 }
 
 const files = ["chains.js", "classify.js", "hours.js"].map((f) => [`lib/${f}`, `src/core/${f}`]);
+files.push(["breeds/breeds.json", "src/core/breeds.json"]);
 const registry = JSON.parse(await get("i18n/languages.json"));
 const codes = registry.languages.map((l) => l.code);
 files.push(["i18n/languages.json", "src/i18n/packs/languages.json"]);
@@ -45,7 +51,7 @@ for (const [from, to] of files) {
   const dest = path.join(ROOT, to);
   const current = fs.existsSync(dest) ? fs.readFileSync(dest, "utf8") : null;
   if (current === body) continue;
-  if (CHECK) { console.error(`::error file=${to}::differs from snuffel-data/${from} (run: node tools/sync-core.mjs)`); drift++; continue; }
+  if (CHECK) { console.error(`::error file=${to}::differs from ${SOURCE}/${from} (run: node tools/sync-core.mjs)`); drift++; continue; }
   fs.mkdirSync(path.dirname(dest), { recursive: true });
   fs.writeFileSync(dest, body);
   console.log("updated " + to);
@@ -56,4 +62,4 @@ if ((fs.existsSync(packsTs) ? fs.readFileSync(packsTs, "utf8") : "") !== generat
   else { fs.writeFileSync(packsTs, generated); console.log("updated src/i18n/packs.ts"); }
 }
 if (CHECK && drift) process.exit(1);
-console.log(CHECK ? "shared core matches snuffel-data@" + REF : "shared core synced from snuffel-data@" + REF);
+console.log(CHECK ? "shared core matches " + SOURCE : "shared core synced from " + SOURCE);

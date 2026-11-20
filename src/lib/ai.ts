@@ -8,6 +8,7 @@ import { ageMonths, today, type Dog } from "./dogs";
 import { aiSummary, type Observation } from "./dogfile";
 import { signCategory } from "./dogsummary";
 import { installId } from "./install";
+import { breedForServer, breeds } from "./breeds";
 
 export type Urgency = "emergency" | "vet_today" | "vet_soon" | "monitor" | "unclear";
 export type Topic = "health" | "behaviour" | "lost" | "other";   // lost: a lost or found dog
@@ -39,7 +40,7 @@ export async function ask(all: ChatMessage[], lang: string, labels: { emergency:
   if (lastAnswer?.parts?.intake && lastAnswer.parts.intake_sig) { body.intake = lastAnswer.parts.intake; body.intake_sig = lastAnswer.parts.intake_sig; }
   if (dog) {
     body.dog = {
-      name: dog.name || undefined, breed: dog.breed || undefined, ageMonths: ageMonths(dog.birth) ?? undefined, weightKg: dog.weight ?? undefined,
+      name: dog.name || undefined, ...breedForServer(breeds(), dog), ageMonths: ageMonths(dog.birth) ?? undefined, weightKg: dog.weight ?? undefined,
       sex: dog.sex ?? undefined, neutered: dog.neutered ?? undefined,
       history: (await aiSummary(dog.id).catch(() => null)) ?? undefined   // only when the owner allows it for this dog
     };

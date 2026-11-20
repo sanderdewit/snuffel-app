@@ -19,6 +19,8 @@ import { C, S } from "../ui/theme";
 import { Toggle } from "../ui/Toggle";
 import { sendOnOpen } from "../lib/handoff";
 import { DateField } from "../ui/DateField";
+import { BreedPicker, NO_BREED } from "../ui/BreedPicker";
+import type { BreedChoice } from "../lib/breeds";
 import icon from "../../assets/icon.png";
 
 const STEPS = 6;   // welcome, area, dog, vet, AI help, done
@@ -37,7 +39,7 @@ export default function Welcome() {
 
   // dog
   const [name, setName] = useState("");
-  const [breed, setBreed] = useState("");
+  const [breed, setBreed] = useState<BreedChoice>(NO_BREED);
   const [birth, setBirth] = useState("");
   const [weight, setWeight] = useState("");
   const [photo, setPhoto] = useState<string | null>(null);
@@ -100,7 +102,7 @@ export default function Welcome() {
     if (birth && !validDate(birth)) { setDogMsg(t("app_invalidDate")); return false; }
     setDogMsg(null);
     const kg = weight ? Number(weight.replace(",", ".")) : null;
-    setDogId(await saveDog({ id: dogId ?? undefined, name: name.trim(), breed: breed.trim() || null, birth: birth || null,
+    setDogId(await saveDog({ id: dogId ?? undefined, name: name.trim(), ...breed, birth: birth || null,
       weight: kg != null && kg > 0 && kg < 150 ? kg : null, sex: null, neutered: null, photo }));
     return true;
   };
@@ -112,7 +114,7 @@ export default function Welcome() {
   const addAnother = async () => {
     if (!(await persistDog())) return;
     setAdded((a) => [...a, name.trim()]);
-    setDogId(null); setName(""); setBreed(""); setBirth(""); setWeight(""); setPhoto(null);
+    setDogId(null); setName(""); setBreed(NO_BREED); setBirth(""); setWeight(""); setPhoto(null);
   };
 
   // Your own vet can be part of a chain: all vets nearest first (chains labelled),
@@ -204,7 +206,7 @@ export default function Welcome() {
         <Text style={S.muted}>{t("app_dogName")}</Text>
         <TextInput style={S.input} value={name} onChangeText={setName} maxLength={40} />
         <Text style={S.muted}>{t("app_breed")}</Text>
-        <TextInput style={S.input} value={breed} onChangeText={setBreed} maxLength={40} />
+        <BreedPicker value={breed} onChange={setBreed} />
         <View style={[S.row, { gap: 8 }]}>
           <View style={{ flex: 1, gap: 4 }}>
             <Text style={S.muted}>{t("app_birthDate")}</Text>
