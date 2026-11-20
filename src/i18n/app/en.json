@@ -200,6 +200,8 @@
   "app_aiUses": "Using {name}'s profile",
   "app_otherDog": "Is this about another dog?",
   "app_changeDog": "Change dog",
+  "app_noDogInfo": "Without a dog profile, advice is general. Age, breed and weight make a difference, for example to which amounts are toxic and which risks apply. With a profile, the advice fits your dog better.",
+  "app_chooseDog": "Choose a dog",
   "app_callMyVet": "Call {name}",
   "app_newChatConfirm": "Delete this conversation? This can't be undone.",
   "app_retry": "Try again",

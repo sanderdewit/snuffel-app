@@ -204,6 +204,8 @@
   "app_aiUses": "A usar o perfil de {name}",
   "app_otherDog": "Trata-se de outro cão?",
   "app_changeDog": "Mudar de cão",
+  "app_noDogInfo": "Sem perfil do cão, os conselhos são gerais. A idade, a raça e o peso fazem diferença, por exemplo nas quantidades que são tóxicas e nos riscos a ter em conta. Com um perfil, os conselhos adequam-se melhor ao seu cão.",
+  "app_chooseDog": "Escolher cão",
   "app_callMyVet": "Ligar para {name}",
   "app_newChatConfirm": "Eliminar esta conversa? Esta ação não pode ser anulada.",
   "app_retry": "Tentar novamente",

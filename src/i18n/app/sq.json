@@ -200,6 +200,8 @@
   "app_aiUses": "Duke përdorur profilin e {name}",
   "app_otherDog": "A bëhet fjalë për një qen tjetër?",
   "app_changeDog": "Zgjidh një qen tjetër",
+  "app_noDogInfo": "Pa profil të qenit, këshillat janë të përgjithshme. Mosha, raca dhe pesha kanë rëndësi, për shembull për sasitë që janë toksike dhe rreziqet që ekzistojnë. Me një profil, këshillat i përshtaten më mirë qenit tënd.",
+  "app_chooseDog": "Zgjidh një qen",
   "app_callMyVet": "Telefono {name}",
   "app_newChatConfirm": "Ta fshish këtë bisedë? Ky veprim nuk mund të zhbëhet.",
   "app_retry": "Provo përsëri",

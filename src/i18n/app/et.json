@@ -200,6 +200,8 @@
   "app_aiUses": "Kasutab koera {name} profiili",
   "app_otherDog": "Kas see käib teise koera kohta?",
   "app_changeDog": "Vaheta koera",
+  "app_noDogInfo": "Ilma koera profiilita on nõuanded üldised. Vanus, tõug ja kaal mõjutavad näiteks seda, millised kogused on mürgised ja millised riskid kehtivad. Profiiliga sobivad nõuanded sinu koerale paremini.",
+  "app_chooseDog": "Vali koer",
   "app_callMyVet": "Helista: {name}",
   "app_newChatConfirm": "Kas kustutada see vestlus? Seda ei saa tagasi võtta.",
   "app_retry": "Proovi uuesti",

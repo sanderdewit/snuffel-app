@@ -208,6 +208,8 @@
   "app_aiUses": "Naudojamas {name} profilis",
   "app_otherDog": "Ar tai apie kitą šunį?",
   "app_changeDog": "Keisti šunį",
+  "app_noDogInfo": "Be šuns profilio patarimai yra bendri. Amžius, veislė ir svoris turi įtakos, pavyzdžiui, kokie kiekiai yra nuodingi ir kokia rizika kyla. Su profiliu patarimai geriau tinka jūsų šuniui.",
+  "app_chooseDog": "Pasirinkti šunį",
   "app_callMyVet": "Skambinti: {name}",
   "app_newChatConfirm": "Ištrinti šį pokalbį? To nebus galima atšaukti.",
   "app_retry": "Bandyti dar kartą",

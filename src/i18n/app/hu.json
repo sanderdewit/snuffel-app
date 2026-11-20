@@ -200,6 +200,8 @@
   "app_aiUses": "{name} profilja alapján",
   "app_otherDog": "Egy másik kutyáról van szó?",
   "app_changeDog": "Másik kutya választása",
+  "app_noDogInfo": "Kutyaprofil nélkül a tanácsok általánosak. A kor, a fajta és a súly számít, például abban, hogy milyen mennyiség mérgező, és milyen kockázatok vannak. Profillal a tanácsok jobban illenek a kutyádhoz.",
+  "app_chooseDog": "Kutya választása",
   "app_callMyVet": "{name} hívása",
   "app_newChatConfirm": "Törlöd ezt a beszélgetést? Ez nem vonható vissza.",
   "app_retry": "Újra",

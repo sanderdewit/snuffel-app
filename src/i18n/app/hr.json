@@ -204,6 +204,8 @@
   "app_aiUses": "Koristi se profil psa {name}",
   "app_otherDog": "Je li riječ o drugom psu?",
   "app_changeDog": "Promijeni psa",
+  "app_noDogInfo": "Bez profila psa savjeti su općeniti. Dob, pasmina i težina utječu, na primjer, na to koje su količine otrovne i koji rizici postoje. S profilom savjeti bolje odgovaraju tvom psu.",
+  "app_chooseDog": "Odaberi psa",
   "app_callMyVet": "Nazovi {name}",
   "app_newChatConfirm": "Izbrisati ovaj razgovor? To se ne može poništiti.",
   "app_retry": "Pokušaj ponovno",

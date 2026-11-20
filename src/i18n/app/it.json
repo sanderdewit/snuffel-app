@@ -204,6 +204,8 @@
   "app_aiUses": "Con il profilo di {name}",
   "app_otherDog": "Si tratta di un altro cane?",
   "app_changeDog": "Cambia cane",
+  "app_noDogInfo": "Senza un profilo del cane, i consigli sono generali. Età, razza e peso fanno la differenza, per esempio su quali quantità sono tossiche e quali rischi ci sono. Con un profilo, i consigli si adattano meglio al tuo cane.",
+  "app_chooseDog": "Scegli un cane",
   "app_callMyVet": "Chiama {name}",
   "app_newChatConfirm": "Eliminare questa conversazione? L'azione non può essere annullata.",
   "app_retry": "Riprova",

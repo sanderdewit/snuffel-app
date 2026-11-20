@@ -200,6 +200,8 @@
   "app_aiUses": "Använder {name}s profil",
   "app_otherDog": "Gäller det en annan hund?",
   "app_changeDog": "Byt hund",
+  "app_noDogInfo": "Utan hundprofil blir råden allmänna. Ålder, ras och vikt spelar roll, till exempel för vilka mängder som är giftiga och vilka risker som gäller. Med en profil passar råden bättre för din hund.",
+  "app_chooseDog": "Välj hund",
   "app_callMyVet": "Ring {name}",
   "app_newChatConfirm": "Radera den här konversationen? Det går inte att ångra.",
   "app_retry": "Försök igen",

@@ -20,6 +20,8 @@ test("another dog: the other dogs and 'no specific dog', never the chosen one", 
   assert.deepStrictEqual(otherDogOptions(dogs, 5, "-").map((o) => o.name), ["Zeus", "Briciola", "-"]);
   // One dog: only 'no specific dog' (the app adds "Add a dog").
   assert.deepStrictEqual(otherDogOptions([dogs[0]], 1, "-"), [{ id: null, name: "-" }]);
+  // From the 'no specific dog' conversation ("Choose a dog"): just the dogs.
+  assert.deepStrictEqual(otherDogOptions(dogs, null, "-").map((o) => o.id), [1, 2, 5]);
 });
 test("the question carried over is the owner's latest one", () => {
   assert.strictEqual(lastQuestion([

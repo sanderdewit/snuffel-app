@@ -204,6 +204,8 @@
   "app_aiUses": "Folosind profilul lui {name}",
   "app_otherDog": "Este vorba despre alt câine?",
   "app_changeDog": "Schimbă câinele",
+  "app_noDogInfo": "Fără un profil al câinelui, sfaturile sunt generale. Vârsta, rasa și greutatea contează, de exemplu pentru ce cantități sunt toxice și ce riscuri există. Cu un profil, sfaturile se potrivesc mai bine câinelui tău.",
+  "app_chooseDog": "Alege un câine",
   "app_callMyVet": "Sună la {name}",
   "app_newChatConfirm": "Ștergi această conversație? Acțiunea nu poate fi anulată.",
   "app_retry": "Încearcă din nou",

@@ -200,6 +200,8 @@
   "app_aiUses": "Notar prófíl {name}",
   "app_otherDog": "Snýst þetta um annan hund?",
   "app_changeDog": "Skipta um hund",
+  "app_noDogInfo": "Án prófíls fyrir hundinn eru ráðin almenn. Aldur, tegund og þyngd skipta máli, til dæmis um hvaða magn er eitrað og hvaða áhætta á við. Með prófíl passa ráðin betur fyrir hundinn þinn.",
+  "app_chooseDog": "Velja hund",
   "app_callMyVet": "Hringja í {name}",
   "app_newChatConfirm": "Eyða þessu samtali? Ekki er hægt að afturkalla það.",
   "app_retry": "Reyna aftur",

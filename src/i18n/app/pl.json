@@ -208,6 +208,8 @@
   "app_aiUses": "Na podstawie profilu: {name}",
   "app_otherDog": "Czy chodzi o innego psa?",
   "app_changeDog": "Zmień psa",
+  "app_noDogInfo": "Bez profilu psa porady są ogólne. Wiek, rasa i waga mają znaczenie, na przykład dla tego, jakie ilości są trujące i jakie ryzyko występuje. Z profilem porady lepiej pasują do twojego psa.",
+  "app_chooseDog": "Wybierz psa",
   "app_callMyVet": "Zadzwoń: {name}",
   "app_newChatConfirm": "Usunąć tę rozmowę? Tej operacji nie można cofnąć.",
   "app_retry": "Spróbuj ponownie",

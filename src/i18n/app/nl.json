@@ -200,6 +200,8 @@
   "app_aiUses": "Met het profiel van {name}",
   "app_otherDog": "Gaat dit over een andere hond?",
   "app_changeDog": "Andere hond kiezen",
+  "app_noDogInfo": "Zonder hondenprofiel is het advies algemeen. Leeftijd, ras en gewicht maken verschil, bijvoorbeeld voor welke hoeveelheden giftig zijn en welke risico's spelen. Met een profiel past het advies beter bij je hond.",
+  "app_chooseDog": "Hond kiezen",
   "app_callMyVet": "Bel {name}",
   "app_newChatConfirm": "Dit gesprek verwijderen? Dat kan niet ongedaan worden.",
   "app_retry": "Opnieuw proberen",

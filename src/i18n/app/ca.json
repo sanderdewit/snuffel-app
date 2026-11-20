@@ -204,6 +204,8 @@
   "app_aiUses": "Amb el perfil de {name}",
   "app_otherDog": "Es tracta d'un altre gos?",
   "app_changeDog": "Canvia de gos",
+  "app_noDogInfo": "Sense perfil del gos, els consells són generals. L'edat, la raça i el pes hi influeixen, per exemple en quines quantitats són tòxiques i quins riscos hi ha. Amb un perfil, els consells s'ajusten millor al teu gos.",
+  "app_chooseDog": "Tria un gos",
   "app_callMyVet": "Truca a {name}",
   "app_newChatConfirm": "Vols suprimir aquesta conversa? No es pot desfer.",
   "app_retry": "Torna-ho a provar",

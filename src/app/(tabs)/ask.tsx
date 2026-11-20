@@ -73,6 +73,12 @@ export default function Ask() {
   const [shareFile, setShareFile] = useState(true);
   // `${dogId}:${index}` of an answer about another dog than the chosen one: "Is this about another dog?"
   const [otherDogAt, setOtherDogAt] = useState<string | null>(null);
+  // The note on general advice in the "no specific dog" conversation: closed (kept on
+  // the phone until that conversation is cleared), null while loading; dogs loaded once.
+  const [noDogInfoClosed, setNoDogInfoClosed] = useState<boolean | null>(null);
+  const [choosingDog, setChoosingDog] = useState(false);
+  const [dogsLoaded, setDogsLoaded] = useState(false);
+  useEffect(() => { kvGet("noDogInfoClosed").then((v) => setNoDogInfoClosed(v === "1")).catch(() => setNoDogInfoClosed(false)); }, []);
   const list = useRef<FlatList<ChatMessage>>(null);
   const currentDog = useRef<number | null>(null);    // for answers that arrive after a dog switch
   const scrollTo = useRef<number | null>(null);      // index of a new answer: show its start
@@ -84,6 +90,7 @@ export default function Ask() {
     myVet().then(setVet).catch(() => undefined);
     Promise.all([listDogs(), kvGet("askDog")]).then(([d, last]) => {
       setDogs(d);
+      setDogsLoaded(true);
       const fromLink = params.dog && params.dog !== appliedDogParam.current ? Number(params.dog) : null;
       appliedDogParam.current = params.dog;
       // A dog asked for by a link, else the current one, else the last one used, else the only one.
@@ -101,6 +108,7 @@ export default function Ask() {
     currentDog.current = dogId;
     setLoadedFor(null);
     setOtherDogAt(null);
+    setChoosingDog(false);
     loadChat(dogId).catch(() => [] as ChatMessage[]).then((m) => { setMessages(m); setLoadedFor({ dog: dogId }); });
     kvSet("askDog", dogId == null ? null : String(dogId)).catch(() => undefined);
     if (dogId != null) shareFileWithAi(dogId).then(setShareFile).catch(() => undefined);
@@ -274,9 +282,14 @@ export default function Ask() {
     if (q && !text.trim()) setText(q);
   };
 
+  const closeNoDogInfo = () => { setNoDogInfoClosed(true); kvSet("noDogInfoClosed", "1").catch(() => undefined); };
   const newChat = () => Alert.alert(t("app_newChatConfirm"), undefined, [
     { text: t("app_cancel"), style: "cancel" },
-    { text: t("app_newChat"), style: "destructive", onPress: async () => { await clearChat(dogId); setMessages([]); setObsState(new Map()); } }
+    { text: t("app_newChat"), style: "destructive", onPress: async () => {
+      await clearChat(dogId); setMessages([]); setObsState(new Map());
+      // A cleared "no specific dog" conversation starts with the note on general advice again.
+      if (dogId == null) { setNoDogInfoClosed(false); kvSet("noDogInfoClosed", null).catch(() => undefined); }
+    } }
   ]);
 
   // What to do next: call your own vet first, then find one / a trainer.
@@ -309,12 +322,32 @@ export default function Ask() {
         <Text style={[S.body, { flex: 1, color: "#7f1d1d" }]}>🚨 {t("app_aiEmergencyLine")}</Text>
         <Text style={{ color: C.danger, fontWeight: "700" }}>{t("emergencyBtn")} ›</Text>
       </Pressable>
-      {dogs.length === 0 && (
-        <Pressable onPress={() => router.push({ pathname: "/dog/[id]", params: { id: "new" } })} accessibilityRole="button" style={[S.card, S.row, { gap: 8 }]}>
-          <Text style={{ fontSize: 22 }}>🐶</Text>
-          <Text style={[S.body, { flex: 1 }]}>{t("app_aiAddDog")}</Text>
-          <Text style={{ color: C.muted, fontSize: 20 }}>›</Text>
-        </Pressable>
+      {/* No dog chosen (or none added yet): the advice is general. After the emergency line,
+          never in the way of a question. */}
+      {dogsLoaded && dogId == null && noDogInfoClosed === false && (
+        <View style={[S.card, { gap: 8 }]}>
+          <View style={[S.row, { gap: 8, alignItems: "flex-start" }]}>
+            <Text style={{ fontSize: 20 }} importantForAccessibility="no" accessibilityElementsHidden>🐶</Text>
+            <Text style={[S.body, { flex: 1 }]}>{t("app_noDogInfo")}</Text>
+            <Pressable onPress={closeNoDogInfo} hitSlop={12} accessibilityRole="button" accessibilityLabel={t("close")}>
+              <Text style={{ color: C.muted, fontSize: 16 }}>✕</Text>
+            </Pressable>
+          </View>
+          {dogs.length > 0 ? (
+            <>
+              <Pressable onPress={() => setChoosingDog((c) => !c)} accessibilityRole="button" accessibilityState={{ expanded: choosingDog }}
+                style={[S.btnGhost, { alignSelf: "flex-start", minHeight: 40 }]}>
+                <Text style={S.btnGhostText}>🐕 {t("app_chooseDog")} {choosingDog ? "▴" : "▾"}</Text>
+              </Pressable>
+              {choosingDog && <DogChips options={otherDogOptions(dogs, null, t("app_noDog"))} onChange={setDogId} />}
+            </>
+          ) : (
+            <Pressable onPress={() => router.push({ pathname: "/dog/[id]", params: { id: "new" } })} accessibilityRole="button"
+              style={[S.btnGhost, { alignSelf: "flex-start", minHeight: 40 }]}>
+              <Text style={S.btnGhostText}>＋ {t("app_addDog")}</Text>
+            </Pressable>
+          )}
+        </View>
       )}
       {messages.length === 0 && (
         <View style={{ gap: 8 }}>

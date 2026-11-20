@@ -200,6 +200,8 @@
   "app_aiUses": "Käytössä koiran {name} profiili",
   "app_otherDog": "Koskeeko tämä toista koiraa?",
   "app_changeDog": "Vaihda koiraa",
+  "app_noDogInfo": "Ilman koiran profiilia neuvot ovat yleisiä. Ikä, rotu ja paino vaikuttavat esimerkiksi siihen, mitkä määrät ovat myrkyllisiä ja mitkä riskit koskevat koiraa. Profiilin avulla neuvot sopivat paremmin koirallesi.",
+  "app_chooseDog": "Valitse koira",
   "app_callMyVet": "Soita: {name}",
   "app_newChatConfirm": "Poistetaanko tämä keskustelu? Toimintoa ei voi perua.",
   "app_retry": "Yritä uudelleen",

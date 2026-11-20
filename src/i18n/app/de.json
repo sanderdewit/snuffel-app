@@ -200,6 +200,8 @@
   "app_aiUses": "Mit dem Profil von {name}",
   "app_otherDog": "Geht es um einen anderen Hund?",
   "app_changeDog": "Hund wechseln",
+  "app_noDogInfo": "Ohne Hundeprofil ist der Rat allgemein. Alter, Rasse und Gewicht machen einen Unterschied, zum Beispiel dabei, welche Mengen giftig sind und welche Risiken bestehen. Mit einem Profil passt der Rat besser zu deinem Hund.",
+  "app_chooseDog": "Hund auswählen",
   "app_callMyVet": "{name} anrufen",
   "app_newChatConfirm": "Diese Unterhaltung löschen? Das kann nicht rückgängig gemacht werden.",
   "app_retry": "Erneut versuchen",

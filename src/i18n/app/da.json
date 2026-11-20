@@ -200,6 +200,8 @@
   "app_aiUses": "Bruger {name}s profil",
   "app_otherDog": "Handler det om en anden hund?",
   "app_changeDog": "Skift hund",
+  "app_noDogInfo": "Uden en hundeprofil er rådene generelle. Alder, race og vægt gør en forskel, for eksempel for hvilke mængder der er giftige, og hvilke risici der gælder. Med en profil passer rådene bedre til din hund.",
+  "app_chooseDog": "Vælg hund",
   "app_callMyVet": "Ring til {name}",
   "app_newChatConfirm": "Slet denne samtale? Det kan ikke fortrydes.",
   "app_retry": "Prøv igen",

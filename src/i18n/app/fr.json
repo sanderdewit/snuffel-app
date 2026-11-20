@@ -204,6 +204,8 @@
   "app_aiUses": "Avec le profil de {name}",
   "app_otherDog": "S'agit-il d'un autre chien ?",
   "app_changeDog": "Changer de chien",
+  "app_noDogInfo": "Sans profil de chien, les conseils restent généraux. L'âge, la race et le poids changent les choses, par exemple les quantités toxiques et les risques à surveiller. Avec un profil, les conseils sont mieux adaptés à votre chien.",
+  "app_chooseDog": "Choisir un chien",
   "app_callMyVet": "Appeler {name}",
   "app_newChatConfirm": "Supprimer cette conversation ? Cette action est irréversible.",
   "app_retry": "Réessayer",

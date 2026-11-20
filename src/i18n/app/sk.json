@@ -208,6 +208,8 @@
   "app_aiUses": "Používa sa profil psa {name}",
   "app_otherDog": "Ide o iného psa?",
   "app_changeDog": "Zmeniť psa",
+  "app_noDogInfo": "Bez profilu psa sú rady všeobecné. Vek, plemeno a hmotnosť zohrávajú úlohu, napríklad v tom, aké množstvo je jedovaté a aké riziká hrozia. S profilom rady lepšie sedia vášmu psovi.",
+  "app_chooseDog": "Vybrať psa",
   "app_callMyVet": "Zavolať {name}",
   "app_newChatConfirm": "Odstrániť túto konverzáciu? Túto akciu nie je možné vrátiť.",
   "app_retry": "Skúsiť znova",

@@ -204,6 +204,8 @@
   "app_aiUses": "Izmanto {name} profilu",
   "app_otherDog": "Vai tas ir par citu suni?",
   "app_changeDog": "Mainīt suni",
+  "app_noDogInfo": "Bez suņa profila padomi ir vispārīgi. Vecums, šķirne un svars ietekmē, piemēram, to, kādi daudzumi ir indīgi un kādi riski pastāv. Ar profilu padomi labāk atbilst tavam sunim.",
+  "app_chooseDog": "Izvēlēties suni",
   "app_callMyVet": "Zvanīt: {name}",
   "app_newChatConfirm": "Dzēst šo sarunu? To nevarēs atsaukt.",
   "app_retry": "Mēģināt vēlreiz",
