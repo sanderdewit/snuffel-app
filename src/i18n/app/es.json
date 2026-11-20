@@ -202,6 +202,8 @@
   "app_aiAddDog": "Añade a tu perro para recibir consejos a medida",
   "app_aiTryAsking": "Puedes preguntar, por ejemplo:",
   "app_aiUses": "Con el perfil de {name}",
+  "app_otherDog": "¿Se trata de otro perro?",
+  "app_changeDog": "Cambiar de perro",
   "app_callMyVet": "Llamar a {name}",
   "app_newChatConfirm": "¿Eliminar esta conversación? No se puede deshacer.",
   "app_retry": "Reintentar",

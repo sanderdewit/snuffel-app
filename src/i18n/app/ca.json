@@ -202,6 +202,8 @@
   "app_aiAddDog": "Afegeix el teu gos per rebre consells a mida",
   "app_aiTryAsking": "Pots preguntar, per exemple:",
   "app_aiUses": "Amb el perfil de {name}",
+  "app_otherDog": "Es tracta d'un altre gos?",
+  "app_changeDog": "Canvia de gos",
   "app_callMyVet": "Truca a {name}",
   "app_newChatConfirm": "Vols suprimir aquesta conversa? No es pot desfer.",
   "app_retry": "Torna-ho a provar",

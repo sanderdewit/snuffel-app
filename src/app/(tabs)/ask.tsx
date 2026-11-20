@@ -2,7 +2,7 @@
 // the owner allows it, a summary of its file) goes along so the advice fits
 // that dog. Each dog has its own conversation, kept on the phone.
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ActivityIndicator, Alert, FlatList, KeyboardAvoidingView, Linking, Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { AccessibilityInfo, ActivityIndicator, Alert, FlatList, KeyboardAvoidingView, Linking, Platform, Pressable, Text, TextInput, View } from "react-native";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useI18n } from "../../i18n";
 import { addChat, ask, clearChat, loadChat, type AnswerParts, type ChatMessage } from "../../lib/ai";
@@ -12,12 +12,14 @@ import { kvGet, kvSet } from "../../lib/db";
 import { ageMonths, listDogs, today, type Dog } from "../../lib/dogs";
 import { addRecord, autoFile, deleteRecordById, fileObservation, setShareFileWithAi, shareFileWithAi, type Observation } from "../../lib/dogfile";
 import { formatDate } from "../../lib/dates";
+import { lastQuestion, otherDogOptions } from "../../lib/dogchoice";
 import { myVet, type SavedPlace } from "../../lib/saved";
 import { retryOnServer, speak, startListening, stopListening, stopSpeaking } from "../../lib/voice";
 import { isStopPhrase } from "../../lib/talk";
 import { takeQuestion } from "../../lib/handoff";
 import { useSpeechRecognitionEvent } from "expo-speech-recognition";
 import { callUrl } from "../../ui/PlaceCard";
+import { DogChips, DogSwitcher } from "../../ui/DogSwitcher";
 import { Toggle } from "../../ui/Toggle";
 import { C, S } from "../../ui/theme";
 
@@ -69,6 +71,8 @@ export default function Ask() {
   const [busy, setBusy] = useState(false);
   const [vet, setVet] = useState<SavedPlace | null>(null);
   const [shareFile, setShareFile] = useState(true);
+  // `${dogId}:${index}` of an answer about another dog than the chosen one: "Is this about another dog?"
+  const [otherDogAt, setOtherDogAt] = useState<string | null>(null);
   const list = useRef<FlatList<ChatMessage>>(null);
   const currentDog = useRef<number | null>(null);    // for answers that arrive after a dog switch
   const scrollTo = useRef<number | null>(null);      // index of a new answer: show its start
@@ -96,6 +100,7 @@ export default function Ask() {
   useEffect(() => {
     currentDog.current = dogId;
     setLoadedFor(null);
+    setOtherDogAt(null);
     loadChat(dogId).catch(() => [] as ChatMessage[]).then((m) => { setMessages(m); setLoadedFor({ dog: dogId }); });
     kvSet("askDog", dogId == null ? null : String(dogId)).catch(() => undefined);
     if (dogId != null) shareFileWithAi(dogId).then(setShareFile).catch(() => undefined);
@@ -116,9 +121,11 @@ export default function Ask() {
       : { role: "assistant", content: r.reply, urgency: r.urgency, topic: r.topic, sig: r.sig, parts: r.parts };
     if (!reply.local) await addChat(askedFor, reply);
     // A sign the owner reported goes into the dog's file (by itself unless switched
-    // off for this dog, or undone for this kind of sign in this conversation).
+    // off for this dog, or undone for this kind of sign in this conversation);
+    // never when the answer is about another dog than the chosen one.
     const obs = reply.parts?.observation;
-    if (obs && askedFor != null) {
+    const otherDog = !!reply.parts?.other_dog && askedFor != null;
+    if (obs && askedFor != null && !otherDog) {
       const key = `${askedFor}:${history.length}`;
       const auto = !undoneCats.current.has(`${askedFor}:${obs.category}`) && (await autoFile(askedFor).catch(() => false));
       const id = auto ? await fileObservation(askedFor, obs).catch(() => null) : null;
@@ -127,6 +134,7 @@ export default function Ask() {
     if (currentDog.current !== askedFor) return;   // the user switched dogs meanwhile: it's in that dog's thread
     scrollTo.current = history.length;
     setMessages(history.concat(reply));
+    if (otherDog) { setOtherDogAt(`${askedFor}:${history.length}`); AccessibilityInfo.announceForAccessibility(t("app_otherDog")); }
     // Asked by voice: answer by voice too (hands busy with the dog), with the
     // short spoken version; in conversation mode, listen again afterwards.
     if (spoken || talkRef.current) {
@@ -149,6 +157,7 @@ export default function Ask() {
     const user: ChatMessage = { role: "user", content };
     const history = messages.filter((m) => !m.local).concat(user);
     setMessages(history);
+    setOtherDogAt(null);
     if (tapped == null) setText("");
     await addChat(dogId, user);
     await run(history, spoken != null);
@@ -257,6 +266,14 @@ export default function Ask() {
     setObsState((m) => new Map(m).set(key, { ...s, id }));
   };
 
+  // "Is this about another dog?": that dog's own conversation opens, with the
+  // question filled in (not sent: the owner checks it, it may need more words).
+  const switchDog = (id: number | null) => {
+    const q = lastQuestion(messages);
+    setDogId(id);
+    if (q && !text.trim()) setText(q);
+  };
+
   const newChat = () => Alert.alert(t("app_newChatConfirm"), undefined, [
     { text: t("app_cancel"), style: "cancel" },
     { text: t("app_newChat"), style: "destructive", onPress: async () => { await clearChat(dogId); setMessages([]); setObsState(new Map()); } }
@@ -317,15 +334,10 @@ export default function Ask() {
     <KeyboardAvoidingView style={S.screen} behavior={Platform.OS === "ios" ? "padding" : undefined} keyboardVerticalOffset={90}>
       {dogs.length > 0 && (
         <View style={{ borderBottomWidth: 1, borderColor: C.line }}>
-          <ScrollView horizontal style={{ flexGrow: 0, flexShrink: 0 }} contentContainerStyle={{ gap: 6, paddingHorizontal: 12, paddingVertical: 10, alignItems: "center" }} showsHorizontalScrollIndicator={false}>
-            <Text style={S.muted}>{t("app_askFor")}:</Text>
-            {[{ id: null as number | null, name: t("app_noDog") }].concat(dogs).map((d) => (
-              <Pressable key={String(d.id)} onPress={() => setDogId(d.id)} accessibilityRole="radio" accessibilityState={{ selected: dogId === d.id }}
-                style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: 16, backgroundColor: dogId === d.id ? C.brandDark : C.chip }}>
-                <Text style={{ color: dogId === d.id ? "#fff" : C.text }}>{d.id != null ? "🐕 " : ""}{d.name}</Text>
-              </Pressable>
-            ))}
-          </ScrollView>
+          {/* Which dog this conversation is about; each dog has its own conversation. */}
+          <View style={{ paddingHorizontal: 12, paddingVertical: 10 }}>
+            <DogSwitcher dogs={dogs} value={dogId} onChange={setDogId} />
+          </View>
           {/* What goes along with the question, switchable right here. */}
           {dog && (
             <View style={[S.row, { gap: 8, paddingHorizontal: 12, paddingBottom: 8 }]}>
@@ -363,6 +375,23 @@ export default function Ask() {
                 {m.parts && !expanded.has(i) ? <Answer parts={m.parts} onFull={() => setExpanded((s) => new Set(s).add(i))} />
                   : <Text style={[S.body, { color: m.role === "user" ? "#fff" : C.text }]}>{m.content}</Text>}
               </View>
+              {/* The owner talks about another dog than the chosen one: offer that dog's own conversation */}
+              {otherDogAt === `${dogId}:${i}` && (
+                <View style={[S.card, { gap: 8, paddingVertical: 10, backgroundColor: C.chip }]}>
+                  <View style={[S.row, { gap: 8 }]}>
+                    <Text style={[S.body, { flex: 1, fontWeight: "600" }]} accessibilityRole="header">🐾 {t("app_otherDog")}</Text>
+                    <Pressable onPress={() => setOtherDogAt(null)} hitSlop={12} accessibilityRole="button" accessibilityLabel={t("close")}>
+                      <Text style={{ color: C.muted, fontSize: 16 }}>✕</Text>
+                    </Pressable>
+                  </View>
+                  <DogChips options={otherDogOptions(dogs, dogId, t("app_noDog"))} onChange={switchDog}>
+                    <Pressable onPress={() => router.push({ pathname: "/dog/[id]", params: { id: "new" } })} accessibilityRole="button"
+                      style={{ minHeight: 40, justifyContent: "center", paddingHorizontal: 12, paddingVertical: 8, borderRadius: 16, borderWidth: 1, borderColor: C.brandDark, backgroundColor: C.card }}>
+                      <Text style={{ color: C.brandDark, fontWeight: "600" }}>＋ {t("app_addDog")}</Text>
+                    </Pressable>
+                  </DogChips>
+                </View>
+              )}
               {/* Tap-to-answer replies for the latest answer's first question */}
               {m.role === "assistant" && i === messages.length - 1 && !busy && !!m.parts?.quick_replies.length && (
                 <View style={[S.row, { gap: 6, flexWrap: "wrap" }]}>

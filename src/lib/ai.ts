@@ -16,7 +16,8 @@ export type Topic = "health" | "behaviour" | "lost" | "other";   // lost: a lost
 // observation: a factual note for the dog's file when the owner reported a sign.
 // intake / intake_sig: the server's signed notes on the current complaint (question
 // budget, facts so far); sent back unchanged with the next question.
-export interface AnswerParts { summary: string; steps: string[]; watch_for: string[]; questions: string[]; quick_replies: string[]; spoken: string; observation?: Observation; intake?: unknown; intake_sig?: string }
+// other_dog: the owner talks about another dog than the chosen one (the chat offers to switch).
+export interface AnswerParts { summary: string; steps: string[]; watch_for: string[]; questions: string[]; quick_replies: string[]; spoken: string; observation?: Observation; intake?: unknown; intake_sig?: string; other_dog?: boolean }
 // local: shown on screen only (an error message); never stored, never sent to the model.
 // sig: the server's signature on an answer; only signed answers count as history.
 export interface ChatMessage { id?: number; role: "user" | "assistant"; content: string; urgency?: Urgency; topic?: Topic; local?: boolean; sig?: string; parts?: AnswerParts }
@@ -102,6 +103,7 @@ export function answerParts(d: unknown): AnswerParts | undefined {
   const obs = observationOf(o.observation);
   if (obs) p.observation = obs;
   if (o.intake && typeof o.intake === "object" && typeof o.intake_sig === "string") { p.intake = o.intake; p.intake_sig = o.intake_sig; }
+  if (o.other_dog === true) p.other_dog = true;
   return p.summary || p.steps.length || p.spoken ? p : undefined;
 }
 

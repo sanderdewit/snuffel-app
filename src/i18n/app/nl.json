@@ -198,6 +198,8 @@
   "app_aiAddDog": "Voeg je hond toe voor advies op maat",
   "app_aiTryAsking": "Je kunt bijvoorbeeld vragen:",
   "app_aiUses": "Met het profiel van {name}",
+  "app_otherDog": "Gaat dit over een andere hond?",
+  "app_changeDog": "Andere hond kiezen",
   "app_callMyVet": "Bel {name}",
   "app_newChatConfirm": "Dit gesprek verwijderen? Dat kan niet ongedaan worden.",
   "app_retry": "Opnieuw proberen",

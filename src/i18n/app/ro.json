@@ -202,6 +202,8 @@
   "app_aiAddDog": "Adaugă-ți câinele pentru sfaturi potrivite lui",
   "app_aiTryAsking": "Poți întreba, de exemplu:",
   "app_aiUses": "Folosind profilul lui {name}",
+  "app_otherDog": "Este vorba despre alt câine?",
+  "app_changeDog": "Schimbă câinele",
   "app_callMyVet": "Sună la {name}",
   "app_newChatConfirm": "Ștergi această conversație? Acțiunea nu poate fi anulată.",
   "app_retry": "Încearcă din nou",

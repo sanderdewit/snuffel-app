@@ -198,6 +198,8 @@
   "app_aiAddDog": "Lisa oma koer, et saada just talle sobivaid nõuandeid",
   "app_aiTryAsking": "Võid näiteks küsida:",
   "app_aiUses": "Kasutab koera {name} profiili",
+  "app_otherDog": "Kas see käib teise koera kohta?",
+  "app_changeDog": "Vaheta koera",
   "app_callMyVet": "Helista: {name}",
   "app_newChatConfirm": "Kas kustutada see vestlus? Seda ei saa tagasi võtta.",
   "app_retry": "Proovi uuesti",

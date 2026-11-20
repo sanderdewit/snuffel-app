@@ -202,6 +202,8 @@
   "app_aiAddDog": "Dodaj svog psa za savete po meri",
   "app_aiTryAsking": "Možeš da pitaš, na primer:",
   "app_aiUses": "Koristi se profil psa {name}",
+  "app_otherDog": "Da li je reč o drugom psu?",
+  "app_changeDog": "Promeni psa",
   "app_callMyVet": "Pozovi {name}",
   "app_newChatConfirm": "Obrisati ovaj razgovor? Ovo ne može da se opozove.",
   "app_retry": "Pokušaj ponovo",

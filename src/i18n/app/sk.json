@@ -206,6 +206,8 @@
   "app_aiAddDog": "Pridajte svojho psa a získajte rady na mieru",
   "app_aiTryAsking": "Môžete sa opýtať napríklad:",
   "app_aiUses": "Používa sa profil psa {name}",
+  "app_otherDog": "Ide o iného psa?",
+  "app_changeDog": "Zmeniť psa",
   "app_callMyVet": "Zavolať {name}",
   "app_newChatConfirm": "Odstrániť túto konverzáciu? Túto akciu nie je možné vrátiť.",
   "app_retry": "Skúsiť znova",

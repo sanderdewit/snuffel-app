@@ -206,6 +206,8 @@
   "app_aiAddDog": "Dodaj swojego psa, aby otrzymywać dopasowane porady",
   "app_aiTryAsking": "Możesz zapytać na przykład:",
   "app_aiUses": "Na podstawie profilu: {name}",
+  "app_otherDog": "Czy chodzi o innego psa?",
+  "app_changeDog": "Zmień psa",
   "app_callMyVet": "Zadzwoń: {name}",
   "app_newChatConfirm": "Usunąć tę rozmowę? Tej operacji nie można cofnąć.",
   "app_retry": "Spróbuj ponownie",

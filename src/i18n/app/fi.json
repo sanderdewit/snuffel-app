@@ -198,6 +198,8 @@
   "app_aiAddDog": "Lisää koirasi, niin saat siihen sopivia neuvoja",
   "app_aiTryAsking": "Voit kysyä esimerkiksi:",
   "app_aiUses": "Käytössä koiran {name} profiili",
+  "app_otherDog": "Koskeeko tämä toista koiraa?",
+  "app_changeDog": "Vaihda koiraa",
   "app_callMyVet": "Soita: {name}",
   "app_newChatConfirm": "Poistetaanko tämä keskustelu? Toimintoa ei voi perua.",
   "app_retry": "Yritä uudelleen",

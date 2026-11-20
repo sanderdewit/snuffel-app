@@ -198,6 +198,8 @@
   "app_aiAddDog": "Shto qenin tënd për këshilla të përshtatura",
   "app_aiTryAsking": "Mund të pyesësh, për shembull:",
   "app_aiUses": "Duke përdorur profilin e {name}",
+  "app_otherDog": "A bëhet fjalë për një qen tjetër?",
+  "app_changeDog": "Zgjidh një qen tjetër",
   "app_callMyVet": "Telefono {name}",
   "app_newChatConfirm": "Ta fshish këtë bisedë? Ky veprim nuk mund të zhbëhet.",
   "app_retry": "Provo përsëri",

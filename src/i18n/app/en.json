@@ -198,6 +198,8 @@
   "app_aiAddDog": "Add your dog for advice that fits",
   "app_aiTryAsking": "You could ask, for example:",
   "app_aiUses": "Using {name}'s profile",
+  "app_otherDog": "Is this about another dog?",
+  "app_changeDog": "Change dog",
   "app_callMyVet": "Call {name}",
   "app_newChatConfirm": "Delete this conversation? This can't be undone.",
   "app_retry": "Try again",

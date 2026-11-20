@@ -198,6 +198,8 @@
   "app_aiAddDog": "Füge deinen Hund hinzu für passende Ratschläge",
   "app_aiTryAsking": "Du könntest zum Beispiel fragen:",
   "app_aiUses": "Mit dem Profil von {name}",
+  "app_otherDog": "Geht es um einen anderen Hund?",
+  "app_changeDog": "Hund wechseln",
   "app_callMyVet": "{name} anrufen",
   "app_newChatConfirm": "Diese Unterhaltung löschen? Das kann nicht rückgängig gemacht werden.",
   "app_retry": "Erneut versuchen",

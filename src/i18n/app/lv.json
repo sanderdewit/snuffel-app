@@ -202,6 +202,8 @@
   "app_aiAddDog": "Pievieno savu suni, lai saņemtu piemērotus padomus",
   "app_aiTryAsking": "Tu vari jautāt, piemēram:",
   "app_aiUses": "Izmanto {name} profilu",
+  "app_otherDog": "Vai tas ir par citu suni?",
+  "app_changeDog": "Mainīt suni",
   "app_callMyVet": "Zvanīt: {name}",
   "app_newChatConfirm": "Dzēst šo sarunu? To nevarēs atsaukt.",
   "app_retry": "Mēģināt vēlreiz",

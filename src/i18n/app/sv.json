@@ -198,6 +198,8 @@
   "app_aiAddDog": "Lägg till din hund för råd som passar",
   "app_aiTryAsking": "Du kan till exempel fråga:",
   "app_aiUses": "Använder {name}s profil",
+  "app_otherDog": "Gäller det en annan hund?",
+  "app_changeDog": "Byt hund",
   "app_callMyVet": "Ring {name}",
   "app_newChatConfirm": "Radera den här konversationen? Det går inte att ångra.",
   "app_retry": "Försök igen",

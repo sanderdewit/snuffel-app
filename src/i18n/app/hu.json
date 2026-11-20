@@ -198,6 +198,8 @@
   "app_aiAddDog": "Add hozzá a kutyádat a rá szabott tanácsokért",
   "app_aiTryAsking": "Kérdezheted például:",
   "app_aiUses": "{name} profilja alapján",
+  "app_otherDog": "Egy másik kutyáról van szó?",
+  "app_changeDog": "Másik kutya választása",
   "app_callMyVet": "{name} hívása",
   "app_newChatConfirm": "Törlöd ezt a beszélgetést? Ez nem vonható vissza.",
   "app_retry": "Újra",
