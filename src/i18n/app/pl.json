@@ -238,6 +238,8 @@
   "app_voiceAiThinking": "Myślę…",
   "app_voiceAiSpeaking": "Mówię…",
   "app_voiceAiHangUp": "Rozłącz",
+  "app_voiceNoteWait": "Sprawdzam, czy jest coś do zapisania w karcie: {name}…",
+  "app_voiceNoteAsk": "Dodać do karty: {name}?",
   "app_voiceAiEnded": "Rozmowa została zakończona.",
   "app_voiceAiTime": "10 minut minęło. Możesz rozpocząć nową rozmowę.",
   "app_voiceAiLimit": "Na dziś wystarczy rozmów. Spróbuj ponownie jutro albo wpisz swoje pytanie.",

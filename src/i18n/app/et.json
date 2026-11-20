@@ -230,6 +230,8 @@
   "app_voiceAiThinking": "Mõtlen…",
   "app_voiceAiSpeaking": "Räägin…",
   "app_voiceAiHangUp": "Lõpeta kõne",
+  "app_voiceNoteWait": "Kontrollin, kas toimikusse on midagi märkida: {name}…",
+  "app_voiceNoteAsk": "Kas lisada toimikusse: {name}?",
   "app_voiceAiEnded": "Vestlus on lõppenud.",
   "app_voiceAiTime": "10 minutit on täis. Võid alustada uut vestlust.",
   "app_voiceAiLimit": "Tänaseks on vestlusi küllalt. Proovi homme uuesti või kirjuta oma küsimus.",

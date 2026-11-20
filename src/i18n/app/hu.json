@@ -230,6 +230,8 @@
   "app_voiceAiThinking": "Gondolkodik…",
   "app_voiceAiSpeaking": "Beszél…",
   "app_voiceAiHangUp": "Hívás vége",
+  "app_voiceNoteWait": "Ellenőrzi, van-e mit rögzíteni {name} dossziéjában…",
+  "app_voiceNoteAsk": "Hozzáadod {name} dossziéjához?",
   "app_voiceAiEnded": "A beszélgetés véget ért.",
   "app_voiceAiTime": "Letelt a 10 perc. Kezdhetsz új beszélgetést.",
   "app_voiceAiLimit": "Mára ennyi beszélgetés elég. Próbáld újra holnap, vagy írd be a kérdésed.",

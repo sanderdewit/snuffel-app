@@ -230,6 +230,8 @@
   "app_voiceAiThinking": "Denkt na…",
   "app_voiceAiSpeaking": "Praat…",
   "app_voiceAiHangUp": "Ophangen",
+  "app_voiceNoteWait": "Even kijken of er iets in het dossier van {name} hoort…",
+  "app_voiceNoteAsk": "Toevoegen aan het dossier van {name}?",
   "app_voiceAiEnded": "Het gesprek is afgelopen.",
   "app_voiceAiTime": "De 10 minuten zijn om. Je kunt een nieuw gesprek beginnen.",
   "app_voiceAiLimit": "Genoeg gesprekken voor vandaag. Probeer het morgen weer, of typ je vraag.",

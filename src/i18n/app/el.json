@@ -230,6 +230,8 @@
   "app_voiceAiThinking": "Σκέφτεται…",
   "app_voiceAiSpeaking": "Μιλάει…",
   "app_voiceAiHangUp": "Τερματισμός",
+  "app_voiceNoteWait": "Ελέγχει αν υπάρχει κάτι για τον φάκελο: {name}…",
+  "app_voiceNoteAsk": "Προσθήκη στον φάκελο: {name};",
   "app_voiceAiEnded": "Η συνομιλία τελείωσε.",
   "app_voiceAiTime": "Τα 10 λεπτά έληξαν. Μπορείτε να ξεκινήσετε νέα συνομιλία.",
   "app_voiceAiLimit": "Αρκετές συνομιλίες για σήμερα. Δοκιμάστε ξανά αύριο ή γράψτε την ερώτησή σας.",

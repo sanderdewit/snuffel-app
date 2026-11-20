@@ -230,6 +230,8 @@
   "app_voiceAiThinking": "Miettii…",
   "app_voiceAiSpeaking": "Puhuu…",
   "app_voiceAiHangUp": "Lopeta puhelu",
+  "app_voiceNoteWait": "Tarkistaa, onko kansioon jotain kirjattavaa: {name}…",
+  "app_voiceNoteAsk": "Lisätäänkö kansioon: {name}?",
   "app_voiceAiEnded": "Keskustelu on päättynyt.",
   "app_voiceAiTime": "10 minuuttia on kulunut. Voit aloittaa uuden keskustelun.",
   "app_voiceAiLimit": "Keskusteluja riittää tältä päivältä. Yritä huomenna uudelleen tai kirjoita kysymyksesi.",

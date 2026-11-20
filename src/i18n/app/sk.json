@@ -238,6 +238,8 @@
   "app_voiceAiThinking": "Premýšľam…",
   "app_voiceAiSpeaking": "Hovorím…",
   "app_voiceAiHangUp": "Zavesiť",
+  "app_voiceNoteWait": "Zisťujem, či je niečo na zapísanie do zložky: {name}…",
+  "app_voiceNoteAsk": "Pridať do zložky: {name}?",
   "app_voiceAiEnded": "Rozhovor sa skončil.",
   "app_voiceAiTime": "10 minút uplynulo. Môžete začať nový rozhovor.",
   "app_voiceAiLimit": "Na dnes už bolo rozhovorov dosť. Skúste to znova zajtra alebo napíšte svoju otázku.",

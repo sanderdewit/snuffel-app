@@ -230,6 +230,8 @@
   "app_voiceAiThinking": "Мисли…",
   "app_voiceAiSpeaking": "Говори…",
   "app_voiceAiHangUp": "Затвори",
+  "app_voiceNoteWait": "Проверява дали има нещо за досието на {name}…",
+  "app_voiceNoteAsk": "Да се добави ли в досието на {name}?",
   "app_voiceAiEnded": "Разговорът приключи.",
   "app_voiceAiTime": "10-те минути изтекоха. Можете да започнете нов разговор.",
   "app_voiceAiLimit": "Стига разговори за днес. Опитайте отново утре или напишете въпроса си.",

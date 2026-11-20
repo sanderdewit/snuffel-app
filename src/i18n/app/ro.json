@@ -234,6 +234,8 @@
   "app_voiceAiThinking": "Mă gândesc…",
   "app_voiceAiSpeaking": "Vorbesc…",
   "app_voiceAiHangUp": "Închide",
+  "app_voiceNoteWait": "Verific dacă e ceva de notat în dosarul lui {name}…",
+  "app_voiceNoteAsk": "Adaugi în dosarul lui {name}?",
   "app_voiceAiEnded": "Conversația s-a încheiat.",
   "app_voiceAiTime": "Cele 10 minute s-au terminat. Poți începe o conversație nouă.",
   "app_voiceAiLimit": "Ajung conversațiile pentru azi. Încearcă din nou mâine sau scrie-ți întrebarea.",

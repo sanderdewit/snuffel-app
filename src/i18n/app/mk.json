@@ -230,6 +230,8 @@
   "app_voiceAiThinking": "Размислувам…",
   "app_voiceAiSpeaking": "Зборувам…",
   "app_voiceAiHangUp": "Прекини",
+  "app_voiceNoteWait": "Проверувам дали има нешто за досието на {name}…",
+  "app_voiceNoteAsk": "Да се додаде во досието на {name}?",
   "app_voiceAiEnded": "Разговорот заврши.",
   "app_voiceAiTime": "10-те минути истекоа. Можеш да започнеш нов разговор.",
   "app_voiceAiLimit": "Доволно разговори за денес. Обиди се повторно утре или напиши го прашањето.",
