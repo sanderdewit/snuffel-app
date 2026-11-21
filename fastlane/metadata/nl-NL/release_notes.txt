@@ -1,3 +1,7 @@
-Slimmere AI-assistent: hij stelt eerst de vragen die de assistent van een dierenarts ook stelt, en zegt nu ook wanneer je vandaag nog naar de dierenarts moet. Getoetst op 1.000 situaties in 29 talen.
+Kies het ras van je hond uit de hele lijst: alle FCI-rassen en kruisingen zoals Labradoodle en Cockapoo.
 
-Nieuw: signalen uit de AI-chat komen in het dossier van je hond. Je kunt dat ongedaan maken of per hond uitzetten. Komt iets vaker terug, dan zie je dat in het dossier en in de pdf.
+Geef aan over welke hond een AI-chat gaat. Beoordeel antwoorden met 👍 of 👎; na een 👎 kun je het gesprek versturen om Snuffel beter te maken.
+
+AI-spraakgesprek (bèta): zet wat je besproken hebt in het dossier van je hond.
+
+Slimmere AI: hij vraagt na een operatie of nieuw medicijn hoe het met je hond gaat, en verwijst 's avonds (lokale tijd) zo nodig naar de dienstdoende dierenarts.

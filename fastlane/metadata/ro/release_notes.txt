@@ -1,3 +1,7 @@
-Asistent AI mai inteligent: pune mai întâi întrebările pe care le-ar pune și un asistent veterinar și îți spune acum și când câinele tău trebuie dus la veterinar chiar azi. Testat pe 1.000 de situații în 29 de limbi.
+Alege rasa câinelui din lista completă: toate rasele FCI și încrucișări precum Labradoodle și Cockapoo.
 
-Nou: semnele din chatul AI ajung în fișa câinelui tău. Poți anula acest lucru sau îl poți dezactiva pentru fiecare câine. Dacă ceva revine des, vezi asta în fișă și în PDF.
+Stabilește la ce câine se referă un chat AI. Evaluează răspunsurile cu 👍 sau 👎; după un 👎 poți trimite conversația pentru a îmbunătăți Snuffel.
+
+Conversație vocală cu AI (beta): adaugă în fișa câinelui ce ați discutat.
+
+AI mai inteligent: întreabă cum se simte câinele după o operație sau un medicament nou, iar seara (ora locală) te îndrumă la nevoie spre veterinarul de gardă.

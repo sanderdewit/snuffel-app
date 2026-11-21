@@ -1,3 +1,7 @@
-Smartere AI-assistent: den stiller først spørsmålene en dyrepleier ville stilt, og forteller deg nå også når hunden din bør til veterinær allerede i dag. Testet på 1000 situasjoner på 29 språk.
+Rasen til hunden din velger du nå fra hele listen: alle FCI-raser pluss krysninger som Labradoodle og Cockapoo.
 
-Nytt: tegn fra AI-chatten lagres i journalen til hunden din. Du kan angre dette eller slå det av for hver hund. Hvis noe går igjen, ser du det i journalen og i PDF-en.
+Velg hvilken hund en AI-chat gjelder. Gi svarene 👍 eller 👎; etter 👎 kan du sende samtalen for å gjøre Snuffel bedre.
+
+AI-talesamtale (beta): legg det dere snakket om, inn i journalen til hunden din.
+
+Smartere AI: den spør hvordan hunden har det etter en operasjon eller ny medisin, og viser om kvelden (lokal tid) ved behov til vakthavende veterinær.

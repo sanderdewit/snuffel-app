@@ -1,3 +1,7 @@
-Múdrejší AI asistent: najprv sa opýta na to, na čo by sa opýtala veterinárna sestra, a teraz vám povie aj to, kedy má váš pes ešte dnes ísť k veterinárovi. Otestované na 1 000 situáciách v 29 jazykoch.
+Plemeno psa teraz zvolíte z úplného zoznamu: všetky plemená FCI aj krížence ako Labradoodle a Cockapoo.
 
-Novinka: príznaky z AI chatu sa zapisujú do karty vášho psa. Môžete to vrátiť späť alebo vypnúť pre každého psa zvlášť. Ak sa niečo opakuje, uvidíte to v karte aj v PDF.
+Vyberte, ktorého psa sa AI chat týka. Hodnoťte odpovede 👍 alebo 👎; po 👎 môžete konverzáciu odoslať a pomôcť nám zlepšiť Snuffel.
+
+Hlasový rozhovor s AI (beta): to, čo ste prebrali, si môžete uložiť do karty vášho psa.
+
+Múdrejšia AI: po operácii alebo novom lieku sa opýta, ako sa psovi darí, a večer (podľa miestneho času) vás v prípade potreby nasmeruje na veterinárnu pohotovosť.

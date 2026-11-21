@@ -1,3 +1,7 @@
-Okosabb MI-asszisztens: először azokat a kérdéseket teszi fel, amelyeket egy állatorvosi asszisztens is feltenne, és most azt is megmondja, ha a kutyádnak még ma állatorvoshoz kell mennie. 1000 helyzeten tesztelve, 29 nyelven.
+Kutyád fajtáját a teljes listából adhatod meg: minden FCI-fajta és keresztezések, például Labradoodle és Cockapoo.
 
-Újdonság: az MI-csevegésben felmerülő tünetek bekerülnek a kutyád naplójába. Ezt visszavonhatod, vagy kutyánként kikapcsolhatod. Ha valami újra és újra előfordul, a naplóban és a PDF-ben is látod.
+Válaszd ki, melyik kutyáról szól egy MI-csevegés. Értékeld a válaszokat 👍 vagy 👎 jellel; 👎 után elküldheted a beszélgetést a Snuffel fejlesztéséhez.
+
+MI-hangbeszélgetés (béta): a megbeszélteket hozzáadhatod a kutyád naplójához.
+
+Okosabb MI: műtét vagy új gyógyszer után megkérdezi, hogy van a kutyád, este pedig (helyi idő szerint), ha kell, az ügyeletes állatorvoshoz irányít.

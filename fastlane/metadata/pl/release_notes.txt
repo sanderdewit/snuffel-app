@@ -1,3 +1,7 @@
-Mądrzejszy asystent AI: najpierw zadaje pytania, które zadałby technik weterynarii, a teraz mówi ci też, kiedy twój pies powinien jeszcze dziś trafić do weterynarza. Przetestowany na 1000 sytuacjach w 29 językach.
+Rasę psa wybierzesz teraz z pełnej listy: wszystkie rasy FCI oraz krzyżówki, np. Labradoodle i Cockapoo.
 
-Nowość: objawy z czatu z AI trafiają do karty twojego psa. Możesz to cofnąć albo wyłączyć dla każdego psa osobno. Jeśli coś się powtarza, zobaczysz to w karcie i w pliku PDF.
+Wybierz, którego psa dotyczy czat z AI. Oceniaj odpowiedzi 👍 lub 👎; po 👎 możesz wysłać tę rozmowę i pomóc nam ulepszyć Snuffel.
+
+Rozmowa głosowa z AI (beta): dodaj to, o czym rozmawialiście, do karty swojego psa.
+
+Mądrzejszy asystent AI: pyta, jak czuje się pies po operacji lub przy nowym leku, a wieczorem (czas lokalny) w razie potrzeby kieruje cię do dyżurnego weterynarza.

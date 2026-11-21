@@ -1,3 +1,7 @@
-Pametniji AI asistent: najpre postavlja pitanja koja bi postavio i veterinarski tehničar, a sada ti kaže i kada psa treba još danas da odvedeš kod veterinara. Testirano na 1000 situacija na 29 jezika.
+Rasu svog psa sada biraš sa kompletne liste: sve FCI rase i melezi kao što su Labradudl i Kokapu.
 
-Novo: simptomi iz AI četa upisuju se u karton tvog psa. To možeš da poništiš ili da isključiš za svakog psa posebno. Ako se nešto ponavlja, videćeš to u kartonu i u PDF-u.
+Izaberi o kom psu je reč u AI četu. Oceni odgovore sa 👍 ili 👎; posle 👎 možeš da pošalješ taj razgovor i pomogneš nam da poboljšamo Snuffel.
+
+AI glasovni razgovor (beta): dodaj ono o čemu ste razgovarali u karton svog psa.
+
+Pametniji AI: pita kako je pas posle operacije ili novog leka, a uveče (po lokalnom vremenu) te po potrebi upućuje na dežurnog veterinara.

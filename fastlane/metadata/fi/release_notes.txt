@@ -1,3 +1,7 @@
-Fiksumpi tekoälyavustaja: se kysyy ensin samat asiat kuin eläinhoitaja kysyisi, ja kertoo nyt myös, milloin koirasi pitää viedä eläinlääkäriin jo tänään. Testattu 1 000 tilanteella 29 kielellä.
+Valitse koirasi rotu koko listasta: kaikki FCI-rodut ja risteytykset, kuten Labradoodle ja Cockapoo.
 
-Uutta: tekoälychatissa esiin tulleet oireet tallentuvat koirasi kansioon. Voit perua tallennuksen tai poistaa sen käytöstä koirakohtaisesti. Jos jokin toistuu, näet sen kansiossa ja PDF:ssä.
+Kerro, mitä koiraa tekoälychat koskee. Arvioi vastaukset peukulla 👍 tai 👎; alapeukun jälkeen voit lähettää keskustelun Snuffelin parantamiseksi.
+
+Tekoälypuhelu (beeta): lisää puhelussa käsitellyt asiat koirasi kansioon.
+
+Fiksumpi tekoäly: se kysyy leikkauksen tai uuden lääkkeen jälkeen, miten koirasi voi, ja ohjaa illalla (paikallista aikaa) tarvittaessa päivystävälle eläinlääkärille.
