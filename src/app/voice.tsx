@@ -89,7 +89,7 @@ export default function Voice() {
   // Emergency: the call ends (no note: no time for it now) and the Emergency tab opens.
   const emergency = () => {
     call.current?.close();
-    router.navigate("/(tabs)/emergency");
+    router.dismissTo("/(tabs)/emergency");   // back to the tabs, not a second set of them
   };
 
   // Time left, shown in the last two minutes.

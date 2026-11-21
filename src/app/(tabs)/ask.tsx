@@ -197,21 +197,22 @@ export default function Ask() {
 
   // ?q= fills in a question (not sent), ?dog= picks the dog: from the walkthrough.
   const params = useLocalSearchParams<{ q?: string; dog?: string; n?: string }>();   // n: a new value each time, so the same question fills in again
-  const appliedDogParam = useRef<string | undefined>(undefined);   // tab params stick: apply once
+  const appliedDogParam = useRef<string | undefined>(undefined);   // tab params stick: apply each link once (dog + its n)
   const dogResolved = useRef(false);   // the opening dog is known (dogs and the last choice read)
   useFocusEffect(useCallback(() => {
     myVet().then(setVet).catch(() => undefined);
     Promise.all([listDogs(), kvGet("askDog")]).then(([d, last]) => {
       setDogs(d);
       setDogsLoaded(true);
-      const fromLink = params.dog && params.dog !== appliedDogParam.current ? Number(params.dog) : null;
-      appliedDogParam.current = params.dog;
+      const link = params.dog ? `${params.dog}|${params.n ?? ""}` : undefined;
+      const fromLink = params.dog && link !== appliedDogParam.current ? Number(params.dog) : null;
+      appliedDogParam.current = link;
       // A dog asked for by a link, else the current one, else the last choice (also
       // "no specific dog"), else, for an owner who never chose, the only one.
       dogResolved.current = true;
       setDogId((cur) => openingDog(d, fromLink, cur, last));
     }).catch(() => undefined);
-  }, [params.dog]));
+  }, [params.dog, params.n]));
   useEffect(() => { if (params.q) setText(String(params.q).slice(0, 1000)); }, [params.q, params.n]);
   // Whose conversation is on screen: a question handed over by the walkthrough
   // is sent only once that conversation has loaded.

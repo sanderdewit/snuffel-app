@@ -16,7 +16,7 @@ import { breedLabel, breeds } from "../../lib/breeds";
 import { formatDate } from "../../lib/dates";
 import { myVet, type SavedPlace } from "../../lib/saved";
 import { remember } from "../../lib/placeStore";
-import { callUrl, displayName, OpenBadge } from "../../ui/PlaceCard";
+import { callUrl, displayName, OpenLine } from "../../ui/PlaceCard";
 import { DateField } from "../../ui/DateField";
 import { DogAvatar } from "../../ui/DogAvatar";
 import { DogForm } from "../../ui/DogForm";
@@ -141,7 +141,7 @@ function Overview({ dogId }: { dogId: number }) {
 
       {/* The AI help tab with this dog chosen (ask.tsx reads ?dog=). dismissTo goes back to
           the tabs under this page; navigate would push a second set of tabs on the stack. */}
-      <Pressable onPress={() => router.dismissTo({ pathname: "/ask", params: { dog: String(dogId) } })} accessibilityRole="button"
+      <Pressable onPress={() => router.dismissTo({ pathname: "/ask", params: { dog: String(dogId), n: String(Date.now()) } })} accessibilityRole="button"
         style={({ pressed }) => [S.btn, S.row, { gap: 8, minHeight: 48 }, pressed && S.pressed]}>
         <Icon name="message-circle" size={20} color={C.onBrand} />
         <Text style={[S.btnText, { flexShrink: 1, textAlign: "center" }]}>{tf("app_askAboutDog", { name: dog.name })}</Text>
@@ -251,7 +251,7 @@ function Overview({ dogId }: { dogId: number }) {
               <Text style={S.muted}>{t("app_myVet")}</Text>
             </View>
             <Text style={[S.body, { fontWeight: "700" }]}>{displayName(vet, t)}</Text>
-            <OpenBadge p={vet} />
+            <OpenLine p={vet} />
           </Pressable>
           {!!vet.phone && (
             <Pressable onPress={() => Linking.openURL(callUrl(vet.phone!)).catch(() => undefined)} accessibilityRole="button"

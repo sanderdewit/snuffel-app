@@ -24,7 +24,7 @@ export const fromIso = (iso: string) => new Date(iso + "T12:00:00");
 export function formatDate(iso: string, lang: string): string {
   if (!validDate(iso)) return iso;
   // The app's English is British ("30 April 2021", not "April 30, 2021").
-  const locale = lang === "en" ? "en-GB" : lang;
+  const locale = lang === "en" ? "en-GB" : lang === "sr" ? "sr-Latn" : lang;   // the app's Serbian is Latin script
   try { return fromIso(iso).toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric" }); }
   catch { return iso; }
 }

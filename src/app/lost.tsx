@@ -109,7 +109,7 @@ export default function Lost() {
           {(s.key === "lostStep4" || s.key === "foundStep3") && <Groups groups={groups} t={t} />}
           {s.emergency && (
             <Pressable style={({ pressed }) => [S.btn, S.row, { gap: 8, backgroundColor: C.dangerFill }, pressed && S.pressed]}
-              onPress={() => router.navigate("/(tabs)/emergency")} accessibilityRole="button">
+              onPress={() => router.dismissTo("/(tabs)/emergency")} accessibilityRole="button">
               <Symbol name="alarm-light-outline" size={20} color={C.onBrand} />
               <Text style={[S.btnText, { flexShrink: 1 }]}>{t("app_findOpenVet")}</Text>
             </Pressable>
