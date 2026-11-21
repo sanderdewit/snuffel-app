@@ -13,6 +13,19 @@ import { C, S } from "../ui/theme";
 
 const PRIVACY_MAIL = "privacy@snuffel.app";
 
+// The placeholders that replace a name, e-mail address or number (feedbackReport.ts) look
+// like what they are: grey labels, not a glitch in the text.
+const TOKEN = /(\[name\]|\[email\]|\[number\])/;
+function Masked({ text }: { text: string }) {
+  return (
+    <Text style={S.body} selectable>
+      {text.split(TOKEN).map((part, i) => TOKEN.test(part)
+        ? <Text key={i} style={{ backgroundColor: C.line, color: C.muted, fontWeight: "600" }}>{" " + part + " "}</Text>
+        : part)}
+    </Text>
+  );
+}
+
 function Preview({ report }: { report: Report }) {
   const { t, tf } = useI18n();
   const d = report.dog;
@@ -34,7 +47,7 @@ function Preview({ report }: { report: Report }) {
           <Text style={[S.muted, { fontWeight: "700", color: m.role === "user" ? C.brandDark : C.text }]}>
             {m.role === "user" ? t("app_fbYou") : "Snuffel"}{urgency(m.urgency) ? " · " + urgency(m.urgency) : ""}
           </Text>
-          <Text style={S.body} selectable>{m.content}</Text>
+          <Masked text={m.content} />
         </View>
       ))}
       <Text style={S.muted}>{t("app_language")}: {report.lang} · {tf("app_version", { v: report.appVersion })}</Text>
@@ -100,12 +113,13 @@ export default function Feedback() {
         {!report ? <Text style={[S.body, { color: C.warn }]}>{t("app_fbFailed")}</Text> : (
           <>
             <Text style={S.h2}>{t("app_fbWhatSent")}</Text>
+            {/* Before the conversation: otherwise "[name]" in the text looks like a bug */}
+            <Text style={S.muted}>🔒 {t("app_fbNotSent")}</Text>
             <Preview report={report} />
             <TextInput style={S.input} value={comment} onChangeText={setComment} placeholder={t("app_fbComment")}
               maxLength={LIMITS.comment} returnKeyType="done" accessibilityLabel={t("app_fbComment")} />
             {/* The note as it is sent, when replacing a name or number changed it */}
             {!!report.comment && report.comment !== comment.replace(/\s+/g, " ").trim() && <Text style={S.muted}>→ {report.comment}</Text>}
-            <Text style={S.muted}>🔒 {t("app_fbNotSent")}</Text>
           </>
         )}
         {!!problem && <Text style={[S.body, { color: C.warn }]} accessibilityLiveRegion="polite">{problem}</Text>}
