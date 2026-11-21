@@ -18,3 +18,12 @@ export const DARK_MAP_LABELS_MORE = {
   country_label: "#999999",   // countries (on `earth`)
   state_label: "#8c8c8c"      // regions and provinces (on `state_label_halo`)
 };
+
+// The light map's own labels for rivers, lakes and seas, countries and regions were
+// as faint: 2.4, 1.9 and 1.6:1 on what lies under them. These are 4.5:1 or more and
+// stay a little lighter than the city names (#5c5c5c), so cities still come first.
+export const LIGHT_MAP_LABELS = {
+  ocean_label: "#28509a",     // on `water`
+  country_label: "#5e5e5e",   // on `earth`
+  state_label: "#616161"      // on `state_label_halo`
+};

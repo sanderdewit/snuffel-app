@@ -7,7 +7,7 @@ import assert from "node:assert";
 import { namedFlavor } from "@protomaps/basemaps";
 import type { Category } from "../src/core/classify.ts";
 import { DARK_MAP_LABELS, PALETTES, type Palette, type Scheme, type UrgencyLevel } from "../src/ui/palette.ts";
-import { DARK_MAP_LABELS_MORE, MARKER_RING } from "../src/ui/mapPalette.ts";
+import { DARK_MAP_LABELS_MORE, LIGHT_MAP_LABELS, MARKER_RING } from "../src/ui/mapPalette.ts";
 
 let passed = 0, failed = 0;
 function test(name: string, fn: () => void) {
@@ -145,6 +145,19 @@ for (const [label, under] of Object.entries(MORE_UNDER)) {
   rows.push(`dark   map ${label.padEnd(42)} ${darkMapAll[label]} on ${darkMapAll[under]}  ${r.toFixed(2)}`);
   test(`${label} on ${under}: ${r.toFixed(2)} >= 4.5 and >= light's ${was.toFixed(2)}`, () => assert.ok(r >= TEXT && r >= was, `${r.toFixed(2)}:1`));
 }
+// The same labels on the light map (LIGHT_MAP_LABELS): were 2.4, 1.9 and 1.6:1.
+const lightMapAll = { ...lightMap, ...LIGHT_MAP_LABELS } as Record<string, string>;
+test("every light label has a known background", () =>
+  assert.deepStrictEqual(Object.keys(LIGHT_MAP_LABELS).sort(), Object.keys(MORE_UNDER).sort()));
+for (const [label, under] of Object.entries(MORE_UNDER)) {
+  const r = contrast(lightMapAll[label], lightMapAll[under]);
+  rows.push(`light  map ${label.padEnd(42)} ${lightMapAll[label]} on ${lightMapAll[under]}  ${r.toFixed(2)}`);
+  test(`light ${label} on ${under}: ${r.toFixed(2)} >= 4.5`, () => assert.ok(r >= TEXT, `${r.toFixed(2)}:1`));
+}
+test("the light grey labels stay lighter than the city names (cities first; water names are blue)", () => {
+  for (const label of ["country_label", "state_label"])
+    assert.ok(luminance(lightMapAll[label]) >= luminance(lightMapAll.city_label), `${label} ${lightMapAll[label]} is darker than city_label`);
+});
 test("the extra dark labels stay below the city names (cities first)", () => {
   for (const label of Object.keys(DARK_MAP_LABELS_MORE))
     assert.ok(luminance(darkMapAll[label]) <= luminance(darkMapAll.city_label), `${label} ${darkMapAll[label]} is brighter than city_label`);

@@ -10,10 +10,10 @@ import { layers, namedFlavor } from "@protomaps/basemaps";
 import type { StyleSpecification } from "@maplibre/maplibre-react-native";
 import { CONFIG } from "./config";
 import { DARK_MAP_LABELS } from "../ui/palette";
-import { DARK_MAP_LABELS_MORE } from "../ui/mapPalette";
+import { DARK_MAP_LABELS_MORE, LIGHT_MAP_LABELS } from "../ui/mapPalette";
 
 const flavor = (scheme: "light" | "dark") =>
-  scheme === "dark" ? { ...namedFlavor("dark"), ...DARK_MAP_LABELS, ...DARK_MAP_LABELS_MORE } : namedFlavor("light");
+  scheme === "dark" ? { ...namedFlavor("dark"), ...DARK_MAP_LABELS, ...DARK_MAP_LABELS_MORE } : { ...namedFlavor("light"), ...LIGHT_MAP_LABELS };
 
 const cache = new Map<string, StyleSpecification>();
 
