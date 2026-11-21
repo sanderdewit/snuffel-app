@@ -7,12 +7,16 @@ import { useQuickActionRouting } from "expo-quick-actions/router";
 import { useI18n } from "../../i18n";
 import { useTheme } from "../../ui/theme";
 
-const icon = (glyph: string) => ({ focused }: { focused: boolean }) =>
-  <Text style={{ fontSize: 20, opacity: focused ? 1 : 0.55 }}>{glyph}</Text>;
+// Other tabs' emoji are dimmed. Dimming blends them into the bar: on the dark bar
+// 55 % made the mid and dark tones of 🔎 and 🐕 hard to see, so dark dims less
+// (the label colour still shows the chosen tab).
+const icon = (glyph: string, dim: number) => ({ focused }: { focused: boolean }) =>
+  <Text style={{ fontSize: 20, opacity: focused ? 1 : dim }}>{glyph}</Text>;
 
 export default function TabsLayout() {
   const { t } = useI18n();
-  const { C } = useTheme();
+  const { scheme, C } = useTheme();
+  const dim = scheme === "dark" ? 0.8 : 0.55;
 
   // Home-screen shortcut (long-press the app icon): straight to the nearest open vet.
   useQuickActionRouting();
@@ -31,11 +35,11 @@ export default function TabsLayout() {
 
   return (
     <Tabs screenOptions={{ tabBarActiveTintColor: C.link, tabBarInactiveTintColor: C.muted, headerTintColor: C.text }}>
-      <Tabs.Screen name="index" options={{ title: t("app_tab_find"), tabBarIcon: icon("🔎"), headerShown: false }} />
-      <Tabs.Screen name="emergency" options={{ title: t("emergencyBtn"), tabBarIcon: icon("🚨"), tabBarActiveTintColor: C.danger }} />
-      <Tabs.Screen name="saved" options={{ title: t("app_tab_saved"), tabBarIcon: icon("⭐") }} />
-      <Tabs.Screen name="dogs" options={{ title: t("app_tab_dogs"), tabBarIcon: icon("🐕") }} />
-      <Tabs.Screen name="ask" options={{ title: t("app_tab_ask"), headerTitle: t("app_askTitle"), tabBarIcon: icon("💬") }} />
+      <Tabs.Screen name="index" options={{ title: t("app_tab_find"), tabBarIcon: icon("🔎", dim), headerShown: false }} />
+      <Tabs.Screen name="emergency" options={{ title: t("emergencyBtn"), tabBarIcon: icon("🚨", dim), tabBarActiveTintColor: C.danger }} />
+      <Tabs.Screen name="saved" options={{ title: t("app_tab_saved"), tabBarIcon: icon("⭐", dim) }} />
+      <Tabs.Screen name="dogs" options={{ title: t("app_tab_dogs"), tabBarIcon: icon("🐕", dim) }} />
+      <Tabs.Screen name="ask" options={{ title: t("app_tab_ask"), headerTitle: t("app_askTitle"), tabBarIcon: icon("💬", dim) }} />
     </Tabs>
   );
 }

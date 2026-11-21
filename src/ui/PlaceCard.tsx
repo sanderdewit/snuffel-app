@@ -3,6 +3,7 @@ import { router } from "expo-router";
 import { useI18n } from "../i18n";
 import { CATEGORIES, type Place } from "../lib/places";
 import { remember } from "../lib/placeStore";
+import { CategoryIcon } from "./Emoji";
 import { useTheme } from "./theme";
 
 export const directionsUrl = (p: Place) => `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}`;
@@ -41,9 +42,7 @@ export function PlaceCard({ p, big }: { p: Place; big?: boolean }) {
   return (
     <Pressable onPress={open} style={({ pressed }) => [S.card, { marginBottom: 10, opacity: pressed ? 0.85 : 1 }]} accessibilityRole="button">
       <View style={[S.row, { gap: 10, alignItems: "flex-start" }]}>
-        <View style={{ width: 38, height: 38, borderRadius: 19, backgroundColor: C.cat[p.cat] + "22", alignItems: "center", justifyContent: "center" }}>
-          <Text style={{ fontSize: 19 }}>{cat.icon}</Text>
-        </View>
+        <CategoryIcon cat={p.cat} size={19} box={38} always />
         <View style={{ flex: 1, gap: 2 }}>
           <Text style={[S.h2, big && { fontSize: 19 }]} numberOfLines={2}>{displayName(p, t)}</Text>
           <Text style={S.muted} numberOfLines={1}>

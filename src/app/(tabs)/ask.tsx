@@ -495,13 +495,14 @@ export default function Ask() {
         {talk && <Text style={[S.muted, { color: C.link, fontWeight: "600" }]} accessibilityLiveRegion="polite">🎧 {t("app_talkOn")}</Text>}
         {listening && <Text style={[S.muted, { color: C.danger, fontWeight: "700" }]} accessibilityLiveRegion="polite">🎙️ {t("app_voiceListening")}</Text>}
         {!!voiceNote && <Text style={[S.muted, { color: C.warn }]}>{voiceNote}</Text>}
+        {/* Mic and conversation mode are emoji only (🎙️, 🎧 are drawn in black): on glyphBg, light in dark mode too */}
         <View style={[S.row, { gap: 8 }]}>
           <Pressable onPress={toggleListening} disabled={busy} accessibilityRole="button" accessibilityLabel={t(listening ? "app_voiceListening" : "app_voiceStart")}
-            style={{ width: 46, height: 46, borderRadius: 23, alignItems: "center", justifyContent: "center", backgroundColor: listening ? C.dangerFill : C.chip, opacity: busy ? 0.5 : 1 }}>
+            style={{ width: 46, height: 46, borderRadius: 23, alignItems: "center", justifyContent: "center", backgroundColor: listening ? C.dangerFill : C.glyphBg, opacity: busy ? 0.5 : 1 }}>
             <Text style={{ fontSize: 22, color: C.onBrand }}>{listening ? "⏹" : "🎙️"}</Text>
           </Pressable>
           <Pressable onPress={toggleTalk} disabled={busy && !talk} accessibilityRole="switch" accessibilityState={{ checked: talk }} accessibilityLabel={t("app_talkMode")}
-            style={{ width: 46, height: 46, borderRadius: 23, alignItems: "center", justifyContent: "center", backgroundColor: talk ? C.brandDark : C.chip, opacity: busy && !talk ? 0.5 : 1 }}>
+            style={{ width: 46, height: 46, borderRadius: 23, alignItems: "center", justifyContent: "center", backgroundColor: talk ? C.brandDark : C.glyphBg, opacity: busy && !talk ? 0.5 : 1 }}>
             <Text style={{ fontSize: 20 }}>🎧</Text>
           </Pressable>
           <Input style={[S.input, { flex: 1, maxHeight: 120 }]} value={text} onChangeText={setText} placeholder={t("aiPlaceholder")} multiline maxLength={1000} />

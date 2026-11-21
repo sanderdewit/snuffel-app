@@ -106,7 +106,8 @@ export default function Dogs() {
               </View>
             ) : (
               <Pressable style={S.btnGhost} onPress={pickImport} disabled={importing} accessibilityRole="button">
-                {importing ? <ActivityIndicator color={C.brand} /> : <Text style={S.btnGhostText}>📥 {t("app_import")}</Text>}
+                {/* on the grey button: link, not brand (brand on dark chip is 2.7:1) */}
+                {importing ? <ActivityIndicator color={C.link} /> : <Text style={S.btnGhostText}>📥 {t("app_import")}</Text>}
               </Pressable>
             )}
           </View>

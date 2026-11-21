@@ -7,6 +7,7 @@ import { useI18n } from "../../i18n";
 import { currentPosition, geocode, LocationDeniedError, reverseLabel, shortLabel, type Spot } from "../../lib/geo";
 import { CATEGORIES, CATEGORY_ORDER, NotCoveredError, offline, search, type Place } from "../../lib/places";
 import type { Category } from "../../core/classify";
+import { CategoryIcon, Emoji } from "../../ui/Emoji";
 import { PlaceCard } from "../../ui/PlaceCard";
 import { PlaceMap } from "../../ui/PlaceMap";
 import { Input } from "../../ui/Input";
@@ -108,7 +109,10 @@ export default function Find() {
     <SafeAreaView style={S.screen} edges={["top"]}>
       <View style={{ paddingHorizontal: 16, paddingTop: 8, gap: 8 }}>
         <View style={[S.row, { justifyContent: "space-between" }]}>
-          <Text style={S.h1}>🐾 Snuffel</Text>
+          <View style={[S.row, { gap: 6 }]}>
+            <Emoji char="🐾" size={22} box={32} />
+            <Text style={S.h1}>Snuffel</Text>
+          </View>
           <Pressable onPress={() => router.push("/settings")} hitSlop={12} accessibilityRole="button" accessibilityLabel={t("app_settings")}>
             <Text style={{ fontSize: 22 }}>⚙️</Text>
           </Pressable>
@@ -136,8 +140,11 @@ export default function Find() {
                 const next = { ...s, [c]: !s[c] };
                 return CATEGORY_ORDER.some((k) => next[k]) ? next : allCats(true);
               })} accessibilityRole="checkbox" accessibilityState={{ checked: on }}
-                style={{ paddingHorizontal: 10, paddingVertical: 6, borderRadius: 16, backgroundColor: on ? C.cat[c] + "22" : C.chip, borderWidth: 1, borderColor: on ? C.cat[c] : C.line }}>
-                <Text style={{ color: C.text }}>{CATEGORIES[c].icon} {t(CATEGORIES[c].key)}</Text>
+                style={{ paddingHorizontal: 10, paddingVertical: 6, borderRadius: 16, backgroundColor: on ? C.cat[c] + "22" : C.chip, borderWidth: 1, borderColor: on ? C.cat[c] : C.line,
+                  flexDirection: "row", alignItems: "center", gap: 5 }}>
+                {/* dark: on the category's light disc (the negative margin keeps the chip's height) */}
+                <CategoryIcon cat={c} size={14} box={24} style={{ marginVertical: -4, marginLeft: -4 }} />
+                <Text style={{ color: C.text }}>{t(CATEGORIES[c].key)}</Text>
               </Pressable>
             );
           })}

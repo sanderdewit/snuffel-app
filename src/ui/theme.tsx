@@ -28,7 +28,7 @@ function makeStyles(C: Palette) {
     body: { fontSize: 15, color: C.text, lineHeight: 21 },
     muted: { fontSize: 13, color: C.muted, lineHeight: 18 },
     row: { flexDirection: "row", alignItems: "center" },
-    input: { backgroundColor: C.card, borderWidth: 1, borderColor: C.line, borderRadius: 12, paddingHorizontal: 12, paddingVertical: 10, fontSize: 16, color: C.text },
+    input: { backgroundColor: C.card, borderWidth: 1, borderColor: C.fieldLine, borderRadius: 12, paddingHorizontal: 12, paddingVertical: 10, fontSize: 16, color: C.text },
     btn: { backgroundColor: C.brand, borderRadius: 12, paddingVertical: 12, paddingHorizontal: 16, alignItems: "center", justifyContent: "center" },
     btnText: { color: C.onBrand, fontSize: 16, fontWeight: "700" },
     btnGhost: { backgroundColor: C.chip, borderRadius: 12, paddingVertical: 10, paddingHorizontal: 14, alignItems: "center", justifyContent: "center" },
