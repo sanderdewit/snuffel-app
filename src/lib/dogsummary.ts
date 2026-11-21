@@ -2,16 +2,17 @@
 // No app imports, so tests/dogsummary.test.ts runs in plain Node.
 
 export type RecordKind = "symptom" | "visit" | "diagnosis" | "medication" | "allergy" | "weight" | "behaviour" | "note" | "ai";
-export const RECORD_KINDS: { kind: RecordKind; icon: string; key: string }[] = [
-  { kind: "symptom", icon: "🌡️", key: "app_rec_symptom" },
-  { kind: "visit", icon: "🩺", key: "app_rec_visit" },
-  { kind: "diagnosis", icon: "📋", key: "app_rec_diagnosis" },
-  { kind: "medication", icon: "💊", key: "app_rec_medication" },
-  { kind: "allergy", icon: "⚠️", key: "app_rec_allergy" },
-  { kind: "weight", icon: "⚖️", key: "app_rec_weight" },
-  { kind: "behaviour", icon: "🐾", key: "app_rec_behaviour" },
-  { kind: "note", icon: "📝", key: "app_rec_note" },
-  { kind: "ai", icon: "💬", key: "app_rec_ai" }
+// Each kind's icon is in src/ui/RecordIcon.tsx.
+export const RECORD_KINDS: { kind: RecordKind; key: string }[] = [
+  { kind: "symptom", key: "app_rec_symptom" },
+  { kind: "visit", key: "app_rec_visit" },
+  { kind: "diagnosis", key: "app_rec_diagnosis" },
+  { kind: "medication", key: "app_rec_medication" },
+  { kind: "allergy", key: "app_rec_allergy" },
+  { kind: "weight", key: "app_rec_weight" },
+  { kind: "behaviour", key: "app_rec_behaviour" },
+  { kind: "note", key: "app_rec_note" },
+  { kind: "ai", key: "app_rec_ai" }
 ];
 // Categories of an observed sign ("symptom" entries), as the AI chat returns them
 // (each has a label app_sign_<category>). "reproductive" is asked for in ai.ts (features).
@@ -20,6 +21,21 @@ export type SignCategory = (typeof SIGN_CATEGORIES)[number];
 export const signCategory = (v: unknown): SignCategory => (SIGN_CATEGORIES as readonly string[]).includes(String(v)) ? (v as SignCategory) : "other";
 
 export interface DogRecord { id: number; dogId: number; kind: RecordKind; date: string; title: string; details: string | null; value: number | null; category?: SignCategory | null }
+
+/**
+ * An edited entry the way it is stored: a known kind, the title (at most 200
+ * characters) and details (4000) trimmed, a value only for a weight, a category only
+ * for a sign. Null when it can't be stored (unknown kind, no title, a weight without
+ * a value). The date is checked by the caller (validDate, src/lib/dates.ts).
+ */
+export function cleanRecord<T extends Omit<DogRecord, "id">>(r: T): T | null {
+  if (!RECORD_KINDS.some((k) => k.kind === r.kind)) return null;
+  const title = String(r.title ?? "").trim().slice(0, 200);
+  const details = r.details ? String(r.details).trim().slice(0, 4000) || null : null;
+  const value = r.kind === "weight" && typeof r.value === "number" && Number.isFinite(r.value) ? r.value : null;
+  if (!title || (r.kind === "weight" && value == null)) return null;
+  return { ...r, title, details, value, category: r.kind === "symptom" ? signCategory(r.category) : null };
+}
 
 export const SUMMARY_MAX = 1400;
 
