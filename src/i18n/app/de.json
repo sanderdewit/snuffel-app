@@ -251,6 +251,7 @@
   "app_voiceNoteWait": "Prüft, ob etwas in {name}s Akte gehört…",
   "app_voiceNoteAsk": "Zu {name}s Akte hinzufügen?",
   "app_voiceAiEnded": "Das Gespräch ist beendet.",
+  "app_voiceNoMic": "Snuffel konnte das Mikrofon nicht hören, daher wurde das Gespräch beendet. Ein Neustart hilft meistens.",
   "app_voiceAiTime": "Die 10 Minuten sind um. Du kannst ein neues Gespräch beginnen.",
   "app_voiceAiLimit": "Genug Gespräche für heute. Versuch es morgen wieder oder tippe deine Frage.",
   "app_voiceAiNote": "Deine Stimme geht an Azure OpenAI in der EU; nichts wird gespeichert.",

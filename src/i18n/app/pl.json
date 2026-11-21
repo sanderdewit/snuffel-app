@@ -259,6 +259,7 @@
   "app_voiceNoteWait": "Sprawdzam, czy jest coś do zapisania w karcie: {name}…",
   "app_voiceNoteAsk": "Dodać do karty: {name}?",
   "app_voiceAiEnded": "Rozmowa została zakończona.",
+  "app_voiceNoMic": "Snuffel nie słyszał mikrofonu, więc rozmowa została przerwana. Zwykle pomaga rozpoczęcie od nowa.",
   "app_voiceAiTime": "10 minut minęło. Możesz rozpocząć nową rozmowę.",
   "app_voiceAiLimit": "Na dziś wystarczy rozmów. Spróbuj ponownie jutro albo wpisz swoje pytanie.",
   "app_voiceAiNote": "Twój głos trafia do Azure OpenAI w UE; nic nie jest zapisywane.",

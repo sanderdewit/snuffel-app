@@ -11,6 +11,10 @@
 // answer outside the conversation: a note for the dog's file (voicenote.ts),
 // made from what the model already heard. The connection stays up only for
 // that answer, at most NOTE_WAIT_MS.
+// During the call the microphone is checked from the connection's statistics
+// (micwatch.ts): when the phone stops sending audio, the iPhone's recording is
+// restarted once, and if that doesn't help the call ends with a message, instead
+// of "Listening…" for ever.
 import { AppState, Platform } from "react-native";
 // LiveKit's maintained fork of react-native-webrtc: same API, supports the New Architecture.
 import { AudioDeviceModule, audioDeviceModuleEvents, type AutomaticAppleAudioConfiguration, mediaDevices, MediaStream, RTCPeerConnection } from "@livekit/react-native-webrtc";
@@ -23,17 +27,19 @@ import { signCategory } from "./dogsummary";
 import { installId } from "./install";
 import { parseVoiceNote, type VoiceNote } from "./voicenote";
 import { breedForServer, breeds } from "./breeds";
+import { micSample, micWatch } from "./micwatch";
 
-export type VoiceState = "connecting" | "listening" | "thinking" | "speaking" | "ended";
-export type VoiceEnd = "done" | "time" | "beta" | "rate_limited" | "unavailable" | "mic" | "failed";
+export type VoiceState = "connecting" | "listening" | "hearing" | "thinking" | "speaking" | "ended";   // hearing: the AI hears the owner speak
+export type VoiceEnd = "done" | "time" | "beta" | "rate_limited" | "unavailable" | "mic" | "nomic" | "failed";   // mic: no permission; nomic: no sound from it
 export interface VoiceLine { role: "user" | "assistant"; text: string }
 
 export interface VoiceHandlers {
   onState(s: VoiceState): void;
   onLines(lines: VoiceLine[]): void;          // the transcript so far
   onConnected(maxSeconds: number): void;      // the conversation is live
-  onEnd(reason: VoiceEnd, noting: boolean): void;   // once; noting: the note for the dog's file is on its way (onNote follows)
+  onEnd(reason: VoiceEnd, noting: boolean, detail?: string): void;   // once; noting: the note for the dog's file is on its way (onNote follows); detail: the audio state, after "nomic"
   onNote?(note: VoiceNote | null): void;      // after onEnd(_, true): the note, or null (nothing to note, or no answer in time)
+  onLevel?(level: number | undefined): void;  // the microphone's level (0-1) a few times a second; undefined: not known
 }
 
 /**
@@ -43,6 +49,7 @@ export interface VoiceHandlers {
 export interface VoiceCall { hangUp(): void; close(): void }
 
 const NOTE_WAIT_MS = 8000;
+const MIC_CHECK_MS = 250, MIC_DEAD_MS = 4000;
 // The request for the note: a system message, answered as the session's instructions
 // (set by /api/voice) describe. response.create gets no `instructions`: they would
 // replace the session's for that answer, and with them the file note rules, the
@@ -51,8 +58,9 @@ const NOTE_REQUEST = "(The call has ended. Reply only with the JSON note for the
 
 /** Starts a conversation right away and returns its handle at once. */
 export function startVoice(lang: string, labels: { emergency: string; lost: string }, dog: Dog | null, h: VoiceHandlers): VoiceCall {
-  let ended = false, closed = false, noting = false;
+  let ended = false, closed = false, noting = false, spoke = false;
   let timer: ReturnType<typeof setTimeout> | null = null, noteTimer: ReturnType<typeof setTimeout> | null = null;
+  let micTimer: ReturnType<typeof setInterval> | null = null;
   let pc: RTCPeerConnection | null = null, mic: MediaStream | null = null;
   let events: ReturnType<RTCPeerConnection["createDataChannel"]> | null = null;
   const send = (m: object) => { try { events?.send(JSON.stringify(m)); } catch { /* closed */ } };
@@ -73,6 +81,7 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
     closed = true;
     if (timer) clearTimeout(timer);
     if (noteTimer) clearTimeout(noteTimer);
+    if (micTimer) clearInterval(micTimer);
     appState.remove();
     request.abort();                                   // a session still being set up
     mic?.getTracks().forEach((t) => t.stop());
@@ -83,14 +92,70 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
   // (only with a dog and a live data channel). Ending again while the note is on its
   // way (the screen closes, the app goes to the background, the connection drops)
   // stops waiting for it.
-  function end(reason: VoiceEnd, note = false) {
+  function end(reason: VoiceEnd, note = false, detail?: string) {
     if (ended) { noteDone(null); return; }
     ended = true;
     if (timer) clearTimeout(timer);
+    if (micTimer) clearInterval(micTimer);
     noting = note && !!dog && !!h.onNote && events?.readyState === "open";
     if (noting) { silence(); askNote(); } else close();
     h.onState("ended");
-    h.onEnd(reason, noting);
+    h.onEnd(reason, noting, detail);
+  }
+
+  // The microphone, checked a few times a second once connected (micwatch.ts); the
+  // level goes to the screen. No audio for MIC_DEAD_MS: restart the recording once,
+  // then end the call ("nomic", with a note only if the owner had already spoken).
+  function watchMic() {
+    const watch = micWatch(MIC_DEAD_MS);
+    let revived: string | null = null, busy = false, last: ReturnType<typeof micSample> = {};
+    micTimer = setInterval(() => {
+      if (busy || ended || !pc) return;
+      if (pc.connectionState !== "connected") { watch.reset(); return; }
+      busy = true;
+      pc.getStats().then(async (report) => {
+        if (ended) return;
+        last = micSample(report);
+        h.onLevel?.(last.level);
+        if (watch.check(last, Date.now()) !== "dead") return;
+        if (revived == null) { revived = await reviveMic(); watch.reset(); return; }
+        end("nomic", spoke, audioState(last, revived));
+      }).catch(() => undefined).finally(() => { busy = false; });
+    }, MIC_CHECK_MS);
+  }
+
+  // What can be restarted from here: the track, the iPhone's mute and recording.
+  // Returns what was found, for the detail line.
+  async function reviveMic(): Promise<string> {
+    const found: string[] = [];
+    try { mic?.getAudioTracks().forEach((t) => { if (!t.enabled) { found.push("track-off"); t.enabled = true; } }); } catch { /* ended */ }
+    if (Platform.OS === "ios") {
+      try { if (AudioDeviceModule.isMicrophoneMuted()) { found.push("muted"); await AudioDeviceModule.setMicrophoneMuted(false); } } catch { found.push("muted?"); }
+      try {
+        if (AudioDeviceModule.isRecording()) { found.push("rec"); await AudioDeviceModule.stopRecording(); } else found.push("norec");
+        await AudioDeviceModule.startRecording();
+      } catch (e) { found.push("err:" + String((e as Error)?.message || e).slice(0, 40)); }
+    }
+    return found.join(",") || "-";
+  }
+
+  // One line on the audio state, shown small under "nomic" for a screenshot.
+  function audioState(s: ReturnType<typeof micSample>, revived: string): string {
+    const part = (label: string, f: () => unknown) => { try { return `${label} ${String(f())}`; } catch { return `${label} ?`; } };
+    const ios = Platform.OS === "ios";
+    return [
+      ios && part("session", () => { const a = ExpoSpeechRecognitionModule.getAudioSessionCategoryAndOptionsIOS(); return `${a.category}/${a.mode}`; }),
+      ios && part("engine", () => (AudioDeviceModule.isEngineRunning() ? "on" : "off")),
+      ios && part("rec", () => (AudioDeviceModule.isRecording() ? "yes" : "no")),
+      ios && part("muted", () => (AudioDeviceModule.isMicrophoneMuted() ? "yes" : "no")),
+      ios && part("vp", () => (AudioDeviceModule.isVoiceProcessingEnabled() ? "on" : "off")),
+      ios && part("avail", () => { const a = AudioDeviceModule.getEngineAvailability(); return `${a.isInputAvailable ? "in" : "-"}${a.isOutputAvailable ? "out" : "-"}`; }),
+      part("pc", () => `${pc?.connectionState}/${pc?.iceConnectionState}`),
+      part("track", () => { const t = mic?.getAudioTracks()[0]; return t ? `${t.readyState}${t.enabled ? "" : ",off"}${t.muted ? ",muted" : ""}` : "none"; }),
+      part("sent", () => `${s.samples ?? "?"}s/${s.packets ?? "?"}p`),
+      part("spoke", () => (spoke ? "yes" : "no")),
+      part("revive", () => revived)
+    ].filter(Boolean).join(" · ");
   }
 
   // Microphone and the AI's voice stop at once; the connection stays up for the note.
@@ -197,8 +262,8 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
           return l;
         };
         switch (m.type) {
-          case "input_audio_buffer.speech_started": h.onState("listening"); break;
-          case "input_audio_buffer.speech_stopped": h.onState("thinking"); break;
+          case "input_audio_buffer.speech_started": h.onState("hearing"); break;
+          case "input_audio_buffer.speech_stopped": spoke = true; h.onState("thinking"); break;
           case "output_audio_buffer.started": h.onState("speaking"); break;
           case "output_audio_buffer.stopped": h.onState("listening"); break;
           case "conversation.item.input_audio_transcription.completed":   // only if the server turns transcription on
@@ -245,6 +310,7 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
       timer = setTimeout(() => end("time", true), maxSeconds * 1000);
       h.onConnected(maxSeconds);
       h.onState("listening");
+      watchMic();
     } catch {
       end(ended ? "done" : "failed");                  // an abort after hanging up is not a failure
     }

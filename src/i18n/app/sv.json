@@ -251,6 +251,7 @@
   "app_voiceNoteWait": "Letar efter något att anteckna i {name}s journal…",
   "app_voiceNoteAsk": "Lägga till i {name}s journal?",
   "app_voiceAiEnded": "Samtalet har avslutats.",
+  "app_voiceNoMic": "Snuffel kunde inte höra mikrofonen, så samtalet har avbrutits. Det brukar hjälpa att börja om.",
   "app_voiceAiTime": "De 10 minuterna är slut. Du kan starta ett nytt samtal.",
   "app_voiceAiLimit": "Det räcker med samtal för i dag. Försök igen i morgon, eller skriv din fråga.",
   "app_voiceAiNote": "Din röst skickas till Azure OpenAI i EU; inget sparas.",

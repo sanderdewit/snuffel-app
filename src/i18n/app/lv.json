@@ -255,6 +255,7 @@
   "app_voiceNoteWait": "Pārbaudu, vai ir kas pierakstāms lietā: {name}…",
   "app_voiceNoteAsk": "Pievienot lietai: {name}?",
   "app_voiceAiEnded": "Saruna ir beigusies.",
+  "app_voiceNoMic": "Snuffel nedzirdēja mikrofonu, tāpēc saruna tika pārtraukta. Parasti palīdz sākt no jauna.",
   "app_voiceAiTime": "10 minūtes ir beigušās. Vari sākt jaunu sarunu.",
   "app_voiceAiLimit": "Šodienai sarunu pietiek. Mēģini vēlreiz rīt vai uzraksti savu jautājumu.",
   "app_voiceAiNote": "Tava balss tiek nosūtīta uz Azure OpenAI ES; nekas netiek saglabāts.",

@@ -259,6 +259,7 @@
   "app_voiceNoteWait": "Preverjam, ali je kaj za zapis v mapo: {name} …",
   "app_voiceNoteAsk": "Želite dodati v mapo: {name}?",
   "app_voiceAiEnded": "Pogovor je končan.",
+  "app_voiceNoMic": "Snuffel ni slišal mikrofona, zato se je pogovor ustavil. Ponoven začetek običajno pomaga.",
   "app_voiceAiTime": "10 minut je minilo. Lahko začnete nov pogovor.",
   "app_voiceAiLimit": "Za danes je pogovorov dovolj. Poskusite znova jutri ali vpišite svoje vprašanje.",
   "app_voiceAiNote": "Vaš glas se pošlje v Azure OpenAI v EU; nič se ne shrani.",

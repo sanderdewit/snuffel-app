@@ -3,6 +3,10 @@
 // or when the screen closes. The transcript is shown, not stored. With a dog
 // chosen, hanging up (or the time limit) brings a note for its file of the signs
 // the owner mentioned: added only when the owner taps it, as in the chat (undo).
+// The bars under the status show the microphone's level (lit in the brand colour
+// while the AI hears speech), so a silent microphone is visible; when the phone
+// sends no sound at all the call ends with a message (realtime.ts) and can be
+// started again here.
 import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, type ScrollViewInstance, Text, View } from "react-native";
 import { Stack, router, useLocalSearchParams } from "expo-router";
@@ -11,14 +15,17 @@ import { useBeta } from "../lib/beta";
 import { formatDate } from "../lib/dates";
 import { deleteRecordById, fileObservation } from "../lib/dogfile";
 import { getDog, type Dog } from "../lib/dogs";
+import { levelBars } from "../lib/micwatch";
 import { startVoice, type VoiceCall, type VoiceEnd, type VoiceLine, type VoiceState } from "../lib/realtime";
 import type { VoiceNote } from "../lib/voicenote";
 import { useTheme } from "../ui/theme";
 
 const END_TEXT: Record<VoiceEnd, string> = {
   done: "app_voiceAiEnded", time: "app_voiceAiTime", beta: "app_betaRevoked", rate_limited: "app_voiceAiLimit",
-  unavailable: "aiReply", mic: "app_voiceDenied", failed: "aiError"
+  unavailable: "aiReply", mic: "app_voiceDenied", nomic: "app_voiceNoMic", failed: "aiError"
 };
+const AGAIN: VoiceEnd[] = ["nomic", "failed"];   // ends worth a "Try again" here
+const BARS = 5;
 
 export default function Voice() {
   const { t, tf, lang } = useI18n();
@@ -33,6 +40,9 @@ export default function Voice() {
   const [noting, setNoting] = useState(false);                  // the note for the dog's file is on its way
   const [note, setNote] = useState<VoiceNote | null>(null);
   const [filed, setFiled] = useState<number | null>(null);      // the file entry, once added
+  const [level, setLevel] = useState<number | undefined>(undefined);
+  const [detail, setDetail] = useState<string | null>(null);    // the audio state after "nomic"
+  const [run, setRun] = useState(0);                            // "Try again" starts a new call
   const call = useRef<Pick<VoiceCall, "hangUp"> | null>(null);
   const scroll = useRef<ScrollViewInstance>(null);
 
@@ -50,17 +60,24 @@ export default function Voice() {
         onState: (s) => { if (!gone) setState(s); },
         onLines: (l) => { if (!gone) setLines(l); },
         onConnected: (maxSeconds) => { if (!gone) setLeft(maxSeconds); },
-        onEnd: (reason, notePending) => {
+        onEnd: (reason, notePending, info) => {
           if (reason === "beta") beta.leave().catch(() => undefined);   // code taken out of the beta
-          if (!gone) { setEnded(reason); setNoting(notePending); }
+          if (!gone) { setEnded(reason); setNoting(notePending); setDetail(info || null); }
         },
-        onNote: (n) => { if (!gone) { setNoting(false); setNote(n); } }
+        onNote: (n) => { if (!gone) { setNoting(false); setNote(n); } },
+        onLevel: (l) => { if (!gone) setLevel(l); }
       });
     })();
     // Closing the screen ends the call at once, without waiting for a note.
     return () => { gone = true; stopped = true; handle?.close(); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [run]);
+
+  const again = () => {
+    setState("connecting"); setLines([]); setEnded(null); setLeft(null); setNoting(false);
+    setNote(null); setFiled(null); setLevel(undefined); setDetail(null);
+    setRun((r) => r + 1);
+  };
 
   // Time left, shown in the last two minutes.
   useEffect(() => {
@@ -84,7 +101,8 @@ export default function Voice() {
     : state === "connecting" ? t("app_voiceAiConnecting")
     : state === "speaking" ? t("app_voiceAiSpeaking")
     : state === "thinking" ? t("app_voiceAiThinking")
-    : t("app_voiceAiListening");
+    : t("app_voiceAiListening");                                  // listening, hearing
+  const lit = levelBars(level, BARS);
 
   return (
     <View style={[S.screen, { padding: 16, gap: 12 }]}>
@@ -97,10 +115,20 @@ export default function Voice() {
             <Text style={[S.h2, { textAlign: "center" }]} accessibilityLiveRegion="polite">{status}</Text>
           </View>
         )}
+        {/* The microphone's level: is the phone hearing anything? */}
+        {!ended && left != null && level !== undefined && (
+          <View style={[S.row, { gap: 4, height: 20, alignItems: "flex-end" }]} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+            {Array.from({ length: BARS }, (_, i) => (
+              <View key={i} style={{ width: 6, height: 6 + i * 3.5, borderRadius: 3,
+                backgroundColor: i < lit ? (state === "hearing" ? C.brand : C.muted) : C.line }} />
+            ))}
+          </View>
+        )}
         {!ended && left != null && left <= 120 && (
           <Text style={[S.muted, { color: C.warn }]}>{`${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}`}</Text>
         )}
         {ended && <Text style={[S.body, { textAlign: "center" }]}>{t(END_TEXT[ended])}</Text>}
+        {ended && !!detail && <Text style={[S.muted, { fontSize: 11, textAlign: "center" }]} selectable>🔧 {detail}</Text>}
       </View>
 
       {/* The note for the dog's file: on its way, then ready to add (or added: undo) */}
@@ -139,7 +167,14 @@ export default function Voice() {
 
       <Text style={S.muted}>🤖 {t("app_aiIsAI")} {t("app_voiceAiNote")}</Text>
       {ended ? (
-        <Pressable style={S.btn} onPress={() => router.back()} accessibilityRole="button"><Text style={S.btnText}>{t("close")}</Text></Pressable>
+        <View style={{ gap: 8 }}>
+          {AGAIN.includes(ended) && !noting && (
+            <Pressable style={S.btn} onPress={again} accessibilityRole="button"><Text style={S.btnText}>{t("app_retry")}</Text></Pressable>
+          )}
+          <Pressable style={AGAIN.includes(ended) && !noting ? S.btnGhost : S.btn} onPress={() => router.back()} accessibilityRole="button">
+            <Text style={AGAIN.includes(ended) && !noting ? S.btnGhostText : S.btnText}>{t("close")}</Text>
+          </Pressable>
+        </View>
       ) : (
         <Pressable style={[S.btn, { backgroundColor: C.dangerFill }]} onPress={() => call.current?.hangUp()} accessibilityRole="button">
           <Text style={S.btnText}>{t("app_voiceAiHangUp")}</Text>

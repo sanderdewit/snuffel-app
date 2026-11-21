@@ -251,6 +251,7 @@
   "app_voiceNoteWait": "Even kijken of er iets in het dossier van {name} hoort…",
   "app_voiceNoteAsk": "Toevoegen aan het dossier van {name}?",
   "app_voiceAiEnded": "Het gesprek is afgelopen.",
+  "app_voiceNoMic": "Snuffel kon de microfoon niet horen, dus het gesprek is gestopt. Opnieuw beginnen helpt meestal.",
   "app_voiceAiTime": "De 10 minuten zijn om. Je kunt een nieuw gesprek beginnen.",
   "app_voiceAiLimit": "Genoeg gesprekken voor vandaag. Probeer het morgen weer, of typ je vraag.",
   "app_voiceAiNote": "Je stem gaat naar Azure OpenAI in de EU; er wordt niets opgeslagen.",

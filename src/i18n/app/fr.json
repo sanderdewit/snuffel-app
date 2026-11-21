@@ -255,6 +255,7 @@
   "app_voiceNoteWait": "Recherche d'éléments à noter dans le dossier de {name}…",
   "app_voiceNoteAsk": "Ajouter au dossier de {name} ?",
   "app_voiceAiEnded": "La conversation est terminée.",
+  "app_voiceNoMic": "Snuffel n'entendait pas le micro, la conversation s'est donc arrêtée. La relancer suffit généralement.",
   "app_voiceAiTime": "Les 10 minutes sont écoulées. Vous pouvez lancer une nouvelle conversation.",
   "app_voiceAiLimit": "Assez de conversations pour aujourd'hui. Réessayez demain ou écrivez votre question.",
   "app_voiceAiNote": "Votre voix est envoyée à Azure OpenAI dans l'UE ; rien n'est conservé.",

@@ -259,6 +259,7 @@
   "app_voiceNoteWait": "Tikrinu, ar yra ką užrašyti byloje: {name}…",
   "app_voiceNoteAsk": "Pridėti į bylą: {name}?",
   "app_voiceAiEnded": "Pokalbis baigtas.",
+  "app_voiceNoMic": "Snuffel negirdėjo mikrofono, todėl pokalbis sustabdytas. Paprastai padeda pradėti iš naujo.",
   "app_voiceAiTime": "10 minučių baigėsi. Galite pradėti naują pokalbį.",
   "app_voiceAiLimit": "Šiandien pokalbių jau gana. Bandykite dar kartą rytoj arba parašykite savo klausimą.",
   "app_voiceAiNote": "Jūsų balsas siunčiamas į Azure OpenAI ES; niekas nesaugoma.",

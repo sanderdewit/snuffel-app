@@ -251,6 +251,7 @@
   "app_voiceNoteWait": "Po kontrolloj nëse ka diçka për dosjen e {name}…",
   "app_voiceNoteAsk": "Ta shtosh në dosjen e {name}?",
   "app_voiceAiEnded": "Biseda përfundoi.",
+  "app_voiceNoMic": "Snuffel nuk e dëgjonte mikrofonin, ndaj biseda u ndal. Zakonisht ndihmon rinisja.",
   "app_voiceAiTime": "10 minutat mbaruan. Mund të nisësh një bisedë të re.",
   "app_voiceAiLimit": "Mjaft biseda për sot. Provo përsëri nesër ose shkruaj pyetjen tënde.",
   "app_voiceAiNote": "Zëri yt dërgohet te Azure OpenAI në BE; nuk ruhet asgjë.",

@@ -255,6 +255,7 @@
   "app_voiceNoteWait": "Verific dacă e ceva de notat în dosarul lui {name}…",
   "app_voiceNoteAsk": "Adaugi în dosarul lui {name}?",
   "app_voiceAiEnded": "Conversația s-a încheiat.",
+  "app_voiceNoMic": "Snuffel nu a putut auzi microfonul, așa că conversația s-a oprit. De obicei ajută o nouă încercare.",
   "app_voiceAiTime": "Cele 10 minute s-au terminat. Poți începe o conversație nouă.",
   "app_voiceAiLimit": "Ajung conversațiile pentru azi. Încearcă din nou mâine sau scrie-ți întrebarea.",
   "app_voiceAiNote": "Vocea ta este trimisă către Azure OpenAI în UE; nu se stochează nimic.",

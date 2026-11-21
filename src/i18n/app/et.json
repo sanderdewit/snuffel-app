@@ -251,6 +251,7 @@
   "app_voiceNoteWait": "Kontrollin, kas toimikusse on midagi märkida: {name}…",
   "app_voiceNoteAsk": "Kas lisada toimikusse: {name}?",
   "app_voiceAiEnded": "Vestlus on lõppenud.",
+  "app_voiceNoMic": "Snuffel ei kuulnud mikrofoni, seega vestlus peatus. Uuesti alustamine tavaliselt aitab.",
   "app_voiceAiTime": "10 minutit on täis. Võid alustada uut vestlust.",
   "app_voiceAiLimit": "Tänaseks on vestlusi küllalt. Proovi homme uuesti või kirjuta oma küsimus.",
   "app_voiceAiNote": "Sinu hääl saadetakse ELis asuvale Azure OpenAI teenusele; midagi ei salvestata.",

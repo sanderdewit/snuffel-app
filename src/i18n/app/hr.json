@@ -255,6 +255,7 @@
   "app_voiceNoteWait": "Provjerava ima li nešto za dosje: {name}…",
   "app_voiceNoteAsk": "Dodati u dosje: {name}?",
   "app_voiceAiEnded": "Razgovor je završen.",
+  "app_voiceNoMic": "Snuffel nije čuo mikrofon pa je razgovor zaustavljen. Ponovno pokretanje obično pomaže.",
   "app_voiceAiTime": "Isteklo je 10 minuta. Možeš započeti novi razgovor.",
   "app_voiceAiLimit": "Dosta razgovora za danas. Pokušaj ponovno sutra ili napiši svoje pitanje.",
   "app_voiceAiNote": "Tvoj glas šalje se u Azure OpenAI u EU-u; ništa se ne pohranjuje.",

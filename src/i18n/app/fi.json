@@ -251,6 +251,7 @@
   "app_voiceNoteWait": "Tarkistaa, onko kansioon jotain kirjattavaa: {name}…",
   "app_voiceNoteAsk": "Lisätäänkö kansioon: {name}?",
   "app_voiceAiEnded": "Keskustelu on päättynyt.",
+  "app_voiceNoMic": "Snuffel ei kuullut mikrofonia, joten keskustelu keskeytyi. Uudelleen aloittaminen auttaa yleensä.",
   "app_voiceAiTime": "10 minuuttia on kulunut. Voit aloittaa uuden keskustelun.",
   "app_voiceAiLimit": "Keskusteluja riittää tältä päivältä. Yritä huomenna uudelleen tai kirjoita kysymyksesi.",
   "app_voiceAiNote": "Äänesi lähetetään Azure OpenAI -palveluun EU:ssa; mitään ei tallenneta.",

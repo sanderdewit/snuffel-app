@@ -251,6 +251,7 @@
   "app_voiceNoteWait": "Checking for anything to note in {name}'s file…",
   "app_voiceNoteAsk": "Add to {name}'s file?",
   "app_voiceAiEnded": "The conversation has ended.",
+  "app_voiceNoMic": "Snuffel couldn't hear the microphone, so the conversation has stopped. Starting again usually helps.",
   "app_voiceAiTime": "The 10 minutes are up. You can start a new conversation.",
   "app_voiceAiLimit": "That's enough conversations for today. Try again tomorrow, or type your question.",
   "app_voiceAiNote": "Your voice goes to Azure OpenAI in the EU; nothing is stored.",

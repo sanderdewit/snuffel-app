@@ -259,6 +259,7 @@
   "app_voiceNoteWait": "Zjišťuji, jestli je něco k zapsání do složky: {name}…",
   "app_voiceNoteAsk": "Přidat do složky: {name}?",
   "app_voiceAiEnded": "Rozhovor skončil.",
+  "app_voiceNoMic": "Snuffel neslyšel mikrofon, a proto se rozhovor zastavil. Obvykle pomůže začít znovu.",
   "app_voiceAiTime": "10 minut uplynulo. Můžete začít nový rozhovor.",
   "app_voiceAiLimit": "Pro dnešek už dost rozhovorů. Zkuste to zítra, nebo dotaz napište.",
   "app_voiceAiNote": "Váš hlas se odesílá do Azure OpenAI v EU; nic se neukládá.",

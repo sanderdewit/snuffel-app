@@ -255,6 +255,7 @@
   "app_voiceNoteWait": "Comprovant si hi ha res per anotar a l'expedient de {name}…",
   "app_voiceNoteAsk": "Vols afegir-ho a l'expedient de {name}?",
   "app_voiceAiEnded": "La conversa ha acabat.",
+  "app_voiceNoMic": "Snuffel no sentia el micròfon, així que la conversa s'ha aturat. Tornar a començar sol funcionar.",
   "app_voiceAiTime": "S'han acabat els 10 minuts. Pots començar una conversa nova.",
   "app_voiceAiLimit": "Prou converses per avui. Torna-ho a provar demà o escriu la teva pregunta.",
   "app_voiceAiNote": "La teva veu va a Azure OpenAI a la UE; no es desa res.",

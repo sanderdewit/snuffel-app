@@ -251,6 +251,7 @@
   "app_voiceNoteWait": "Ellenőrzi, van-e mit rögzíteni {name} dossziéjában…",
   "app_voiceNoteAsk": "Hozzáadod {name} dossziéjához?",
   "app_voiceAiEnded": "A beszélgetés véget ért.",
+  "app_voiceNoMic": "A Snuffel nem hallotta a mikrofont, ezért a beszélgetés leállt. Az újrakezdés általában segít.",
   "app_voiceAiTime": "Letelt a 10 perc. Kezdhetsz új beszélgetést.",
   "app_voiceAiLimit": "Mára ennyi beszélgetés elég. Próbáld újra holnap, vagy írd be a kérdésed.",
   "app_voiceAiNote": "A hangod az EU-ban működő Azure OpenAI-hoz kerül; semmit nem tárolunk.",
