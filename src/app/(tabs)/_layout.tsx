@@ -35,9 +35,12 @@ export default function TabsLayout() {
   return (
     <Tabs screenOptions={{ tabBarActiveTintColor: C.link, tabBarInactiveTintColor: C.muted, headerTintColor: C.text, tabBarLabelStyle: { fontWeight: "600" } }}>
       <Tabs.Screen name="index" options={{ title: t("app_tab_find"), tabBarIcon: icon("map-search", "map-search-outline"), headerShown: false }} />
-      {/* Emergency is red whether it is chosen or not, so it can be found at a glance */}
-      <Tabs.Screen name="emergency" options={{ title: t("emergencyBtn"), tabBarIcon: icon("alarm-light", "alarm-light-outline"),
-        tabBarActiveTintColor: C.danger, tabBarInactiveTintColor: C.danger, tabBarLabelStyle: { fontWeight: "700" } }} />
+      {/* Emergency is red whether it is chosen or not, so it can be found at a glance. The tab
+          bar takes its tint colours from the chosen tab only, so the red is set on this tab's
+          own icon and label (a label style's colour wins over the tint). */}
+      <Tabs.Screen name="emergency" options={{ title: t("emergencyBtn"),
+        tabBarIcon: ({ focused, size }) => <Symbol name={focused ? "alarm-light" : "alarm-light-outline"} size={size} color={C.danger} />,
+        tabBarLabelStyle: { fontWeight: "700", color: C.danger } }} />
       <Tabs.Screen name="saved" options={{ title: t("app_tab_saved"), tabBarIcon: icon("bookmark", "bookmark-outline") }} />
       <Tabs.Screen name="dogs" options={{ title: t("app_tab_dogs"), tabBarIcon: icon("paw", "paw-outline") }} />
       <Tabs.Screen name="ask" options={{ title: t("app_tab_ask"), headerTitle: t("app_askTitle"), tabBarIcon: icon("message-text", "message-text-outline") }} />
