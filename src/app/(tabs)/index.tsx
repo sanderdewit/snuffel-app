@@ -1,20 +1,26 @@
-// Find: address or GPS search, categories, independents only, radius, map or list.
-// Three rows of controls under the title, every control 44 px or more: the search
+// Find: address or GPS search, categories, open now, independents only, radius, map or list.
+// Four rows of controls under the title, every control 44 px or more: the search
 // field with "Near me" inside it (the keyboard's search key searches an address),
 // the category chips (their dots are the map's markers: the chips are its legend),
-// and one row with independents only, the radius (one button, the choices in a
-// sheet) and List/Map. In the list, the chips and that row scroll away with the
-// results; on the map they stay above it.
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, FlatList, Keyboard, Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+// the two filter switches (Open now, Independents only: what is shown), and the
+// radius (one button, the choices in a sheet) with List/Map (where and how). In the
+// list, the chips and both rows scroll away with the results; on the map they stay
+// above it.
+//
+// Open now (src/lib/findlist.ts) hides only places known to be closed: places with
+// unknown hours stay, below the open ones. It starts off on every launch: it depends
+// on the hour, and a filter left on at night would quietly empty the list.
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { AccessibilityInfo, ActivityIndicator, FlatList, Keyboard, Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
 import { useI18n } from "../../i18n";
+import { findList } from "../../lib/findlist";
 import { currentPosition, geocode, LocationDeniedError, reverseLabel, shortLabel, type Spot } from "../../lib/geo";
-import { CATEGORIES, CATEGORY_ORDER, NotCoveredError, offline, search, type Place } from "../../lib/places";
+import { CATEGORIES, CATEGORY_ORDER, hoursNow, NotCoveredError, offline, search, type Place } from "../../lib/places";
 import type { Category } from "../../core/classify";
 import { Icon, Symbol } from "../../ui/Icon";
-import { PlaceCard } from "../../ui/PlaceCard";
+import { PlaceCard, useMinuteClock } from "../../ui/PlaceCard";
 import { MarkerDot, PlaceMap } from "../../ui/PlaceMap";
 import { Input } from "../../ui/Input";
 import { useTheme } from "../../ui/theme";
@@ -62,6 +68,32 @@ function RadiusButton({ value, onChange }: { value: number; onChange: (r: number
   );
 }
 
+// A filter switch (Open now, Independents only). On: a ticked box, a green border
+// and green text; off: an empty box. The box says it, not the colour alone.
+function FilterSwitch({ label, hint, on, onPress }: { label: string; hint?: string; on: boolean; onPress: () => void }) {
+  const { C, S } = useTheme();
+  return (
+    <Pressable onPress={onPress} accessibilityRole="switch" accessibilityState={{ checked: on }} accessibilityLabel={label} accessibilityHint={hint}
+      style={({ pressed }) => [styles.filter, { gap: 6, paddingHorizontal: 10, borderWidth: 1.5, borderColor: on ? C.ok : C.line, backgroundColor: C.card }, pressed && S.pressed]}>
+      <Icon name={on ? "check-square" : "square"} size={16} color={on ? C.ok : C.muted} />
+      <Text style={[styles.filterText, { color: on ? C.ok : C.text, flexShrink: 1 }]}>{label}</Text>
+    </Pressable>
+  );
+}
+
+// A list heading for Open now: "● Open now", "○ Opening hours unknown" (the dots as on the cards).
+function StateHeading({ open, text }: { open: boolean; text: string }) {
+  const { C } = useTheme();
+  const color = open ? C.ok : C.muted;
+  return (
+    <View style={{ flexDirection: "row", alignItems: "center", gap: 6, marginTop: open ? 2 : 6, marginBottom: 8 }} accessibilityRole="header">
+      <View style={{ width: 9, height: 9, borderRadius: 5, backgroundColor: open ? color : "transparent", borderWidth: open ? 0 : 1.5, borderColor: color }}
+        accessibilityElementsHidden importantForAccessibility="no-hide-descendants" />
+      <Text style={{ color, fontWeight: "700", fontSize: 14, flexShrink: 1 }}>{text}</Text>
+    </View>
+  );
+}
+
 export default function Find() {
   const { t, tf, lang } = useI18n();
   const { C, S } = useTheme();
@@ -73,7 +105,11 @@ export default function Find() {
   const [error, setError] = useState<string | null>(null);
   const [view, setView] = useState<"list" | "map">("list");
   const [independentOnly, setIndependentOnly] = useState(true);
+  const [openOnly, setOpenOnly] = useState(false);
   const [cats, setCats] = useState<Record<Category, boolean>>(() => allCats(true));
+  // The cards' open lines and Open now read the same minute, so a card never says
+  // "Closed" under "Open now"; a place that closes leaves the list at that minute.
+  const now = useMinuteClock();
 
   const load = useCallback(async (s: Spot, r: number) => {
     setBusy(true); setError(null);
@@ -122,16 +158,35 @@ export default function Find() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.cat, params.near, params.view]);
 
-  // Memoised: the map fits its view to `shown` whenever it changes, so typing in the
-  // search field must not hand it a new list.
-  const { independents, chains, showChains, shown } = useMemo(() => {
-    const filtered = places.filter((p) => cats[p.cat]);
-    const independents = filtered.filter((p) => !p.chain);
-    const chains = filtered.filter((p) => p.chain);
-    const showChains = chains.length > 0 && (!independentOnly || independents.length === 0);
-    return { independents, chains, showChains, shown: showChains ? independents.concat(chains) : independents };
-  }, [places, cats, independentOnly]);
+  // What the list shows (src/lib/findlist.ts). With Open now, read again every minute.
+  const nextRadius = RADII.find((r) => r > radius);
+  const clock = openOnly ? now : null;
+  const list = useMemo(() => findList(places, {
+    cats, independentOnly, openOnly, canWiden: !!nextRadius,
+    status: (p) => hoursNow(p, clock ?? undefined)
+  }), [places, cats, independentOnly, openOnly, clock, nextRadius]);
+  // The map fits its view to `shown` whenever it changes, so typing in the search field
+  // or the minute ticking must not hand it a new list: a new one only when its places change.
+  const shownKey = list.shown.map((p) => p.id).join("|");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const shown = useMemo(() => list.shown, [places, shownKey]);
   const all = CATEGORY_ORDER.every((c) => cats[c]);
+
+  const count = spot && !busy && !error
+    ? (openOnly && list.unknown ? tf("app_openCounts", { open: list.open, unknown: list.unknown }) : tf("countResults", { n: shown.length }))
+      + (spot.label ? " · " + shortLabel(spot.label) : "")
+    : null;
+  // A filter switched: screen readers hear what the list now holds (after the switch's own state).
+  const countRef = useRef(count);
+  countRef.current = count;
+  const filterState = `${openOnly}|${independentOnly}`;
+  const lastFilters = useRef(filterState);
+  useEffect(() => {
+    if (lastFilters.current === filterState) return;
+    lastFilters.current = filterState;
+    const timer = setTimeout(() => { if (countRef.current) AccessibilityInfo.announceForAccessibility(countRef.current); }, 600);
+    return () => clearTimeout(timer);
+  }, [filterState]);
 
   const pickRadius = (r: number) => { setRadius(r); if (spot) load(spot, r); };
   // "All" plus the categories. With everything shown, tapping a category shows
@@ -142,8 +197,7 @@ export default function Find() {
     return CATEGORY_ORDER.some((k) => next[k]) ? next : allCats(true);
   });
 
-  // "Search further: 25 km" when only chains (or nothing) are near.
-  const nextRadius = RADII.find((r) => r > radius);
+  // "Search further: 25 km" when only chains (or nothing, or nothing open) are near.
   const widen = nextRadius ? (
     <Pressable style={({ pressed }) => [S.btnGhost, S.row, { alignSelf: "flex-start", gap: 8, minHeight: 44, marginBottom: 8 }, pressed && S.pressed]}
       onPress={() => pickRadius(nextRadius)} accessibilityRole="button">
@@ -152,19 +206,40 @@ export default function Find() {
     </Pressable>
   ) : null;
 
-  type Row = { kind: "place"; p: Place } | { kind: "note"; text: string } | { kind: "divider" } | { kind: "widen" };
-  const rows: Row[] = independents.map((p) => ({ kind: "place" as const, p }));
-  if (showChains) {
-    if (independents.length) rows.push({ kind: "divider" });
-    else {
-      // Only chains nearby: say so, offer a wider search, and show them below.
-      rows.push({ kind: "note", text: t("chainOnlyNote") });
-      if (independentOnly && nextRadius) rows.push({ kind: "widen" });
+  // The rows that aren't places: headings, notes and the ways on.
+  const NOTES = { chainOnly: "chainOnlyNote", openChains: "app_openChainsNote", noneOpen: "app_noneOpen" } as const;
+  const ghost = (icon: ReactNode, label: string, onPress: () => void, color?: string) => (
+    <Pressable style={({ pressed }) => [S.btnGhost, S.row, { alignSelf: "flex-start", gap: 8, minHeight: 44, marginBottom: 8 }, pressed && S.pressed]}
+      onPress={onPress} accessibilityRole="button">
+      {icon}
+      <Text style={[S.btnGhostText, color ? { color, fontWeight: "700" } : null, { flexShrink: 1 }]}>{label}</Text>
+    </Pressable>
+  );
+  const renderRow = ({ item }: { item: (typeof list.rows)[number] }) => {
+    switch (item.kind) {
+      case "place": return <PlaceCard p={item.p} now={now} />;
+      case "widen": return widen;
+      case "heading":
+        if (item.text === "chains") return <Text style={[S.h2, { marginVertical: 8 }]} accessibilityRole="header">{t("chainsHeading")}</Text>;
+        return <StateHeading open={item.text === "openNow"} text={t(item.text)} />;
+      case "note":
+        if (item.text === "noneOpen") {
+          return (
+            <View style={[S.row, { gap: 8, alignItems: "flex-start", marginTop: 4, marginBottom: 10 }]}>
+              <Icon name="clock" size={20} color={C.muted} style={{ marginTop: 1 }} />
+              <Text style={[S.body, { flex: 1 }]}>{tf(NOTES.noneOpen, { km: radius / 1000 })}</Text>
+            </View>
+          );
+        }
+        return <Text style={[S.muted, { marginVertical: 8 }]}>{t(NOTES[item.text])}</Text>;
+      case "showClosed":
+        return ghost(<Icon name="eye" size={18} />, tf("app_showClosed", { n: item.n }), () => setOpenOnly(false));
+      case "emergency":
+        return ghost(<Symbol name="alarm-light-outline" size={19} color={C.danger} />, t("app_findOpenVet"), () => router.navigate("/emergency"), C.danger);
     }
-    chains.forEach((p) => rows.push({ kind: "place", p }));
-  }
+  };
 
-  // The chips, the filter row and the result line: in the list they scroll with the results.
+  // The chips, the filter rows and the result line: in the list they scroll with the results.
   const filters = (
     <View style={{ gap: 8, paddingBottom: 8 }}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps="handled"
@@ -187,12 +262,15 @@ export default function Find() {
         })}
       </ScrollView>
 
+      {/* What is shown: the two filter switches, on a row of their own (with the radius and
+          List/Map they don't fit 390 px, not even in English). They wrap only at large text sizes. */}
       <View style={[S.row, { flexWrap: "wrap", gap: 8 }]}>
-        <Pressable onPress={() => setIndependentOnly((v) => !v)} accessibilityRole="switch" accessibilityState={{ checked: independentOnly }}
-          style={({ pressed }) => [styles.filter, { gap: 6, paddingHorizontal: 10, borderWidth: 1.5, borderColor: independentOnly ? C.ok : C.line, backgroundColor: C.card }, pressed && S.pressed]}>
-          <Icon name={independentOnly ? "check-square" : "square"} size={16} color={independentOnly ? C.ok : C.muted} />
-          <Text style={[styles.filterText, { color: independentOnly ? C.ok : C.text }]}>{t("independentOnly")}</Text>
-        </Pressable>
+        <FilterSwitch label={t("openNow")} hint={t("app_openNowHint")} on={openOnly} onPress={() => setOpenOnly((v) => !v)} />
+        <FilterSwitch label={t("independentOnly")} on={independentOnly} onPress={() => setIndependentOnly((v) => !v)} />
+      </View>
+
+      {/* Where and how: the radius, and List or Map */}
+      <View style={[S.row, { flexWrap: "wrap", gap: 8 }]}>
         <RadiusButton value={radius} onChange={pickRadius} />
         {/* List or map: a segmented control. marginLeft auto: on the right, also when it wraps to a line of its own. */}
         <View accessibilityRole="radiogroup" style={[S.row, { marginLeft: "auto", padding: 2, borderRadius: 12, borderWidth: 1, borderColor: C.line, backgroundColor: C.chip }]}>
@@ -208,11 +286,7 @@ export default function Find() {
         </View>
       </View>
 
-      {spot && !busy && !error && (
-        <Text style={S.muted} numberOfLines={1}>
-          {tf("countResults", { n: shown.length })}{spot.label ? " · " + shortLabel(spot.label) : ""}
-        </Text>
-      )}
+      {!!count && <Text style={S.muted} numberOfLines={2}>{count}</Text>}
       {offline && !busy && <Text style={[S.muted, { color: C.warn }]}>{t("app_offline")}</Text>}
       {!!error && <Text style={[S.body, { color: C.danger }]} accessibilityLiveRegion="polite">{error}</Text>}
     </View>
@@ -249,18 +323,15 @@ export default function Find() {
 
       {view === "list" && spot && !busy ? (
         <FlatList
-          data={rows}
+          data={list.rows}
+          extraData={now}
           keyExtractor={(r, i) => (r.kind === "place" ? r.p.id : r.kind + i)}
           ListHeaderComponent={filters}
           contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"
           ListEmptyComponent={error ? undefined : <View style={{ gap: 8 }}><Text style={S.muted}>{t("noResults")} {t("noResultsHint")}</Text>{widen}</View>}
-          renderItem={({ item }) =>
-            item.kind === "place" ? <PlaceCard p={item.p} /> :
-            item.kind === "widen" ? widen :
-            item.kind === "divider" ? <Text style={[S.h2, { marginVertical: 8 }]} accessibilityRole="header">{t("chainsHeading")}</Text> :
-            <Text style={[S.muted, { marginVertical: 8 }]}>{item.text}</Text>}
+          renderItem={renderRow}
         />
       ) : (
         <View style={{ flex: 1 }}>
