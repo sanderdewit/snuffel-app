@@ -9,6 +9,7 @@
 import { Text, View, type StyleProp, type ViewStyle } from "react-native";
 import type { Category } from "../core/classify";
 import { CATEGORIES } from "../lib/places";
+import { Symbol } from "./Icon";
 import { useTheme } from "./theme";
 
 interface EmojiProps {
@@ -32,8 +33,17 @@ export function Emoji({ char, size, box, bg, always, style }: EmojiProps) {
   );
 }
 
-/** A category's emoji on the category's disc: light tint in both schemes, so 🩺 and 🎓 show on dark too. */
-export function CategoryIcon({ cat, ...rest }: { cat: Category } & Omit<EmojiProps, "char" | "bg">) {
+/**
+ * A category's icon on the category's disc: a line symbol in a deep shade of the
+ * category's hue (catInk) on a light tint of it (catDisc), in both schemes. The hue
+ * matches the category's map marker and its dot on the Find chips.
+ * `size` is kept for the old emoji call sites; the symbol is half the disc.
+ */
+export function CategoryIcon({ cat, box, style }: { cat: Category } & Omit<EmojiProps, "char" | "bg">) {
   const { C } = useTheme();
-  return <Emoji char={CATEGORIES[cat].icon} bg={C.catDisc[cat]} {...rest} />;
+  return (
+    <View style={[{ width: box, height: box, borderRadius: box / 2, backgroundColor: C.catDisc[cat], alignItems: "center", justifyContent: "center" }, style]} {...hidden}>
+      <Symbol name={CATEGORIES[cat].symbol} size={Math.round(box * 0.55)} color={C.catInk[cat]} />
+    </View>
+  );
 }

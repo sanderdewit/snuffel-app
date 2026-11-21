@@ -47,7 +47,8 @@ export interface Palette {
   fieldLine: string;   // the border of text fields and pickers (S.input)
   glyphBg: string;     // the disc behind an emoji that has to be seen: icon-only buttons (mic, conversation mode), the paw by the name
   cat: Record<Category, string>;           // category dots, chips and map markers
-  catDisc: Record<Category, string>;       // the disc behind a category's emoji (place cards, Find chips, the place title)
+  catDisc: Record<Category, string>;       // the disc behind a category's icon (place cards, Find chips, the place title)
+  catInk: Record<Category, string>;        // the category's icon on that disc: a deep shade of its hue (4.5:1 or more on the disc)
 }
 
 const lightDanger = "#d62525", lightWarn = "#a75b05", lightOrangeText = "#c2410c";
@@ -90,6 +91,11 @@ export const LIGHT: Palette = {
   catDisc: {
     vet: "#e2eafc", hospital: "#fae2e2", grooming: "#fae2ed", shop: "#fef2de",
     boarding: "#eee5fd", training: "#dfedec", play: "#e0f3e7", shelter: "#def0f5"
+  },
+  // The category's icon on its disc, both schemes: a deep shade of the same hue (Tailwind 800)
+  catInk: {
+    vet: "#1e40af", hospital: "#991b1b", grooming: "#9d174d", shop: "#92400e",
+    boarding: "#5b21b6", training: "#115e59", play: "#166534", shelter: "#155e75"
   }
 };
 
@@ -132,6 +138,11 @@ export const DARK: Palette = {
   catDisc: {
     vet: "#bfdbfe", hospital: "#fecaca", grooming: "#fbcfe8", shop: "#fde68a",
     boarding: "#ddd6fe", training: "#99f6e4", play: "#bbf7d0", shelter: "#a5f3fc"
+  },
+  // The category's icon on its disc, both schemes: a deep shade of the same hue (Tailwind 800)
+  catInk: {
+    vet: "#1e40af", hospital: "#991b1b", grooming: "#9d174d", shop: "#92400e",
+    boarding: "#5b21b6", training: "#115e59", play: "#166534", shelter: "#155e75"
   }
 };
 

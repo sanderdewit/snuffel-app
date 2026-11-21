@@ -2,6 +2,7 @@
 // reads, with every cell kept in SQLite. Network first; when offline (or the
 // download fails) the stored copy is used, whatever its age. Cells around home
 // are "pinned" so the cache trim never removes them.
+import type { SymbolName } from "../ui/Icon";
 import { CONFIG } from "./config";
 import { db, dbReady, kvGetJson, kvSetJson } from "./db";
 import { classify, type Category } from "../core/classify";
@@ -36,15 +37,15 @@ interface Manifest { version: string; cell: number; path: string; cells: string[
 
 export const CATEGORY_ORDER: Category[] = ["vet", "hospital", "grooming", "shop", "boarding", "training", "play", "shelter"];
 // The colours per category, light and dark, are in the palette (src/ui/palette.ts, `cat`).
-export const CATEGORIES: Record<Category, { icon: string; key: string }> = {
-  vet: { icon: "🩺", key: "cat_vet" },
-  hospital: { icon: "🏥", key: "cat_hospital" },
-  grooming: { icon: "✂️", key: "cat_grooming" },
-  shop: { icon: "🛍️", key: "cat_shop" },
-  boarding: { icon: "🏨", key: "cat_boarding" },
-  training: { icon: "🎓", key: "cat_training" },
-  play: { icon: "🎾", key: "cat_play" },
-  shelter: { icon: "🐾", key: "cat_shelter" }
+export const CATEGORIES: Record<Category, { icon: string; symbol: SymbolName; key: string }> = {
+  vet: { icon: "🩺", symbol: "stethoscope", key: "cat_vet" },
+  hospital: { icon: "🏥", symbol: "hospital-box-outline", key: "cat_hospital" },
+  grooming: { icon: "✂️", symbol: "content-cut", key: "cat_grooming" },
+  shop: { icon: "🛍️", symbol: "shopping-outline", key: "cat_shop" },
+  boarding: { icon: "🏨", symbol: "bed-outline", key: "cat_boarding" },
+  training: { icon: "🎓", symbol: "school-outline", key: "cat_training" },
+  play: { icon: "🎾", symbol: "tennis-ball", key: "cat_play" },
+  shelter: { icon: "🐾", symbol: "paw", key: "cat_shelter" }
 };
 // Parks and shelters are often run by a municipality, which isn't a chain.
 const COMMERCIAL: Partial<Record<Category, boolean>> = { vet: true, hospital: true, grooming: true, shop: true, boarding: true, training: true };
