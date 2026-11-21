@@ -10,6 +10,11 @@
 // Dark keeps the same orange for filled buttons (white text on it), and uses
 // lighter tints for orange, red, green, amber and blue *text*, so they stay
 // readable on the dark slate surfaces.
+//
+// Emoji can't follow the scheme, and many are drawn in black or dark grey: 🩺 vet,
+// 🎓 training, 🐾 shelter and the app's paw, 🎧 conversation mode. On the dark card
+// such a glyph is about 1:1 (gone); on light it is 12:1. So in dark mode an emoji that
+// has to be seen sits on a light disc (catDisc, glyphBg; see src/ui/Emoji.tsx).
 import type { Category } from "../core/classify";
 
 export type Scheme = "light" | "dark";
@@ -39,7 +44,10 @@ export interface Palette {
   noteBg: string;      // a chat bubble from the app itself (an error), not from the AI
   toggleOn: string;    // switch track (the knob is white in both)
   toggleOff: string;
+  fieldLine: string;   // the border of text fields and pickers (S.input)
+  glyphBg: string;     // the disc behind an emoji that has to be seen: icon-only buttons (mic, conversation mode), the paw by the name
   cat: Record<Category, string>;           // category dots, chips and map markers
+  catDisc: Record<Category, string>;       // the disc behind a category's emoji (place cards, Find chips, the place title)
 }
 
 const lightDanger = "#d62525", lightWarn = "#a75b05", lightOrangeText = "#c2410c";
@@ -69,10 +77,19 @@ export const LIGHT: Palette = {
   noteBg: "#fff7ed",
   toggleOn: "#16a34a",
   toggleOff: "#cbd5e1",
+  // As before. (Against the screen this is 1.2:1, below the 3:1 asked for a field's
+  // edge in WCAG 1.4.11: a darker border here is the owner's choice, it changes the look.)
+  fieldLine: "#e2e8f0",
+  glyphBg: "#f1f5f9",   // = chip: light mode looks as before
   // the website's marker colours
   cat: {
     vet: "#2563eb", hospital: "#dc2626", grooming: "#db2777", shop: "#f59e0b",
     boarding: "#7c3aed", training: "#0f766e", play: "#16a34a", shelter: "#0891b2"
+  },
+  // The tint the place cards always had (the category colour at 0x22 alpha on the white card)
+  catDisc: {
+    vet: "#e2eafc", hospital: "#fae2e2", grooming: "#fae2ed", shop: "#fef2de",
+    boarding: "#eee5fd", training: "#dfedec", play: "#e0f3e7", shelter: "#def0f5"
   }
 };
 
@@ -102,11 +119,32 @@ export const DARK: Palette = {
   noteBg: "#431407",
   toggleOn: "#16a34a",
   toggleOff: "#475569",
+  fieldLine: "#64748b",  // `line` (1.4:1 on the card) left fields without a visible edge; this is 3:1 on card and bg
+  glyphBg: "#cbd5e1",    // light, as `strong`: a black emoji on it is 10:1
   // the same hues, lighter: visible on dark cards and on the dark map
   cat: {
     vet: "#60a5fa", hospital: "#f87171", grooming: "#f472b6", shop: "#fbbf24",
     boarding: "#a78bfa", training: "#2dd4bf", play: "#4ade80", shelter: "#22d3ee"
+  },
+  // Light tints of the same hues (Tailwind 200), not the dark 0x22 tint: 🩺, 🎓 and 🐾
+  // are drawn in black (1.3:1 on that dark tint, 10:1 or more on these). The hue still
+  // matches the category's map marker.
+  catDisc: {
+    vet: "#bfdbfe", hospital: "#fecaca", grooming: "#fbcfe8", shop: "#fde68a",
+    boarding: "#ddd6fe", training: "#99f6e4", play: "#bbf7d0", shelter: "#a5f3fc"
   }
 };
 
 export const PALETTES: Record<Scheme, Palette> = { light: LIGHT, dark: DARK };
+
+// Map labels in dark mode. Protomaps' dark flavour draws street names, house numbers
+// and neighbourhoods in #525252 on a #1f1f1f halo (2.1:1; its light flavour has about
+// 3.4:1) and city names at 3.8:1. These replace them (src/lib/mapStyle.ts): 4.5:1 or
+// more on their halo. Light keeps Protomaps' own colours.
+export const DARK_MAP_LABELS = {
+  roads_label_minor: "#8c8c8c",
+  roads_label_major: "#9c9c9c",
+  subplace_label: "#8c8c8c",
+  address_label: "#8c8c8c",
+  city_label: "#b3b3b3"
+};

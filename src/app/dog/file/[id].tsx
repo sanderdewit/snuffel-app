@@ -8,6 +8,7 @@ import {
   addRecord, autoFile, deleteRecord, exportData, exportPdf, listRecords, PASSWORD_MIN, PasswordTooShortError, RECORD_KINDS, recurring, setAutoFile,
   setShareFileWithAi, shareFileWithAi, type DogRecord, type RecordKind
 } from "../../../lib/dogfile";
+import { Emoji } from "../../../ui/Emoji";
 import { Toggle } from "../../../ui/Toggle";
 import { Input } from "../../../ui/Input";
 import { useTheme } from "../../../ui/theme";
@@ -113,8 +114,9 @@ export default function DogFile() {
           <View style={[S.row, { flexWrap: "wrap", gap: 6 }]}>
             {RECORD_KINDS.filter((k) => k.kind !== "ai").map((k) => (
               <Pressable key={k.kind} onPress={() => setKind(k.kind)}
-                style={{ paddingHorizontal: 10, paddingVertical: 6, borderRadius: 16, backgroundColor: kind === k.kind ? C.brand : C.chip }}>
-                <Text style={{ color: kind === k.kind ? C.onBrand : C.text }}>{k.icon} {t(k.key)}</Text>
+                style={{ paddingHorizontal: 10, paddingVertical: 6, borderRadius: 16, backgroundColor: kind === k.kind ? C.brand : C.chip, flexDirection: "row", alignItems: "center", gap: 5 }}>
+                <Emoji char={k.icon} size={14} box={24} style={{ marginVertical: -4, marginLeft: -4 }} />
+                <Text style={{ color: kind === k.kind ? C.onBrand : C.text }}>{t(k.key)}</Text>
               </Pressable>
             ))}
           </View>
@@ -145,8 +147,11 @@ export default function DogFile() {
       {records.length === 0 && !adding && <Text style={S.muted}>{t("app_noEntries")}</Text>}
       {records.map((r) => (
         <Pressable key={r.id} onLongPress={() => remove(r)} style={[S.card, { gap: 4 }]}>
-          <View style={[S.row, { justifyContent: "space-between" }]}>
-            <Text style={S.muted}>{icon(r.kind)} {kindLabel(r.kind)}{r.kind === "symptom" && r.category && r.category !== "other" ? " · " + t("app_sign_" + r.category) : ""} · {formatDate(r.date, lang)}</Text>
+          <View style={[S.row, { justifyContent: "space-between", gap: 8 }]}>
+            <View style={[S.row, { gap: 5, flex: 1 }]}>
+              <Emoji char={icon(r.kind)} size={13} box={22} style={{ marginVertical: -3 }} />
+              <Text style={[S.muted, { flex: 1 }]}>{kindLabel(r.kind)}{r.kind === "symptom" && r.category && r.category !== "other" ? " · " + t("app_sign_" + r.category) : ""} · {formatDate(r.date, lang)}</Text>
+            </View>
             <Pressable onPress={() => remove(r)} hitSlop={10} accessibilityRole="button" accessibilityLabel={t("app_delete")}>
               <Text style={{ color: C.muted }}>✕</Text>
             </Pressable>

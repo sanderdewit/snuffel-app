@@ -2,10 +2,15 @@
 // read directly by MapLibre Native through a pmtiles:// URL (range requests,
 // no tile server). Labels follow the app language; the colours follow light or
 // dark (Protomaps' own "light" and "dark" flavours, with their matching sprites:
-// only the style changes, the tiles are the same).
+// only the style changes, the tiles are the same). Dark has lighter label
+// colours than Protomaps' (DARK_MAP_LABELS in palette.ts): street names were 2.1:1.
 import { layers, namedFlavor } from "@protomaps/basemaps";
 import type { StyleSpecification } from "@maplibre/maplibre-react-native";
 import { CONFIG } from "./config";
+import { DARK_MAP_LABELS } from "../ui/palette";
+
+const flavor = (scheme: "light" | "dark") =>
+  scheme === "dark" ? { ...namedFlavor("dark"), ...DARK_MAP_LABELS } : namedFlavor("light");
 
 const cache = new Map<string, StyleSpecification>();
 
@@ -24,7 +29,7 @@ export function mapStyle(lang: string, scheme: "light" | "dark" = "light"): Styl
           attribution: "© OpenStreetMap contributors, Protomaps"
         }
       },
-      layers: layers("protomaps", namedFlavor(scheme), { lang }) as StyleSpecification["layers"]
+      layers: layers("protomaps", flavor(scheme), { lang }) as StyleSpecification["layers"]
     };
     cache.set(key, style);
   }

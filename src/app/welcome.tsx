@@ -15,6 +15,7 @@ import { currentPosition, geocode, LocationDeniedError } from "../lib/geo";
 import { pinHomeArea, search, type Place } from "../lib/places";
 import { setMyVet } from "../lib/saved";
 import { ChainBadge, displayName } from "../ui/PlaceCard";
+import { Emoji } from "../ui/Emoji";
 import { Input } from "../ui/Input";
 import { useTheme } from "../ui/theme";
 import { Toggle } from "../ui/Toggle";
@@ -169,7 +170,7 @@ export default function Welcome() {
         <View style={{ gap: 12, alignSelf: "stretch", marginTop: 8 }}>
           {[["🩺", "app_ob_f1"], ["🚨", "app_ob_f2"], ["💬", "app_ob_f3"], ["📁", "app_ob_f4"]].map(([e, k]) => (
             <View key={k} style={[S.row, { gap: 12, alignItems: "flex-start" }]}>
-              <Text style={{ fontSize: 22 }}>{e}</Text>
+              <Emoji char={e} size={22} box={34} />
               <Text style={[S.body, { flex: 1 }]}>{t(k)}</Text>
             </View>
           ))}
@@ -271,7 +272,7 @@ export default function Welcome() {
   } else {
     body = (
       <View style={{ gap: 16, alignItems: "center", paddingTop: 40 }}>
-        <Text style={{ fontSize: 64 }}>🐾</Text>
+        <Emoji char="🐾" size={64} box={104} />
         <Text style={[S.h1, { fontSize: 28 }]}>{t("app_ob_doneTitle")}</Text>
         <Text style={[S.body, { textAlign: "center" }]}>{t("app_ob_doneText")}</Text>
       </View>

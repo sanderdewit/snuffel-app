@@ -8,6 +8,7 @@ import { CATEGORIES, placeById, refreshOpenState, type Place } from "../../lib/p
 import { recall } from "../../lib/placeStore";
 import { isSaved, save, setMyVet, unsave } from "../../lib/saved";
 import { callUrl, ChainBadge, directionsUrl, displayName, OpenBadge } from "../../ui/PlaceCard";
+import { CategoryIcon } from "../../ui/Emoji";
 import { useTheme } from "../../ui/theme";
 
 // OpenStreetMap's editor for this place: corrections go to the source.
@@ -42,7 +43,10 @@ export default function PlaceScreen() {
     <ScrollView style={S.screen} contentContainerStyle={{ padding: 16, gap: 12 }}>
       <Stack.Screen options={{ title: t(cat.key) }} />
       <View style={{ gap: 4 }}>
-        <Text style={S.h1}>{cat.icon} {displayName(p, t)}</Text>
+        <View style={[S.row, { gap: 8 }]}>
+          <CategoryIcon cat={p.cat} size={22} box={36} />
+          <Text style={[S.h1, { flex: 1 }]}>{displayName(p, t)}</Text>
+        </View>
         {!!p.address && <Text style={S.body}>{p.address}</Text>}
         <View style={[S.row, { gap: 12, flexWrap: "wrap" }]}><OpenBadge p={p} /><ChainBadge p={p} /></View>
         {p.chain && p.chainVia && <Text style={S.muted}>({t("via_" + p.chainVia)})</Text>}
