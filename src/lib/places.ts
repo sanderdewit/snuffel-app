@@ -178,7 +178,7 @@ function normalize(els: Element[], ref: ChainRef | null, lat: number, lon: numbe
       id: el.id, name, cat, lat: el.lat, lon: el.lon, cc: el.cc || null,
       chain: chain ? chain.group : null, chainVia: chain ? chain.via : null,
       address: address(tags),
-      website: first(tags.website || tags["contact:website"] || tags.url),
+      website: first(tags.website || tags["contact:website"] || tags.url || tags["snuffel:website"]),   // snuffel: a branch of the same practice (snuffel-data vets/)
       phone: first(tags.phone || tags["contact:phone"]),
       hours: tags.opening_hours || tags["snuffel:opening_hours"] || null,
       hoursFromSite: !tags.opening_hours && !!tags["snuffel:opening_hours"],
