@@ -1,5 +1,6 @@
 // A place in a list (Find, Saved, Emergency), and the pieces the place screen and
 // Emergency share with it: the open-now line, the chain badge, the Call button.
+import { clockNow } from "../lib/clock";
 import { useEffect, useState } from "react";
 import { AppState, Linking, Pressable, Text, View, type StyleProp, type ViewStyle } from "react-native";
 import { router } from "expo-router";
@@ -24,12 +25,12 @@ const isVet = (p: Place) => p.cat === "vet" || p.cat === "hospital";
 
 /** The time, renewed every minute (and on return to the app): "closes at 12:00" must not go stale on screen. */
 export function useMinuteClock(): Date {
-  const [now, setNow] = useState(() => new Date());
+  const [now, setNow] = useState(() => clockNow());
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
-    const schedule = () => { timer = setTimeout(() => { setNow(new Date()); schedule(); }, 60000 - (Date.now() % 60000) + 50); };
+    const schedule = () => { timer = setTimeout(() => { setNow(clockNow()); schedule(); }, 60000 - (Date.now() % 60000) + 50); };
     schedule();
-    const sub = AppState.addEventListener("change", (s) => { if (s === "active") setNow(new Date()); });
+    const sub = AppState.addEventListener("change", (s) => { if (s === "active") setNow(clockNow()); });
     return () => { clearTimeout(timer); sub.remove(); };
   }, []);
   return now;

@@ -4,6 +4,7 @@
 // screenshot build. A normal start never sees it. It fills the phone with a
 // sample dog, reminders, "my vet" and one real AI conversation, once.
 import { Platform, Settings } from "react-native";
+import { isDemo } from "./clock";
 import { Asset } from "expo-asset";
 import { File, Paths } from "expo-file-system";
 import poodle from "../../assets/icon.png";
@@ -15,15 +16,8 @@ import { search } from "./places";
 import { setMyVet } from "./saved";
 import { addRecord } from "./dogfile";
 
-// Android has no launch arguments: there it is a separate screenshot build
-// (EXPO_PUBLIC_SNUFFEL_DEMO=1, inlined at build time); store builds never have it.
-const ANDROID_DEMO_BUILD = process.env.EXPO_PUBLIC_SNUFFEL_DEMO === "1";
-
-export function isDemo(): boolean {
-  if (Platform.OS === "android") return ANDROID_DEMO_BUILD;
-  if (Platform.OS !== "ios") return false;
-  try { return Settings.get("SnuffelDemo") === "YES" || Settings.get("SnuffelDemo") === true; } catch { return false; }
-}
+// Whether the app runs in screenshot mode: in clock.ts, which places.ts uses too.
+export { isDemo };
 
 /** Screen to open at launch ("-SnuffelDemoRoute /emergency"): links would show iOS's "Open in…?" prompt. */
 export function demoRoute(): string | null {

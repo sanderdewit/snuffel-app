@@ -188,6 +188,7 @@ export default function Ask() {
   const [voiceMenu, setVoiceMenu] = useState(false);
   useEffect(() => { kvGet("noDogInfoClosed").then((v) => setNoDogInfoClosed(v === "1")).catch(() => setNoDogInfoClosed(false)); }, []);
   const list = useRef<FlatList<ChatMessage>>(null);
+  const openAt = useRef<number | null>(null);   // the latest answer when the conversation was loaded
   const currentDog = useRef<number | null>(null);    // for answers that arrive after a dog switch
   // What the list keeps in view as its content grows: the end (a conversation just
   // opened, a question just sent), the start of a new answer (its index: the band and
@@ -222,7 +223,14 @@ export default function Ask() {
     setLoadedFor(null);
     setOtherDogAt(null);
     setChoosingDog(false);
-    loadChat(dogId).catch(() => [] as ChatMessage[]).then((m) => { follow.current = "end"; setMessages(m); setLoadedFor({ dog: dogId }); });
+    loadChat(dogId).catch(() => [] as ChatMessage[]).then((m) => {
+      // Open at the start of the latest answer (its band and what to do first), else at the end.
+      let last = -1;
+      m.forEach((x, i) => { if (x.role === "assistant") last = i; });
+      openAt.current = last >= 0 ? last : null;
+      follow.current = last >= 0 ? last : "end";
+      setMessages(m); setLoadedFor({ dog: dogId });
+    });
     // Remembered once the opening dog is known: the first render's "no dog" is no choice.
     if (dogResolved.current) kvSet("askDog", storedDog(dogId)).catch(() => undefined);
     if (dogId != null) shareFileWithAi(dogId).then(setShareFile).catch(() => undefined);
@@ -292,9 +300,13 @@ export default function Ask() {
   };
   useEffect(() => {
     if (!loadedFor || loadedFor.dog !== dogId) return;
-    // An existing conversation opens at its latest message, not at the intro
+    // An existing conversation opens at the start of its latest answer, not at the intro
     // (onContentSizeChange can fire before the list has its final layout).
-    const timer = setTimeout(() => list.current?.scrollToEnd({ animated: false }), 250);
+    const at = openAt.current;
+    const timer = setTimeout(() => {
+      if (at != null) list.current?.scrollToIndex({ index: at, viewPosition: 0, viewOffset: 8, animated: false });
+      else list.current?.scrollToEnd({ animated: false });
+    }, 250);
     const q = takeQuestion(dogId);
     if (q) send(undefined, q);
     return () => clearTimeout(timer);
