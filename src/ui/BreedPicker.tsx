@@ -7,6 +7,7 @@ import { FlatList, Modal, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useI18n } from "../i18n";
 import { breedLabel, breedName, breeds, MIX_MAX, MIX_SIZES, searchBreeds, type Breed, type BreedChoice } from "../lib/breeds";
+import { Icon } from "./Icon";
 import { Input } from "./Input";
 import { useTheme } from "./theme";
 
@@ -37,7 +38,7 @@ function BreedList({ visible, onPick, onClose, exclude }: { visible: boolean; on
         <View style={[S.row, { gap: 8, padding: 12, borderBottomWidth: 1, borderColor: C.line, backgroundColor: C.card }]}>
           <Input style={[S.input, { flex: 1 }]} value={query} onChangeText={setQuery} placeholder={t("app_breedSearch")}
             autoFocus autoCorrect={false} autoCapitalize="none" returnKeyType="search" clearButtonMode="while-editing" accessibilityLabel={t("app_breedSearch")} />
-          <Pressable onPress={close} style={S.btnGhost} accessibilityRole="button">
+          <Pressable onPress={close} style={({ pressed }) => [S.btnGhost, { minHeight: 44 }, pressed && S.pressed]} accessibilityRole="button">
             <Text style={S.btnGhostText}>{t("app_cancel")}</Text>
           </Pressable>
         </View>
@@ -52,7 +53,7 @@ function BreedList({ visible, onPick, onClose, exclude }: { visible: boolean; on
             <Text style={[S.muted, { paddingHorizontal: 16, paddingTop: 14, paddingBottom: 4, fontWeight: "700" }]}>{item.header}</Text>
           ) : (
             <Pressable onPress={() => { setQuery(""); onPick(item.breed); }} accessibilityRole="button"
-              style={({ pressed }) => ({ paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderColor: C.line, backgroundColor: pressed ? C.chip : C.card })}>
+              style={({ pressed }) => [{ minHeight: 44, justifyContent: "center", paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderColor: C.line, backgroundColor: pressed ? C.chip : C.card }, pressed && S.pressed]}>
               <Text style={[S.body, item.breed.kind === "mixed" || item.breed.kind === "other" ? { fontWeight: "700" } : null]}>
                 {item.breed.names[lang] || item.breed.names.en}
               </Text>
@@ -86,17 +87,17 @@ export function BreedPicker({ value, onChange }: { value: BreedChoice; onChange:
     }
     setOpen(null);
   };
-  const chip = (on: boolean) => [S.btnGhost, { paddingVertical: 8, backgroundColor: on ? C.brand : C.chip }];
+  const chip = (on: boolean) => ({ pressed }: { pressed: boolean }) =>
+    [S.btnGhost, S.row, { gap: 6, minHeight: 44, paddingVertical: 8, backgroundColor: on ? C.brand : C.chip }, pressed && S.pressed];
   const chipText = (on: boolean) => [S.btnGhostText, { color: on ? C.onBrand : C.text }];
+  const shown = (isMixed ? breedName(breeds(), "mixed", lang) : label) || t("app_breedChoose");
 
   return (
     <View style={{ gap: 8 }}>
-      <Pressable onPress={() => setOpen("breed")} accessibilityRole="button" accessibilityLabel={t("app_breed")}
-        style={[S.input, S.row, { justifyContent: "space-between", gap: 8 }]}>
-        <Text style={{ flex: 1, fontSize: 16, color: value.breedId || value.breed ? C.text : C.muted }} numberOfLines={2}>
-          {(isMixed ? breedName(breeds(), "mixed", lang) : label) || t("app_breedChoose")}
-        </Text>
-        <Text style={{ color: C.muted, fontSize: 18 }}>›</Text>
+      <Pressable onPress={() => setOpen("breed")} accessibilityRole="button" accessibilityLabel={`${t("app_breed")}: ${shown}`}
+        style={({ pressed }) => [S.input, S.row, { justifyContent: "space-between", gap: 8, minHeight: 44 }, pressed && S.pressed]}>
+        <Text style={{ flex: 1, fontSize: 16, color: value.breedId || value.breed ? C.text : C.muted }} numberOfLines={2}>{shown}</Text>
+        <Icon name="chevron-right" size={18} color={C.muted} />
       </Pressable>
 
       {isOther && (
@@ -107,9 +108,9 @@ export function BreedPicker({ value, onChange }: { value: BreedChoice; onChange:
       {isMixed && (
         <View style={{ gap: 8 }}>
           <Text style={S.muted}>{t("app_breedSize")}</Text>
-          <View style={[S.row, { gap: 8 }]}>
+          <View style={[S.row, { gap: 8 }]} accessibilityRole="radiogroup" accessibilityLabel={t("app_breedSize")}>
             {MIX_SIZES.map((s) => (
-              <Pressable key={s} style={[chip(value.breedSize === s), { flex: 1 }]} accessibilityRole="button" accessibilityState={{ selected: value.breedSize === s }}
+              <Pressable key={s} style={(st) => [chip(value.breedSize === s)(st), { flex: 1 }]} accessibilityRole="radio" accessibilityState={{ checked: value.breedSize === s }}
                 onPress={() => onChange({ ...value, breedSize: value.breedSize === s ? null : s })}>
                 <Text style={chipText(value.breedSize === s)}>{t("app_size_" + s)}</Text>
               </Pressable>
@@ -121,12 +122,14 @@ export function BreedPicker({ value, onChange }: { value: BreedChoice; onChange:
             {value.breedMix.map((id) => (
               <Pressable key={id} style={chip(true)} accessibilityRole="button" accessibilityLabel={`${breedName(breeds(), id, lang)}, ${t("app_remove")}`}
                 onPress={() => onChange({ ...value, breedMix: value.breedMix.filter((m) => m !== id) })}>
-                <Text style={chipText(true)}>{breedName(breeds(), id, lang)}  ✕</Text>
+                <Text style={chipText(true)}>{breedName(breeds(), id, lang)}</Text>
+                <Icon name="x" size={16} color={C.onBrand} />
               </Pressable>
             ))}
             {value.breedMix.length < MIX_MAX && (
               <Pressable style={chip(false)} onPress={() => setOpen("mainly")} accessibilityRole="button">
-                <Text style={chipText(false)}>＋ {t("app_breedMainlyAdd")}</Text>
+                <Icon name="plus" size={16} />
+                <Text style={chipText(false)}>{t("app_breedMainlyAdd")}</Text>
               </Pressable>
             )}
           </View>
@@ -134,8 +137,9 @@ export function BreedPicker({ value, onChange }: { value: BreedChoice; onChange:
       )}
 
       {(value.breedId || value.breed) && (
-        <Pressable onPress={() => onChange(NO_BREED)} style={{ alignSelf: "flex-start" }} accessibilityRole="button">
-          <Text style={[S.muted, { color: C.link }]}>{t("app_remove")}</Text>
+        <Pressable onPress={() => onChange(NO_BREED)} accessibilityRole="button" accessibilityLabel={`${t("app_breed")}, ${t("app_remove")}`}
+          style={({ pressed }) => [{ alignSelf: "flex-start", minHeight: 44, justifyContent: "center", paddingRight: 12 }, pressed && S.pressed]}>
+          <Text style={{ fontSize: 15, fontWeight: "600", color: C.link }}>{t("app_remove")}</Text>
         </Pressable>
       )}
 
