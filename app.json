@@ -45,6 +45,10 @@
             ]
           }
         ]
+      },
+      "icon": {
+        "light": "./assets/icon.png",
+        "tinted": "./assets/icon-tinted.png"
       }
     },
     "android": {
@@ -52,7 +56,8 @@
       "adaptiveIcon": {
         "backgroundColor": "#F5EBDD",
         "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png"
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "permissions": [
         "ACCESS_COARSE_LOCATION",
