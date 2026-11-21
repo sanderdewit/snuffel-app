@@ -1,13 +1,21 @@
 // AI help with health and behaviour. With a dog chosen, its profile (and, if
 // the owner allows it, a summary of its file) goes along so the advice fits
 // that dog. Each dog has its own conversation, kept on the phone.
-import { useCallback, useEffect, useRef, useState } from "react";
-import { AccessibilityInfo, ActivityIndicator, Alert, FlatList, KeyboardAvoidingView, Linking, Platform, Pressable, Text, View } from "react-native";
-import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
+//
+// An answer is one card, in the order that matters when something is wrong: the
+// urgency band (the level's colour and icon, "AI first assessment, not a
+// diagnosis"), then what to do (call my vet, find an open vet now), then the
+// advice, then Read aloud / Save to the file / thumbs. The header holds the voice
+// options (one headset button: conversation mode, and the beta voice call) and
+// New chat; under it one row with the dog and the health-file switch; at the
+// bottom one composer row (the field with the mic inside, a round Send).
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { AccessibilityInfo, ActivityIndicator, Alert, FlatList, Keyboard, KeyboardAvoidingView, Linking, Modal, Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { Tabs, router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useI18n } from "../../i18n";
 import { addChat, ask, clearChat, loadChat, type AnswerParts, type ChatMessage } from "../../lib/ai";
 import { useBeta } from "../../lib/beta";
-import { CONFIG } from "../../lib/config";
 import { kvGet, kvSet } from "../../lib/db";
 import { ageMonths, listDogs, today, type Dog } from "../../lib/dogs";
 import { addRecord, autoFile, deleteRecordById, fileObservation, setShareFileWithAi, shareFileWithAi, type Observation } from "../../lib/dogfile";
@@ -20,9 +28,11 @@ import { takeQuestion } from "../../lib/handoff";
 import { useSpeechRecognitionEvent } from "expo-speech-recognition";
 import { callUrl } from "../../ui/PlaceCard";
 import { DogChips, DogSwitcher } from "../../ui/DogSwitcher";
+import { Icon, Symbol, type IconName } from "../../ui/Icon";
 import { Rating } from "../../ui/Rating";
 import { Input } from "../../ui/Input";
 import { Toggle } from "../../ui/Toggle";
+import { AssessmentNote, UrgencyBand, isLevel, levelKey, withoutEmoji } from "../../ui/Urgency";
 import { useTheme } from "../../ui/theme";
 
 // Example questions for an empty conversation; a puppy gets house-training first.
@@ -32,6 +42,8 @@ function starters(dog: Dog | null): string[] {
     ? ["app_aiStarter4", "app_aiStarter1", "app_aiStarter3", "app_aiStarter5"]
     : ["app_aiStarter1", "app_aiStarter3", "app_aiStarter2", "app_aiStarter5"];
 }
+
+const hidden = { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants" as const };
 
 // A structured answer: the verdict first (readable in five seconds), then the
 // steps, the signs to get help sooner, and the follow-up questions.
@@ -49,15 +61,109 @@ function Answer({ parts, onFull }: { parts: AnswerParts; onFull: () => void }) {
       ))}
       {parts.watch_for.length > 0 && (
         <View style={{ gap: 2, marginTop: 2 }}>
-          <Text style={[S.muted, { fontWeight: "700", color: C.warn }]}>⚠️ {t("app_aiWatchFor")}</Text>
+          <View style={[S.row, { gap: 6 }]}>
+            <Icon name="alert-triangle" size={14} color={C.warn} />
+            <Text style={[S.muted, { flex: 1, fontWeight: "700", color: C.warn }]}>{t("app_aiWatchFor")}</Text>
+          </View>
           {parts.watch_for.map((w, n) => <Text key={n} style={S.body}>• {w}</Text>)}
         </View>
       )}
       {parts.questions.map((q, n) => <Text key={n} style={[S.body, { fontStyle: "italic" }]}>{q}</Text>)}
-      <Pressable onPress={onFull} hitSlop={8} accessibilityRole="button">
-        <Text style={[S.muted, { textDecorationLine: "underline" }]}>{t("app_aiFullAnswer")}</Text>
+      <Pressable onPress={onFull} accessibilityRole="button"
+        style={({ pressed }) => [{ minHeight: 44, justifyContent: "center", alignSelf: "flex-start" }, pressed && S.pressed]}>
+        <Text style={[S.muted, { fontSize: 14, textDecorationLine: "underline" }]}>{t("app_aiFullAnswer")}</Text>
       </Pressable>
     </View>
+  );
+}
+
+// What to do next, at the top of the answer: the first filled, any further one outlined.
+interface NextStep { label: string; icon: (color: string) => ReactNode; go: () => void; danger?: boolean }
+function NextButton({ step, first }: { step: NextStep; first: boolean }) {
+  const { C, S } = useTheme();
+  const ink = first ? C.onBrand : step.danger ? C.danger : C.link;
+  return (
+    <Pressable onPress={step.go} accessibilityRole="button"
+      style={({ pressed }) => [S.row, { minHeight: 48, gap: 8, justifyContent: "center", borderRadius: 12, paddingHorizontal: 12, paddingVertical: 8 },
+        first ? { backgroundColor: step.danger ? C.dangerFill : C.brand }
+          : { backgroundColor: C.card, borderWidth: 2, borderColor: step.danger ? C.danger : C.link },
+        pressed && S.pressed]}>
+      {step.icon(ink)}
+      <Text style={{ flexShrink: 1, textAlign: "center", fontSize: 16, fontWeight: "700", color: ink }}>{step.label}</Text>
+    </Pressable>
+  );
+}
+
+// A 44 px icon button in the navigation header.
+function HeaderButton({ icon, label, onPress, on, expanded }: { icon: IconName; label: string; onPress: () => void; on?: boolean; expanded?: boolean }) {
+  const { C, S } = useTheme();
+  return (
+    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={label} accessibilityState={expanded == null ? undefined : { expanded }}
+      style={({ pressed }) => [{ width: 44, height: 44, borderRadius: 22, marginHorizontal: 6, alignItems: "center", justifyContent: "center" },
+        on && { backgroundColor: C.brandDark }, pressed && S.pressed]}>
+      <Icon name={icon} size={22} color={on ? C.onBrand : C.link} />
+    </Pressable>
+  );
+}
+
+// A row that is one switch for screen readers (label and state), drawn with the app's Toggle.
+function SwitchRow({ label, value, onChange, children, disabled }: { label: string; value: boolean; onChange: (v: boolean) => void; children: ReactNode; disabled?: boolean }) {
+  const { S } = useTheme();
+  return (
+    <Pressable onPress={() => onChange(!value)} disabled={disabled} accessibilityRole="switch" accessibilityLabel={label}
+      accessibilityState={{ checked: value, disabled: !!disabled }}
+      style={({ pressed }) => [S.row, { gap: 10, minHeight: 44 }, disabled && { opacity: 0.5 }, pressed && S.pressed]}>
+      {children}
+      <View pointerEvents="none" {...hidden}><Toggle value={value} onValueChange={() => undefined} /></View>
+    </Pressable>
+  );
+}
+
+// Behind the headset button: conversation mode for everyone, the live voice call for beta users.
+function VoiceSheet({ visible, onClose, talk, canTalk, onTalk, beta, canCall, onCall }: {
+  visible: boolean; onClose: () => void; talk: boolean; canTalk: boolean; onTalk: () => void; beta: boolean; canCall: boolean; onCall: () => void;
+}) {
+  const { t } = useI18n();
+  const { C, S } = useTheme();
+  const insets = useSafeAreaInsets();
+  return (
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose} statusBarTranslucent>
+      <View style={{ flex: 1, justifyContent: "flex-end" }}>
+        {/* A veil in the screen's own colour, light or dark: the chat steps back */}
+        <Pressable style={StyleSheet.absoluteFill} onPress={onClose} accessibilityRole="button" accessibilityLabel={t("close")}>
+          <View style={{ flex: 1, backgroundColor: C.bg, opacity: 0.75 }} />
+        </Pressable>
+        <View accessibilityViewIsModal style={{ backgroundColor: C.card, borderTopLeftRadius: 18, borderTopRightRadius: 18, borderWidth: 1, borderBottomWidth: 0,
+          borderColor: C.fieldLine, paddingHorizontal: 16, paddingTop: 6, paddingBottom: 12 + insets.bottom }}>
+          <View style={[S.row, { gap: 8 }]}>
+            <Text style={[S.h2, { flex: 1 }]} accessibilityRole="header">{t("app_voiceMenu")}</Text>
+            <Pressable onPress={onClose} accessibilityRole="button" accessibilityLabel={t("close")}
+              style={({ pressed }) => [{ width: 44, height: 44, alignItems: "center", justifyContent: "center" }, pressed && S.pressed]}>
+              <Icon name="x" size={22} color={C.muted} />
+            </Pressable>
+          </View>
+          <SwitchRow label={t("app_talkMode")} value={talk} onChange={onTalk} disabled={!canTalk}>
+            <Icon name="headphones" size={22} color={C.link} />
+            <View style={{ flex: 1, gap: 2, paddingVertical: 10 }}>
+              <Text style={[S.body, { fontWeight: "600" }]}>{t("app_talkMode")}</Text>
+              <Text style={S.muted}>{t("app_talkOn")}</Text>
+            </View>
+          </SwitchRow>
+          {/* Beta: a live spoken conversation with the AI itself (Settings → Beta features) */}
+          {beta && (
+            <Pressable onPress={onCall} disabled={!canCall} accessibilityRole="button" accessibilityState={{ disabled: !canCall }}
+              style={({ pressed }) => [S.row, { gap: 10, minHeight: 56, borderTopWidth: 1, borderColor: C.line }, !canCall && { opacity: 0.5 }, pressed && S.pressed]}>
+              <Icon name="phone-call" size={22} color={C.link} />
+              <View style={{ flex: 1, gap: 2, paddingVertical: 10 }}>
+                <Text style={[S.body, { fontWeight: "600" }]}>{t("app_voiceAiStart")}</Text>
+                <Text style={S.muted}>{t("app_voiceAiNote")}</Text>
+              </View>
+              <Icon name="chevron-right" size={20} color={C.muted} />
+            </Pressable>
+          )}
+        </View>
+      </View>
+    </Modal>
   );
 }
 
@@ -79,10 +185,15 @@ export default function Ask() {
   const [noDogInfoClosed, setNoDogInfoClosed] = useState<boolean | null>(null);
   const [choosingDog, setChoosingDog] = useState(false);
   const [dogsLoaded, setDogsLoaded] = useState(false);
+  const [voiceMenu, setVoiceMenu] = useState(false);
   useEffect(() => { kvGet("noDogInfoClosed").then((v) => setNoDogInfoClosed(v === "1")).catch(() => setNoDogInfoClosed(false)); }, []);
   const list = useRef<FlatList<ChatMessage>>(null);
   const currentDog = useRef<number | null>(null);    // for answers that arrive after a dog switch
-  const scrollTo = useRef<number | null>(null);      // index of a new answer: show its start
+  // What the list keeps in view as its content grows: the end (a conversation just
+  // opened, a question just sent), the start of a new answer (its index: the band and
+  // what to do come first), or nothing once the owner scrolls or the answer is shown.
+  const follow = useRef<"end" | number | null>(null);
+  const scrollRetries = useRef(0);
 
   // ?q= fills in a question (not sent), ?dog= picks the dog: from the walkthrough.
   const params = useLocalSearchParams<{ q?: string; dog?: string }>();
@@ -110,7 +221,7 @@ export default function Ask() {
     setLoadedFor(null);
     setOtherDogAt(null);
     setChoosingDog(false);
-    loadChat(dogId).catch(() => [] as ChatMessage[]).then((m) => { setMessages(m); setLoadedFor({ dog: dogId }); });
+    loadChat(dogId).catch(() => [] as ChatMessage[]).then((m) => { follow.current = "end"; setMessages(m); setLoadedFor({ dog: dogId }); });
     // Remembered once the opening dog is known: the first render's "no dog" is no choice.
     if (dogResolved.current) kvSet("askDog", storedDog(dogId)).catch(() => undefined);
     if (dogId != null) shareFileWithAi(dogId).then(setShareFile).catch(() => undefined);
@@ -142,9 +253,14 @@ export default function Ask() {
       setObsState((m) => new Map(m).set(key, { obs, id }));
     }
     if (currentDog.current !== askedFor) return;   // the user switched dogs meanwhile: it's in that dog's thread
-    scrollTo.current = history.length;
+    // Show the new answer's start: its band and what to do. In an emergency the
+    // keyboard goes away too, so the buttons get the screen.
+    follow.current = history.length;
+    scrollRetries.current = 0;
+    if (reply.urgency === "emergency") Keyboard.dismiss();
     setMessages(history.concat(reply));
     if (otherDog) { setOtherDogAt(`${askedFor}:${history.length}`); AccessibilityInfo.announceForAccessibility(t("app_otherDog")); }
+    else if (isLevel(reply.urgency) && !spoken && !talkRef.current) AccessibilityInfo.announceForAccessibility(t(levelKey(reply.urgency)));
     // Asked by voice: answer by voice too (hands busy with the dog), with the
     // short spoken version; in conversation mode, listen again afterwards.
     if (spoken || talkRef.current) {
@@ -166,6 +282,7 @@ export default function Ask() {
     if (!content || busy) return;
     const user: ChatMessage = { role: "user", content };
     const history = messages.filter((m) => !m.local).concat(user);
+    follow.current = "end";
     setMessages(history);
     setOtherDogAt(null);
     if (tapped == null) setText("");
@@ -188,8 +305,8 @@ export default function Ask() {
 
   // ---- voice ----
   // Conversation mode: after each spoken answer, listen again, until a stop
-  // phrase ("stop", "bedankt"), two silences in a row, or a tap on 🎧.
-  // Tapping 🎙️ while an answer is read out interrupts it and listens.
+  // phrase ("stop", "bedankt"), two silences in a row, or a tap on the headset.
+  // Tapping the mic while an answer is read out interrupts it and listens.
   const [listening, setListening] = useState(false);
   const [speaking, setSpeaking] = useState<number | null>(null);   // index of the message being read
   const [voiceNote, setVoiceNote] = useState<string | null>(null);
@@ -241,7 +358,16 @@ export default function Ask() {
     setSpeaking(i);
     speak(content, lang, () => setSpeaking((cur) => (cur === i ? null : cur)));
   };
-  useFocusEffect(useCallback(() => () => { talkRef.current = false; setTalk(false); stopSpeaking(); stopListening(); }, []));
+  useFocusEffect(useCallback(() => () => { talkRef.current = false; setTalk(false); setVoiceMenu(false); stopSpeaking(); stopListening(); }, []));
+
+  // The headset sheet's choices act once the sheet has gone (a new screen or the
+  // microphone while a modal is still closing is asking for trouble on iOS).
+  const afterSheet = (fn: () => void) => { setVoiceMenu(false); setTimeout(fn, 300); };
+  const startCall = () => {
+    // The phone's own speech recognition lets go of the microphone first.
+    if (talkRef.current || listening) { endTalk(); stopListening(); stopSpeaking(); setSpeaking(null); }
+    router.push({ pathname: "/voice", params: dogId != null ? { dog: String(dogId) } : {} });
+  };
 
   // "Save to the dog's file": the question as title, the answer as details.
   // Keyed by message id, so a remount or dog switch can't save it twice.
@@ -294,59 +420,86 @@ export default function Ask() {
     } }
   ]);
 
+  // The navigation header: the headset (voice options) and New chat. The buttons
+  // call the latest handlers through a ref, so the header only changes with what it shows.
+  const header = useRef({ newChat, openVoice: () => setVoiceMenu(true) });
+  header.current = { newChat, openVoice: () => setVoiceMenu(true) };
+  const hasChat = messages.length > 0;
+  const headerOptions = useMemo(() => ({
+    headerLeft: () => <HeaderButton icon="headphones" label={t("app_voiceMenu")} on={talk} expanded={voiceMenu} onPress={() => header.current.openVoice()} />,
+    headerRight: () => (hasChat ? <HeaderButton icon="edit-3" label={t("app_newChat")} onPress={() => header.current.newChat()} /> : null)
+  }), [t, talk, voiceMenu, hasChat]);
+
   // What to do next: call your own vet first, then find one / a trainer.
   const actions = (m: ChatMessage) => {
-    const out: { label: string; go: () => void; danger?: boolean }[] = [];
+    const out: NextStep[] = [];
     const health = m.topic !== "behaviour";
     if (health && (m.urgency === "emergency" || m.urgency === "vet_today" || m.urgency === "vet_soon") && vet?.phone) {
-      out.push({ label: "📞 " + tf("app_callMyVet", { name: vet.name || t("app_myVet") }), go: () => Linking.openURL(callUrl(vet.phone!)), danger: m.urgency === "emergency" });
+      out.push({ label: tf("app_callMyVet", { name: vet.name || t("app_myVet") }), icon: (c) => <Icon name="phone" size={20} color={c} />,
+        go: () => Linking.openURL(callUrl(vet.phone!)), danger: m.urgency === "emergency" });
     }
     // Only when it's needed: home advice ("monitor") gets no referral buttons;
     // its warning signs say when to get help.
-    if (m.urgency === "emergency") out.push({ label: t("aiCtaEmergency"), go: () => router.push("/emergency"), danger: !vet?.phone });
-    // A lost or found dog: the first steps and official registers on the website.
-    else if (m.topic === "lost") out.push({ label: t("aiCtaLost"), go: () => Linking.openURL(CONFIG.website + "#lost") });
+    if (m.urgency === "emergency") out.push({ label: withoutEmoji(t("aiCtaEmergency")), icon: (c) => <Icon name="map-pin" size={20} color={c} />, go: () => router.push("/emergency"), danger: true });
+    // A lost or found dog: the app's own guide (first steps, the official registers).
+    else if (m.topic === "lost") out.push({ label: withoutEmoji(t("aiCtaLost")), icon: (c) => <Icon name="search" size={20} color={c} />, go: () => router.push("/lost") });
     else if (m.urgency === "vet_soon" || m.urgency === "vet_today") {
-      if (m.topic === "behaviour") out.push({ label: t("aiCtaTrainers"), go: () => router.push({ pathname: "/", params: { cat: "training" } }) });
-      else if (!vet) out.push({ label: t("aiCtaVets"), go: () => router.push({ pathname: "/", params: { cat: "vet" } }) });
+      if (m.topic === "behaviour") out.push({ label: withoutEmoji(t("aiCtaTrainers")), icon: (c) => <Symbol name="school-outline" size={20} color={c} />,
+        go: () => router.push({ pathname: "/", params: { cat: "training" } }) });
+      else if (!vet) out.push({ label: withoutEmoji(t("aiCtaVets")), icon: (c) => <Symbol name="stethoscope" size={20} color={c} />,
+        go: () => router.push({ pathname: "/", params: { cat: "vet" } }) });
     }
     return out;
   };
+
+  const closeButton = (onPress: () => void) => (
+    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={t("close")}
+      style={({ pressed }) => [{ width: 44, height: 44, marginVertical: -10, marginRight: -10, alignItems: "center", justifyContent: "center" }, pressed && S.pressed]}>
+      <Icon name="x" size={18} color={C.muted} />
+    </Pressable>
+  );
 
   const intro = (
     <View style={{ gap: 10, marginBottom: 8 }}>
       <View style={[S.card, { gap: 6 }]}>
         <Text style={S.body}>{t("aiIntro")}</Text>
-        <Text style={[S.muted, { fontWeight: "600" }]}>🤖 {t("app_aiIsAI")}</Text>
+        <View style={[S.row, { gap: 6, alignItems: "flex-start" }]}>
+          <Symbol name="robot-outline" size={16} color={C.muted} style={{ marginTop: 1 }} />
+          <Text style={[S.muted, { flex: 1, fontWeight: "600" }]}>{t("app_aiIsAI")}</Text>
+        </View>
+        <Text style={S.muted}>{t("aiDisclaimer")}</Text>
       </View>
       <Pressable onPress={() => router.push("/emergency")} accessibilityRole="button"
-        style={[S.card, S.row, { gap: 8, backgroundColor: C.alertBg, borderColor: C.alertLine }]}>
-        <Text style={[S.body, { flex: 1, color: C.alertText }]}>🚨 {t("app_aiEmergencyLine")}</Text>
-        <Text style={{ color: C.danger, fontWeight: "700" }}>{t("emergencyBtn")} ›</Text>
+        style={({ pressed }) => [S.card, S.row, { gap: 8, backgroundColor: C.alertBg, borderColor: C.alertLine }, pressed && S.pressed]}>
+        <Icon name="alert-octagon" size={20} color={C.danger} />
+        <Text style={[S.body, { flex: 1, color: C.alertText }]}>{t("app_aiEmergencyLine")}</Text>
+        <Text style={{ color: C.danger, fontWeight: "700" }}>{t("emergencyBtn")}</Text>
+        <Icon name="chevron-right" size={18} color={C.danger} />
       </Pressable>
       {/* No dog chosen (or none added yet): the advice is general. After the emergency line,
           never in the way of a question. */}
       {dogsLoaded && dogId == null && noDogInfoClosed === false && (
         <View style={[S.card, { gap: 8 }]}>
           <View style={[S.row, { gap: 8, alignItems: "flex-start" }]}>
-            <Text style={{ fontSize: 20 }} importantForAccessibility="no" accessibilityElementsHidden>🐶</Text>
+            <Symbol name="dog" size={20} color={C.muted} />
             <Text style={[S.body, { flex: 1 }]}>{t("app_noDogInfo")}</Text>
-            <Pressable onPress={closeNoDogInfo} hitSlop={12} accessibilityRole="button" accessibilityLabel={t("close")}>
-              <Text style={{ color: C.muted, fontSize: 16 }}>✕</Text>
-            </Pressable>
+            {closeButton(closeNoDogInfo)}
           </View>
           {dogs.length > 0 ? (
             <>
               <Pressable onPress={() => setChoosingDog((c) => !c)} accessibilityRole="button" accessibilityState={{ expanded: choosingDog }}
-                style={[S.btnGhost, { alignSelf: "flex-start", minHeight: 40 }]}>
-                <Text style={S.btnGhostText}>🐕 {t("app_chooseDog")} {choosingDog ? "▴" : "▾"}</Text>
+                style={({ pressed }) => [S.btnGhost, S.row, { gap: 6, alignSelf: "flex-start", minHeight: 44 }, pressed && S.pressed]}>
+                <Symbol name="dog" size={18} />
+                <Text style={S.btnGhostText}>{t("app_chooseDog")}</Text>
+                <Icon name={choosingDog ? "chevron-up" : "chevron-down"} size={18} />
               </Pressable>
               {choosingDog && <DogChips options={otherDogOptions(dogs, null, t("app_noDog"))} onChange={setDogId} />}
             </>
           ) : (
             <Pressable onPress={() => router.push({ pathname: "/dog/[id]", params: { id: "new" } })} accessibilityRole="button"
-              style={[S.btnGhost, { alignSelf: "flex-start", minHeight: 40 }]}>
-              <Text style={S.btnGhostText}>＋ {t("app_addDog")}</Text>
+              style={({ pressed }) => [S.btnGhost, S.row, { gap: 6, alignSelf: "flex-start", minHeight: 44 }, pressed && S.pressed]}>
+              <Icon name="plus" size={18} />
+              <Text style={S.btnGhostText}>{t("app_addDog")}</Text>
             </Pressable>
           )}
         </View>
@@ -355,8 +508,9 @@ export default function Ask() {
         <View style={{ gap: 8 }}>
           <Text style={S.muted}>{t("app_aiTryAsking")}</Text>
           {starters(dog).map((k) => (
-            <Pressable key={k} onPress={() => send(undefined, t(k))} disabled={busy} accessibilityRole="button" style={[S.card, S.row, { gap: 8, paddingVertical: 10 }]}>
-              <Text>💬</Text>
+            <Pressable key={k} onPress={() => send(undefined, t(k))} disabled={busy} accessibilityRole="button"
+              style={({ pressed }) => [S.card, S.row, { gap: 10, minHeight: 44, paddingVertical: 10 }, pressed && S.pressed]}>
+              <Icon name="message-circle" size={18} color={C.link} />
               <Text style={[S.body, { flex: 1 }]}>{t(k)}</Text>
             </Pressable>
           ))}
@@ -365,74 +519,122 @@ export default function Ask() {
     </View>
   );
 
+  // A small action under an answer (Read aloud, Save to the file): 44 px high.
+  const small = (icon: IconName, label: string, onPress: () => void) => (
+    <Pressable onPress={onPress} accessibilityRole="button"
+      style={({ pressed }) => [S.row, { gap: 6, minHeight: 44, paddingHorizontal: 8 }, pressed && S.pressed]}>
+      <Icon name={icon} size={18} color={C.link} />
+      <Text style={{ flexShrink: 1, color: C.link, fontSize: 14, fontWeight: "600" }}>{label}</Text>
+    </Pressable>
+  );
+
   return (
     <KeyboardAvoidingView style={S.screen} behavior={Platform.OS === "ios" ? "padding" : undefined} keyboardVerticalOffset={90}>
+      <Tabs.Screen options={headerOptions} />
       {dogs.length > 0 && (
-        <View style={{ borderBottomWidth: 1, borderColor: C.line }}>
-          {/* Which dog this conversation is about; each dog has its own conversation. */}
-          <View style={{ paddingHorizontal: 12, paddingVertical: 10 }}>
-            <DogSwitcher dogs={dogs} value={dogId} onChange={setDogId} />
-          </View>
-          {/* What goes along with the question, switchable right here. */}
-          {dog && (
-            <View style={[S.row, { gap: 8, paddingHorizontal: 12, paddingBottom: 8 }]}>
-              <Text style={[S.muted, { flex: 1 }]}>{tf("app_aiUses", { name: dog.name })} · {t("app_shareWithAi")}</Text>
-              <Toggle value={shareFile} onValueChange={async (on) => { setShareFile(on); await setShareFileWithAi(dog.id, on); }} />
-            </View>
-          )}
+        <View style={{ paddingHorizontal: 12, paddingVertical: 6, borderBottomWidth: 1, borderColor: C.line, backgroundColor: C.card }}>
+          {/* Which dog this conversation is about (each dog has its own), and, for a dog,
+              whether its file goes along: switchable right here. */}
+          <DogSwitcher dogs={dogs} value={dogId} onChange={setDogId}>
+            {dog && (
+              <View style={{ flex: 1, alignItems: "flex-end" }}>
+                <SwitchRow label={tf("app_aiUseFile", { name: dog.name })} value={shareFile}
+                  onChange={async (on) => { setShareFile(on); await setShareFileWithAi(dog.id, on).catch(() => undefined); }}>
+                  <Text style={[S.muted, { flexShrink: 1, fontWeight: "600", textAlign: "right" }]}>{tf("app_aiUseFile", { name: dog.name })}</Text>
+                </SwitchRow>
+              </View>
+            )}
+          </DogSwitcher>
         </View>
       )}
       <FlatList
         ref={list}
         data={messages}
         keyExtractor={(m, i) => String(m.id ?? "x" + i)}
-        contentContainerStyle={{ padding: 12, gap: 8 }}
+        contentContainerStyle={{ padding: 12, gap: 10 }}
+        onScrollBeginDrag={() => { follow.current = null; }}
         onContentSizeChange={() => {
-          // A new answer: show its start (urgency first), not its end. The size
-          // can also change before the answer is in the list (with voice, the
+          // A new answer: show its start (band and what to do first), not its end, and
+          // keep it there (thumbs and notes that load afterwards don't scroll it away).
+          // The size can also change before the answer is in the list (with voice, the
           // "listening" line goes away): then wait, an index past the end crashes.
-          const at = scrollTo.current;
-          if (at != null && at < messages.length) { scrollTo.current = null; list.current?.scrollToIndex({ index: at, viewPosition: 0, animated: true }); }
-          else if (at == null) list.current?.scrollToEnd({ animated: true });
+          const at = follow.current;
+          if (at === "end") list.current?.scrollToEnd({ animated: true });
+          else if (at != null && at < messages.length) { follow.current = null; list.current?.scrollToIndex({ index: at, viewPosition: 0, viewOffset: 8, animated: true }); }
         }}
-        onScrollToIndexFailed={() => list.current?.scrollToEnd({ animated: true })}
+        onScrollToIndexFailed={(info) => {
+          // Not measured yet: get close, then try again (never to the end: that hides the band).
+          list.current?.scrollToOffset({ offset: info.averageItemLength * info.index, animated: false });
+          if (scrollRetries.current++ < 4) setTimeout(() => list.current?.scrollToIndex({ index: info.index, viewPosition: 0, viewOffset: 8, animated: true }), 120);
+        }}
         ListHeaderComponent={intro}
         renderItem={({ item: m, index: i }) => {
-          const next = m.role === "assistant" && (!m.local || m.urgency === "emergency") ? actions(m) : [];
+          if (m.role === "user") {
+            return (
+              <View style={{ alignSelf: "flex-end", maxWidth: "85%", backgroundColor: C.brandDark, borderRadius: 16, borderBottomRightRadius: 4, paddingVertical: 10, paddingHorizontal: 12 }}>
+                <Text style={[S.body, { color: C.onBrand }]}>{m.content}</Text>
+              </View>
+            );
+          }
+          const next = !m.local || m.urgency === "emergency" ? actions(m) : [];
+          const level = isLevel(m.urgency) ? m.urgency : null;
+          const structured = !!m.parts && !expanded.has(i);
           return (
-            <View style={{ alignSelf: m.role === "user" ? "flex-end" : "flex-start", maxWidth: "88%", gap: 6 }}>
-              {m.urgency && m.urgency !== "unclear" && (
-                <Text style={{ fontWeight: "700", color: C.urgency[m.urgency] }}>
-                  {t(m.urgency === "vet_today" ? "app_urgency_vet_today" : "urgency_" + m.urgency)}
-                </Text>
-              )}
-              <View style={{ backgroundColor: m.role === "user" ? C.brandDark : m.local ? C.noteBg : C.card, borderRadius: 14, padding: 10, borderWidth: m.role === "user" ? 0 : 1, borderColor: C.line }}>
-                {m.parts && !expanded.has(i) ? <Answer parts={m.parts} onFull={() => setExpanded((s) => new Set(s).add(i))} />
-                  : <Text style={[S.body, { color: m.role === "user" ? C.onBrand : C.text }]}>{m.content}</Text>}
+            <View style={{ gap: 8 }}>
+              <View style={{ backgroundColor: m.local ? C.noteBg : C.card, borderRadius: 16, borderWidth: 1, borderColor: C.line, overflow: "hidden" }}>
+                {/* The level first, in its colour and with its own icon; an answer without one still says what it is */}
+                {level ? <UrgencyBand level={level} /> : !m.local && <AssessmentNote />}
+                {/* What to do, before the advice */}
+                {next.length > 0 && (
+                  <View style={{ gap: 8, paddingHorizontal: 14, paddingTop: 12 }}>
+                    {next.map((a, n) => <NextButton key={a.label} step={a} first={n === 0} />)}
+                  </View>
+                )}
+                <View style={{ paddingHorizontal: 14, paddingTop: 12, paddingBottom: structured ? 0 : 12 }}>
+                  {m.parts && structured ? <Answer parts={m.parts} onFull={() => { follow.current = null; setExpanded((s) => new Set(s).add(i)); }} />
+                    : <Text style={S.body}>{m.content}</Text>}
+                </View>
+                {!m.local && (
+                  <View style={[S.row, { flexWrap: "wrap", gap: 2, paddingHorizontal: 6, borderTopWidth: 1, borderColor: C.line }]}>
+                    {small(speaking === i ? "square" : "volume-2", t(speaking === i ? "app_stopReading" : "app_readAloud"), () => toggleRead(i, m.content))}
+                    {dog && m.urgency && (
+                      filed.has(fileKey(m, i))
+                        ? (
+                          <View style={[S.row, { gap: 6, minHeight: 44, paddingHorizontal: 8 }]}>
+                            <Icon name="check" size={18} color={C.ok} />
+                            <Text style={{ flexShrink: 1, color: C.ok, fontSize: 14, fontWeight: "600" }}>{t("app_savedToFile")}</Text>
+                          </View>
+                        )
+                        : small("folder-plus", tf("app_saveToFile", { name: dog.name }), () => saveToFile(m, i))
+                    )}
+                    <View style={{ flexGrow: 1 }} />
+                    {m.id != null && <Rating id={m.id} />}
+                  </View>
+                )}
               </View>
               {/* The owner talks about another dog than the chosen one: offer that dog's own conversation */}
               {otherDogAt === `${dogId}:${i}` && (
                 <View style={[S.card, { gap: 8, paddingVertical: 10, backgroundColor: C.chip }]}>
                   <View style={[S.row, { gap: 8 }]}>
-                    <Text style={[S.body, { flex: 1, fontWeight: "600" }]} accessibilityRole="header">🐾 {t("app_otherDog")}</Text>
-                    <Pressable onPress={() => setOtherDogAt(null)} hitSlop={12} accessibilityRole="button" accessibilityLabel={t("close")}>
-                      <Text style={{ color: C.muted, fontSize: 16 }}>✕</Text>
-                    </Pressable>
+                    <Symbol name="paw" size={18} color={C.muted} />
+                    <Text style={[S.body, { flex: 1, fontWeight: "600" }]} accessibilityRole="header">{t("app_otherDog")}</Text>
+                    {closeButton(() => setOtherDogAt(null))}
                   </View>
                   <DogChips options={otherDogOptions(dogs, dogId, t("app_noDog"))} onChange={switchDog}>
                     <Pressable onPress={() => router.push({ pathname: "/dog/[id]", params: { id: "new" } })} accessibilityRole="button"
-                      style={{ minHeight: 40, justifyContent: "center", paddingHorizontal: 12, paddingVertical: 8, borderRadius: 16, borderWidth: 1, borderColor: C.link, backgroundColor: C.card }}>
-                      <Text style={{ color: C.link, fontWeight: "600" }}>＋ {t("app_addDog")}</Text>
+                      style={({ pressed }) => [S.row, { gap: 6, minHeight: 44, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 22, borderWidth: 1, borderColor: C.link, backgroundColor: C.card }, pressed && S.pressed]}>
+                      <Icon name="plus" size={16} color={C.link} />
+                      <Text style={{ color: C.link, fontWeight: "600" }}>{t("app_addDog")}</Text>
                     </Pressable>
                   </DogChips>
                 </View>
               )}
               {/* Tap-to-answer replies for the latest answer's first question */}
-              {m.role === "assistant" && i === messages.length - 1 && !busy && !!m.parts?.quick_replies.length && (
+              {i === messages.length - 1 && !busy && !!m.parts?.quick_replies.length && (
                 <View style={[S.row, { gap: 6, flexWrap: "wrap" }]}>
                   {m.parts.quick_replies.map((q) => (
                     <Pressable key={q} onPress={() => send(undefined, q)} accessibilityRole="button"
-                      style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: 16, borderWidth: 1, borderColor: C.link, backgroundColor: C.card }}>
+                      style={({ pressed }) => [{ minHeight: 44, justifyContent: "center", paddingHorizontal: 14, paddingVertical: 8, borderRadius: 22, borderWidth: 1, borderColor: C.link, backgroundColor: C.card }, pressed && S.pressed]}>
                       <Text style={{ color: C.link, fontWeight: "600" }}>{q}</Text>
                     </Pressable>
                   ))}
@@ -443,80 +645,70 @@ export default function Ask() {
                 const key = `${dogId}:${i}`, s = obsState.get(key);
                 if (!s) return null;
                 return (
-                  <View style={[S.card, S.row, { gap: 8, paddingVertical: 8, backgroundColor: C.chip }]}>
+                  <View style={[S.card, S.row, { gap: 8, paddingVertical: 4, backgroundColor: C.chip }]}>
+                    <Icon name={s.id != null ? "check" : "file-plus"} size={16} color={s.id != null ? C.ok : C.muted} />
                     <Text style={[S.muted, { flex: 1 }]} numberOfLines={2}>
-                      {s.id != null ? "✓ " + tf("app_obsFiled", { name: dog.name }) : "📝 " + tf("app_obsAdd", { name: dog.name })}: <Text style={{ fontWeight: "700", color: C.text }}>{s.obs.title}</Text> · {formatDate(s.obs.date, lang)}
+                      {tf(s.id != null ? "app_obsFiled" : "app_obsAdd", { name: dog.name })}: <Text style={{ fontWeight: "700", color: C.text }}>{s.obs.title}</Text> · {formatDate(s.obs.date, lang)}
                     </Text>
-                    <Pressable onPress={() => (s.id != null ? undoObs(key) : addObs(key))} hitSlop={8} accessibilityRole="button">
+                    <Pressable onPress={() => (s.id != null ? undoObs(key) : addObs(key))} accessibilityRole="button"
+                      style={({ pressed }) => [{ minHeight: 44, justifyContent: "center", paddingHorizontal: 6 }, pressed && S.pressed]}>
                       <Text style={{ color: C.link, fontWeight: "600" }}>{t(s.id != null ? "app_undo" : "app_add")}</Text>
                     </Pressable>
                   </View>
                 );
               })()}
-              {m.role === "assistant" && !m.local && (
-                <View style={[S.row, { gap: 16, flexWrap: "wrap" }]}>
-                  <Pressable onPress={() => toggleRead(i, m.content)} hitSlop={8} accessibilityRole="button"
-                    accessibilityLabel={t(speaking === i ? "app_stopReading" : "app_readAloud")}>
-                    <Text style={{ color: C.link, fontWeight: "600" }}>{speaking === i ? "⏹ " + t("app_stopReading") : "🔊 " + t("app_readAloud")}</Text>
-                  </Pressable>
-                  {dog && m.urgency && (
-                    filed.has(fileKey(m, i))
-                      ? <Text style={{ color: C.ok, fontWeight: "600" }}>✓ {t("app_savedToFile")}</Text>
-                      : <Pressable onPress={() => saveToFile(m, i)} hitSlop={8} accessibilityRole="button">
-                          <Text style={{ color: C.link, fontWeight: "600" }}>📁 {tf("app_saveToFile", { name: dog.name })}</Text>
-                        </Pressable>
-                  )}
-                  {m.id != null && <Rating id={m.id} />}
-                </View>
-              )}
-              {next.map((a) => (
-                <Pressable key={a.label} style={[S.btn, a.danger && { backgroundColor: C.dangerFill }]} onPress={a.go} accessibilityRole="button">
-                  <Text style={S.btnText}>{a.label}</Text>
-                </Pressable>
-              ))}
             </View>
           );
         }}
         ListFooterComponent={busy ? <ActivityIndicator color={C.brand} style={{ marginTop: 8 }} />
           : lastUnanswered ? (
-            <Pressable style={[S.btnGhost, { alignSelf: "flex-start" }]} onPress={retry} accessibilityRole="button">
-              <Text style={S.btnGhostText}>↻ {t("app_retry")}</Text>
+            <Pressable onPress={retry} accessibilityRole="button"
+              style={({ pressed }) => [S.btnGhost, S.row, { gap: 6, alignSelf: "flex-start", minHeight: 44 }, pressed && S.pressed]}>
+              <Icon name="refresh-cw" size={16} />
+              <Text style={S.btnGhostText}>{t("app_retry")}</Text>
             </Pressable>
           ) : undefined}
       />
-      <View style={{ padding: 12, gap: 6, borderTopWidth: 1, borderColor: C.line, backgroundColor: C.card }}>
-        {/* Beta: a live spoken conversation with the AI itself (Settings → Beta features) */}
-        {beta.voice && !talk && !listening && (
-          <Pressable onPress={() => router.push({ pathname: "/voice", params: dogId != null ? { dog: String(dogId) } : {} })} disabled={busy}
-            accessibilityRole="button" style={[S.btnGhost, { flexDirection: "row", justifyContent: "center", gap: 6 }]}>
-            <Text style={S.btnGhostText}>🎧 {t("app_voiceAiStart")}</Text>
-          </Pressable>
-        )}
-        {talk && <Text style={[S.muted, { color: C.link, fontWeight: "600" }]} accessibilityLiveRegion="polite">🎧 {t("app_talkOn")}</Text>}
-        {listening && <Text style={[S.muted, { color: C.danger, fontWeight: "700" }]} accessibilityLiveRegion="polite">🎙️ {t("app_voiceListening")}</Text>}
-        {!!voiceNote && <Text style={[S.muted, { color: C.warn }]}>{voiceNote}</Text>}
-        {/* Mic and conversation mode are emoji only (🎙️, 🎧 are drawn in black): on glyphBg, light in dark mode too */}
-        <View style={[S.row, { gap: 8 }]}>
-          <Pressable onPress={toggleListening} disabled={busy} accessibilityRole="button" accessibilityLabel={t(listening ? "app_voiceListening" : "app_voiceStart")}
-            style={{ width: 46, height: 46, borderRadius: 23, alignItems: "center", justifyContent: "center", backgroundColor: listening ? C.dangerFill : C.glyphBg, opacity: busy ? 0.5 : 1 }}>
-            <Text style={{ fontSize: 22, color: C.onBrand }}>{listening ? "⏹" : "🎙️"}</Text>
-          </Pressable>
-          <Pressable onPress={toggleTalk} disabled={busy && !talk} accessibilityRole="switch" accessibilityState={{ checked: talk }} accessibilityLabel={t("app_talkMode")}
-            style={{ width: 46, height: 46, borderRadius: 23, alignItems: "center", justifyContent: "center", backgroundColor: talk ? C.brandDark : C.glyphBg, opacity: busy && !talk ? 0.5 : 1 }}>
-            <Text style={{ fontSize: 20 }}>🎧</Text>
-          </Pressable>
-          <Input style={[S.input, { flex: 1, maxHeight: 120 }]} value={text} onChangeText={setText} placeholder={t("aiPlaceholder")} multiline maxLength={1000} />
-          <Pressable style={[S.btn, { backgroundColor: C.brandDark }, busy && { opacity: 0.5 }]} onPress={() => send()} disabled={busy} accessibilityRole="button"><Text style={S.btnText}>{t("aiSend")}</Text></Pressable>
-        </View>
-        <View style={[S.row, { justifyContent: "space-between" }]}>
-          <Text style={[S.muted, { flex: 1 }]}>{t("aiDisclaimer")}</Text>
-          {messages.length > 0 && (
-            <Pressable onPress={newChat} hitSlop={8} accessibilityRole="button">
-              <Text style={{ color: C.link, fontWeight: "600" }}>{t("app_newChat")}</Text>
+      <View style={{ paddingHorizontal: 12, paddingVertical: 8, gap: 6, borderTopWidth: 1, borderColor: C.line, backgroundColor: C.card }}>
+        {/* Conversation mode is on: what it does, and the headset to end it */}
+        {talk && (
+          <View style={[S.row, { gap: 8 }]}>
+            <Text style={[S.muted, { flex: 1, color: C.link, fontWeight: "600" }]} accessibilityLiveRegion="polite">{t("app_talkOn")}</Text>
+            <Pressable onPress={toggleTalk} accessibilityRole="switch" accessibilityState={{ checked: true }} accessibilityLabel={t("app_talkMode")}
+              style={({ pressed }) => [{ width: 44, height: 44, borderRadius: 22, alignItems: "center", justifyContent: "center", backgroundColor: C.brandDark }, pressed && S.pressed]}>
+              <Icon name="headphones" size={20} color={C.onBrand} />
             </Pressable>
-          )}
+          </View>
+        )}
+        {listening && (
+          <View style={[S.row, { gap: 6 }]}>
+            <Icon name="mic" size={16} color={C.danger} />
+            <Text style={[S.muted, { flex: 1, color: C.danger, fontWeight: "700" }]} accessibilityLiveRegion="polite">{t("app_voiceListening")}</Text>
+          </View>
+        )}
+        {!!voiceNote && <Text style={[S.muted, { color: C.warn }]}>{voiceNote}</Text>}
+        {/* One row: the field with the mic inside, and a round Send */}
+        <View style={[S.row, { gap: 8, alignItems: "flex-end" }]}>
+          <View style={{ flex: 1, minHeight: 44, flexDirection: "row", alignItems: "flex-end", borderWidth: 1, borderColor: C.fieldLine, borderRadius: 22, backgroundColor: C.card, paddingLeft: 14 }}>
+            <Input style={{ flex: 1, minHeight: 42, maxHeight: 120, paddingHorizontal: 0, paddingTop: 11, paddingBottom: 11, fontSize: 16, color: C.text }}
+              value={text} onChangeText={setText} placeholder={t("aiPlaceholder")} multiline maxLength={1000} />
+            <Pressable onPress={toggleListening} disabled={busy} accessibilityRole="button" accessibilityLabel={t(listening ? "app_voiceListening" : "app_voiceStart")}
+              accessibilityState={{ disabled: busy }}
+              style={({ pressed }) => [{ width: 44, height: 42, alignItems: "center", justifyContent: "center" }, busy && { opacity: 0.5 }, pressed && S.pressed]}>
+              {listening
+                ? <View style={{ width: 32, height: 32, borderRadius: 16, alignItems: "center", justifyContent: "center", backgroundColor: C.dangerFill }}><Icon name="square" size={14} color={C.onBrand} /></View>
+                : <Icon name="mic" size={22} color={C.muted} />}
+            </Pressable>
+          </View>
+          <Pressable onPress={() => send()} disabled={busy} accessibilityRole="button" accessibilityLabel={t("aiSend")} accessibilityState={{ disabled: busy }}
+            style={({ pressed }) => [{ width: 44, height: 44, borderRadius: 22, alignItems: "center", justifyContent: "center", backgroundColor: C.brandDark }, busy && { opacity: 0.5 }, pressed && S.pressed]}>
+            <Icon name="arrow-up" size={22} color={C.onBrand} />
+          </Pressable>
         </View>
       </View>
+      <VoiceSheet visible={voiceMenu} onClose={() => setVoiceMenu(false)}
+        talk={talk} canTalk={!busy || talk} onTalk={() => afterSheet(toggleTalk)}
+        beta={beta.voice} canCall={!busy} onCall={() => afterSheet(startCall)} />
     </KeyboardAvoidingView>
   );
 }
