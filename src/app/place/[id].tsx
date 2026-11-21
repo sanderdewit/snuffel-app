@@ -8,7 +8,7 @@ import { CATEGORIES, placeById, refreshOpenState, type Place } from "../../lib/p
 import { recall } from "../../lib/placeStore";
 import { isSaved, save, setMyVet, unsave } from "../../lib/saved";
 import { callUrl, ChainBadge, directionsUrl, displayName, OpenBadge } from "../../ui/PlaceCard";
-import { C, S } from "../../ui/theme";
+import { useTheme } from "../../ui/theme";
 
 // OpenStreetMap's editor for this place: corrections go to the source.
 function osmEditUrl(id: string): string | null {
@@ -18,6 +18,7 @@ function osmEditUrl(id: string): string | null {
 
 export default function PlaceScreen() {
   const { t } = useI18n();
+  const { C, S } = useTheme();
   const { id, lat, lon } = useLocalSearchParams<{ id: string; lat?: string; lon?: string }>();
   const [p, setP] = useState<Place | null>(() => recall(id));
   const [missing, setMissing] = useState(false);
@@ -53,8 +54,8 @@ export default function PlaceScreen() {
             <Text style={S.btnText}>📞 {t("call")}</Text>
           </Pressable>
         )}
-        <Pressable style={[S.btn, { flex: 1, backgroundColor: C.text }]} onPress={() => Linking.openURL(directionsUrl(p))} accessibilityRole="button">
-          <Text style={S.btnText}>🧭 {t("directions")}</Text>
+        <Pressable style={[S.btn, { flex: 1, backgroundColor: C.strong }]} onPress={() => Linking.openURL(directionsUrl(p))} accessibilityRole="button">
+          <Text style={[S.btnText, { color: C.onStrong }]}>🧭 {t("directions")}</Text>
         </Pressable>
       </View>
 

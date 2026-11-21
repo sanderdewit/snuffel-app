@@ -30,6 +30,7 @@ echo "== root"; adb root || true; sleep 3; boot_wait
 echo "== install $APK"; retry adb install -r "$APK"
 adb shell settings put secure location_mode 3
 adb shell settings put global sysui_demo_allowed 1
+adb shell cmd uimode night no || true   # the app follows the phone: store images stay light
 
 for L in ${LANGS[@]}; do
   case "$L" in nl) LOC=nl-NL ;; en) LOC=en-GB ;; *) LOC="$L-$(echo "$L" | tr a-z A-Z)" ;; esac

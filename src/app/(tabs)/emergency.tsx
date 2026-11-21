@@ -10,10 +10,11 @@ import { currentPosition, LocationDeniedError } from "../../lib/geo";
 import { emergency, emergencyRank, NotCoveredError, type Place } from "../../lib/places";
 import { myVet, type SavedPlace } from "../../lib/saved";
 import { callUrl, PlaceCard } from "../../ui/PlaceCard";
-import { C, S } from "../../ui/theme";
+import { useTheme } from "../../ui/theme";
 
 export default function Emergency() {
   const { t, tf } = useI18n();
+  const { C, S } = useTheme();
   const [places, setPlaces] = useState<Place[] | null>(null);
   const [radiusM, setRadiusM] = useState(0);
   const [busy, setBusy] = useState(false);
@@ -49,21 +50,21 @@ export default function Emergency() {
         contentContainerStyle={{ padding: 16 }}
         ListHeaderComponent={
           <View style={{ gap: 10, marginBottom: 10 }}>
-            <View style={[S.card, { backgroundColor: "#fef2f2", borderColor: "#fecaca" }]}>
-              <Text style={[S.body, { color: "#7f1d1d" }]}>🚨 {t("emergencyBanner")}</Text>
+            <View style={[S.card, { backgroundColor: C.alertBg, borderColor: C.alertLine }]}>
+              <Text style={[S.body, { color: C.alertText }]}>🚨 {t("emergencyBanner")}</Text>
             </View>
             {vet && (
               <View style={S.card}>
                 <Text style={S.muted}>⭐ {t("app_myVet")}</Text>
                 <Text style={S.h2}>{vet.name}</Text>
                 {!!vet.phone && (
-                  <Pressable style={[S.btn, { backgroundColor: C.danger, marginTop: 8 }]} onPress={() => Linking.openURL(callUrl(vet.phone!))}>
+                  <Pressable style={[S.btn, { backgroundColor: C.dangerFill, marginTop: 8 }]} onPress={() => Linking.openURL(callUrl(vet.phone!))}>
                     <Text style={S.btnText}>📞 {t("call")}</Text>
                   </Pressable>
                 )}
               </View>
             )}
-            <Pressable style={[S.btn, { backgroundColor: C.danger }]} onPress={run} disabled={busy} accessibilityRole="button">
+            <Pressable style={[S.btn, { backgroundColor: C.dangerFill }]} onPress={run} disabled={busy} accessibilityRole="button">
               <Text style={S.btnText}>📍 {t("app_findOpenVet")}</Text>
             </Pressable>
             {busy && <ActivityIndicator size="large" color={C.danger} />}

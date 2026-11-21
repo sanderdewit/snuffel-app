@@ -1,6 +1,6 @@
-// Settings: language, offline home area, beta features, privacy and about.
+// Settings: language, appearance, offline home area, beta features, privacy and about.
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Linking, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Linking, Pressable, ScrollView, Text, View } from "react-native";
 import Constants from "expo-constants";
 import { router } from "expo-router";
 import { LANGUAGES, useI18n } from "../i18n";
@@ -11,12 +11,40 @@ import { SentReports } from "../ui/Rating";
 import { kvGetJson } from "../lib/db";
 import { currentPosition, LocationDeniedError } from "../lib/geo";
 import { pinHomeArea } from "../lib/places";
-import { C, S } from "../ui/theme";
+import { Input } from "../ui/Input";
+import { useTheme, type AppearanceChoice } from "../ui/theme";
+
+// Appearance: like the phone (light or dark, also when the phone switches at
+// sunset), or always light or always dark. Kept on the phone.
+function AppearanceCard() {
+  const { t } = useI18n();
+  const { C, S, appearance, setAppearance } = useTheme();
+  const options: [AppearanceChoice, string][] = [
+    [null, t("app_appearanceAuto")], ["light", t("app_appearanceLight")], ["dark", t("app_appearanceDark")]
+  ];
+  return (
+    <View style={[S.card, { gap: 10 }]}>
+      <Text style={S.h2}>🌓 {t("app_appearance")}</Text>
+      <View style={[S.row, { flexWrap: "wrap", gap: 6 }]} accessibilityRole="radiogroup" accessibilityLabel={t("app_appearance")}>
+        {options.map(([value, label]) => {
+          const on = appearance === value;
+          return (
+            <Pressable key={value ?? "auto"} onPress={() => setAppearance(value)} accessibilityRole="radio" accessibilityState={{ checked: on }}
+              style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: 16, backgroundColor: on ? C.brand : C.chip }}>
+              <Text style={{ color: on ? C.onBrand : C.text }}>{label}</Text>
+            </Pressable>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
 
 // Beta features: enter a code (checked by the server), then switch the AI voice
 // conversation on or off. Leaving the beta forgets the code.
 function BetaCard() {
   const { t } = useI18n();
+  const { C, S } = useTheme();
   const beta = useBeta();
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
@@ -39,11 +67,11 @@ function BetaCard() {
         <>
           <Text style={S.body}>{t("app_betaText")}</Text>
           <View style={[S.row, { gap: 8 }]}>
-            <TextInput style={[S.input, { flex: 1 }]} value={code} onChangeText={(v) => { setCode(v); setMsg(null); }}
+            <Input style={[S.input, { flex: 1 }]} value={code} onChangeText={(v) => { setCode(v); setMsg(null); }}
               placeholder={t("app_betaCode")} autoCapitalize="characters" autoCorrect={false} autoComplete="off"
               maxLength={64} returnKeyType="done" onSubmitEditing={join} accessibilityLabel={t("app_betaCode")} />
             <Pressable style={[S.btn, (busy || !code.trim()) && { opacity: 0.5 }]} onPress={join} disabled={busy || !code.trim()} accessibilityRole="button">
-              {busy ? <ActivityIndicator color="#fff" /> : <Text style={S.btnText}>{t("app_betaJoin")}</Text>}
+              {busy ? <ActivityIndicator color={C.onBrand} /> : <Text style={S.btnText}>{t("app_betaJoin")}</Text>}
             </Pressable>
           </View>
           {!!msg && <Text style={[S.muted, { color: C.warn }]}>{msg}</Text>}
@@ -69,6 +97,7 @@ function BetaCard() {
 
 export default function Settings() {
   const { t, tf, choice, setLanguage } = useI18n();
+  const { C, S } = useTheme();
   const [home, setHome] = useState<{ at: number } | null>(null);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
@@ -89,7 +118,7 @@ export default function Settings() {
   const option = (code: string | null, label: string) => (
     <Pressable key={code ?? "auto"} onPress={() => setLanguage(code)}
       style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: 16, backgroundColor: choice === code ? C.brand : C.chip }}>
-      <Text style={{ color: choice === code ? "#fff" : C.text }}>{label}</Text>
+      <Text style={{ color: choice === code ? C.onBrand : C.text }}>{label}</Text>
     </Pressable>
   );
 
@@ -103,11 +132,13 @@ export default function Settings() {
         </View>
       </View>
 
+      <AppearanceCard />
+
       <View style={[S.card, { gap: 8 }]}>
         <Text style={S.h2}>📶 {t("app_offlineArea")}</Text>
         <Text style={S.body}>{t("app_offlineAreaText")}</Text>
         <Pressable style={S.btn} onPress={setHomeHere} disabled={busy} accessibilityRole="button">
-          {busy ? <ActivityIndicator color="#fff" /> : <Text style={S.btnText}>🏠 {t("app_setHomeHere")}</Text>}
+          {busy ? <ActivityIndicator color={C.onBrand} /> : <Text style={S.btnText}>🏠 {t("app_setHomeHere")}</Text>}
         </Pressable>
         {!!msg && <Text style={S.muted}>{msg}</Text>}
         {!msg && home && <Text style={S.muted}>✓ {new Date(home.at).toLocaleDateString()}</Text>}
@@ -120,16 +151,16 @@ export default function Settings() {
         <Text style={S.body}>{t("app_privacyText")}</Text>
         <Text style={S.body}>{t("app_fbPrivacy")}</Text>
         <SentReports />
-        <Pressable onPress={() => Linking.openURL(CONFIG.privacy)}><Text style={{ color: C.brandDark, fontWeight: "600" }}>{t("app_privacy")} ↗</Text></Pressable>
+        <Pressable onPress={() => Linking.openURL(CONFIG.privacy)}><Text style={{ color: C.link, fontWeight: "600" }}>{t("app_privacy")} ↗</Text></Pressable>
       </View>
 
       <View style={[S.card, { gap: 6 }]}>
         <Text style={S.h2}>🐾 {t("app_about")}</Text>
         <Text style={S.body}>{t("app_aboutText")}</Text>
         <Text style={[S.body, { fontStyle: "italic" }]}>{t("app_aboutThanks")}</Text>
-        <Pressable onPress={() => Linking.openURL(CONFIG.website)}><Text style={{ color: C.brandDark, fontWeight: "600" }}>{t("website")} ↗</Text></Pressable>
+        <Pressable onPress={() => Linking.openURL(CONFIG.website)}><Text style={{ color: C.link, fontWeight: "600" }}>{t("website")} ↗</Text></Pressable>
         <Pressable onPress={() => Linking.openURL("https://www.openstreetmap.org/copyright")}><Text style={S.muted}>{t("footerProto")} ↗</Text></Pressable>
-        <Pressable onPress={() => router.push("/welcome")} accessibilityRole="button"><Text style={{ color: C.brandDark, fontWeight: "600" }}>🐾 {t("app_ob_replay")}</Text></Pressable>
+        <Pressable onPress={() => router.push("/welcome")} accessibilityRole="button"><Text style={{ color: C.link, fontWeight: "600" }}>🐾 {t("app_ob_replay")}</Text></Pressable>
         <Text style={S.muted}>{tf("app_version", { v: Constants.expoConfig?.version || "?" })}</Text>
       </View>
     </ScrollView>

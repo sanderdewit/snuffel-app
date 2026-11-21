@@ -35,15 +35,16 @@ interface Element { id: string; lat: number; lon: number; cc?: string; tags: Rec
 interface Manifest { version: string; cell: number; path: string; cells: string[]; cellSet?: Set<string> }
 
 export const CATEGORY_ORDER: Category[] = ["vet", "hospital", "grooming", "shop", "boarding", "training", "play", "shelter"];
-export const CATEGORIES: Record<Category, { icon: string; color: string; key: string }> = {
-  vet: { icon: "🩺", color: "#2563eb", key: "cat_vet" },
-  hospital: { icon: "🏥", color: "#dc2626", key: "cat_hospital" },
-  grooming: { icon: "✂️", color: "#db2777", key: "cat_grooming" },
-  shop: { icon: "🛍️", color: "#f59e0b", key: "cat_shop" },
-  boarding: { icon: "🏨", color: "#7c3aed", key: "cat_boarding" },
-  training: { icon: "🎓", color: "#0f766e", key: "cat_training" },
-  play: { icon: "🎾", color: "#16a34a", key: "cat_play" },
-  shelter: { icon: "🐾", color: "#0891b2", key: "cat_shelter" }
+// The colours per category, light and dark, are in the palette (src/ui/palette.ts, `cat`).
+export const CATEGORIES: Record<Category, { icon: string; key: string }> = {
+  vet: { icon: "🩺", key: "cat_vet" },
+  hospital: { icon: "🏥", key: "cat_hospital" },
+  grooming: { icon: "✂️", key: "cat_grooming" },
+  shop: { icon: "🛍️", key: "cat_shop" },
+  boarding: { icon: "🏨", key: "cat_boarding" },
+  training: { icon: "🎓", key: "cat_training" },
+  play: { icon: "🎾", key: "cat_play" },
+  shelter: { icon: "🐾", key: "cat_shelter" }
 };
 // Parks and shelters are often run by a municipality, which isn't a chain.
 const COMMERCIAL: Partial<Record<Category, boolean>> = { vet: true, hospital: true, grooming: true, shop: true, boarding: true, training: true };

@@ -1,6 +1,6 @@
 // Find: address or GPS search, categories, independents-only, map or list.
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, FlatList, Keyboard, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, FlatList, Keyboard, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
 import { useI18n } from "../../i18n";
@@ -9,14 +9,16 @@ import { CATEGORIES, CATEGORY_ORDER, NotCoveredError, offline, search, type Plac
 import type { Category } from "../../core/classify";
 import { PlaceCard } from "../../ui/PlaceCard";
 import { PlaceMap } from "../../ui/PlaceMap";
+import { Input } from "../../ui/Input";
 import { Toggle } from "../../ui/Toggle";
-import { C, S } from "../../ui/theme";
+import { useTheme } from "../../ui/theme";
 
 const RADII = [1000, 3000, 5000, 10000, 25000, 50000, 75000, 100000];
 const allCats = (on: boolean) => Object.fromEntries(CATEGORY_ORDER.map((c) => [c, on])) as Record<Category, boolean>;
 
 export default function Find() {
   const { t, tf, lang } = useI18n();
+  const { C, S } = useTheme();
   const [query, setQuery] = useState("");
   const [spot, setSpot] = useState<Spot | null>(null);
   const [radius, setRadius] = useState(3000);
@@ -112,7 +114,7 @@ export default function Find() {
           </Pressable>
         </View>
         <View style={[S.row, { gap: 8 }]}>
-          <TextInput
+          <Input
             style={[S.input, { flex: 1 }]} value={query} onChangeText={setQuery}
             placeholder={t("searchPlaceholder")} returnKeyType="search" onSubmitEditing={byAddress} autoCorrect={false}
           />
@@ -124,7 +126,7 @@ export default function Find() {
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6 }}>
           <Pressable onPress={() => setCats(allCats(true))} accessibilityRole="button" accessibilityState={{ selected: all }}
             style={{ paddingHorizontal: 12, paddingVertical: 6, borderRadius: 16, backgroundColor: all ? C.brandDark : C.chip, borderWidth: 1, borderColor: all ? C.brandDark : C.line }}>
-            <Text style={{ color: all ? "#fff" : C.text, fontWeight: "600" }}>{t("filterAll")}</Text>
+            <Text style={{ color: all ? C.onBrand : C.text, fontWeight: "600" }}>{t("filterAll")}</Text>
           </Pressable>
           {CATEGORY_ORDER.map((c) => {
             const on = !all && cats[c];
@@ -134,7 +136,7 @@ export default function Find() {
                 const next = { ...s, [c]: !s[c] };
                 return CATEGORY_ORDER.some((k) => next[k]) ? next : allCats(true);
               })} accessibilityRole="checkbox" accessibilityState={{ checked: on }}
-                style={{ paddingHorizontal: 10, paddingVertical: 6, borderRadius: 16, backgroundColor: on ? CATEGORIES[c].color + "22" : C.chip, borderWidth: 1, borderColor: on ? CATEGORIES[c].color : C.line }}>
+                style={{ paddingHorizontal: 10, paddingVertical: 6, borderRadius: 16, backgroundColor: on ? C.cat[c] + "22" : C.chip, borderWidth: 1, borderColor: on ? C.cat[c] : C.line }}>
                 <Text style={{ color: C.text }}>{CATEGORIES[c].icon} {t(CATEGORIES[c].key)}</Text>
               </Pressable>
             );
@@ -148,7 +150,7 @@ export default function Find() {
           <View style={[S.row, { gap: 6 }]}>
             {(["list", "map"] as const).map((v) => (
               <Pressable key={v} onPress={() => setView(v)} style={[S.btnGhost, { paddingVertical: 6, backgroundColor: view === v ? C.brand : C.chip }]}>
-                <Text style={[S.btnGhostText, { color: view === v ? "#fff" : C.text }]}>{t(v === "list" ? "viewList" : "viewMap")}</Text>
+                <Text style={[S.btnGhostText, { color: view === v ? C.onBrand : C.text }]}>{t(v === "list" ? "viewList" : "viewMap")}</Text>
               </Pressable>
             ))}
           </View>
@@ -157,8 +159,8 @@ export default function Find() {
           <Text style={S.muted}>{t("radius")}:</Text>
           {RADII.map((r) => (
             <Pressable key={r} onPress={() => { setRadius(r); if (spot) load(spot, r); }}
-              style={{ paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12, backgroundColor: radius === r ? C.text : C.chip }}>
-              <Text style={{ color: radius === r ? "#fff" : C.text }}>{r / 1000} km</Text>
+              style={{ paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12, backgroundColor: radius === r ? C.strong : C.chip }}>
+              <Text style={{ color: radius === r ? C.onStrong : C.text }}>{r / 1000} km</Text>
             </Pressable>
           ))}
         </ScrollView>

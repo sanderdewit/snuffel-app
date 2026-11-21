@@ -14,6 +14,7 @@ across Europe, and see which places belong to large chains. One codebase
 | **Saved** | Favourites and "my vet", available offline |
 | **Offline** | Places within 15 km of home are kept on the phone |
 | **Languages** | 29, following the phone (or chosen in Settings) |
+| **Light and dark** | Following the phone (or chosen in Settings), map included; colours from `src/ui/palette.ts`, WCAG AA checked by `tests/contrast.test.ts` |
 
 No accounts, no tracking. Everything personal stays on the phone; the AI
 questions go to Azure OpenAI in the EU and are not used for training.

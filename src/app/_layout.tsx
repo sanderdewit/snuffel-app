@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Alert } from "react-native";
-import { Stack, router } from "expo-router";
+import { Stack, ThemeProvider as NavigationThemeProvider, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as Notifications from "expo-notifications";
 import { I18nProvider, useI18n } from "../i18n";
@@ -9,7 +9,7 @@ import { REMINDER_KINDS, rescheduleAll, setReminderTexts } from "../lib/dogs";
 import { kvGet } from "../lib/db";
 import { installCrashNote, takeCrashNote } from "../lib/crash";
 import { isDemo, seedDemo } from "../lib/demo";
-import { C } from "../ui/theme";
+import { ThemeProvider, useTheme } from "../ui/theme";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({ shouldShowBanner: true, shouldShowList: true, shouldPlaySound: false, shouldSetBadge: false })
@@ -61,35 +61,41 @@ function CrashNote() {
   return null;
 }
 
+// Light or dark (src/ui/theme.tsx): the navigation header, tab bar and status bar follow too.
 function Screens() {
   const { t } = useI18n();
+  const { scheme, C, navigation } = useTheme();
   return (
-    <Stack screenOptions={{ headerTransparent: false, headerTintColor: C.brandDark, contentStyle: { backgroundColor: C.bg }, headerBackButtonDisplayMode: "minimal" }}>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      {/* A plain screen, not a modal: a full-screen modal got no top safe-area inset on iOS */}
-      <Stack.Screen name="welcome" options={{ headerShown: false, animation: "fade", gestureEnabled: false }} />
-      <Stack.Screen name="place/[id]" options={{ title: "" }} />
-      <Stack.Screen name="dog/[id]" options={{ title: t("app_editDog") }} />
-      <Stack.Screen name="dog/file/[id]" options={{ title: t("app_dogFile") }} />
-      <Stack.Screen name="settings" options={{ title: t("app_settings") }} />
-      <Stack.Screen name="lost" options={{ title: t("lostTitle").replace(/^\S+\s/, "") /* without the 🔎 */ }} />
-      <Stack.Screen name="voice" options={{ title: t("app_betaVoice"), gestureEnabled: false }} />
-      <Stack.Screen name="feedback" options={{ title: t("app_fbTitle") }} />
-    </Stack>
+    <NavigationThemeProvider value={navigation}>
+      <StatusBar style={scheme === "dark" ? "light" : "dark"} />
+      <Stack screenOptions={{ headerTransparent: false, headerTintColor: C.link, contentStyle: { backgroundColor: C.bg }, headerBackButtonDisplayMode: "minimal" }}>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        {/* A plain screen, not a modal: a full-screen modal got no top safe-area inset on iOS */}
+        <Stack.Screen name="welcome" options={{ headerShown: false, animation: "fade", gestureEnabled: false }} />
+        <Stack.Screen name="place/[id]" options={{ title: "" }} />
+        <Stack.Screen name="dog/[id]" options={{ title: t("app_editDog") }} />
+        <Stack.Screen name="dog/file/[id]" options={{ title: t("app_dogFile") }} />
+        <Stack.Screen name="settings" options={{ title: t("app_settings") }} />
+        <Stack.Screen name="lost" options={{ title: t("lostTitle").replace(/^\S+\s/, "") /* without the 🔎 */ }} />
+        <Stack.Screen name="voice" options={{ title: t("app_betaVoice"), gestureEnabled: false }} />
+        <Stack.Screen name="feedback" options={{ title: t("app_fbTitle") }} />
+      </Stack>
+    </NavigationThemeProvider>
   );
 }
 
 export default function Root() {
   return (
-    <I18nProvider>
-      <BetaProvider>
-        <StatusBar style="dark" />
-        <ReminderTexts />
-        <NotificationLinks />
-        <Screens />
-        <FirstRun />
-        <CrashNote />
-      </BetaProvider>
-    </I18nProvider>
+    <ThemeProvider>
+      <I18nProvider>
+        <BetaProvider>
+          <ReminderTexts />
+          <NotificationLinks />
+          <Screens />
+          <FirstRun />
+          <CrashNote />
+        </BetaProvider>
+      </I18nProvider>
+    </ThemeProvider>
   );
 }

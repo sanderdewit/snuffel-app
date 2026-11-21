@@ -3,7 +3,7 @@
 // (location) are asked in context, on the step that needs them. Shown once
 // (kv "onboarded"); Settings can replay it.
 import { useState } from "react";
-import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "expo-image";
@@ -15,7 +15,8 @@ import { currentPosition, geocode, LocationDeniedError } from "../lib/geo";
 import { pinHomeArea, search, type Place } from "../lib/places";
 import { setMyVet } from "../lib/saved";
 import { ChainBadge, displayName } from "../ui/PlaceCard";
-import { C, S } from "../ui/theme";
+import { Input } from "../ui/Input";
+import { useTheme } from "../ui/theme";
 import { Toggle } from "../ui/Toggle";
 import { sendOnOpen } from "../lib/handoff";
 import { DateField } from "../ui/DateField";
@@ -27,6 +28,7 @@ const STEPS = 6;   // welcome, area, dog, vet, AI help, done
 
 export default function Welcome() {
   const { t, tf, lang } = useI18n();
+  const { C, S } = useTheme();
   // ?step=n opens a later step (screenshot runs; tools/screenshots.sh)
   const { step: startAt } = useLocalSearchParams<{ step?: string }>();
   const [step, setStep] = useState(() => Math.min(Math.max(Number(startAt) || 0, 0), STEPS - 1));
@@ -139,7 +141,7 @@ export default function Welcome() {
   const footer = (primary: { label: string; onPress: () => void; busy?: boolean }, secondary?: { label: string; onPress: () => void }) => (
     <View style={{ gap: 8, paddingTop: 8 }}>
       <Pressable style={S.btn} onPress={primary.onPress} disabled={primary.busy} accessibilityRole="button">
-        {primary.busy ? <ActivityIndicator color="#fff" /> : <Text style={S.btnText}>{primary.label}</Text>}
+        {primary.busy ? <ActivityIndicator color={C.onBrand} /> : <Text style={S.btnText}>{primary.label}</Text>}
       </Pressable>
       {secondary && (
         <Pressable style={[S.btnGhost, { backgroundColor: "transparent" }]} onPress={secondary.onPress} accessibilityRole="button">
@@ -184,7 +186,7 @@ export default function Welcome() {
         </Pressable>
         <Text style={S.muted}>{t("app_ob_postcode")}</Text>
         <View style={[S.row, { gap: 8 }]}>
-          <TextInput style={[S.input, { flex: 1 }]} value={query} onChangeText={setQuery} placeholder={t("searchPlaceholder")}
+          <Input style={[S.input, { flex: 1 }]} value={query} onChangeText={setQuery} placeholder={t("searchPlaceholder")}
             returnKeyType="search" onSubmitEditing={areaByText} autoCorrect={false} />
           <Pressable style={S.btnGhost} onPress={areaByText} disabled={areaBusy} accessibilityRole="button"><Text style={S.btnGhostText}>OK</Text></Pressable>
         </View>
@@ -201,10 +203,10 @@ export default function Welcome() {
           {photo
             ? <Image source={{ uri: photo }} style={{ width: 96, height: 96, borderRadius: 48 }} />
             : <View style={{ width: 96, height: 96, borderRadius: 48, backgroundColor: C.chip, alignItems: "center", justifyContent: "center" }}><Text style={{ fontSize: 42 }}>🐶</Text></View>}
-          <Text style={{ color: C.brandDark, fontWeight: "600" }}>{t("app_choosePhoto")}</Text>
+          <Text style={{ color: C.link, fontWeight: "600" }}>{t("app_choosePhoto")}</Text>
         </Pressable>
         <Text style={S.muted}>{t("app_dogName")}</Text>
-        <TextInput style={S.input} value={name} onChangeText={setName} maxLength={40} />
+        <Input style={S.input} value={name} onChangeText={setName} maxLength={40} />
         <Text style={S.muted}>{t("app_breed")}</Text>
         <BreedPicker value={breed} onChange={setBreed} />
         <View style={[S.row, { gap: 8 }]}>
@@ -214,7 +216,7 @@ export default function Welcome() {
           </View>
           <View style={{ flex: 1, gap: 4 }}>
             <Text style={S.muted}>{t("app_weight")}</Text>
-            <TextInput style={S.input} value={weight} onChangeText={setWeight} keyboardType="decimal-pad" maxLength={5} />
+            <Input style={S.input} value={weight} onChangeText={setWeight} keyboardType="decimal-pad" maxLength={5} />
           </View>
         </View>
         {!!dogMsg && <Text style={[S.body, { color: C.danger }]}>{dogMsg}</Text>}

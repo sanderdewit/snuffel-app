@@ -1,6 +1,6 @@
 // Add / edit a dog, and its care reminders.
 import { useEffect, useState } from "react";
-import { Alert, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { Image } from "expo-image";
 import { File } from "expo-file-system";
@@ -13,12 +13,14 @@ import {
 import { Toggle } from "../../ui/Toggle";
 import { BreedPicker, NO_BREED } from "../../ui/BreedPicker";
 import type { BreedChoice } from "../../lib/breeds";
-import { C, S } from "../../ui/theme";
+import { Input } from "../../ui/Input";
+import { useTheme } from "../../ui/theme";
 import { DateField } from "../../ui/DateField";
 import { formatDate } from "../../lib/dates";
 
 export default function DogScreen() {
   const { t, tf, lang } = useI18n();
+  const { C, S } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const [dogId, setDogId] = useState<number | null>(id && id !== "new" ? Number(id) : null);
   const [name, setName] = useState("");
@@ -86,18 +88,18 @@ export default function DogScreen() {
         {photo
           ? <Image source={{ uri: photo }} style={{ width: 110, height: 110, borderRadius: 55 }} />
           : <View style={{ width: 110, height: 110, borderRadius: 55, backgroundColor: C.chip, alignItems: "center", justifyContent: "center" }}><Text style={{ fontSize: 48 }}>🐶</Text></View>}
-        <Text style={{ color: C.brandDark, fontWeight: "600" }}>{t("app_choosePhoto")}</Text>
+        <Text style={{ color: C.link, fontWeight: "600" }}>{t("app_choosePhoto")}</Text>
       </Pressable>
 
-      {field(t("app_dogName"), <TextInput style={S.input} value={name} onChangeText={setName} maxLength={40} />)}
+      {field(t("app_dogName"), <Input style={S.input} value={name} onChangeText={setName} maxLength={40} />)}
       {field(t("app_breed"), <BreedPicker value={breed} onChange={setBreed} />)}
       {field(t("app_birthDate"), <DateField value={birth} onChange={setBirth} maximumDate={new Date()} accessibilityLabel={t("app_birthDate")} />)}
-      {field(t("app_weight"), <TextInput style={S.input} value={weight} onChangeText={setWeight} keyboardType="decimal-pad" maxLength={5} />)}
+      {field(t("app_weight"), <Input style={S.input} value={weight} onChangeText={setWeight} keyboardType="decimal-pad" maxLength={5} />)}
       {field(t("app_sex"), (
         <View style={[S.row, { gap: 8 }]}>
           {(["male", "female"] as const).map((s) => (
             <Pressable key={s} onPress={() => setSex(sex === s ? null : s)} style={[S.btnGhost, { flex: 1, backgroundColor: sex === s ? C.brand : C.chip }]}>
-              <Text style={[S.btnGhostText, { color: sex === s ? "#fff" : C.text }]}>{t(s === "male" ? "app_male" : "app_female")}</Text>
+              <Text style={[S.btnGhostText, { color: sex === s ? C.onBrand : C.text }]}>{t(s === "male" ? "app_male" : "app_female")}</Text>
             </Pressable>
           ))}
         </View>

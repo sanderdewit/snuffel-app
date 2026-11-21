@@ -61,6 +61,11 @@ export async function kvGet(k: string): Promise<string | null> {
   const row = await db.getFirstAsync<{ v: string }>("SELECT v FROM kv WHERE k = ?", k);
   return row ? row.v : null;
 }
+/** For a setting needed before the first frame (the appearance). Null when not stored,
+ *  also on a first start, before the migrations have made the table. */
+export function kvGetSync(k: string): string | null {
+  try { return db.getFirstSync<{ v: string }>("SELECT v FROM kv WHERE k = ?", k)?.v ?? null; } catch { return null; }
+}
 export async function kvSet(k: string, v: string | null): Promise<void> {
   await dbReady();
   if (v == null) await db.runAsync("DELETE FROM kv WHERE k = ?", k);

@@ -41,6 +41,7 @@ for L in ${LANGS[@]}; do
   UDID=$(xcrun simctl create "snuffel-$L" "$DEVICE_TYPE" "$RUNTIME")
   xcrun simctl boot "$UDID"
   xcrun simctl bootstatus "$UDID" -b > /dev/null
+  xcrun simctl ui "$UDID" appearance light   # the app follows the phone: store images stay light
   xcrun simctl status_bar "$UDID" override --time "9:41" --dataNetwork wifi --wifiBars 3 --cellularMode active --cellularBars 4 --batteryState charged --batteryLevel 100
   xcrun simctl location "$UDID" set "$LAT,$LON"
   xcrun simctl install "$UDID" "$APP"

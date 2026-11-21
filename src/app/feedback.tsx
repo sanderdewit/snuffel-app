@@ -3,13 +3,14 @@
 // exactly what would be sent (the report object itself, see src/lib/feedbackReport.ts).
 // Nothing leaves the phone unless the owner taps Send.
 import { useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, KeyboardAvoidingView, Linking, Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, KeyboardAvoidingView, Linking, Platform, Pressable, ScrollView, Text, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { useI18n } from "../i18n";
 import { feedbackDraft, reportInput, sendReport } from "../lib/feedback";
 import { buildReport, LIMITS, type Report } from "../lib/feedbackReport";
+import { Input } from "../ui/Input";
 import { CopyCode } from "../ui/Rating";
-import { C, S } from "../ui/theme";
+import { useTheme } from "../ui/theme";
 
 const PRIVACY_MAIL = "privacy@snuffel.app";
 
@@ -17,6 +18,7 @@ const PRIVACY_MAIL = "privacy@snuffel.app";
 // like what they are: grey labels, not a glitch in the text.
 const TOKEN = /(\[name\]|\[email\]|\[number\])/;
 function Masked({ text }: { text: string }) {
+  const { C, S } = useTheme();
   return (
     <Text style={S.body} selectable>
       {text.split(TOKEN).map((part, i) => TOKEN.test(part)
@@ -28,6 +30,7 @@ function Masked({ text }: { text: string }) {
 
 function Preview({ report }: { report: Report }) {
   const { t, tf } = useI18n();
+  const { C, S } = useTheme();
   const d = report.dog;
   const urgency = (u?: string) => (u && u !== "unclear" ? t(u === "vet_today" ? "app_urgency_vet_today" : "urgency_" + u) : "");
   return (
@@ -44,7 +47,7 @@ function Preview({ report }: { report: Report }) {
       )}
       {report.messages.map((m, i) => (
         <View key={i} style={{ gap: 2 }}>
-          <Text style={[S.muted, { fontWeight: "700", color: m.role === "user" ? C.brandDark : C.text }]}>
+          <Text style={[S.muted, { fontWeight: "700", color: m.role === "user" ? C.link : C.text }]}>
             {m.role === "user" ? t("app_fbYou") : "Snuffel"}{urgency(m.urgency) ? " · " + urgency(m.urgency) : ""}
           </Text>
           <Masked text={m.content} />
@@ -57,6 +60,7 @@ function Preview({ report }: { report: Report }) {
 
 export default function Feedback() {
   const { t, lang } = useI18n();
+  const { C, S } = useTheme();
   const { id } = useLocalSearchParams<{ id?: string }>();
   const chatId = Number(id);
   const [draft, setDraft] = useState<Awaited<ReturnType<typeof feedbackDraft>> | undefined>(undefined);
@@ -91,7 +95,7 @@ export default function Feedback() {
           <CopyCode code={code} big />
           <Text style={S.body}>{t("app_fbRemoveHow")}</Text>
           <Pressable onPress={() => Linking.openURL(`mailto:${PRIVACY_MAIL}?subject=${encodeURIComponent("Snuffel " + code)}`).catch(() => undefined)} accessibilityRole="link">
-            <Text style={{ color: C.brandDark, fontWeight: "600" }}>✉️ {PRIVACY_MAIL}</Text>
+            <Text style={{ color: C.link, fontWeight: "600" }}>✉️ {PRIVACY_MAIL}</Text>
           </Pressable>
           <Text style={S.muted}>{t("app_fbFindCode")}</Text>
         </View>
@@ -116,7 +120,7 @@ export default function Feedback() {
             {/* Before the conversation: otherwise "[name]" in the text looks like a bug */}
             <Text style={S.muted}>🔒 {t("app_fbNotSent")}</Text>
             <Preview report={report} />
-            <TextInput style={S.input} value={comment} onChangeText={setComment} placeholder={t("app_fbComment")}
+            <Input style={S.input} value={comment} onChangeText={setComment} placeholder={t("app_fbComment")}
               maxLength={LIMITS.comment} returnKeyType="done" accessibilityLabel={t("app_fbComment")} />
             {/* The note as it is sent, when replacing a name or number changed it */}
             {!!report.comment && report.comment !== comment.replace(/\s+/g, " ").trim() && <Text style={S.muted}>→ {report.comment}</Text>}
@@ -126,7 +130,7 @@ export default function Feedback() {
         <View style={{ gap: 8 }}>
           {!!report && (
             <Pressable style={[S.btn, busy && { opacity: 0.6 }]} onPress={send} disabled={busy} accessibilityRole="button">
-              {busy ? <ActivityIndicator color="#fff" /> : <Text style={S.btnText}>{t("app_fbSend")}</Text>}
+              {busy ? <ActivityIndicator color={C.onBrand} /> : <Text style={S.btnText}>{t("app_fbSend")}</Text>}
             </Pressable>
           )}
           <Pressable style={S.btnGhost} onPress={() => router.back()} disabled={busy} accessibilityRole="button">

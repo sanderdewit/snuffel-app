@@ -10,19 +10,20 @@ import { router, useFocusEffect } from "expo-router";
 import { useI18n } from "../i18n";
 import { formatDate, isoDate } from "../lib/dates";
 import { getRating, sentReports, setVote, type Rating as RatingRow } from "../lib/feedback";
-import { C, S } from "./theme";
+import { useTheme } from "./theme";
 
 const MONO = Platform.select({ ios: "Menlo", default: "monospace" });
 
 /** The removal code, selectable, with a Copy button. */
 export function CopyCode({ code, big }: { code: string; big?: boolean }) {
   const { t } = useI18n();
+  const { C, S } = useTheme();
   const [copied, setCopied] = useState(false);
   return (
     <View style={[S.row, { gap: 12, flexWrap: "wrap" }]}>
       <Text selectable style={{ fontFamily: MONO, fontSize: big ? 22 : 14, fontWeight: "700", color: C.text, letterSpacing: 1 }}>{code}</Text>
       <Pressable onPress={() => { Clipboard.setString(code); setCopied(true); }} hitSlop={8} accessibilityRole="button" accessibilityLabel={t("app_fbCopy")}>
-        <Text style={{ color: C.brandDark, fontWeight: "600" }}>{copied ? "✓ " + t("app_fbCopied") : "📋 " + t("app_fbCopy")}</Text>
+        <Text style={{ color: C.link, fontWeight: "600" }}>{copied ? "✓ " + t("app_fbCopied") : "📋 " + t("app_fbCopy")}</Text>
       </Pressable>
     </View>
   );
@@ -30,6 +31,7 @@ export function CopyCode({ code, big }: { code: string; big?: boolean }) {
 
 export function Rating({ id }: { id: number }) {
   const { t } = useI18n();
+  const { C, S } = useTheme();
   const [r, setR] = useState<RatingRow | null>(null);
   const [loaded, setLoaded] = useState(false);
   const load = useCallback(() => { getRating(id).then((x) => { setR(x); setLoaded(true); }).catch(() => setLoaded(true)); }, [id]);
@@ -53,7 +55,7 @@ export function Rating({ id }: { id: number }) {
     const on = r?.vote === vote;
     return (
       <Pressable onPress={onPress} hitSlop={8} accessibilityRole="button" accessibilityLabel={label} accessibilityState={{ selected: on }}
-        style={{ paddingHorizontal: 8, paddingVertical: 2, borderRadius: 12, borderWidth: 1, borderColor: on ? C.brandDark : "transparent", backgroundColor: on ? C.chip : "transparent" }}>
+        style={{ paddingHorizontal: 8, paddingVertical: 2, borderRadius: 12, borderWidth: 1, borderColor: on ? C.link : "transparent", backgroundColor: on ? C.chip : "transparent" }}>
         <Text style={{ fontSize: 16, opacity: on ? 1 : 0.6 }}>{vote === "up" ? "👍" : "👎"}</Text>
       </Pressable>
     );
@@ -69,6 +71,7 @@ export function Rating({ id }: { id: number }) {
 /** Settings → Privacy: what was sent from this phone, with the codes to have it removed. */
 export function SentReports() {
   const { t, lang } = useI18n();
+  const { S } = useTheme();
   const [list, setList] = useState<RatingRow[]>([]);
   useFocusEffect(useCallback(() => { sentReports().then(setList).catch(() => undefined); }, []));
   if (!list.length) return null;

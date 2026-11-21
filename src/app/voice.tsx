@@ -13,17 +13,16 @@ import { deleteRecordById, fileObservation } from "../lib/dogfile";
 import { getDog, type Dog } from "../lib/dogs";
 import { startVoice, type VoiceCall, type VoiceEnd, type VoiceLine, type VoiceState } from "../lib/realtime";
 import type { VoiceNote } from "../lib/voicenote";
-import { C, S } from "../ui/theme";
+import { useTheme } from "../ui/theme";
 
 const END_TEXT: Record<VoiceEnd, string> = {
   done: "app_voiceAiEnded", time: "app_voiceAiTime", beta: "app_betaRevoked", rate_limited: "app_voiceAiLimit",
   unavailable: "aiReply", mic: "app_voiceDenied", failed: "aiError"
 };
-// The chat's urgency colours (ask.tsx): "keep an eye on it" is not green, "today" between amber and red.
-const URGENCY_COLOR: Record<VoiceNote["urgency"], string> = { emergency: C.danger, vet_today: "#c2410c", vet_soon: C.warn, monitor: "#1d4ed8", unclear: C.muted };
 
 export default function Voice() {
   const { t, tf, lang } = useI18n();
+  const { C, S } = useTheme();
   const beta = useBeta();
   const { dog: dogParam } = useLocalSearchParams<{ dog?: string }>();
   const [state, setState] = useState<VoiceState>("connecting");
@@ -114,7 +113,7 @@ export default function Voice() {
       {ended && dog && note && (
         <View style={[S.card, { gap: 6, backgroundColor: C.chip }]} accessibilityLiveRegion="polite">
           {note.urgency !== "unclear" && (
-            <Text style={{ fontWeight: "700", color: URGENCY_COLOR[note.urgency] }}>
+            <Text style={{ fontWeight: "700", color: C.urgency[note.urgency] }}>
               {t(note.urgency === "vet_today" ? "app_urgency_vet_today" : "urgency_" + note.urgency)}
             </Text>
           )}
@@ -124,7 +123,7 @@ export default function Voice() {
           <Text style={S.body}><Text style={{ fontWeight: "700" }}>{note.observation.title}</Text> · {formatDate(note.observation.date, lang)}</Text>
           {!!note.observation.details && <Text style={S.muted}>{note.observation.details}</Text>}
           <Pressable onPress={filed != null ? undoNote : addNote} hitSlop={8} accessibilityRole="button" style={{ alignSelf: "flex-start", paddingVertical: 4 }}>
-            <Text style={{ color: C.brandDark, fontWeight: "600" }}>{t(filed != null ? "app_undo" : "app_add")}</Text>
+            <Text style={{ color: C.link, fontWeight: "600" }}>{t(filed != null ? "app_undo" : "app_add")}</Text>
           </Pressable>
         </View>
       )}
@@ -133,7 +132,7 @@ export default function Voice() {
         {lines.map((l, i) => (
           <View key={i} style={{ alignSelf: l.role === "user" ? "flex-end" : "flex-start", maxWidth: "88%",
             backgroundColor: l.role === "user" ? C.brandDark : C.card, borderRadius: 14, padding: 10, borderWidth: l.role === "user" ? 0 : 1, borderColor: C.line }}>
-            <Text style={[S.body, { color: l.role === "user" ? "#fff" : C.text }]}>{l.text}</Text>
+            <Text style={[S.body, { color: l.role === "user" ? C.onBrand : C.text }]}>{l.text}</Text>
           </View>
         ))}
       </ScrollView>
@@ -142,7 +141,7 @@ export default function Voice() {
       {ended ? (
         <Pressable style={S.btn} onPress={() => router.back()} accessibilityRole="button"><Text style={S.btnText}>{t("close")}</Text></Pressable>
       ) : (
-        <Pressable style={[S.btn, { backgroundColor: C.danger }]} onPress={() => call.current?.hangUp()} accessibilityRole="button">
+        <Pressable style={[S.btn, { backgroundColor: C.dangerFill }]} onPress={() => call.current?.hangUp()} accessibilityRole="button">
           <Text style={S.btnText}>{t("app_voiceAiHangUp")}</Text>
         </Pressable>
       )}

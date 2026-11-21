@@ -1,6 +1,6 @@
 // The dog's health & behaviour file: entries, AI sharing switch, export.
 import { useCallback, useState } from "react";
-import { ActivityIndicator, Alert, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Alert, Pressable, ScrollView, Text, View } from "react-native";
 import { Stack, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useI18n } from "../../../i18n";
 import { getDog, today, validDate, type Dog } from "../../../lib/dogs";
@@ -9,12 +9,14 @@ import {
   setShareFileWithAi, shareFileWithAi, type DogRecord, type RecordKind
 } from "../../../lib/dogfile";
 import { Toggle } from "../../../ui/Toggle";
-import { C, S } from "../../../ui/theme";
+import { Input } from "../../../ui/Input";
+import { useTheme } from "../../../ui/theme";
 import { DateField } from "../../../ui/DateField";
 import { formatDate } from "../../../lib/dates";
 
 export default function DogFile() {
   const { t, tf, lang } = useI18n();
+  const { C, S } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const dogId = Number(id);
   const [dog, setDog] = useState<Dog | null>(null);
@@ -112,7 +114,7 @@ export default function DogFile() {
             {RECORD_KINDS.filter((k) => k.kind !== "ai").map((k) => (
               <Pressable key={k.kind} onPress={() => setKind(k.kind)}
                 style={{ paddingHorizontal: 10, paddingVertical: 6, borderRadius: 16, backgroundColor: kind === k.kind ? C.brand : C.chip }}>
-                <Text style={{ color: kind === k.kind ? "#fff" : C.text }}>{k.icon} {t(k.key)}</Text>
+                <Text style={{ color: kind === k.kind ? C.onBrand : C.text }}>{k.icon} {t(k.key)}</Text>
               </Pressable>
             ))}
           </View>
@@ -121,16 +123,16 @@ export default function DogFile() {
           {kind === "weight" ? (
             <>
               <Text style={S.muted}>{t("app_entryWeight")}</Text>
-              <TextInput style={S.input} value={weight} onChangeText={setWeight} keyboardType="decimal-pad" maxLength={5} autoFocus />
+              <Input style={S.input} value={weight} onChangeText={setWeight} keyboardType="decimal-pad" maxLength={5} autoFocus />
             </>
           ) : (
             <>
               <Text style={S.muted}>{t("app_entryTitle")}</Text>
-              <TextInput style={S.input} value={title} onChangeText={setTitle} maxLength={200} autoFocus />
+              <Input style={S.input} value={title} onChangeText={setTitle} maxLength={200} autoFocus />
             </>
           )}
           <Text style={S.muted}>{t("app_entryDetails")}</Text>
-          <TextInput style={[S.input, { minHeight: 70, textAlignVertical: "top" }]} value={details} onChangeText={setDetails} multiline maxLength={4000} />
+          <Input style={[S.input, { minHeight: 70, textAlignVertical: "top" }]} value={details} onChangeText={setDetails} multiline maxLength={4000} />
           <View style={[S.row, { gap: 8 }]}>
             <Pressable style={[S.btnGhost, { flex: 1 }]} onPress={() => setAdding(false)}><Text style={S.btnGhostText}>{t("app_cancel")}</Text></Pressable>
             <Pressable style={[S.btn, { flex: 1 }]} onPress={save}><Text style={S.btnText}>{t("app_save")}</Text></Pressable>
@@ -159,8 +161,8 @@ export default function DogFile() {
         {exporting ? (
           <View style={{ gap: 6 }}>
             <Text style={S.muted}>{t("app_exportPasswordHint")}</Text>
-            <TextInput style={S.input} value={pw} onChangeText={setPw} placeholder={t("app_password")} secureTextEntry autoCapitalize="none" textContentType="newPassword" />
-            {!!pw && <TextInput style={S.input} value={pw2} onChangeText={setPw2} placeholder={t("app_passwordRepeat")} secureTextEntry autoCapitalize="none" textContentType="newPassword" />}
+            <Input style={S.input} value={pw} onChangeText={setPw} placeholder={t("app_password")} secureTextEntry autoCapitalize="none" textContentType="newPassword" />
+            {!!pw && <Input style={S.input} value={pw2} onChangeText={setPw2} placeholder={t("app_passwordRepeat")} secureTextEntry autoCapitalize="none" textContentType="newPassword" />}
             <Pressable style={S.btn} onPress={doExport} disabled={busy}><Text style={S.btnText}>{t("app_export")}</Text></Pressable>
           </View>
         ) : (

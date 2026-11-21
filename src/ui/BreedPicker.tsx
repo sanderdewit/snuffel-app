@@ -3,11 +3,12 @@
 // are found too). "Mixed breed" asks for the size and optionally the main breeds,
 // "Other breed" for the owner's own words.
 import { useMemo, useState } from "react";
-import { FlatList, Modal, Pressable, Text, TextInput, View } from "react-native";
+import { FlatList, Modal, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useI18n } from "../i18n";
 import { breedLabel, breedName, breeds, MIX_MAX, MIX_SIZES, searchBreeds, type Breed, type BreedChoice } from "../lib/breeds";
-import { C, S } from "./theme";
+import { Input } from "./Input";
+import { useTheme } from "./theme";
 
 export const NO_BREED: BreedChoice = { breedId: null, breed: null, breedSize: null, breedMix: [] };
 
@@ -16,6 +17,7 @@ type Row = { key: string; header: string } | { key: string; breed: Breed };
 /** The list itself, full screen. `exclude`: ids not offered (the "mainly" choice offers no mixed/other). */
 function BreedList({ visible, onPick, onClose, exclude }: { visible: boolean; onPick: (b: Breed) => void; onClose: () => void; exclude?: string[] }) {
   const { t, lang } = useI18n();
+  const { C, S } = useTheme();
   const [query, setQuery] = useState("");
   const rows = useMemo<Row[]>(() => {
     if (!visible) return [];
@@ -33,7 +35,7 @@ function BreedList({ visible, onPick, onClose, exclude }: { visible: boolean; on
     <Modal visible={visible} animationType="slide" onRequestClose={close}>
       <SafeAreaView style={S.screen} edges={["top", "bottom"]}>
         <View style={[S.row, { gap: 8, padding: 12, borderBottomWidth: 1, borderColor: C.line, backgroundColor: C.card }]}>
-          <TextInput style={[S.input, { flex: 1 }]} value={query} onChangeText={setQuery} placeholder={t("app_breedSearch")} placeholderTextColor={C.muted}
+          <Input style={[S.input, { flex: 1 }]} value={query} onChangeText={setQuery} placeholder={t("app_breedSearch")}
             autoFocus autoCorrect={false} autoCapitalize="none" returnKeyType="search" clearButtonMode="while-editing" accessibilityLabel={t("app_breedSearch")} />
           <Pressable onPress={close} style={S.btnGhost} accessibilityRole="button">
             <Text style={S.btnGhostText}>{t("app_cancel")}</Text>
@@ -69,6 +71,7 @@ function BreedList({ visible, onPick, onClose, exclude }: { visible: boolean; on
 
 export function BreedPicker({ value, onChange }: { value: BreedChoice; onChange: (c: BreedChoice) => void }) {
   const { t, tf, lang } = useI18n();
+  const { C, S } = useTheme();
   const [open, setOpen] = useState<"breed" | "mainly" | null>(null);
   const mainlyExclude = useMemo(() => ["mixed", "other", ...value.breedMix], [value.breedMix]);
   const label = breedLabel(breeds(), value, lang, t, tf);
@@ -84,7 +87,7 @@ export function BreedPicker({ value, onChange }: { value: BreedChoice; onChange:
     setOpen(null);
   };
   const chip = (on: boolean) => [S.btnGhost, { paddingVertical: 8, backgroundColor: on ? C.brand : C.chip }];
-  const chipText = (on: boolean) => [S.btnGhostText, { color: on ? "#fff" : C.text }];
+  const chipText = (on: boolean) => [S.btnGhostText, { color: on ? C.onBrand : C.text }];
 
   return (
     <View style={{ gap: 8 }}>
@@ -97,8 +100,8 @@ export function BreedPicker({ value, onChange }: { value: BreedChoice; onChange:
       </Pressable>
 
       {isOther && (
-        <TextInput style={S.input} value={value.breed || ""} onChangeText={(s) => onChange({ ...value, breed: s })} maxLength={40}
-          placeholder={t("app_breedOtherText")} placeholderTextColor={C.muted} accessibilityLabel={t("app_breedOtherText")} />
+        <Input style={S.input} value={value.breed || ""} onChangeText={(s) => onChange({ ...value, breed: s })} maxLength={40}
+          placeholder={t("app_breedOtherText")} accessibilityLabel={t("app_breedOtherText")} />
       )}
 
       {isMixed && (
@@ -132,7 +135,7 @@ export function BreedPicker({ value, onChange }: { value: BreedChoice; onChange:
 
       {(value.breedId || value.breed) && (
         <Pressable onPress={() => onChange(NO_BREED)} style={{ alignSelf: "flex-start" }} accessibilityRole="button">
-          <Text style={[S.muted, { color: C.brandDark }]}>{t("app_remove")}</Text>
+          <Text style={[S.muted, { color: C.link }]}>{t("app_remove")}</Text>
         </Pressable>
       )}
 

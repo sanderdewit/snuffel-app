@@ -1,6 +1,6 @@
 // My dogs: profiles with their next care reminder.
 import { useCallback, useState } from "react";
-import { ActivityIndicator, Alert, FlatList, Pressable, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Alert, FlatList, Pressable, Text, View } from "react-native";
 import { Image } from "expo-image";
 import * as DocumentPicker from "expo-document-picker";
 import { File } from "expo-file-system";
@@ -9,13 +9,15 @@ import { router, useFocusEffect } from "expo-router";
 import { useI18n } from "../../i18n";
 import { ageMonths, listDogs, listReminders, REMINDER_KINDS, today, type Dog, type Reminder } from "../../lib/dogs";
 import { breedLabel, breeds } from "../../lib/breeds";
-import { C, S } from "../../ui/theme";
+import { Input } from "../../ui/Input";
+import { useTheme } from "../../ui/theme";
 import { formatDate } from "../../lib/dates";
 
 type Row = Dog & { next: Reminder | null };
 
 export default function Dogs() {
   const { t, tf, lang } = useI18n();
+  const { C, S } = useTheme();
   const [dogs, setDogs] = useState<Row[]>([]);
   const withNext = async (): Promise<Row[]> => {
     const out: Row[] = [];
@@ -96,7 +98,7 @@ export default function Dogs() {
             {asking ? (
               <View style={[S.card, { gap: 6 }]}>
                 <Text style={S.body}>{t("app_importPassword")}</Text>
-                <TextInput style={S.input} value={pw} onChangeText={setPw} placeholder={t("app_password")} secureTextEntry autoCapitalize="none" autoFocus />
+                <Input style={S.input} value={pw} onChangeText={setPw} placeholder={t("app_password")} secureTextEntry autoCapitalize="none" autoFocus />
                 <View style={[S.row, { gap: 8 }]}>
                   <Pressable style={[S.btnGhost, { flex: 1 }]} onPress={() => { setAsking(null); setPw(""); }}><Text style={S.btnGhostText}>{t("app_cancel")}</Text></Pressable>
                   <Pressable style={[S.btn, { flex: 1 }]} onPress={() => runImport(asking, pw)}><Text style={S.btnText}>OK</Text></Pressable>

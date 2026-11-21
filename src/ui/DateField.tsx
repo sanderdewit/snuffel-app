@@ -7,7 +7,7 @@ import { Modal, Platform, Pressable, Text, View } from "react-native";
 import DateTimePicker, { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { useI18n } from "../i18n";
 import { formatDate, fromIso, isoDate, today, validDate } from "../lib/dates";
-import { C, S } from "./theme";
+import { useTheme } from "./theme";
 
 interface Props {
   value: string;
@@ -21,6 +21,7 @@ interface Props {
 
 export function DateField({ value, onChange, minimumDate, maximumDate, placeholder, children, accessibilityLabel }: Props) {
   const { t, lang } = useI18n();
+  const { scheme, C, S } = useTheme();
   const [iosOpen, setIosOpen] = useState(false);
   const [draft, setDraft] = useState<Date>(new Date());
   const start = validDate(value) ? fromIso(value) : maximumDate && maximumDate < new Date() ? maximumDate : fromIso(today());
@@ -45,10 +46,11 @@ export function DateField({ value, onChange, minimumDate, maximumDate, placehold
       </Pressable>
       {Platform.OS === "ios" && (
         <Modal visible={iosOpen} transparent animationType="slide" onRequestClose={() => setIosOpen(false)}>
+          {/* The dimmed backdrop is black in light and dark alike */}
           <Pressable style={{ flex: 1, backgroundColor: "#0006" }} onPress={() => setIosOpen(false)} />
           <View style={{ backgroundColor: C.card, padding: 16, paddingBottom: 32 }}>
             <DateTimePicker value={draft} mode="date" display="inline" locale={lang} minimumDate={minimumDate} maximumDate={maximumDate}
-              onChange={(_, d) => d && setDraft(d)} />
+              themeVariant={scheme} onChange={(_, d) => d && setDraft(d)} />
             <Pressable style={S.btn} onPress={() => { setIosOpen(false); onChange(isoDate(draft)); }} accessibilityRole="button">
               <Text style={S.btnText}>{t("app_done")}</Text>
             </Pressable>

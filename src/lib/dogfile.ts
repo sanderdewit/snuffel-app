@@ -202,7 +202,9 @@ export async function exportPdf(dogId: number, t: (k: string) => string, tf: (k:
     dog.weight && [t("app_weight"), dog.weight + " kg"],
     dog.sex && [t("app_sex"), t(dog.sex === "male" ? "app_male" : "app_female") + (dog.neutered ? ", " + t("app_neutered").toLowerCase() : "")]
   ].filter(Boolean) as string[][];
-  const html = `<!doctype html><html><head><meta charset="utf-8"><style>
+  // Paper is white: always light, also when the app is dark (fixed colours, "only light").
+  const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="color-scheme" content="only light"><style>
+    html, body { background: #fff; }
     body { font-family: -apple-system, Roboto, Helvetica, Arial, sans-serif; color: #0f172a; margin: 32px; font-size: 12pt; }
     h1 { font-size: 20pt; margin: 0 0 4px; } h2 { font-size: 13pt; margin: 22px 0 6px; border-bottom: 1px solid #cbd5e1; padding-bottom: 3px; }
     .head { display: flex; gap: 18px; align-items: center; } img { width: 90px; height: 90px; border-radius: 45px; object-fit: cover; }

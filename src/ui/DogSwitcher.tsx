@@ -5,12 +5,13 @@ import { useState, type ReactNode } from "react";
 import { Pressable, Text, View } from "react-native";
 import { useI18n } from "../i18n";
 import { chatDogOptions, type DogOption } from "../lib/dogchoice";
-import { C, S } from "./theme";
+import { useTheme } from "./theme";
 
 const label = (o: DogOption) => (o.id != null ? "🐕 " : "") + o.name;
 
 /** Dogs as chips: a choice (radio) with `value`, or plain buttons without (the "another dog?" hint); children go last. */
 export function DogChips({ options, value, onChange, children }: { options: DogOption[]; value?: number | null; onChange: (id: number | null) => void; children?: ReactNode }) {
+  const { C, S } = useTheme();
   const choice = value !== undefined;
   return (
     <View style={[S.row, { gap: 6, flexWrap: "wrap", flexShrink: 1 }]} accessibilityRole={choice ? "radiogroup" : undefined}>
@@ -20,7 +21,7 @@ export function DogChips({ options, value, onChange, children }: { options: DogO
           <Pressable key={String(o.id)} onPress={() => onChange(o.id)} accessibilityRole={choice ? "radio" : "button"} accessibilityState={choice ? { checked: on } : undefined}
             style={{ minHeight: 40, justifyContent: "center", paddingHorizontal: 12, paddingVertical: 8, borderRadius: 16,
               backgroundColor: on ? C.brandDark : C.card, borderWidth: 1, borderColor: on ? C.brandDark : C.line }}>
-            <Text style={{ color: on ? "#fff" : C.text, fontWeight: on ? "600" : "400" }}>{label(o)}</Text>
+            <Text style={{ color: on ? C.onBrand : C.text, fontWeight: on ? "600" : "400" }}>{label(o)}</Text>
           </Pressable>
         );
       })}
@@ -31,6 +32,7 @@ export function DogChips({ options, value, onChange, children }: { options: DogO
 
 export function DogSwitcher({ dogs, value, onChange }: { dogs: { id: number; name: string }[]; value: number | null; onChange: (id: number | null) => void }) {
   const { t } = useI18n();
+  const { C, S } = useTheme();
   const [open, setOpen] = useState(false);
   if (!dogs.length) return null;
   const options = chatDogOptions(dogs, t("app_noDog"));
@@ -52,8 +54,8 @@ export function DogSwitcher({ dogs, value, onChange }: { dogs: { id: number; nam
         style={[S.row, { gap: 8, minHeight: 40, flexWrap: "wrap" }]}>
         <Text style={S.muted}>{title}:</Text>
         <View style={[S.row, { gap: 6, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 16, backgroundColor: C.brandDark }]}>
-          <Text style={{ color: "#fff", fontWeight: "600" }}>{label(current)}</Text>
-          <Text style={{ color: "#fff" }}>{open ? "▴" : "▾"}</Text>
+          <Text style={{ color: C.onBrand, fontWeight: "600" }}>{label(current)}</Text>
+          <Text style={{ color: C.onBrand }}>{open ? "▴" : "▾"}</Text>
         </View>
       </Pressable>
       {open && (
@@ -64,7 +66,7 @@ export function DogSwitcher({ dogs, value, onChange }: { dogs: { id: number; nam
               <Pressable key={String(o.id)} onPress={() => pick(o.id)} accessibilityRole="radio" accessibilityState={{ checked: on }}
                 style={[S.row, { minHeight: 44, paddingHorizontal: 14, gap: 8, borderTopWidth: n ? 1 : 0, borderColor: C.line }]}>
                 <Text style={[S.body, { flex: 1, fontWeight: on ? "700" : "400" }]}>{label(o)}</Text>
-                {on && <Text style={{ color: C.brandDark, fontWeight: "700" }}>✓</Text>}
+                {on && <Text style={{ color: C.link, fontWeight: "700" }}>✓</Text>}
               </Pressable>
             );
           })}

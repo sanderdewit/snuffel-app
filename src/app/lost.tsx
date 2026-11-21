@@ -7,21 +7,23 @@ import { router } from "expo-router";
 import { useI18n } from "../i18n";
 import { defaultLostCountry, LOST_COUNTRIES, LOST_GROUPS_FORM, LOST_LINKS, LOST_STEPS, lastKnownSpot, lostGroups,
   type LostCountry, type LostGroup, type LostMode } from "../lib/lost";
-import { C, S } from "../ui/theme";
+import { useTheme } from "../ui/theme";
 
 const host = (url: string) => { try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return url; } };
 
 function Chip({ on, label, onPress }: { on: boolean; label: string; onPress: () => void }) {
+  const { C } = useTheme();
   return (
     <Pressable onPress={onPress} accessibilityRole="button" accessibilityState={{ selected: on }}
       style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: 18, backgroundColor: on ? C.brandDark : C.chip }}>
-      <Text style={{ color: on ? "#fff" : C.text, fontWeight: "600" }}>{label}</Text>
+      <Text style={{ color: on ? C.onBrand : C.text, fontWeight: "600" }}>{label}</Text>
     </Pressable>
   );
 }
 
 // Name and website on one line: a step with two links stays short.
 function LinkButton({ label, sub, url }: { label: string; sub: string; url: string }) {
+  const { C, S } = useTheme();
   return (
     <Pressable onPress={() => Linking.openURL(url)} accessibilityRole="link"
       style={{ borderWidth: 1, borderColor: C.line, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 7, backgroundColor: C.chip }}>
@@ -32,6 +34,7 @@ function LinkButton({ label, sub, url }: { label: string; sub: string; url: stri
 
 // Local search groups, inside the step about sharing locally / reporting a found dog.
 function Groups({ groups, t }: { groups: LostGroup[] | null; t: (k: string) => string }) {
+  const { C, S } = useTheme();
   return (
     <View style={{ gap: 8 }}>
       {groups && (
@@ -44,7 +47,7 @@ function Groups({ groups, t }: { groups: LostGroup[] | null; t: (k: string) => s
         </View>
       )}
       <Pressable onPress={() => Linking.openURL(LOST_GROUPS_FORM)} accessibilityRole="link" hitSlop={8}>
-        <Text style={{ color: C.brandDark, fontWeight: "600" }}>{t("lostGroupsAdd")} ↗</Text>
+        <Text style={{ color: C.link, fontWeight: "600" }}>{t("lostGroupsAdd")} ↗</Text>
       </Pressable>
     </View>
   );
@@ -52,6 +55,7 @@ function Groups({ groups, t }: { groups: LostGroup[] | null; t: (k: string) => s
 
 export default function Lost() {
   const { t, lang } = useI18n();
+  const { C, S } = useTheme();
   const [mode, setMode] = useState<LostMode>("lost");
   const [country, setCountry] = useState<LostCountry>(defaultLostCountry);
   const [groups, setGroups] = useState<LostGroup[] | null>(null);
@@ -91,7 +95,7 @@ export default function Lost() {
           )}
           {(s.key === "lostStep4" || s.key === "foundStep3") && <Groups groups={groups} t={t} />}
           {s.emergency && (
-            <Pressable style={[S.btn, { backgroundColor: C.danger }]} onPress={() => router.navigate("/(tabs)/emergency")} accessibilityRole="button">
+            <Pressable style={[S.btn, { backgroundColor: C.dangerFill }]} onPress={() => router.navigate("/(tabs)/emergency")} accessibilityRole="button">
               <Text style={S.btnText}>{t("aiCtaEmergency")}</Text>
             </Pressable>
           )}

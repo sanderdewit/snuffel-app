@@ -1,18 +1,21 @@
 // Map of places on the self-hosted basemap. Markers are one GeoJSON source with
-// a circle layer coloured per category (fast with hundreds of places).
+// a circle layer coloured per category (fast with hundreds of places). In dark
+// mode the basemap is Protomaps' dark flavour and the markers are lighter tints.
 import { useEffect, useMemo, useRef } from "react";
 import { StyleSheet } from "react-native";
 import { router } from "expo-router";
 import { Camera, GeoJSONSource, Layer, Map, NativeUserLocation, type CameraRef } from "@maplibre/maplibre-react-native";
 import { useI18n } from "../i18n";
 import { mapStyle } from "../lib/mapStyle";
-import { CATEGORIES, type Place } from "../lib/places";
+import type { Place } from "../lib/places";
 import { recall, remember } from "../lib/placeStore";
+import { useTheme } from "./theme";
 
 export function PlaceMap({ places, center, showUser }: { places: Place[]; center: { lat: number; lon: number } | null; showUser?: boolean }) {
   const { lang } = useI18n();
+  const { scheme, C } = useTheme();
   const camera = useRef<CameraRef>(null);
-  const style = useMemo(() => mapStyle(lang), [lang]);
+  const style = useMemo(() => mapStyle(lang, scheme), [lang, scheme]);
 
   const data = useMemo<GeoJSON.FeatureCollection>(() => {
     places.forEach(remember);
@@ -21,11 +24,11 @@ export function PlaceMap({ places, center, showUser }: { places: Place[]; center
       features: places.map((p) => ({
         type: "Feature",
         id: p.id,
-        properties: { id: p.id, color: CATEGORIES[p.cat].color, chain: p.chain ? 1 : 0 },
+        properties: { id: p.id, color: C.cat[p.cat], chain: p.chain ? 1 : 0 },
         geometry: { type: "Point", coordinates: [p.lon, p.lat] }
       }))
     };
-  }, [places]);
+  }, [places, C]);
 
   useEffect(() => {
     if (!places.length) {
@@ -58,7 +61,7 @@ export function PlaceMap({ places, center, showUser }: { places: Place[]; center
             "circle-radius": ["interpolate", ["linear"], ["zoom"], 8, 4, 14, 8],
             "circle-color": ["get", "color"],
             "circle-opacity": ["case", ["==", ["get", "chain"], 1], 0.45, 1],
-            "circle-stroke-color": "#ffffff",
+            "circle-stroke-color": "#ffffff",   // white in dark too: it lifts the dot off any map colour
             "circle-stroke-width": 2
           }}
         />

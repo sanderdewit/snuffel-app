@@ -2,7 +2,7 @@
 // the owner allows it, a summary of its file) goes along so the advice fits
 // that dog. Each dog has its own conversation, kept on the phone.
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AccessibilityInfo, ActivityIndicator, Alert, FlatList, KeyboardAvoidingView, Linking, Platform, Pressable, Text, TextInput, View } from "react-native";
+import { AccessibilityInfo, ActivityIndicator, Alert, FlatList, KeyboardAvoidingView, Linking, Platform, Pressable, Text, View } from "react-native";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useI18n } from "../../i18n";
 import { addChat, ask, clearChat, loadChat, type AnswerParts, type ChatMessage } from "../../lib/ai";
@@ -21,11 +21,9 @@ import { useSpeechRecognitionEvent } from "expo-speech-recognition";
 import { callUrl } from "../../ui/PlaceCard";
 import { DogChips, DogSwitcher } from "../../ui/DogSwitcher";
 import { Rating } from "../../ui/Rating";
+import { Input } from "../../ui/Input";
 import { Toggle } from "../../ui/Toggle";
-import { C, S } from "../../ui/theme";
-
-const MONITOR = "#1d4ed8";   // "keep an eye on it": not green, which reads as "all fine"
-const VET_TODAY = "#c2410c";  // between the warning amber (vet soon) and the emergency red
+import { useTheme } from "../../ui/theme";
 
 // Example questions for an empty conversation; a puppy gets house-training first.
 function starters(dog: Dog | null): string[] {
@@ -39,12 +37,13 @@ function starters(dog: Dog | null): string[] {
 // steps, the signs to get help sooner, and the follow-up questions.
 function Answer({ parts, onFull }: { parts: AnswerParts; onFull: () => void }) {
   const { t } = useI18n();
+  const { C, S } = useTheme();
   return (
     <View style={{ gap: 8 }}>
       {!!parts.summary && <Text style={[S.body, { fontWeight: "700" }]}>{parts.summary}</Text>}
       {parts.steps.map((s, n) => (
         <View key={n} style={[S.row, { gap: 8, alignItems: "flex-start" }]}>
-          <Text style={[S.body, { fontWeight: "700", color: C.brandDark, minWidth: 16 }]}>{n + 1}.</Text>
+          <Text style={[S.body, { fontWeight: "700", color: C.link, minWidth: 16 }]}>{n + 1}.</Text>
           <Text style={[S.body, { flex: 1 }]}>{s}</Text>
         </View>
       ))}
@@ -64,6 +63,7 @@ function Answer({ parts, onFull }: { parts: AnswerParts; onFull: () => void }) {
 
 export default function Ask() {
   const { t, tf, lang } = useI18n();
+  const { C, S } = useTheme();
   const beta = useBeta();
   const [dogs, setDogs] = useState<Dog[]>([]);
   const [dogId, setDogId] = useState<number | null>(null);
@@ -320,8 +320,8 @@ export default function Ask() {
         <Text style={[S.muted, { fontWeight: "600" }]}>🤖 {t("app_aiIsAI")}</Text>
       </View>
       <Pressable onPress={() => router.push("/emergency")} accessibilityRole="button"
-        style={[S.card, S.row, { gap: 8, backgroundColor: "#fef2f2", borderColor: "#fecaca" }]}>
-        <Text style={[S.body, { flex: 1, color: "#7f1d1d" }]}>🚨 {t("app_aiEmergencyLine")}</Text>
+        style={[S.card, S.row, { gap: 8, backgroundColor: C.alertBg, borderColor: C.alertLine }]}>
+        <Text style={[S.body, { flex: 1, color: C.alertText }]}>🚨 {t("app_aiEmergencyLine")}</Text>
         <Text style={{ color: C.danger, fontWeight: "700" }}>{t("emergencyBtn")} ›</Text>
       </Pressable>
       {/* No dog chosen (or none added yet): the advice is general. After the emergency line,
@@ -402,13 +402,13 @@ export default function Ask() {
           return (
             <View style={{ alignSelf: m.role === "user" ? "flex-end" : "flex-start", maxWidth: "88%", gap: 6 }}>
               {m.urgency && m.urgency !== "unclear" && (
-                <Text style={{ fontWeight: "700", color: m.urgency === "emergency" ? C.danger : m.urgency === "vet_today" ? VET_TODAY : m.urgency === "vet_soon" ? C.warn : MONITOR }}>
+                <Text style={{ fontWeight: "700", color: C.urgency[m.urgency] }}>
                   {t(m.urgency === "vet_today" ? "app_urgency_vet_today" : "urgency_" + m.urgency)}
                 </Text>
               )}
-              <View style={{ backgroundColor: m.role === "user" ? C.brandDark : m.local ? "#fff7ed" : C.card, borderRadius: 14, padding: 10, borderWidth: m.role === "user" ? 0 : 1, borderColor: C.line }}>
+              <View style={{ backgroundColor: m.role === "user" ? C.brandDark : m.local ? C.noteBg : C.card, borderRadius: 14, padding: 10, borderWidth: m.role === "user" ? 0 : 1, borderColor: C.line }}>
                 {m.parts && !expanded.has(i) ? <Answer parts={m.parts} onFull={() => setExpanded((s) => new Set(s).add(i))} />
-                  : <Text style={[S.body, { color: m.role === "user" ? "#fff" : C.text }]}>{m.content}</Text>}
+                  : <Text style={[S.body, { color: m.role === "user" ? C.onBrand : C.text }]}>{m.content}</Text>}
               </View>
               {/* The owner talks about another dog than the chosen one: offer that dog's own conversation */}
               {otherDogAt === `${dogId}:${i}` && (
@@ -421,8 +421,8 @@ export default function Ask() {
                   </View>
                   <DogChips options={otherDogOptions(dogs, dogId, t("app_noDog"))} onChange={switchDog}>
                     <Pressable onPress={() => router.push({ pathname: "/dog/[id]", params: { id: "new" } })} accessibilityRole="button"
-                      style={{ minHeight: 40, justifyContent: "center", paddingHorizontal: 12, paddingVertical: 8, borderRadius: 16, borderWidth: 1, borderColor: C.brandDark, backgroundColor: C.card }}>
-                      <Text style={{ color: C.brandDark, fontWeight: "600" }}>＋ {t("app_addDog")}</Text>
+                      style={{ minHeight: 40, justifyContent: "center", paddingHorizontal: 12, paddingVertical: 8, borderRadius: 16, borderWidth: 1, borderColor: C.link, backgroundColor: C.card }}>
+                      <Text style={{ color: C.link, fontWeight: "600" }}>＋ {t("app_addDog")}</Text>
                     </Pressable>
                   </DogChips>
                 </View>
@@ -432,8 +432,8 @@ export default function Ask() {
                 <View style={[S.row, { gap: 6, flexWrap: "wrap" }]}>
                   {m.parts.quick_replies.map((q) => (
                     <Pressable key={q} onPress={() => send(undefined, q)} accessibilityRole="button"
-                      style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: 16, borderWidth: 1, borderColor: C.brandDark, backgroundColor: C.card }}>
-                      <Text style={{ color: C.brandDark, fontWeight: "600" }}>{q}</Text>
+                      style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: 16, borderWidth: 1, borderColor: C.link, backgroundColor: C.card }}>
+                      <Text style={{ color: C.link, fontWeight: "600" }}>{q}</Text>
                     </Pressable>
                   ))}
                 </View>
@@ -448,7 +448,7 @@ export default function Ask() {
                       {s.id != null ? "✓ " + tf("app_obsFiled", { name: dog.name }) : "📝 " + tf("app_obsAdd", { name: dog.name })}: <Text style={{ fontWeight: "700", color: C.text }}>{s.obs.title}</Text> · {formatDate(s.obs.date, lang)}
                     </Text>
                     <Pressable onPress={() => (s.id != null ? undoObs(key) : addObs(key))} hitSlop={8} accessibilityRole="button">
-                      <Text style={{ color: C.brandDark, fontWeight: "600" }}>{t(s.id != null ? "app_undo" : "app_add")}</Text>
+                      <Text style={{ color: C.link, fontWeight: "600" }}>{t(s.id != null ? "app_undo" : "app_add")}</Text>
                     </Pressable>
                   </View>
                 );
@@ -457,20 +457,20 @@ export default function Ask() {
                 <View style={[S.row, { gap: 16, flexWrap: "wrap" }]}>
                   <Pressable onPress={() => toggleRead(i, m.content)} hitSlop={8} accessibilityRole="button"
                     accessibilityLabel={t(speaking === i ? "app_stopReading" : "app_readAloud")}>
-                    <Text style={{ color: C.brandDark, fontWeight: "600" }}>{speaking === i ? "⏹ " + t("app_stopReading") : "🔊 " + t("app_readAloud")}</Text>
+                    <Text style={{ color: C.link, fontWeight: "600" }}>{speaking === i ? "⏹ " + t("app_stopReading") : "🔊 " + t("app_readAloud")}</Text>
                   </Pressable>
                   {dog && m.urgency && (
                     filed.has(fileKey(m, i))
                       ? <Text style={{ color: C.ok, fontWeight: "600" }}>✓ {t("app_savedToFile")}</Text>
                       : <Pressable onPress={() => saveToFile(m, i)} hitSlop={8} accessibilityRole="button">
-                          <Text style={{ color: C.brandDark, fontWeight: "600" }}>📁 {tf("app_saveToFile", { name: dog.name })}</Text>
+                          <Text style={{ color: C.link, fontWeight: "600" }}>📁 {tf("app_saveToFile", { name: dog.name })}</Text>
                         </Pressable>
                   )}
                   {m.id != null && <Rating id={m.id} />}
                 </View>
               )}
               {next.map((a) => (
-                <Pressable key={a.label} style={[S.btn, a.danger && { backgroundColor: C.danger }]} onPress={a.go} accessibilityRole="button">
+                <Pressable key={a.label} style={[S.btn, a.danger && { backgroundColor: C.dangerFill }]} onPress={a.go} accessibilityRole="button">
                   <Text style={S.btnText}>{a.label}</Text>
                 </Pressable>
               ))}
@@ -492,26 +492,26 @@ export default function Ask() {
             <Text style={S.btnGhostText}>🎧 {t("app_voiceAiStart")}</Text>
           </Pressable>
         )}
-        {talk && <Text style={[S.muted, { color: C.brandDark, fontWeight: "600" }]} accessibilityLiveRegion="polite">🎧 {t("app_talkOn")}</Text>}
+        {talk && <Text style={[S.muted, { color: C.link, fontWeight: "600" }]} accessibilityLiveRegion="polite">🎧 {t("app_talkOn")}</Text>}
         {listening && <Text style={[S.muted, { color: C.danger, fontWeight: "700" }]} accessibilityLiveRegion="polite">🎙️ {t("app_voiceListening")}</Text>}
         {!!voiceNote && <Text style={[S.muted, { color: C.warn }]}>{voiceNote}</Text>}
         <View style={[S.row, { gap: 8 }]}>
           <Pressable onPress={toggleListening} disabled={busy} accessibilityRole="button" accessibilityLabel={t(listening ? "app_voiceListening" : "app_voiceStart")}
-            style={{ width: 46, height: 46, borderRadius: 23, alignItems: "center", justifyContent: "center", backgroundColor: listening ? C.danger : C.chip, opacity: busy ? 0.5 : 1 }}>
-            <Text style={{ fontSize: 22 }}>{listening ? "⏹" : "🎙️"}</Text>
+            style={{ width: 46, height: 46, borderRadius: 23, alignItems: "center", justifyContent: "center", backgroundColor: listening ? C.dangerFill : C.chip, opacity: busy ? 0.5 : 1 }}>
+            <Text style={{ fontSize: 22, color: C.onBrand }}>{listening ? "⏹" : "🎙️"}</Text>
           </Pressable>
           <Pressable onPress={toggleTalk} disabled={busy && !talk} accessibilityRole="switch" accessibilityState={{ checked: talk }} accessibilityLabel={t("app_talkMode")}
             style={{ width: 46, height: 46, borderRadius: 23, alignItems: "center", justifyContent: "center", backgroundColor: talk ? C.brandDark : C.chip, opacity: busy && !talk ? 0.5 : 1 }}>
             <Text style={{ fontSize: 20 }}>🎧</Text>
           </Pressable>
-          <TextInput style={[S.input, { flex: 1, maxHeight: 120 }]} value={text} onChangeText={setText} placeholder={t("aiPlaceholder")} multiline maxLength={1000} />
+          <Input style={[S.input, { flex: 1, maxHeight: 120 }]} value={text} onChangeText={setText} placeholder={t("aiPlaceholder")} multiline maxLength={1000} />
           <Pressable style={[S.btn, { backgroundColor: C.brandDark }, busy && { opacity: 0.5 }]} onPress={() => send()} disabled={busy} accessibilityRole="button"><Text style={S.btnText}>{t("aiSend")}</Text></Pressable>
         </View>
         <View style={[S.row, { justifyContent: "space-between" }]}>
           <Text style={[S.muted, { flex: 1 }]}>{t("aiDisclaimer")}</Text>
           {messages.length > 0 && (
             <Pressable onPress={newChat} hitSlop={8} accessibilityRole="button">
-              <Text style={{ color: C.brandDark, fontWeight: "600" }}>{t("app_newChat")}</Text>
+              <Text style={{ color: C.link, fontWeight: "600" }}>{t("app_newChat")}</Text>
             </Pressable>
           )}
         </View>
