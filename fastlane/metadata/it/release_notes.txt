@@ -1,7 +1,9 @@
-Scegli la razza del tuo cane dall’elenco completo: tutte le razze FCI e incroci come Labradoodle e Cockapoo.
+Un look nuovo, chiaro e scuro.
 
-Indica di quale cane parla una chat IA. Valuta le risposte con 👍 o 👎; dopo un 👎 puoi inviarci la conversazione per migliorare Snuffel.
+Orari a colpo d’occhio: «Aperto ora · chiude alle 18:00», tutta la settimana e un filtro «Aperto ora» in Cerca.
 
-Conversazione vocale IA (beta): aggiungi quanto detto alla scheda del tuo cane.
+Risposte urgenti dell’IA: in cima la chiamata al tuo veterinario e «Trova un veterinario aperto ora».
 
-IA più intelligente: chiede come sta il tuo cane dopo un intervento o un nuovo farmaco e, di sera (ora locale), se serve ti indirizza al veterinario di turno.
+Il tuo cane ha la sua pagina di riepilogo; ora puoi aprire e modificare le voci della scheda salute.
+
+Inoltre: tutte le razze, scegli il cane di ogni chat, valuta le risposte e aggiungi una conversazione vocale con l’IA (beta) alla scheda.

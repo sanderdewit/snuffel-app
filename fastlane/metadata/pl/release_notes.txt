@@ -1,7 +1,9 @@
-Rasę psa wybierzesz teraz z pełnej listy: wszystkie rasy FCI oraz krzyżówki, np. Labradoodle i Cockapoo.
+Świeży nowy wygląd, jasny i ciemny.
 
-Wybierz, którego psa dotyczy czat z AI. Oceniaj odpowiedzi 👍 lub 👎; po 👎 możesz wysłać tę rozmowę i pomóc nam ulepszyć Snuffel.
+Godziny otwarcia na pierwszy rzut oka: „Otwarte · zamknięcie o 18:00”, cały tydzień i filtr „Otwarte” w zakładce Szukaj.
 
-Rozmowa głosowa z AI (beta): dodaj to, o czym rozmawialiście, do karty swojego psa.
+Przy pilnej odpowiedzi AI na górze: telefon do twojego weterynarza i „Znajdź otwartego weterynarza”.
 
-Mądrzejszy asystent AI: pyta, jak czuje się pies po operacji lub przy nowym leku, a wieczorem (czas lokalny) w razie potrzeby kieruje cię do dyżurnego weterynarza.
+Twój pies ma własną stronę z przeglądem; wpisy w karcie zdrowia możesz teraz otwierać i edytować.
+
+Ponadto: pełna lista ras, wybór psa dla czatu, ocena odpowiedzi i dodanie rozmowy głosowej z AI (beta) do karty psa.

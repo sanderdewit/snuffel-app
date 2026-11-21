@@ -1,7 +1,9 @@
-Pick your dog's breed from the full list: all FCI breeds plus crosses like Labradoodle and Cockapoo.
+A fresh new look, in light and dark mode.
 
-Choose which dog an AI chat is about. Rate answers with 👍 or 👎; after a 👎 you can send that conversation to help improve Snuffel.
+Opening hours at a glance: "Open now · closes at 18:00", the whole week, and an "Open now" filter in Find.
 
-AI voice conversation (beta): add what you discussed to your dog's file.
+In an urgent AI answer, calling your vet and "Find an open vet now" come first.
 
-Smarter AI: it asks how your dog is doing after surgery or a new medicine, and knows your local time, so in the evening it points you to the out-of-hours vet when needed.
+Your dog gets its own overview page; entries in the health file can now be opened and edited.
+
+Also new: the full breed list, choose which dog a chat is about, rate answers, and add an AI voice conversation (beta) to your dog's file.

@@ -1,7 +1,9 @@
-Choisissez la race de votre chien parmi toutes les races FCI et des croisements comme Labradoodle ou Cockapoo.
+Un look tout neuf, clair et sombre.
 
-Indiquez de quel chien parle un chat IA. Notez les réponses 👍 ou 👎 ; un 👎 permet d’envoyer la conversation pour améliorer Snuffel.
+Horaires en un coup d’œil : « Ouvert · ferme à 18:00 », toute la semaine et un filtre « Ouvert » dans Chercher.
 
-Conversation vocale IA (bêta) : ajoutez l’essentiel au dossier du chien.
+Réponse urgente de l’IA : d’abord appeler votre vétérinaire et « Trouver un vétérinaire ouvert ».
 
-IA plus fine : elle demande comment va votre chien après une opération ou un nouveau médicament et, le soir (heure locale), renvoie si besoin au vétérinaire de garde.
+Votre chien a sa page de synthèse ; les entrées du dossier santé s’ouvrent et se modifient désormais.
+
+Et aussi : toutes les races, le choix du chien par chat, la notation des réponses et une conversation vocale IA (bêta) à ajouter au dossier.

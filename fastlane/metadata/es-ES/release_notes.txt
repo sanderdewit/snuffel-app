@@ -1,7 +1,9 @@
-Elige la raza de tu perro en la lista completa: todas las razas FCI y cruces como Labradoodle y Cockapoo.
+Un aspecto nuevo, claro y oscuro.
 
-Indica de qué perro trata un chat de IA. Valora las respuestas con 👍 o 👎; tras un 👎 puedes enviarnos la conversación para mejorar Snuffel.
+Horarios de un vistazo: «Abierto ahora · cierra a las 18:00», toda la semana y un filtro «Abierto ahora» en Buscar.
 
-Conversación de voz con IA (beta): añade lo hablado al historial de tu perro.
+En las respuestas urgentes de la IA, primero: llamar a tu veterinario y «Buscar un veterinario abierto ya».
 
-IA más inteligente: pregunta cómo está tu perro tras una operación o un fármaco nuevo y, por la noche (hora local), te remite si hace falta al veterinario de guardia.
+Tu perro tiene su página de resumen; ahora puedes abrir y editar las entradas del historial.
+
+Además: todas las razas, elige el perro de cada chat, valora respuestas y añade una conversación de voz con IA (beta) al historial.

@@ -1,7 +1,9 @@
-Din hunds ras väljer du nu ur hela listan: alla FCI-raser plus korsningar som Labradoodle och Cockerpoo.
+Ett fräscht nytt utseende, i ljust och mörkt läge.
 
-Välj vilken hund en AI-chatt gäller. Betygsätt svar med 👍 eller 👎; efter 👎 kan du skicka konversationen och hjälpa oss förbättra Snuffel.
+Öppettider på ett ögonkast: ”Öppet nu · stänger kl. 18:00”, hela veckan och ett ”Öppet nu”-filter i Hitta.
 
-AI-röstsamtal (beta): lägg till det ni pratade om i din hunds journal.
+Vid ett akut AI-svar visas samtal till din veterinär och ”Hitta en öppen veterinär nu” först.
 
-Smartare AI: den frågar hur hunden mår efter en operation eller ny medicin, och hänvisar på kvällen (lokal tid) vid behov till jourveterinären.
+Din hund får en egen översiktssida, och poster i hälsojournalen kan nu öppnas och redigeras.
+
+Också nytt: hela raslistan, välj vilken hund en chatt gäller, betygsätt svar och lägg till ett AI-röstsamtal (beta) i din hunds journal.

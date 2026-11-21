@@ -1,7 +1,9 @@
-Pasmo psa zdaj izberete s celotnega seznama: vse pasme FCI ter križanci, kot sta Labradoodle in Cockapoo.
+Svež nov videz, v svetlem in temnem načinu.
 
-Izberite, na katerega psa se nanaša klepet z UI. Odgovore ocenite z 👍 ali 👎; po 👎 lahko pogovor pošljete in nam pomagate izboljšati Snuffel.
+Delovni čas na prvi pogled: »Odprto · zapre ob 18:00«, ves teden in filter »Zdaj odprto« v razdelku Išči.
 
-Glasovni pogovor z UI (beta): to, o čemer ste se pogovarjali, dodajte v kartoteko vašega psa.
+Pri nujnem odgovoru UI sta na vrhu klic vašemu veterinarju in »Poišči odprtega veterinarja«.
 
-Pametnejša UI: vpraša, kako je pes po operaciji ali novem zdravilu, zvečer (po lokalnem času) pa vas po potrebi napoti k dežurnemu veterinarju.
+Vaš pes ima svojo stran s pregledom; vnose v kartoteki zdravja lahko zdaj odprete in uredite.
+
+Še novo: celoten seznam pasem, izbira psa za klepet, ocenjevanje odgovorov in dodajanje glasovnega pogovora z UI (beta) v kartoteko psa.

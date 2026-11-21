@@ -1,7 +1,9 @@
-Plemeno psa teď zvolíte z úplného seznamu: všechna plemena FCI i kříženci jako Labradoodle a Cockapoo.
+Svěží nový vzhled, ve světlém i tmavém režimu.
 
-Vyberte, kterého psa se AI chat týká. Hodnoťte odpovědi 👍 nebo 👎; po 👎 můžete konverzaci odeslat a pomoci nám zlepšit Snuffel.
+Otevírací doba na první pohled: „Otevřeno · zavírá: 18:00“, celý týden a filtr „Nyní otevřeno“ v sekci Hledat.
 
-Hlasový rozhovor s AI (beta): to, co jste probrali, si můžete uložit do karty vašeho psa.
+U naléhavé odpovědi AI jsou nahoře volání vašemu veterináři a „Najít otevřeného veterináře“.
 
-Chytřejší AI: po operaci nebo novém léku se zeptá, jak se psovi daří, a večer (podle místního času) vás v případě potřeby nasměruje na veterinární pohotovost.
+Váš pes má vlastní stránku s přehledem; záznamy v kartě zdraví teď můžete otevřít a upravit.
+
+Další novinky: úplný seznam plemen, volba psa pro chat, hodnocení odpovědí a přidání hlasového rozhovoru s AI (beta) do karty psa.

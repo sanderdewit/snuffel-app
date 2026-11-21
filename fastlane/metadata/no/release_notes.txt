@@ -1,7 +1,9 @@
-Rasen til hunden din velger du nå fra hele listen: alle FCI-raser pluss krysninger som Labradoodle og Cockapoo.
+Et friskt nytt utseende, i lys og mørk modus.
 
-Velg hvilken hund en AI-chat gjelder. Gi svarene 👍 eller 👎; etter 👎 kan du sende samtalen for å gjøre Snuffel bedre.
+Åpningstider med ett blikk: «Åpent nå · stenger kl. 18:00», hele uken og et «Åpent nå»-filter i Finn.
 
-AI-talesamtale (beta): legg det dere snakket om, inn i journalen til hunden din.
+Ved et akutt AI-svar kommer oppringing til veterinæren din og «Finn en åpen veterinær nå» øverst.
 
-Smartere AI: den spør hvordan hunden har det etter en operasjon eller ny medisin, og viser om kvelden (lokal tid) ved behov til vakthavende veterinær.
+Hunden din får sin egen oversiktsside, og oppføringer i helsejournalen kan nå åpnes og redigeres.
+
+Også nytt: hele raselisten, velg hvilken hund en chat gjelder, vurder svarene, og legg en AI-talesamtale (beta) inn i journalen til hunden din.
