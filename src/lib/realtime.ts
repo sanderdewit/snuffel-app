@@ -14,7 +14,9 @@
 // During the call the microphone is checked from the connection's statistics
 // (micwatch.ts): when the phone stops sending audio, the iPhone's recording is
 // restarted once, and if that doesn't help the call ends with a message, instead
-// of "Listening…" for ever.
+// of "Listening…" for ever. When the AI heard the owner but no answer comes
+// (ANSWER_WAIT_MS), it is asked once more, then the call ends ("failed"). Both
+// ends show one line on the audio state and the events seen, for a screenshot.
 import { AppState, Platform } from "react-native";
 // LiveKit's maintained fork of react-native-webrtc: same API, supports the New Architecture.
 import { AudioDeviceModule, audioDeviceModuleEvents, type AutomaticAppleAudioConfiguration, mediaDevices, MediaStream, RTCPeerConnection } from "@livekit/react-native-webrtc";
@@ -49,7 +51,7 @@ export interface VoiceHandlers {
 export interface VoiceCall { hangUp(): void; close(): void }
 
 const NOTE_WAIT_MS = 8000;
-const MIC_CHECK_MS = 250, MIC_DEAD_MS = 4000;
+const MIC_CHECK_MS = 250, MIC_DEAD_MS = 4000, ANSWER_WAIT_MS = 15000;
 // The request for the note: a system message, answered as the session's instructions
 // (set by /api/voice) describe. response.create gets no `instructions`: they would
 // replace the session's for that answer, and with them the file note rules, the
@@ -60,7 +62,11 @@ const NOTE_REQUEST = "(The call has ended. Reply only with the JSON note for the
 export function startVoice(lang: string, labels: { emergency: string; lost: string }, dog: Dog | null, h: VoiceHandlers): VoiceCall {
   let ended = false, closed = false, noting = false, spoke = false;
   let timer: ReturnType<typeof setTimeout> | null = null, noteTimer: ReturnType<typeof setTimeout> | null = null;
-  let micTimer: ReturnType<typeof setInterval> | null = null;
+  let micTimer: ReturnType<typeof setInterval> | null = null, answerTimer: ReturnType<typeof setTimeout> | null = null;
+  // For the detail line: the last microphone numbers, what restarting it found,
+  // how often each event came, and the last error the session reported.
+  let lastMic: ReturnType<typeof micSample> = {}, revived: string | null = null, lastError = "";
+  const seen = new Map<string, number>();
   let pc: RTCPeerConnection | null = null, mic: MediaStream | null = null;
   let events: ReturnType<RTCPeerConnection["createDataChannel"]> | null = null;
   const send = (m: object) => { try { events?.send(JSON.stringify(m)); } catch { /* closed */ } };
@@ -82,6 +88,7 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
     if (timer) clearTimeout(timer);
     if (noteTimer) clearTimeout(noteTimer);
     if (micTimer) clearInterval(micTimer);
+    if (answerTimer) clearTimeout(answerTimer);
     appState.remove();
     request.abort();                                   // a session still being set up
     mic?.getTracks().forEach((t) => t.stop());
@@ -97,6 +104,7 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
     ended = true;
     if (timer) clearTimeout(timer);
     if (micTimer) clearInterval(micTimer);
+    if (answerTimer) clearTimeout(answerTimer);
     noting = note && !!dog && !!h.onNote && events?.readyState === "open";
     if (noting) { silence(); askNote(); } else close();
     h.onState("ended");
@@ -108,18 +116,18 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
   // then end the call ("nomic", with a note only if the owner had already spoken).
   function watchMic() {
     const watch = micWatch(MIC_DEAD_MS);
-    let revived: string | null = null, busy = false, last: ReturnType<typeof micSample> = {};
+    let busy = false;
     micTimer = setInterval(() => {
       if (busy || ended || !pc) return;
       if (pc.connectionState !== "connected") { watch.reset(); return; }
       busy = true;
       pc.getStats().then(async (report) => {
         if (ended) return;
-        last = micSample(report);
-        h.onLevel?.(last.level);
-        if (watch.check(last, Date.now()) !== "dead") return;
+        lastMic = micSample(report);
+        h.onLevel?.(lastMic.level);
+        if (watch.check(lastMic, Date.now()) !== "dead") return;
         if (revived == null) { revived = await reviveMic(); watch.reset(); return; }
-        end("nomic", spoke, audioState(last, revived));
+        end("nomic", spoke, audioState());
       }).catch(() => undefined).finally(() => { busy = false; });
     }, MIC_CHECK_MS);
   }
@@ -139,8 +147,27 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
     return found.join(",") || "-";
   }
 
-  // One line on the audio state, shown small under "nomic" for a screenshot.
-  function audioState(s: ReturnType<typeof micSample>, revived: string): string {
+  // The owner stopped speaking: an answer should start within ANSWER_WAIT_MS. If not
+  // (the answer failed, e.g. the minute's token limit), ask once more; still nothing:
+  // the call ends. Speech or an answer starting clears the wait.
+  function awaitAnswer(retried = false) {
+    if (answerTimer) clearTimeout(answerTimer);
+    answerTimer = setTimeout(() => {
+      answerTimer = null;
+      if (ended) return;
+      if (!retried) { send({ type: "response.create" }); awaitAnswer(true); return; }
+      end("failed", true, "no answer · " + audioState());
+    }, ANSWER_WAIT_MS);
+  }
+  const answered = () => { if (answerTimer) { clearTimeout(answerTimer); answerTimer = null; } };
+
+  // One line on the audio state and the events seen, shown small after "nomic" or no answer.
+  function audioState(): string {
+    const s = lastMic;
+    const n = (type: string) => seen.get(type) || 0;
+    const handled = new Set(["input_audio_buffer.speech_started", "input_audio_buffer.speech_stopped", "output_audio_buffer.started",
+      "output_audio_buffer.stopped", "response.output_audio_transcript.delta", "response.output_audio_transcript.done"]);
+    const other = [...seen].filter(([k]) => !handled.has(k)).map(([k, v]) => `${k.replace(/^(response|conversation|input_audio_buffer|output_audio_buffer)\./, "")}×${v}`);
     const part = (label: string, f: () => unknown) => { try { return `${label} ${String(f())}`; } catch { return `${label} ?`; } };
     const ios = Platform.OS === "ios";
     return [
@@ -154,7 +181,10 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
       part("track", () => { const t = mic?.getAudioTracks()[0]; return t ? `${t.readyState}${t.enabled ? "" : ",off"}${t.muted ? ",muted" : ""}` : "none"; }),
       part("sent", () => `${s.samples ?? "?"}s/${s.packets ?? "?"}p`),
       part("spoke", () => (spoke ? "yes" : "no")),
-      part("revive", () => revived)
+      part("revive", () => revived ?? "-"),
+      part("turns", () => `${n("input_audio_buffer.speech_started")}/${n("input_audio_buffer.speech_stopped")}/${n("output_audio_buffer.started")}`),
+      other.length > 0 && "ev " + other.join(","),
+      !!lastError && "error " + lastError
     ].filter(Boolean).join(" · ");
   }
 
@@ -241,8 +271,15 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
       channel.addEventListener("open", () => { greet(); setTimeout(greet, 4000); });
       channel.addEventListener("message", (e: { data?: unknown }) => {
         let m: { type?: string; item_id?: string; transcript?: string; delta?: string; text?: string;
-          response?: { metadata?: Record<string, unknown> | null; output?: { content?: { text?: unknown }[] }[] } };
+          error?: { code?: string; type?: string; message?: string };
+          response?: { status?: string; status_details?: { error?: { code?: string; type?: string } } | null;
+            metadata?: Record<string, unknown> | null; output?: { content?: { text?: unknown }[] }[] } };
         try { m = JSON.parse(String(e.data)); } catch { return; }
+        if (m.type) seen.set(m.type, (seen.get(m.type) || 0) + 1);
+        // Errors the session reports (should the filter pass them): kept for the detail line.
+        if (m.type === "error") lastError = String(m.error?.code || m.error?.type || "error").slice(0, 60);
+        else if (m.type === "response.done" && m.response?.status === "failed")
+          lastError = String(m.response.status_details?.error?.code || m.response.status_details?.error?.type || "response failed").slice(0, 60);
         if (ended) {
           // Only the note is still awaited. The call's own answers are audio, so text
           // output is the note (webrtcfilter=on passes response.output_text.*, not
@@ -262,14 +299,14 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
           return l;
         };
         switch (m.type) {
-          case "input_audio_buffer.speech_started": h.onState("hearing"); break;
-          case "input_audio_buffer.speech_stopped": spoke = true; h.onState("thinking"); break;
-          case "output_audio_buffer.started": h.onState("speaking"); break;
+          case "input_audio_buffer.speech_started": answered(); h.onState("hearing"); break;
+          case "input_audio_buffer.speech_stopped": spoke = true; awaitAnswer(); h.onState("thinking"); break;
+          case "output_audio_buffer.started": answered(); h.onState("speaking"); break;
           case "output_audio_buffer.stopped": h.onState("listening"); break;
           case "conversation.item.input_audio_transcription.completed":   // only if the server turns transcription on
             if (m.transcript?.trim()) { line("user").text = m.transcript.trim(); publish(); }
             break;
-          case "response.output_audio_transcript.delta": line("assistant").text += m.delta || ""; publish(); break;
+          case "response.output_audio_transcript.delta": answered(); line("assistant").text += m.delta || ""; publish(); break;
           case "response.output_audio_transcript.done": if (m.transcript) { line("assistant").text = m.transcript; publish(); } break;
         }
       });
