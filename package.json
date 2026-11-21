@@ -52,7 +52,7 @@
     "ios": "expo run:ios",
     "typecheck": "tsc --noEmit",
     "sync-core": "node tools/sync-core.mjs",
-    "test": "node tests/i18n-app.test.mjs && node tests/plural.test.ts && node tests/dates.test.ts && node tests/hourstext.test.ts && node tests/placelinks.test.ts && node tests/dogfile.test.ts && node tests/dogchoice.test.ts && node tests/talk.test.ts && node tests/voicenote.test.ts && node tests/micwatch.test.ts && node tests/feedback.test.ts && node tests/breeds.test.ts && node tests/contrast.test.ts"
+    "test": "node tests/i18n-app.test.mjs && node tests/plural.test.ts && node tests/dates.test.ts && node tests/hourstext.test.ts && node tests/findlist.test.ts && node tests/placelinks.test.ts && node tests/dogfile.test.ts && node tests/dogchoice.test.ts && node tests/talk.test.ts && node tests/voicenote.test.ts && node tests/micwatch.test.ts && node tests/feedback.test.ts && node tests/breeds.test.ts && node tests/contrast.test.ts"
   },
   "private": true,
   "license": "UNLICENSED"
