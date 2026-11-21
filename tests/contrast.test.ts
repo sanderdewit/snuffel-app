@@ -66,14 +66,16 @@ const PAIRS: [string, Pick, Pick, number][] = [
   // emoji drawn in black or dark grey (🩺, 🎓, 🐾, 🎧) on their discs: about 1:1 on the dark card itself
   ...(Object.keys(PALETTES.light.cat) as Category[]).map((c) =>
     [`dark emoji on catDisc ${c}`, () => EMOJI_DARK, (C: Palette) => C.catDisc[c], TEXT] as [string, Pick, Pick, number]),
-  ["dark emoji on glyphBg (mic, conversation mode, paw)", () => EMOJI_DARK, (C) => C.glyphBg, TEXT]
-];
-
-// Only in dark. Light keeps its look: there the discs are faint tints (the emoji are
-// made for light backgrounds), and fieldLine is `line` (1.2:1, see palette.ts).
-const DARK_PAIRS: [string, Pick, Pick, number][] = [
+  ["dark emoji on glyphBg (mic, conversation mode, paw)", () => EMOJI_DARK, (C) => C.glyphBg, TEXT],
   ["fieldLine on card (the edge of a text field)", (C) => C.fieldLine, (C) => C.card, UI],
   ["fieldLine on bg", (C) => C.fieldLine, (C) => C.bg, UI],
+  // a category's line symbol on its disc (place cards, chips, the place title)
+  ...(Object.keys(PALETTES.light.cat) as Category[]).map((c) =>
+    [`catInk ${c} on catDisc`, (C: Palette) => C.catInk[c], (C: Palette) => C.catDisc[c], TEXT] as [string, Pick, Pick, number])
+];
+
+// Only in dark. Light keeps its look: there the discs are faint tints.
+const DARK_PAIRS: [string, Pick, Pick, number][] = [
   ["glyphBg on card (the disc stands out)", (C) => C.glyphBg, (C) => C.card, UI],
   ...(Object.keys(PALETTES.dark.cat) as Category[]).map((c) =>
     [`catDisc ${c} on card`, (C: Palette) => C.catDisc[c], (C: Palette) => C.card, UI] as [string, Pick, Pick, number])
@@ -118,7 +120,6 @@ test("light catDisc is the old tint (cat + 22 on the white card)", () => {
     assert.ok(now.every((v, i) => Math.abs(v - old[i]) <= 1), `${c}: ${L.catDisc[c]}, was rgb(${old.join(",")})`);
   }
   assert.strictEqual(L.glyphBg, L.chip);
-  assert.strictEqual(L.fieldLine, L.line);
 });
 
 // The dark map (Protomaps' dark flavour with DARK_MAP_LABELS, src/lib/mapStyle.ts).

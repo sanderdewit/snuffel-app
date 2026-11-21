@@ -80,7 +80,7 @@ export const LIGHT: Palette = {
   toggleOff: "#cbd5e1",
   // As before. (Against the screen this is 1.2:1, below the 3:1 asked for a field's
   // edge in WCAG 1.4.11: a darker border here is the owner's choice, it changes the look.)
-  fieldLine: "#e2e8f0",
+  fieldLine: "#7d8ba0",  // 3.5:1 on the card, 3.3:1 on bg (was `line`, 1.2:1: fields had no visible edge)
   glyphBg: "#f1f5f9",   // = chip: light mode looks as before
   // the website's marker colours
   cat: {

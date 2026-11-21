@@ -32,7 +32,9 @@ function makeStyles(C: Palette) {
     btn: { backgroundColor: C.brand, borderRadius: 12, paddingVertical: 12, paddingHorizontal: 16, alignItems: "center", justifyContent: "center" },
     btnText: { color: C.onBrand, fontSize: 16, fontWeight: "700" },
     btnGhost: { backgroundColor: C.chip, borderRadius: 12, paddingVertical: 10, paddingHorizontal: 14, alignItems: "center", justifyContent: "center" },
-    btnGhostText: { color: C.text, fontSize: 15, fontWeight: "600" }
+    btnGhostText: { color: C.text, fontSize: 15, fontWeight: "600" },
+    // Feedback while a card, row or button is held down: <Pressable style={({ pressed }) => [S.card, pressed && S.pressed]}>
+    pressed: { opacity: 0.6 }
   });
 }
 

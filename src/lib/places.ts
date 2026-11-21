@@ -213,8 +213,8 @@ export async function search(lat: number, lon: number, radiusM: number, opts: { 
  * open (as the website does): clinics with unknown hours nearby must not hide
  * an open emergency clinic a little further away. Open places first (and
  * clinics with their own 24/7 emergency service), then unknown hours, then
- * closed clinics whose phone line reaches the on-call vet; within each,
- * independents before chains, then distance.
+ * closed clinics whose phone line reaches the on-call vet; within each, nearest
+ * first (in an emergency an open chain clinic nearby beats an independent one far away).
  */
 export const emergencyRank = (p: Place) => (p.openNow === true || p.is247 || p.emergency === "24/7" ? 0 : p.openNow == null ? 1 : 2);
 
@@ -226,7 +226,7 @@ export async function emergency(lat: number, lon: number): Promise<{ places: Pla
     last = (await search(lat, lon, r)).filter((p) => (p.cat === "vet" || p.cat === "hospital") && (p.openNow !== false || !!p.emergency));
     if (last.length >= 5 && last.some((p) => rank(p) === 0)) break;
   }
-  last.sort((a, b) => rank(a) - rank(b) || (a.chain ? 1 : 0) - (b.chain ? 1 : 0) || a.dist - b.dist);
+  last.sort((a, b) => rank(a) - rank(b) || a.dist - b.dist);
   return { places: last, radiusM };
 }
 
