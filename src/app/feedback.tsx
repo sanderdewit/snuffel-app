@@ -8,11 +8,23 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useI18n } from "../i18n";
 import { feedbackDraft, reportInput, sendReport } from "../lib/feedback";
 import { buildReport, LIMITS, type Report } from "../lib/feedbackReport";
+import { Icon, Symbol, type IconName } from "../ui/Icon";
 import { Input } from "../ui/Input";
 import { CopyCode } from "../ui/Rating";
 import { useTheme } from "../ui/theme";
 
 const PRIVACY_MAIL = "privacy@snuffel.app";
+
+/** A line with an icon in front (screen readers read the text only). */
+function Line({ icon, children, muted }: { icon: IconName; children: string; muted?: boolean }) {
+  const { C, S } = useTheme();
+  return (
+    <View style={[S.row, { gap: 10, alignItems: "flex-start" }]}>
+      <Icon name={icon} size={muted ? 16 : 18} color={muted ? C.muted : C.link} style={{ marginTop: muted ? 1 : 2 }} />
+      <Text style={[muted ? S.muted : S.body, { flex: 1 }]}>{children}</Text>
+    </View>
+  );
+}
 
 // The placeholders that replace a name, e-mail address or number (feedbackReport.ts) look
 // like what they are: grey labels, not a glitch in the text.
@@ -37,7 +49,7 @@ function Preview({ report }: { report: Report }) {
     <View style={[S.card, { gap: 10, backgroundColor: C.chip }]}>
       {d && (
         <View style={{ gap: 2 }}>
-          <Text style={[S.body, { fontWeight: "700" }]}>🐕</Text>
+          <Symbol name="dog" size={20} color={C.muted} />
           {d.breed != null && <Text style={S.body}>{t("app_breed")}: {d.breed}</Text>}
           {d.ageMonths != null && <Text style={S.body}>{t("app_fbAge")}: {tf("app_ageMonths", { n: d.ageMonths })}</Text>}
           {d.weightKg != null && <Text style={S.body}>{t("app_weight")}: {d.weightKg}</Text>}
@@ -90,16 +102,21 @@ export default function Feedback() {
     return (
       <ScrollView style={S.screen} contentContainerStyle={{ padding: 16, gap: 16 }}>
         <View style={[S.card, { gap: 12 }]}>
-          <Text style={[S.h2, { color: C.ok }]}>✓ {t("app_fbSent")}</Text>
+          <View style={[S.row, { gap: 8, alignItems: "flex-start" }]} accessible accessibilityRole="header" accessibilityLabel={t("app_fbSent")}>
+            <Icon name="check-circle" size={20} color={C.ok} style={{ marginTop: 1 }} />
+            <Text style={[S.h2, { flex: 1, color: C.ok }]}>{t("app_fbSent")}</Text>
+          </View>
           <Text style={S.muted}>{t("app_fbCode")}</Text>
           <CopyCode code={code} big />
           <Text style={S.body}>{t("app_fbRemoveHow")}</Text>
-          <Pressable onPress={() => Linking.openURL(`mailto:${PRIVACY_MAIL}?subject=${encodeURIComponent("Snuffel " + code)}`).catch(() => undefined)} accessibilityRole="link">
-            <Text style={{ color: C.link, fontWeight: "600" }}>✉️ {PRIVACY_MAIL}</Text>
+          <Pressable onPress={() => Linking.openURL(`mailto:${PRIVACY_MAIL}?subject=${encodeURIComponent("Snuffel " + code)}`).catch(() => undefined)} accessibilityRole="link"
+            style={({ pressed }) => [S.row, { gap: 8, minHeight: 44, alignSelf: "flex-start" }, pressed && S.pressed]}>
+            <Icon name="mail" size={18} color={C.link} />
+            <Text style={{ color: C.link, fontWeight: "600" }}>{PRIVACY_MAIL}</Text>
           </Pressable>
           <Text style={S.muted}>{t("app_fbFindCode")}</Text>
         </View>
-        <Pressable style={S.btn} onPress={() => router.back()} accessibilityRole="button"><Text style={S.btnText}>{t("app_done")}</Text></Pressable>
+        <Pressable style={({ pressed }) => [S.btn, pressed && S.pressed]} onPress={() => router.back()} accessibilityRole="button"><Text style={S.btnText}>{t("app_done")}</Text></Pressable>
       </ScrollView>
     );
   }
@@ -108,32 +125,33 @@ export default function Feedback() {
     <KeyboardAvoidingView style={S.screen} behavior={Platform.OS === "ios" ? "padding" : undefined} keyboardVerticalOffset={90}>
       <ScrollView contentContainerStyle={{ padding: 16, gap: 14 }} keyboardShouldPersistTaps="handled">
         <Text style={S.h1}>{t("app_fbAsk")}</Text>
-        <View style={[S.card, { gap: 8 }]}>
-          <Text style={S.body}>🎯 {t("app_fbWhy")}</Text>
-          <Text style={S.body}>🇪🇺 {t("app_fbWhere")}</Text>
-          <Text style={S.body}>🗓️ {t("app_fbHowLong")}</Text>
-          <Text style={S.body}>🗑️ {t("app_fbRemoveInfo")}</Text>
+        <View style={[S.card, { gap: 10 }]}>
+          <Line icon="target">{t("app_fbWhy")}</Line>
+          <Line icon="globe">{t("app_fbWhere")}</Line>
+          <Line icon="calendar">{t("app_fbHowLong")}</Line>
+          <Line icon="trash-2">{t("app_fbRemoveInfo")}</Line>
         </View>
         {!report ? <Text style={[S.body, { color: C.warn }]}>{t("app_fbFailed")}</Text> : (
           <>
             <Text style={S.h2}>{t("app_fbWhatSent")}</Text>
             {/* Before the conversation: otherwise "[name]" in the text looks like a bug */}
-            <Text style={S.muted}>🔒 {t("app_fbNotSent")}</Text>
+            <Line icon="lock" muted>{t("app_fbNotSent")}</Line>
             <Preview report={report} />
             <Input style={S.input} value={comment} onChangeText={setComment} placeholder={t("app_fbComment")}
               maxLength={LIMITS.comment} returnKeyType="done" accessibilityLabel={t("app_fbComment")} />
             {/* The note as it is sent, when replacing a name or number changed it */}
-            {!!report.comment && report.comment !== comment.replace(/\s+/g, " ").trim() && <Text style={S.muted}>→ {report.comment}</Text>}
+            {!!report.comment && report.comment !== comment.replace(/\s+/g, " ").trim() && <Line icon="corner-down-right" muted>{report.comment}</Line>}
           </>
         )}
         {!!problem && <Text style={[S.body, { color: C.warn }]} accessibilityLiveRegion="polite">{problem}</Text>}
         <View style={{ gap: 8 }}>
           {!!report && (
-            <Pressable style={[S.btn, busy && { opacity: 0.6 }]} onPress={send} disabled={busy} accessibilityRole="button">
+            <Pressable style={({ pressed }) => [S.btn, busy && { opacity: 0.6 }, pressed && S.pressed]} onPress={send} disabled={busy}
+              accessibilityRole="button" accessibilityState={{ busy, disabled: busy }}>
               {busy ? <ActivityIndicator color={C.onBrand} /> : <Text style={S.btnText}>{t("app_fbSend")}</Text>}
             </Pressable>
           )}
-          <Pressable style={S.btnGhost} onPress={() => router.back()} disabled={busy} accessibilityRole="button">
+          <Pressable style={({ pressed }) => [S.btnGhost, { minHeight: 44 }, pressed && S.pressed]} onPress={() => router.back()} disabled={busy} accessibilityRole="button">
             <Text style={S.btnGhostText}>{t("app_fbDontSend")}</Text>
           </Pressable>
         </View>

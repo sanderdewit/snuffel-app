@@ -15,10 +15,10 @@ import { currentPosition, geocode, LocationDeniedError } from "../lib/geo";
 import { pinHomeArea, search, type Place } from "../lib/places";
 import { setMyVet } from "../lib/saved";
 import { ChainBadge, displayName } from "../ui/PlaceCard";
-import { Emoji } from "../ui/Emoji";
+import { Icon, Symbol, type SymbolName } from "../ui/Icon";
 import { Input } from "../ui/Input";
 import { useTheme } from "../ui/theme";
-import { Toggle } from "../ui/Toggle";
+import { ToggleRow } from "../ui/Toggle";
 import { sendOnOpen } from "../lib/handoff";
 import { DateField } from "../ui/DateField";
 import { BreedPicker, NO_BREED } from "../ui/BreedPicker";
@@ -26,6 +26,11 @@ import type { BreedChoice } from "../lib/breeds";
 import icon from "../../assets/icon.png";
 
 const STEPS = 6;   // welcome, area, dog, vet, AI help, done
+
+// The features on the first page, with the icons of their tabs (Find, Emergency, AI help, My dogs)
+const FEATURES: [SymbolName, string][] = [
+  ["map-search-outline", "app_ob_f1"], ["alarm-light-outline", "app_ob_f2"], ["message-text-outline", "app_ob_f3"], ["paw-outline", "app_ob_f4"]
+];
 
 export default function Welcome() {
   const { t, tf, lang } = useI18n();
@@ -141,11 +146,12 @@ export default function Welcome() {
 
   const footer = (primary: { label: string; onPress: () => void; busy?: boolean }, secondary?: { label: string; onPress: () => void }) => (
     <View style={{ gap: 8, paddingTop: 8 }}>
-      <Pressable style={S.btn} onPress={primary.onPress} disabled={primary.busy} accessibilityRole="button">
+      <Pressable style={({ pressed }) => [S.btn, { minHeight: 48 }, pressed && S.pressed]} onPress={primary.onPress} disabled={primary.busy}
+        accessibilityRole="button" accessibilityState={{ busy: !!primary.busy }}>
         {primary.busy ? <ActivityIndicator color={C.onBrand} /> : <Text style={S.btnText}>{primary.label}</Text>}
       </Pressable>
       {secondary && (
-        <Pressable style={[S.btnGhost, { backgroundColor: "transparent" }]} onPress={secondary.onPress} accessibilityRole="button">
+        <Pressable style={({ pressed }) => [S.btnGhost, { backgroundColor: "transparent", minHeight: 44 }, pressed && S.pressed]} onPress={secondary.onPress} accessibilityRole="button">
           <Text style={[S.btnGhostText, { color: C.muted }]}>{secondary.label}</Text>
         </Pressable>
       )}
@@ -168,9 +174,11 @@ export default function Welcome() {
         <Text style={[S.h1, { fontSize: 28, textAlign: "center" }]}>{t("app_ob_welcomeTitle")}</Text>
         <Text style={[S.body, { textAlign: "center" }]}>{t("app_ob_welcomeText")}</Text>
         <View style={{ gap: 12, alignSelf: "stretch", marginTop: 8 }}>
-          {[["🩺", "app_ob_f1"], ["🚨", "app_ob_f2"], ["💬", "app_ob_f3"], ["📁", "app_ob_f4"]].map(([e, k]) => (
-            <View key={k} style={[S.row, { gap: 12, alignItems: "flex-start" }]}>
-              <Emoji char={e} size={22} box={34} />
+          {FEATURES.map(([name, k]) => (
+            <View key={k} style={[S.row, { gap: 12 }]}>
+              <View style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: C.chip, alignItems: "center", justifyContent: "center" }}>
+                <Symbol name={name} size={20} color={k === "app_ob_f2" ? C.danger : C.link} />
+              </View>
               <Text style={[S.body, { flex: 1 }]}>{t(k)}</Text>
             </View>
           ))}
@@ -182,17 +190,25 @@ export default function Welcome() {
     body = (
       <View style={{ gap: 14 }}>
         {header(t("app_ob_areaTitle"), t("app_ob_areaText"))}
-        <Pressable style={S.btn} onPress={areaByGps} disabled={areaBusy} accessibilityRole="button">
-          <Text style={S.btnText}>📍 {t("useLocation")}</Text>
+        <Pressable style={({ pressed }) => [S.btn, S.row, { gap: 8 }, pressed && S.pressed]} onPress={areaByGps} disabled={areaBusy} accessibilityRole="button">
+          <Icon name="crosshair" size={18} color={C.onBrand} />
+          <Text style={[S.btnText, { flexShrink: 1 }]}>{t("useLocation")}</Text>
         </Pressable>
         <Text style={S.muted}>{t("app_ob_postcode")}</Text>
         <View style={[S.row, { gap: 8 }]}>
-          <Input style={[S.input, { flex: 1 }]} value={query} onChangeText={setQuery} placeholder={t("searchPlaceholder")}
-            returnKeyType="search" onSubmitEditing={areaByText} autoCorrect={false} />
-          <Pressable style={S.btnGhost} onPress={areaByText} disabled={areaBusy} accessibilityRole="button"><Text style={S.btnGhostText}>OK</Text></Pressable>
+          <Input style={[S.input, { flex: 1, minHeight: 44 }]} value={query} onChangeText={setQuery} placeholder={t("app_searchWhere")}
+            accessibilityLabel={t("app_searchWhere")} returnKeyType="search" onSubmitEditing={areaByText} autoCorrect={false} />
+          <Pressable style={({ pressed }) => [S.btnGhost, { minHeight: 44 }, pressed && S.pressed]} onPress={areaByText} disabled={areaBusy} accessibilityRole="button">
+            <Text style={S.btnGhostText}>{t("search")}</Text>
+          </Pressable>
         </View>
         {areaBusy && <ActivityIndicator color={C.brand} />}
-        {!!areaMsg && <Text style={[S.body, { color: spot ? C.ok : C.danger }]}>{spot ? "✓ " : ""}{areaMsg}</Text>}
+        {!!areaMsg && (
+          <View style={[S.row, { gap: 8, alignItems: "flex-start" }]} accessible accessibilityLiveRegion="polite">
+            {!!spot && <Icon name="check-circle" size={18} color={C.ok} style={{ marginTop: 2 }} />}
+            <Text style={[S.body, { flex: 1, color: spot ? C.ok : C.danger }]}>{areaMsg}</Text>
+          </View>
+        )}
       </View>
     );
     foot = footer({ label: t("app_ob_next"), onPress: next }, spot ? undefined : { label: t("app_ob_later"), onPress: next });
@@ -200,14 +216,15 @@ export default function Welcome() {
     body = (
       <View style={{ gap: 12 }}>
         {header(t("app_ob_dogTitle"), t("app_ob_dogText"))}
-        <Pressable onPress={pickPhoto} style={{ alignSelf: "center", alignItems: "center", gap: 6 }} accessibilityRole="button">
+        <Pressable onPress={pickPhoto} style={({ pressed }) => [{ alignSelf: "center", alignItems: "center", gap: 6 }, pressed && S.pressed]}
+          accessibilityRole="button" accessibilityLabel={t("app_choosePhoto")}>
           {photo
             ? <Image source={{ uri: photo }} style={{ width: 96, height: 96, borderRadius: 48 }} />
-            : <View style={{ width: 96, height: 96, borderRadius: 48, backgroundColor: C.chip, alignItems: "center", justifyContent: "center" }}><Text style={{ fontSize: 42 }}>🐶</Text></View>}
+            : <View style={{ width: 96, height: 96, borderRadius: 48, backgroundColor: C.chip, alignItems: "center", justifyContent: "center" }}><Symbol name="dog" size={48} color={C.muted} /></View>}
           <Text style={{ color: C.link, fontWeight: "600" }}>{t("app_choosePhoto")}</Text>
         </Pressable>
         <Text style={S.muted}>{t("app_dogName")}</Text>
-        <Input style={S.input} value={name} onChangeText={setName} maxLength={40} />
+        <Input style={S.input} value={name} onChangeText={setName} maxLength={40} accessibilityLabel={t("app_dogName")} />
         <Text style={S.muted}>{t("app_breed")}</Text>
         <BreedPicker value={breed} onChange={setBreed} />
         <View style={[S.row, { gap: 8 }]}>
@@ -217,16 +234,21 @@ export default function Welcome() {
           </View>
           <View style={{ flex: 1, gap: 4 }}>
             <Text style={S.muted}>{t("app_weight")}</Text>
-            <Input style={S.input} value={weight} onChangeText={setWeight} keyboardType="decimal-pad" maxLength={5} />
+            <Input style={S.input} value={weight} onChangeText={setWeight} keyboardType="decimal-pad" maxLength={5} accessibilityLabel={t("app_weight")} />
           </View>
         </View>
         {!!dogMsg && <Text style={[S.body, { color: C.danger }]}>{dogMsg}</Text>}
         {!!name.trim() && (
-          <Pressable style={[S.btnGhost, { alignSelf: "flex-start" }]} onPress={addAnother} accessibilityRole="button">
+          <Pressable style={({ pressed }) => [S.btnGhost, { alignSelf: "flex-start", minHeight: 44 }, pressed && S.pressed]} onPress={addAnother} accessibilityRole="button">
             <Text style={S.btnGhostText}>{t("app_ob_addAnother")}</Text>
           </Pressable>
         )}
-        {added.length > 0 && <Text style={[S.body, { color: C.ok }]}>✓ {tf("app_ob_dogsAdded", { names: added.join(", ") })}</Text>}
+        {added.length > 0 && (
+          <View style={[S.row, { gap: 8, alignItems: "flex-start" }]}>
+            <Icon name="check-circle" size={18} color={C.ok} style={{ marginTop: 2 }} />
+            <Text style={[S.body, { flex: 1, color: C.ok }]}>{tf("app_ob_dogsAdded", { names: added.join(", ") })}</Text>
+          </View>
+        )}
       </View>
     );
     foot = footer({ label: t("app_ob_next"), onPress: saveDogStep }, name.trim() || added.length ? undefined : { label: t("app_ob_later"), onPress: next });
@@ -238,14 +260,14 @@ export default function Welcome() {
           : vets == null ? <ActivityIndicator color={C.brand} />
           : !vets.length ? <Text style={S.muted}>{t("app_ob_vetNone")}</Text>
           : [
-            <View key="filter" style={[S.row, { gap: 8 }]}>
-              <Toggle value={vetIndependentOnly} onValueChange={setVetIndependentOnly} />
-              <Text style={S.body}>{t("independentOnly")}</Text>
-            </View>,
+            <ToggleRow key="filter" value={vetIndependentOnly} onValueChange={setVetIndependentOnly} label={t("independentOnly")} />,
             ...shownVets.map((p) => (
             <Pressable key={p.id} onPress={() => chooseVet(p)} accessibilityRole="radio" accessibilityState={{ checked: chosen === p.id }}
-              style={[S.card, { gap: 2, borderColor: chosen === p.id ? C.brand : C.line, borderWidth: chosen === p.id ? 2 : 1 }]}>
-              <Text style={S.h2}>{chosen === p.id ? "⭐ " : ""}{displayName(p, t)}</Text>
+              style={({ pressed }) => [S.card, { gap: 2, borderColor: chosen === p.id ? C.brand : C.line, borderWidth: chosen === p.id ? 2 : 1 }, pressed && S.pressed]}>
+              <View style={[S.row, { gap: 8, alignItems: "flex-start" }]}>
+                <Text style={[S.h2, { flex: 1 }]}>{displayName(p, t)}</Text>
+                {chosen === p.id && <Icon name="check-circle" size={20} color={C.link} style={{ marginTop: 1 }} />}
+              </View>
               <Text style={S.muted} numberOfLines={1}>{tf("distanceAway", { km: p.dist.toFixed(1) })}{p.address ? " · " + p.address : ""}</Text>
               <ChainBadge p={p} />
             </Pressable>
@@ -260,10 +282,10 @@ export default function Welcome() {
         <Text style={[S.muted, { marginTop: 4 }]}>{t("app_ob_aiTry")}</Text>
         {examples.map((q) => (
           <Pressable key={q} onPress={() => tryQuestion(q)} accessibilityRole="button"
-            style={[S.card, S.row, { gap: 10 }]}>
-            <Text style={{ fontSize: 20 }}>💬</Text>
+            style={({ pressed }) => [S.card, S.row, { gap: 10, minHeight: 52 }, pressed && S.pressed]}>
+            <Icon name="message-circle" size={20} color={C.link} />
             <Text style={[S.body, { flex: 1 }]}>{q}</Text>
-            <Text style={{ color: C.muted, fontSize: 20 }}>›</Text>
+            <Icon name="chevron-right" size={20} color={C.muted} />
           </Pressable>
         ))}
       </View>
@@ -272,7 +294,9 @@ export default function Welcome() {
   } else {
     body = (
       <View style={{ gap: 16, alignItems: "center", paddingTop: 40 }}>
-        <Emoji char="🐾" size={64} box={104} />
+        <View style={{ width: 104, height: 104, borderRadius: 52, backgroundColor: C.chip, alignItems: "center", justifyContent: "center" }}>
+          <Symbol name="paw" size={56} color={C.link} />
+        </View>
         <Text style={[S.h1, { fontSize: 28 }]}>{t("app_ob_doneTitle")}</Text>
         <Text style={[S.body, { textAlign: "center" }]}>{t("app_ob_doneText")}</Text>
       </View>
@@ -283,12 +307,18 @@ export default function Welcome() {
   return (
     <SafeAreaView style={S.screen} edges={["top", "bottom"]}>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
-        <View style={[S.row, { justifyContent: "space-between", paddingHorizontal: 16, paddingTop: 8, minHeight: 36 }]}>
+        <View style={[S.row, { justifyContent: "space-between", paddingHorizontal: 6, paddingTop: 4, minHeight: 44 }]}>
           {step > 0 && step < STEPS - 1
-            ? <Pressable onPress={() => setStep(step - 1)} hitSlop={12} accessibilityRole="button" accessibilityLabel="←"><Text style={{ fontSize: 22, color: C.muted }}>←</Text></Pressable>
+            ? <Pressable onPress={() => setStep(step - 1)} accessibilityRole="button" accessibilityLabel={t("app_back")}
+                style={({ pressed }) => [{ width: 44, height: 44, alignItems: "center", justifyContent: "center" }, pressed && S.pressed]}>
+                <Icon name="arrow-left" size={24} color={C.muted} />
+              </Pressable>
             : <View />}
           {step > 0 && step < STEPS - 1 && (
-            <Pressable onPress={done} hitSlop={12} accessibilityRole="button"><Text style={{ color: C.muted, fontWeight: "600" }}>{t("app_ob_skip")}</Text></Pressable>
+            <Pressable onPress={done} accessibilityRole="button"
+              style={({ pressed }) => [{ minHeight: 44, paddingHorizontal: 10, justifyContent: "center" }, pressed && S.pressed]}>
+              <Text style={{ color: C.muted, fontWeight: "600" }}>{t("app_ob_skip")}</Text>
+            </Pressable>
           )}
         </View>
         <ScrollView contentContainerStyle={{ padding: 20, paddingTop: 8, flexGrow: 1 }} keyboardShouldPersistTaps="handled">
