@@ -37,9 +37,10 @@ export function DateField({ value, onChange, minimumDate, maximumDate, placehold
 
   return (
     <>
-      <Pressable onPress={open} accessibilityRole="button" accessibilityLabel={accessibilityLabel}>
+      <Pressable onPress={open} accessibilityRole="button" accessibilityLabel={accessibilityLabel && value && !children ? `${accessibilityLabel}: ${formatDate(value, lang)}` : accessibilityLabel}
+        style={({ pressed }) => pressed && S.pressed}>
         {children ?? (
-          <View style={[S.input, { justifyContent: "center" }]}>
+          <View style={[S.input, { justifyContent: "center", minHeight: 44 }]}>
             <Text style={{ fontSize: 16, color: value ? C.text : C.muted }}>{value ? formatDate(value, lang) : placeholder ?? t("app_pickDate")}</Text>
           </View>
         )}
@@ -47,11 +48,11 @@ export function DateField({ value, onChange, minimumDate, maximumDate, placehold
       {Platform.OS === "ios" && (
         <Modal visible={iosOpen} transparent animationType="slide" onRequestClose={() => setIosOpen(false)}>
           {/* The dimmed backdrop is black in light and dark alike */}
-          <Pressable style={{ flex: 1, backgroundColor: "#0006" }} onPress={() => setIosOpen(false)} />
+          <Pressable style={{ flex: 1, backgroundColor: "#0006" }} onPress={() => setIosOpen(false)} accessibilityRole="button" accessibilityLabel={t("close")} />
           <View style={{ backgroundColor: C.card, padding: 16, paddingBottom: 32 }}>
             <DateTimePicker value={draft} mode="date" display="inline" locale={lang} minimumDate={minimumDate} maximumDate={maximumDate}
               themeVariant={scheme} onChange={(_, d) => d && setDraft(d)} />
-            <Pressable style={S.btn} onPress={() => { setIosOpen(false); onChange(isoDate(draft)); }} accessibilityRole="button">
+            <Pressable style={({ pressed }) => [S.btn, { minHeight: 48 }, pressed && S.pressed]} onPress={() => { setIosOpen(false); onChange(isoDate(draft)); }} accessibilityRole="button">
               <Text style={S.btnText}>{t("app_done")}</Text>
             </Pressable>
           </View>

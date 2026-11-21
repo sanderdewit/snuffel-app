@@ -9,7 +9,8 @@ import * as Crypto from "expo-crypto";
 import { File, Paths } from "expo-file-system";
 import { db, dbReady } from "./db";
 import { getDog, listReminders, saveDog, setReminder, validDate, type Dog, type ReminderKind } from "./dogs";
-import { RECORD_KINDS, recurring, signCategory, summarise, type DogRecord, type RecordKind, type SignCategory } from "./dogsummary";
+import { cleanRecord, RECORD_KINDS, recurring, signCategory, summarise, type DogRecord, type RecordKind, type SignCategory } from "./dogsummary";
+import { SAME_EPISODE_MS, syncWeight as syncWeightIn, writeRecord } from "./records";
 import { acceptedParams, b64, imageType, seal, unseal, WrongPasswordError, type Sealed } from "./seal";
 import { breedForServer, breedLabel, breeds, cleanChoice, matchFreeText } from "./breeds";
 
@@ -22,6 +23,26 @@ const toRecord = (r: any): DogRecord => ({ id: r.id, dogId: r.dog_id, kind: r.ki
 export async function listRecords(dogId: number): Promise<DogRecord[]> {
   await dbReady();
   return (await db.getAllAsync("SELECT * FROM records WHERE dog_id = ? ORDER BY date DESC, id DESC", dogId)).map(toRecord);
+}
+
+/** One entry, or null when it is gone. */
+export async function getRecord(id: number): Promise<DogRecord | null> {
+  await dbReady();
+  const r = await db.getFirstAsync("SELECT * FROM records WHERE id = ?", id);
+  return r ? toRecord(r) : null;
+}
+
+/**
+ * Saves an edited entry (same id, same dog): its kind, date, title, details, weight
+ * and, for a sign, its category. False when the entry no longer exists. Throws on an
+ * entry that can't be stored (invalid date, unknown kind, no title, a weight without
+ * a value): the screen checks these first. A weight keeps the profile's weight current.
+ */
+export async function updateRecord(r: DogRecord): Promise<boolean> {
+  const clean = validDate(r.date) ? cleanRecord(r) : null;
+  if (!clean) throw new Error("invalid entry");
+  await dbReady();
+  return writeRecord(db, clean);
 }
 
 export async function addRecord(r: Omit<DogRecord, "id">): Promise<number> {
@@ -37,8 +58,8 @@ export async function addRecord(r: Omit<DogRecord, "id">): Promise<number> {
 export interface Observation { date: string; category: SignCategory; title: string; details: string }
 
 // Follow-up answers about the same sign refine one entry instead of adding new ones:
-// an entry of the same category filed from the chat in the last 12 hours is updated.
-const SAME_EPISODE_MS = 12 * 3600 * 1000;
+// an entry of the same category filed from the chat in the last 12 hours
+// (SAME_EPISODE_MS) is updated, unless the owner has edited it since (updateRecord).
 /** Files an observation for the dog; returns the entry's id. */
 export async function fileObservation(dogId: number, o: Observation): Promise<number> {
   await dbReady();
@@ -69,12 +90,8 @@ export async function setAutoFile(dogId: number, on: boolean): Promise<void> {
   await db.runAsync("UPDATE dogs SET auto_file = ? WHERE id = ?", on ? 1 : 0, dogId);
 }
 
-// The latest weight entry keeps the profile's weight current.
-async function syncWeight(dogId: number) {
-  const latest = await db.getFirstAsync<{ value: number }>(
-    "SELECT value FROM records WHERE dog_id = ? AND kind = 'weight' AND value IS NOT NULL ORDER BY date DESC, id DESC", dogId);
-  if (latest) await db.runAsync("UPDATE dogs SET weight = ? WHERE id = ?", latest.value, dogId);
-}
+// The latest weight entry keeps the profile's weight current (src/lib/records.ts).
+const syncWeight = (dogId: number) => syncWeightIn(db, dogId);
 
 export async function deleteRecord(r: DogRecord): Promise<void> {
   await dbReady();
@@ -200,7 +217,7 @@ export async function exportPdf(dogId: number, t: (k: string) => string, tf: (k:
   const facts = [
     (dog.breedId || dog.breed) && [t("app_breed"), breedLabel(breeds(), dog, lang, t, tf)], dog.birth && [t("app_born"), dog.birth],
     dog.weight && [t("app_weight"), dog.weight + " kg"],
-    dog.sex && [t("app_sex"), t(dog.sex === "male" ? "app_male" : "app_female") + (dog.neutered ? ", " + t("app_neutered").toLowerCase() : "")]
+    dog.sex && [t("app_sex"), t(dog.sex === "male" ? (dog.neutered ? "app_maleNeutered" : "app_male") : (dog.neutered ? "app_femaleNeutered" : "app_female"))]
   ].filter(Boolean) as string[][];
   // Paper is white: always light, also when the app is dark (fixed colours, "only light").
   const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="color-scheme" content="only light"><style>

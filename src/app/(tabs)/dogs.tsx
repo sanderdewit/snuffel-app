@@ -1,14 +1,17 @@
-// My dogs: profiles with their next care reminder.
+// My dogs: profiles with their next care reminder. A dog opens its page
+// (src/app/dog/[id].tsx); importing a dog (rare) is a quiet link under "Add a dog".
 import { useCallback, useState } from "react";
 import { ActivityIndicator, Alert, FlatList, Pressable, Text, View } from "react-native";
-import { Image } from "expo-image";
 import * as DocumentPicker from "expo-document-picker";
 import { File } from "expo-file-system";
 import { IMPORT_MAX_BYTES, importData, NeedsPasswordError } from "../../lib/dogfile";
 import { router, useFocusEffect } from "expo-router";
 import { useI18n } from "../../i18n";
-import { ageMonths, listDogs, listReminders, REMINDER_KINDS, today, type Dog, type Reminder } from "../../lib/dogs";
+import { listDogs, listReminders, REMINDER_KINDS, today, type Dog, type Reminder } from "../../lib/dogs";
 import { breedLabel, breeds } from "../../lib/breeds";
+import { DogAvatar } from "../../ui/DogAvatar";
+import { ageText } from "../../ui/dogInfo";
+import { Icon, Symbol } from "../../ui/Icon";
 import { Input } from "../../ui/Input";
 import { useTheme } from "../../ui/theme";
 import { formatDate } from "../../lib/dates";
@@ -59,55 +62,72 @@ export default function Dogs() {
     await runImport(text, null);
   };
 
-  const age = (d: Dog) => {
-    const m = ageMonths(d.birth);
-    if (m == null) return null;
-    return m < 24 ? tf("app_ageMonths", { n: m }) : tf("app_age", { n: Math.floor(m / 12) });
-  };
-
   return (
     <View style={S.screen}>
       <FlatList
         data={dogs}
         keyExtractor={(d) => String(d.id)}
         contentContainerStyle={{ padding: 16, gap: 10 }}
-        ListEmptyComponent={<Text style={[S.body, { marginBottom: 12 }]}>🐕 {t("app_noDogs")}</Text>}
-        renderItem={({ item: d }) => (
-          <Pressable style={S.card} onPress={() => router.push({ pathname: "/dog/[id]", params: { id: String(d.id) } })} accessibilityRole="button">
-            <View style={[S.row, { gap: 12 }]}>
-              {d.photo
-                ? <Image source={{ uri: d.photo }} style={{ width: 56, height: 56, borderRadius: 28 }} />
-                : <View style={{ width: 56, height: 56, borderRadius: 28, backgroundColor: C.chip, alignItems: "center", justifyContent: "center" }}><Text style={{ fontSize: 28 }}>🐶</Text></View>}
-              <View style={{ flex: 1 }}>
-                <Text style={S.h2}>{d.name}</Text>
-                <Text style={S.muted}>{[breedLabel(breeds(), d, lang, t, tf), age(d), d.weight ? d.weight + " kg" : null].filter(Boolean).join(" · ")}</Text>
-                {d.next && (
-                  <Text style={[S.muted, { color: d.next.due! < today() ? C.danger : C.text, marginTop: 2 }]}>
-                    {t(REMINDER_KINDS.find((k) => k.kind === d.next!.kind)!.key)}: {d.next.due! < today() ? t("app_overdue") : tf("app_nextDue", { date: formatDate(d.next.due!, lang) })}
-                  </Text>
-                )}
+        ListEmptyComponent={
+          <View style={[S.row, { gap: 10, alignItems: "flex-start", marginBottom: 12 }]}>
+            <Symbol name="dog" size={22} color={C.muted} />
+            <Text style={[S.body, { flex: 1 }]}>{t("app_noDogs")}</Text>
+          </View>
+        }
+        renderItem={({ item: d }) => {
+          const overdue = !!d.next && d.next.due! < today();
+          return (
+            <Pressable onPress={() => router.push({ pathname: "/dog/[id]", params: { id: String(d.id) } })} accessibilityRole="button"
+              style={({ pressed }) => [S.card, pressed && S.pressed]}>
+              <View style={[S.row, { gap: 12 }]}>
+                <DogAvatar name={d.name} photo={d.photo} size={56} />
+                <View style={{ flex: 1 }}>
+                  <Text style={S.h2}>{d.name}</Text>
+                  <Text style={S.muted}>{[breedLabel(breeds(), d, lang, t, tf), ageText(d, tf), d.weight ? d.weight + " kg" : null].filter(Boolean).join(" · ")}</Text>
+                  {d.next && (
+                    <Text style={[S.muted, { color: overdue ? C.danger : C.text, marginTop: 2 }, overdue && { fontWeight: "700" }]}>
+                      {t(REMINDER_KINDS.find((k) => k.kind === d.next!.kind)!.key)}: {overdue ? t("app_overdue") : tf("app_nextDue", { date: formatDate(d.next.due!, lang) })}
+                    </Text>
+                  )}
+                </View>
+                <Icon name="chevron-right" size={18} color={C.muted} />
               </View>
-            </View>
-          </Pressable>
-        )}
+            </Pressable>
+          );
+        }}
         ListFooterComponent={
           <View style={{ gap: 8, marginTop: 6 }}>
-            <Pressable style={S.btn} onPress={() => router.push({ pathname: "/dog/[id]", params: { id: "new" } })} accessibilityRole="button">
-              <Text style={S.btnText}>＋ {t("app_addDog")}</Text>
+            <Pressable onPress={() => router.push({ pathname: "/dog/[id]", params: { id: "new" } })} accessibilityRole="button"
+              style={({ pressed }) => [S.btn, S.row, { gap: 8, minHeight: 48 }, pressed && S.pressed]}>
+              <Icon name="plus" size={20} color={C.onBrand} />
+              <Text style={S.btnText}>{t("app_addDog")}</Text>
             </Pressable>
             {asking ? (
               <View style={[S.card, { gap: 6 }]}>
                 <Text style={S.body}>{t("app_importPassword")}</Text>
-                <Input style={S.input} value={pw} onChangeText={setPw} placeholder={t("app_password")} secureTextEntry autoCapitalize="none" autoFocus />
+                <Input style={S.input} value={pw} onChangeText={setPw} placeholder={t("app_password")} accessibilityLabel={t("app_password")}
+                  secureTextEntry autoCapitalize="none" autoFocus />
                 <View style={[S.row, { gap: 8 }]}>
-                  <Pressable style={[S.btnGhost, { flex: 1 }]} onPress={() => { setAsking(null); setPw(""); }}><Text style={S.btnGhostText}>{t("app_cancel")}</Text></Pressable>
-                  <Pressable style={[S.btn, { flex: 1 }]} onPress={() => runImport(asking, pw)}><Text style={S.btnText}>OK</Text></Pressable>
+                  <Pressable onPress={() => { setAsking(null); setPw(""); }} accessibilityRole="button"
+                    style={({ pressed }) => [S.btnGhost, { flex: 1, minHeight: 44 }, pressed && S.pressed]}>
+                    <Text style={S.btnGhostText}>{t("app_cancel")}</Text>
+                  </Pressable>
+                  <Pressable onPress={() => runImport(asking, pw)} disabled={importing} accessibilityRole="button"
+                    style={({ pressed }) => [S.btn, { flex: 1, minHeight: 44 }, pressed && S.pressed]}>
+                    {importing ? <ActivityIndicator color={C.onBrand} /> : <Text style={S.btnText}>OK</Text>}
+                  </Pressable>
                 </View>
               </View>
             ) : (
-              <Pressable style={S.btnGhost} onPress={pickImport} disabled={importing} accessibilityRole="button">
-                {/* on the grey button: link, not brand (brand on dark chip is 2.7:1) */}
-                {importing ? <ActivityIndicator color={C.link} /> : <Text style={S.btnGhostText}>📥 {t("app_import")}</Text>}
+              // Rare, so a quiet link instead of a second big button. Link colour: brand on the chip is 2.7:1 in dark.
+              <Pressable onPress={pickImport} disabled={importing} accessibilityRole="button" accessibilityLabel={t("app_import")} accessibilityState={{ busy: importing }}
+                style={({ pressed }) => [S.row, { gap: 6, minHeight: 44, justifyContent: "center" }, pressed && S.pressed]}>
+                {importing ? <ActivityIndicator color={C.link} /> : (
+                  <>
+                    <Icon name="download" size={18} color={C.link} />
+                    <Text style={{ color: C.link, fontSize: 15, fontWeight: "600" }}>{t("app_import")}</Text>
+                  </>
+                )}
               </Pressable>
             )}
           </View>
