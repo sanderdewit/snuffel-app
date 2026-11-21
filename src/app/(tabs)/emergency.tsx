@@ -12,7 +12,7 @@ import { ActivityIndicator, AppState, FlatList, Linking, Pressable, Text, View }
 import * as Location from "expo-location";
 import { router, Tabs, useFocusEffect } from "expo-router";
 import { useI18n } from "../../i18n";
-import { currentPosition, LocationDeniedError, reverseLabel, shortLabel } from "../../lib/geo";
+import { currentPosition, reverseLabel, shortLabel } from "../../lib/geo";
 import { emergency, emergencyRank, hoursNow, NotCoveredError, offline, type Place } from "../../lib/places";
 import { remember } from "../../lib/placeStore";
 import { myVet, type SavedPlace } from "../../lib/saved";
@@ -50,9 +50,11 @@ export default function Emergency() {
     const id = ++runId.current;
     lastRun.current = Date.now();
     setPhase("locating"); setProblem(null);
+    let located = false;
     try {
       const pos = await currentPosition();
       if (id !== runId.current) return;
+      located = true;
       setPhase("searching");
       // Where the search is from, so a wrong position shows ("near ..."); never waited for.
       setNear(null);
@@ -62,7 +64,8 @@ export default function Emergency() {
       setPlaces(r.places); setRadiusM(r.radiusM);
     } catch (e) {
       if (id !== runId.current) return;
-      const noLocation = e instanceof LocationDeniedError || !(await Location.hasServicesEnabledAsync().catch(() => true));
+      // No position (not allowed, location off, or no fix in time): say so, with ways around it.
+      const noLocation = !located;
       setProblem({
         text: noLocation ? t("app_locationNeeded") : e instanceof NotCoveredError ? t("app_noCoverage") : t("app_errLoad"),
         location: noLocation
@@ -81,12 +84,18 @@ export default function Emergency() {
     return () => { focused.current = false; };
   }, [run]));
 
-  // Back in the app (after a call, the map, or Settings to allow location): search again when stale or when location was the problem.
+  // Back in the app (after a call, the map, or Settings): search again when the list is
+  // stale, or when location was the problem and is now allowed and on. That is checked
+  // without asking: the permission prompt itself also sends the app away and back.
   useEffect(() => {
     const sub = AppState.addEventListener("change", (s) => {
-      if (s !== "active" || !focused.current) return;
+      if (s !== "active" || !focused.current || runId.current < 1) return;
       myVet().then(setVet).catch(() => undefined);
-      if (problemRef.current?.location || Date.now() - lastRun.current > STALE_MS) run();
+      if (problemRef.current?.location) {
+        Promise.all([Location.getForegroundPermissionsAsync(), Location.hasServicesEnabledAsync()])
+          .then(([perm, on]) => { if (perm.status === "granted" && on && problemRef.current?.location) run(); })
+          .catch(() => undefined);
+      } else if (Date.now() - lastRun.current > STALE_MS) run();
     });
     return () => sub.remove();
   }, [run]);
