@@ -1,21 +1,66 @@
-// Find: address or GPS search, categories, independents-only, map or list.
+// Find: address or GPS search, categories, independents only, radius, map or list.
+// Three rows of controls under the title, every control 44 px or more: the search
+// field with "Near me" inside it (the keyboard's search key searches an address),
+// the category chips (their dots are the map's markers: the chips are its legend),
+// and one row with independents only, the radius (one button, the choices in a
+// sheet) and List/Map. In the list, the chips and that row scroll away with the
+// results; on the map they stay above it.
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, FlatList, Keyboard, Pressable, ScrollView, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ActivityIndicator, FlatList, Keyboard, Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
 import { useI18n } from "../../i18n";
 import { currentPosition, geocode, LocationDeniedError, reverseLabel, shortLabel, type Spot } from "../../lib/geo";
 import { CATEGORIES, CATEGORY_ORDER, NotCoveredError, offline, search, type Place } from "../../lib/places";
 import type { Category } from "../../core/classify";
-import { CategoryIcon, Emoji } from "../../ui/Emoji";
+import { Icon, Symbol } from "../../ui/Icon";
 import { PlaceCard } from "../../ui/PlaceCard";
-import { PlaceMap } from "../../ui/PlaceMap";
+import { MarkerDot, PlaceMap } from "../../ui/PlaceMap";
 import { Input } from "../../ui/Input";
-import { Toggle } from "../../ui/Toggle";
 import { useTheme } from "../../ui/theme";
 
 const RADII = [1000, 3000, 5000, 10000, 25000, 50000, 75000, 100000];
+const km = (r: number) => `${r / 1000} km`;
 const allCats = (on: boolean) => Object.fromEntries(CATEGORY_ORDER.map((c) => [c, on])) as Record<Category, boolean>;
+
+// The radius as one button ("3 km ▾"); the choices open in a sheet from the bottom.
+function RadiusButton({ value, onChange }: { value: number; onChange: (r: number) => void }) {
+  const { t } = useI18n();
+  const { C, S } = useTheme();
+  const insets = useSafeAreaInsets();
+  const [open, setOpen] = useState(false);
+  const close = () => setOpen(false);
+  const pick = (r: number) => { close(); if (r !== value) onChange(r); };
+  return (
+    <>
+      <Pressable onPress={() => setOpen(true)} accessibilityRole="button" accessibilityLabel={`${t("radius")}: ${km(value)}`}
+        style={({ pressed }) => [styles.filter, { gap: 4, paddingLeft: 12, paddingRight: 8, borderColor: C.line, backgroundColor: C.card }, pressed && S.pressed]}>
+        <Text style={[styles.filterText, { color: C.text }]}>{km(value)}</Text>
+        <Icon name="chevron-down" size={16} />
+      </Pressable>
+      <Modal visible={open} transparent animationType="fade" onRequestClose={close} statusBarTranslucent navigationBarTranslucent>
+        {/* The dimmed backdrop is black in light and dark alike (as the date sheet's) */}
+        <Pressable style={{ flex: 1, backgroundColor: "#0006" }} onPress={close} accessibilityRole="button" accessibilityLabel={t("close")} />
+        <View style={{ backgroundColor: C.card, borderTopLeftRadius: 16, borderTopRightRadius: 16, paddingTop: 6, paddingBottom: insets.bottom + 8 }}>
+          <Text style={[S.h2, { paddingHorizontal: 16, paddingVertical: 12 }]} accessibilityRole="header">{t("radius")}</Text>
+          <View accessibilityRole="radiogroup" accessibilityLabel={t("radius")}>
+            {RADII.map((r) => {
+              const on = r === value;
+              return (
+                <Pressable key={r} onPress={() => pick(r)} accessibilityRole="radio" accessibilityState={{ checked: on }}
+                  style={({ pressed }) => [S.row, { minHeight: 48, paddingHorizontal: 16, justifyContent: "space-between",
+                    borderTopWidth: StyleSheet.hairlineWidth, borderColor: C.line, backgroundColor: pressed ? C.chip : C.card }]}>
+                  <Text style={[S.body, on && { fontWeight: "700" }]}>{km(r)}</Text>
+                  {on && <Icon name="check" size={20} color={C.link} />}
+                </Pressable>
+              );
+            })}
+          </View>
+        </View>
+      </Modal>
+    </>
+  );
+}
 
 export default function Find() {
   const { t, tf, lang } = useI18n();
@@ -77,19 +122,33 @@ export default function Find() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.cat, params.near, params.view]);
 
-  const filtered = useMemo(() => places.filter((p) => cats[p.cat]), [places, cats]);
+  // Memoised: the map fits its view to `shown` whenever it changes, so typing in the
+  // search field must not hand it a new list.
+  const { independents, chains, showChains, shown } = useMemo(() => {
+    const filtered = places.filter((p) => cats[p.cat]);
+    const independents = filtered.filter((p) => !p.chain);
+    const chains = filtered.filter((p) => p.chain);
+    const showChains = chains.length > 0 && (!independentOnly || independents.length === 0);
+    return { independents, chains, showChains, shown: showChains ? independents.concat(chains) : independents };
+  }, [places, cats, independentOnly]);
   const all = CATEGORY_ORDER.every((c) => cats[c]);
-  const independents = filtered.filter((p) => !p.chain);
-  const chains = filtered.filter((p) => p.chain);
-  const showChains = chains.length > 0 && (!independentOnly || independents.length === 0);
-  const shown = showChains ? independents.concat(chains) : independents;
+
+  const pickRadius = (r: number) => { setRadius(r); if (spot) load(spot, r); };
+  // "All" plus the categories. With everything shown, tapping a category shows
+  // only that one; after that, taps add or remove. None left, or "All": everything.
+  const toggleCat = (c: Category) => setCats((s) => {
+    if (CATEGORY_ORDER.every((k) => s[k])) return { ...allCats(false), [c]: true };
+    const next = { ...s, [c]: !s[c] };
+    return CATEGORY_ORDER.some((k) => next[k]) ? next : allCats(true);
+  });
 
   // "Search further: 25 km" when only chains (or nothing) are near.
   const nextRadius = RADII.find((r) => r > radius);
-  const widen = () => { if (nextRadius) { setRadius(nextRadius); if (spot) load(spot, nextRadius); } };
-  const WidenButton = () => nextRadius ? (
-    <Pressable style={[S.btnGhost, { alignSelf: "flex-start", marginBottom: 8 }]} onPress={widen} accessibilityRole="button">
-      <Text style={S.btnGhostText}>🔍 {tf("widenSearch", { km: nextRadius / 1000 })}</Text>
+  const widen = nextRadius ? (
+    <Pressable style={({ pressed }) => [S.btnGhost, S.row, { alignSelf: "flex-start", gap: 8, minHeight: 44, marginBottom: 8 }, pressed && S.pressed]}
+      onPress={() => pickRadius(nextRadius)} accessibilityRole="button">
+      <Icon name="search" size={18} />
+      <Text style={S.btnGhostText}>{tf("widenSearch", { km: nextRadius / 1000 })}</Text>
     </Pressable>
   ) : null;
 
@@ -105,109 +164,132 @@ export default function Find() {
     chains.forEach((p) => rows.push({ kind: "place", p }));
   }
 
-  return (
-    <SafeAreaView style={S.screen} edges={["top"]}>
-      <View style={{ paddingHorizontal: 16, paddingTop: 8, gap: 8 }}>
-        <View style={[S.row, { justifyContent: "space-between" }]}>
-          <View style={[S.row, { gap: 6 }]}>
-            <Emoji char="🐾" size={22} box={32} />
-            <Text style={S.h1}>Snuffel</Text>
-          </View>
-          <Pressable onPress={() => router.push("/settings")} hitSlop={12} accessibilityRole="button" accessibilityLabel={t("app_settings")}>
-            <Text style={{ fontSize: 22 }}>⚙️</Text>
-          </Pressable>
-        </View>
-        <View style={[S.row, { gap: 8 }]}>
-          <Input
-            style={[S.input, { flex: 1 }]} value={query} onChangeText={setQuery}
-            placeholder={t("searchPlaceholder")} returnKeyType="search" onSubmitEditing={byAddress} autoCorrect={false}
-          />
-          <Pressable style={S.btn} onPress={byAddress} accessibilityRole="button"><Text style={S.btnText}>{t("search")}</Text></Pressable>
-        </View>
-        <Pressable style={S.btnGhost} onPress={nearMe} accessibilityRole="button"><Text style={S.btnGhostText}>📍 {t("useLocation")}</Text></Pressable>
-        {/* "All" plus the categories. With everything shown, tapping a category shows
-            only that one; after that, taps add or remove. None left, or "All": everything. */}
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6 }}>
-          <Pressable onPress={() => setCats(allCats(true))} accessibilityRole="button" accessibilityState={{ selected: all }}
-            style={{ paddingHorizontal: 12, paddingVertical: 6, borderRadius: 16, backgroundColor: all ? C.brandDark : C.chip, borderWidth: 1, borderColor: all ? C.brandDark : C.line }}>
-            <Text style={{ color: all ? C.onBrand : C.text, fontWeight: "600" }}>{t("filterAll")}</Text>
-          </Pressable>
-          {CATEGORY_ORDER.map((c) => {
-            const on = !all && cats[c];
+  // The chips, the filter row and the result line: in the list they scroll with the results.
+  const filters = (
+    <View style={{ gap: 8, paddingBottom: 8 }}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps="handled"
+        style={{ marginHorizontal: -16 }} contentContainerStyle={{ gap: 6, paddingHorizontal: 16 }}>
+        <Pressable onPress={() => setCats(allCats(true))} accessibilityRole="button" accessibilityState={{ selected: all }}
+          style={({ pressed }) => [styles.chip, { paddingHorizontal: 16, backgroundColor: all ? C.brandDark : C.card, borderColor: all ? C.brandDark : C.line }, pressed && S.pressed]}>
+          <Text style={[styles.chipText, { color: all ? C.onBrand : C.text, fontWeight: "600" }]}>{t("filterAll")}</Text>
+        </Pressable>
+        {CATEGORY_ORDER.map((c) => {
+          const on = !all && cats[c];
+          // Chosen: the category's tint, bold text in its deep shade and a check (not colour alone)
+          return (
+            <Pressable key={c} onPress={() => toggleCat(c)} accessibilityRole="checkbox" accessibilityState={{ checked: on }}
+              style={({ pressed }) => [styles.chip, { backgroundColor: on ? C.catDisc[c] : C.card, borderColor: on ? C.cat[c] : C.line }, pressed && S.pressed]}>
+              <MarkerDot cat={c} />
+              <Text style={[styles.chipText, { color: on ? C.catInk[c] : C.text, fontWeight: on ? "700" : "400" }]}>{t(CATEGORIES[c].key)}</Text>
+              {on && <Icon name="check" size={16} color={C.catInk[c]} />}
+            </Pressable>
+          );
+        })}
+      </ScrollView>
+
+      <View style={[S.row, { flexWrap: "wrap", gap: 8 }]}>
+        <Pressable onPress={() => setIndependentOnly((v) => !v)} accessibilityRole="switch" accessibilityState={{ checked: independentOnly }}
+          style={({ pressed }) => [styles.filter, { gap: 6, paddingHorizontal: 10, borderWidth: 1.5, borderColor: independentOnly ? C.ok : C.line, backgroundColor: C.card }, pressed && S.pressed]}>
+          <Icon name={independentOnly ? "check-square" : "square"} size={16} color={independentOnly ? C.ok : C.muted} />
+          <Text style={[styles.filterText, { color: independentOnly ? C.ok : C.text }]}>{t("independentOnly")}</Text>
+        </Pressable>
+        <RadiusButton value={radius} onChange={pickRadius} />
+        {/* List or map: a segmented control. marginLeft auto: on the right, also when it wraps to a line of its own. */}
+        <View accessibilityRole="radiogroup" style={[S.row, { marginLeft: "auto", padding: 2, borderRadius: 12, borderWidth: 1, borderColor: C.line, backgroundColor: C.chip }]}>
+          {(["list", "map"] as const).map((v) => {
+            const on = view === v;
             return (
-              <Pressable key={c} onPress={() => setCats((s) => {
-                if (CATEGORY_ORDER.every((k) => s[k])) return { ...allCats(false), [c]: true };
-                const next = { ...s, [c]: !s[c] };
-                return CATEGORY_ORDER.some((k) => next[k]) ? next : allCats(true);
-              })} accessibilityRole="checkbox" accessibilityState={{ checked: on }}
-                style={{ paddingHorizontal: 10, paddingVertical: 6, borderRadius: 16, backgroundColor: on ? C.cat[c] + "22" : C.chip, borderWidth: 1, borderColor: on ? C.cat[c] : C.line,
-                  flexDirection: "row", alignItems: "center", gap: 5 }}>
-                {/* dark: on the category's light disc (the negative margin keeps the chip's height) */}
-                <CategoryIcon cat={c} size={14} box={24} style={{ marginVertical: -4, marginLeft: -4 }} />
-                <Text style={{ color: C.text }}>{t(CATEGORIES[c].key)}</Text>
+              <Pressable key={v} onPress={() => setView(v)} accessibilityRole="radio" accessibilityState={{ checked: on }}
+                style={({ pressed }) => [styles.segment, { backgroundColor: on ? C.strong : "transparent" }, pressed && S.pressed]}>
+                <Text style={[styles.filterText, { color: on ? C.onStrong : C.text, fontWeight: on ? "700" : "500" }]}>{t(v === "list" ? "viewList" : "viewMap")}</Text>
               </Pressable>
             );
           })}
-        </ScrollView>
-        <View style={[S.row, { justifyContent: "space-between" }]}>
-          <View style={[S.row, { gap: 6 }]}>
-            <Toggle value={independentOnly} onValueChange={setIndependentOnly} />
-            <Text style={S.body}>{t("independentOnly")}</Text>
-          </View>
-          <View style={[S.row, { gap: 6 }]}>
-            {(["list", "map"] as const).map((v) => (
-              <Pressable key={v} onPress={() => setView(v)} style={[S.btnGhost, { paddingVertical: 6, backgroundColor: view === v ? C.brand : C.chip }]}>
-                <Text style={[S.btnGhostText, { color: view === v ? C.onBrand : C.text }]}>{t(v === "list" ? "viewList" : "viewMap")}</Text>
-              </Pressable>
-            ))}
-          </View>
         </View>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6, alignItems: "center" }}>
-          <Text style={S.muted}>{t("radius")}:</Text>
-          {RADII.map((r) => (
-            <Pressable key={r} onPress={() => { setRadius(r); if (spot) load(spot, r); }}
-              style={{ paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12, backgroundColor: radius === r ? C.strong : C.chip }}>
-              <Text style={{ color: radius === r ? C.onStrong : C.text }}>{r / 1000} km</Text>
-            </Pressable>
-          ))}
-        </ScrollView>
-        {spot && !busy && !error && (
-          <Text style={S.muted} numberOfLines={1}>
-            {tf("countResults", { n: shown.length })}{spot.label ? " · " + shortLabel(spot.label) : ""}
-          </Text>
-        )}
-        {offline && !busy && <Text style={[S.muted, { color: C.warn }]}>{t("app_offline")}</Text>}
-        {!!error && <Text style={[S.body, { color: C.danger }]}>{error}</Text>}
       </View>
 
-      <View style={{ flex: 1, marginTop: 8 }}>
-        {busy ? (
-          <View style={{ flex: 1, alignItems: "center", paddingTop: 40, gap: 10 }}>
-            <ActivityIndicator size="large" color={C.brand} />
-            <Text style={S.muted}>{t("loading")}</Text>
+      {spot && !busy && !error && (
+        <Text style={S.muted} numberOfLines={1}>
+          {tf("countResults", { n: shown.length })}{spot.label ? " · " + shortLabel(spot.label) : ""}
+        </Text>
+      )}
+      {offline && !busy && <Text style={[S.muted, { color: C.warn }]}>{t("app_offline")}</Text>}
+      {!!error && <Text style={[S.body, { color: C.danger }]} accessibilityLiveRegion="polite">{error}</Text>}
+    </View>
+  );
+
+  return (
+    <SafeAreaView style={S.screen} edges={["top"]}>
+      <View style={{ paddingHorizontal: 16, paddingTop: 4, paddingBottom: 8, gap: 8 }}>
+        <View style={[S.row, { justifyContent: "space-between", minHeight: 44 }]}>
+          <View style={[S.row, { gap: 8 }]} accessible accessibilityRole="header" accessibilityLabel="Snuffel">
+            <Symbol name="paw" size={24} color={C.link} />
+            <Text style={S.h1}>Snuffel</Text>
           </View>
-        ) : view === "map" ? (
-          <PlaceMap places={shown} center={spot} />
-        ) : !spot ? (
-          <ScrollView contentContainerStyle={S.pad}>
-            <Text style={S.h2}>{t("heroTitle")}</Text>
-            <Text style={[S.body, { marginTop: 6 }]}>{t("heroSub")}</Text>
-            <Text style={[S.muted, { marginTop: 10 }]}>{t("countryNote")}</Text>
-          </ScrollView>
-        ) : (
-          <FlatList
-            data={rows}
-            keyExtractor={(r, i) => (r.kind === "place" ? r.p.id : r.kind + i)}
-            contentContainerStyle={{ padding: 16, paddingTop: 4 }}
-            ListEmptyComponent={<View style={{ gap: 8 }}><Text style={S.muted}>🐶 {t("noResults")} {t("noResultsHint")}</Text><WidenButton /></View>}
-            renderItem={({ item }) =>
-              item.kind === "place" ? <PlaceCard p={item.p} /> :
-              item.kind === "widen" ? <WidenButton /> :
-              item.kind === "divider" ? <Text style={[S.h2, { marginVertical: 8 }]}>{t("chainsHeading")}</Text> :
-              <Text style={[S.muted, { marginVertical: 8 }]}>{item.text}</Text>}
+          <Pressable onPress={() => router.push("/settings")} accessibilityRole="button" accessibilityLabel={t("app_settings")}
+            style={({ pressed }) => [styles.iconButton, { marginRight: -10 }, pressed && S.pressed]}>
+            <Icon name="settings" size={24} color={C.muted} />
+          </Pressable>
+        </View>
+        {/* The search field, with "Near me" inside it */}
+        <View style={[S.row, { minHeight: 52, gap: 8, paddingLeft: 12, paddingRight: 4, borderRadius: 12, borderWidth: 1, borderColor: C.fieldLine, backgroundColor: C.card }]}>
+          <Icon name="search" size={20} color={C.muted} />
+          <Input
+            style={{ flex: 1, minHeight: 44, paddingVertical: 0, paddingHorizontal: 0, fontSize: 16, color: C.text }}
+            value={query} onChangeText={setQuery} placeholder={t("app_searchWhere")} accessibilityLabel={t("app_searchWhere")}
+            returnKeyType="search" onSubmitEditing={byAddress} autoCorrect={false} clearButtonMode="while-editing"
           />
-        )}
+          <Pressable onPress={nearMe} accessibilityRole="button"
+            style={({ pressed }) => [S.row, { minHeight: 44, gap: 6, paddingHorizontal: 12, borderRadius: 10, backgroundColor: C.chip }, pressed && S.pressed]}>
+            <Icon name="crosshair" size={18} color={C.link} />
+            <Text style={[styles.filterText, { color: C.link }]} numberOfLines={1}>{t("app_nearMe")}</Text>
+          </Pressable>
+        </View>
       </View>
+
+      {view === "list" && spot && !busy ? (
+        <FlatList
+          data={rows}
+          keyExtractor={(r, i) => (r.kind === "place" ? r.p.id : r.kind + i)}
+          ListHeaderComponent={filters}
+          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+          ListEmptyComponent={error ? undefined : <View style={{ gap: 8 }}><Text style={S.muted}>{t("noResults")} {t("noResultsHint")}</Text>{widen}</View>}
+          renderItem={({ item }) =>
+            item.kind === "place" ? <PlaceCard p={item.p} /> :
+            item.kind === "widen" ? widen :
+            item.kind === "divider" ? <Text style={[S.h2, { marginVertical: 8 }]} accessibilityRole="header">{t("chainsHeading")}</Text> :
+            <Text style={[S.muted, { marginVertical: 8 }]}>{item.text}</Text>}
+        />
+      ) : (
+        <View style={{ flex: 1 }}>
+          <View style={{ paddingHorizontal: 16 }}>{filters}</View>
+          {busy ? (
+            <View style={{ flex: 1, alignItems: "center", paddingTop: 40, gap: 10 }}>
+              <ActivityIndicator size="large" color={C.brand} />
+              <Text style={S.muted}>{t("loading")}</Text>
+            </View>
+          ) : view === "map" ? (
+            <View style={{ flex: 1 }}><PlaceMap places={shown} center={spot} /></View>
+          ) : (
+            <ScrollView contentContainerStyle={[S.pad, { paddingTop: 8 }]} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
+              <Text style={S.h2}>{t("heroTitle")}</Text>
+              <Text style={[S.body, { marginTop: 6 }]}>{t("heroSub")}</Text>
+              <Text style={[S.muted, { marginTop: 10 }]}>{t("countryNote")}</Text>
+            </ScrollView>
+          )}
+        </View>
+      )}
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  chip: { minHeight: 44, paddingHorizontal: 14, borderRadius: 22, borderWidth: 1, flexDirection: "row", alignItems: "center", gap: 7 },
+  chipText: { fontSize: 15 },
+  filter: { minHeight: 44, borderRadius: 12, borderWidth: 1, flexDirection: "row", alignItems: "center" },
+  filterText: { fontSize: 14, fontWeight: "700" },
+  segment: { minHeight: 40, minWidth: 52, paddingHorizontal: 12, borderRadius: 10, alignItems: "center", justifyContent: "center" },
+  iconButton: { width: 44, height: 44, alignItems: "center", justifyContent: "center" }
+});

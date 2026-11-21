@@ -1,37 +1,64 @@
 // Settings: language, appearance, offline home area, beta features, privacy and about.
-import { useEffect, useState } from "react";
+// The language is one row that opens a searchable list (src/app/language.tsx).
+import { useEffect, useState, type ReactNode } from "react";
 import { ActivityIndicator, Linking, Pressable, ScrollView, Text, View } from "react-native";
 import Constants from "expo-constants";
 import { router } from "expo-router";
-import { LANGUAGES, useI18n } from "../i18n";
+import { LANGUAGES, phoneLanguage, useI18n } from "../i18n";
 import { useBeta } from "../lib/beta";
 import { CONFIG } from "../lib/config";
-import { Toggle } from "../ui/Toggle";
+import { ToggleRow } from "../ui/Toggle";
 import { SentReports } from "../ui/Rating";
 import { kvGetJson } from "../lib/db";
 import { currentPosition, LocationDeniedError } from "../lib/geo";
 import { pinHomeArea } from "../lib/places";
+import { Icon, Symbol, type IconName } from "../ui/Icon";
 import { Input } from "../ui/Input";
 import { useTheme, type AppearanceChoice } from "../ui/theme";
+
+/** A card's title with its icon (a heading for screen readers). */
+function Title({ icon, children }: { icon: ReactNode; children: string }) {
+  const { S } = useTheme();
+  return (
+    <View style={[S.row, { gap: 10 }]} accessible accessibilityRole="header" accessibilityLabel={children}>
+      {icon}
+      <Text style={[S.h2, { flex: 1 }]}>{children}</Text>
+    </View>
+  );
+}
+
+/** A link out of the app: a row of 44 px with the external-link icon. */
+function OutLink({ label, url, quiet }: { label: string; url: string; quiet?: boolean }) {
+  const { C, S } = useTheme();
+  const color = quiet ? C.muted : C.link;
+  return (
+    <Pressable onPress={() => Linking.openURL(url).catch(() => undefined)} accessibilityRole="link"
+      style={({ pressed }) => [S.row, { gap: 6, minHeight: 44 }, pressed && S.pressed]}>
+      <Text style={[quiet ? S.muted : { color, fontWeight: "600" }, { flexShrink: 1 }]}>{label}</Text>
+      <Icon name="external-link" size={quiet ? 14 : 16} color={color} />
+    </Pressable>
+  );
+}
 
 // Appearance: like the phone (light or dark, also when the phone switches at
 // sunset), or always light or always dark. Kept on the phone.
 function AppearanceCard() {
   const { t } = useI18n();
   const { C, S, appearance, setAppearance } = useTheme();
-  const options: [AppearanceChoice, string][] = [
-    [null, t("app_appearanceAuto")], ["light", t("app_appearanceLight")], ["dark", t("app_appearanceDark")]
+  const options: [AppearanceChoice, string, IconName][] = [
+    [null, t("app_appearanceAuto"), "smartphone"], ["light", t("app_appearanceLight"), "sun"], ["dark", t("app_appearanceDark"), "moon"]
   ];
   return (
     <View style={[S.card, { gap: 10 }]}>
-      <Text style={S.h2}>🌓 {t("app_appearance")}</Text>
+      <Title icon={<Icon name="moon" size={20} color={C.muted} />}>{t("app_appearance")}</Title>
       <View style={[S.row, { flexWrap: "wrap", gap: 6 }]} accessibilityRole="radiogroup" accessibilityLabel={t("app_appearance")}>
-        {options.map(([value, label]) => {
+        {options.map(([value, label, icon]) => {
           const on = appearance === value;
           return (
             <Pressable key={value ?? "auto"} onPress={() => setAppearance(value)} accessibilityRole="radio" accessibilityState={{ checked: on }}
-              style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: 16, backgroundColor: on ? C.brand : C.chip }}>
-              <Text style={{ color: on ? C.onBrand : C.text }}>{label}</Text>
+              style={({ pressed }) => [S.row, { gap: 6, minHeight: 44, paddingHorizontal: 14, borderRadius: 22, backgroundColor: on ? C.brand : C.chip }, pressed && S.pressed]}>
+              <Icon name={icon} size={16} color={on ? C.onBrand : C.text} />
+              <Text style={{ color: on ? C.onBrand : C.text, fontWeight: on ? "700" : "400" }}>{label}</Text>
             </Pressable>
           );
         })}
@@ -62,31 +89,33 @@ function BetaCard() {
   if (!beta.ready) return null;
   return (
     <View style={[S.card, { gap: 10 }]}>
-      <Text style={S.h2}>🧪 {t("app_beta")}</Text>
+      <Title icon={<Symbol name="flask-outline" size={20} color={C.muted} />}>{t("app_beta")}</Title>
       {!beta.joined ? (
         <>
           <Text style={S.body}>{t("app_betaText")}</Text>
           <View style={[S.row, { gap: 8 }]}>
-            <Input style={[S.input, { flex: 1 }]} value={code} onChangeText={(v) => { setCode(v); setMsg(null); }}
+            <Input style={[S.input, { flex: 1, minHeight: 44 }]} value={code} onChangeText={(v) => { setCode(v); setMsg(null); }}
               placeholder={t("app_betaCode")} autoCapitalize="characters" autoCorrect={false} autoComplete="off"
               maxLength={64} returnKeyType="done" onSubmitEditing={join} accessibilityLabel={t("app_betaCode")} />
-            <Pressable style={[S.btn, (busy || !code.trim()) && { opacity: 0.5 }]} onPress={join} disabled={busy || !code.trim()} accessibilityRole="button">
+            <Pressable style={({ pressed }) => [S.btn, (busy || !code.trim()) && { opacity: 0.5 }, pressed && S.pressed]} onPress={join}
+              disabled={busy || !code.trim()} accessibilityRole="button" accessibilityState={{ disabled: busy || !code.trim(), busy }}>
               {busy ? <ActivityIndicator color={C.onBrand} /> : <Text style={S.btnText}>{t("app_betaJoin")}</Text>}
             </Pressable>
           </View>
-          {!!msg && <Text style={[S.muted, { color: C.warn }]}>{msg}</Text>}
+          {!!msg && <Text style={[S.muted, { color: C.warn }]} accessibilityLiveRegion="polite">{msg}</Text>}
         </>
       ) : (
         <>
-          <Text style={[S.body, { color: C.ok, fontWeight: "600" }]}>✓ {t("app_betaJoined")}</Text>
-          <View style={[S.row, { gap: 12 }]}>
-            <View style={{ flex: 1, gap: 4 }}>
-              <Text style={[S.body, { fontWeight: "700" }]}>🎧 {t("app_betaVoice")}</Text>
-              <Text style={S.muted}>{t("app_betaVoiceText")}</Text>
-            </View>
-            <Toggle value={beta.voiceOn} label={t("app_betaVoice")} onValueChange={(on) => { beta.setVoiceOn(on).catch(() => undefined); }} />
+          <View style={[S.row, { gap: 8, alignItems: "flex-start" }]}>
+            <Icon name="check-circle" size={18} color={C.ok} style={{ marginTop: 2 }} />
+            <Text style={[S.body, { flex: 1, color: C.ok, fontWeight: "600" }]}>{t("app_betaJoined")}</Text>
           </View>
-          <Pressable onPress={() => { beta.leave().catch(() => undefined); }} hitSlop={8} accessibilityRole="button">
+          <ToggleRow value={beta.voiceOn} onValueChange={(on) => { beta.setVoiceOn(on).catch(() => undefined); }}
+            label={t("app_betaVoice")} detail={t("app_betaVoiceText")} bold
+            icon={<Icon name="headphones" size={20} color={C.muted} style={{ alignSelf: "flex-start", marginTop: 1 }} />}
+            style={{ alignItems: "flex-start" }} />
+          <Pressable onPress={() => { beta.leave().catch(() => undefined); }} accessibilityRole="button"
+            style={({ pressed }) => [{ minHeight: 44, justifyContent: "center", alignSelf: "flex-start" }, pressed && S.pressed]}>
             <Text style={S.muted}>{t("app_betaLeave")}</Text>
           </Pressable>
         </>
@@ -96,7 +125,7 @@ function BetaCard() {
 }
 
 export default function Settings() {
-  const { t, tf, choice, setLanguage } = useI18n();
+  const { t, tf, choice } = useI18n();
   const { C, S } = useTheme();
   const [home, setHome] = useState<{ at: number } | null>(null);
   const [busy, setBusy] = useState(false);
@@ -115,52 +144,64 @@ export default function Settings() {
     } finally { setBusy(false); }
   };
 
-  const option = (code: string | null, label: string) => (
-    <Pressable key={code ?? "auto"} onPress={() => setLanguage(code)}
-      style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: 16, backgroundColor: choice === code ? C.brand : C.chip }}>
-      <Text style={{ color: choice === code ? C.onBrand : C.text }}>{label}</Text>
-    </Pressable>
-  );
+  // "Phone language (English)", or the chosen language's own name
+  const nameOf = (code: string) => LANGUAGES.find((l) => l.code === code)?.name ?? code;
+  const language = choice ? nameOf(choice) : `${t("app_languageAuto")} (${nameOf(phoneLanguage())})`;
 
   return (
     <ScrollView style={S.screen} contentContainerStyle={{ padding: 16, gap: 16 }}>
-      <View style={[S.card, { gap: 10 }]}>
-        <Text style={S.h2}>🌍 {t("app_language")}</Text>
-        <View style={[S.row, { flexWrap: "wrap", gap: 6 }]}>
-          {option(null, t("app_languageAuto"))}
-          {LANGUAGES.map((l) => option(l.code, l.name))}
+      <Pressable onPress={() => router.push("/language")} accessibilityRole="button" accessibilityLabel={`${t("app_language")}: ${language}`}
+        style={({ pressed }) => [S.card, S.row, { gap: 10, minHeight: 56 }, pressed && S.pressed]}>
+        <Icon name="globe" size={20} color={C.muted} />
+        <View style={{ flex: 1, gap: 2 }}>
+          <Text style={S.h2}>{t("app_language")}</Text>
+          <Text style={S.muted}>{language}</Text>
         </View>
-      </View>
+        <Icon name="chevron-right" size={20} color={C.muted} />
+      </Pressable>
 
       <AppearanceCard />
 
       <View style={[S.card, { gap: 8 }]}>
-        <Text style={S.h2}>📶 {t("app_offlineArea")}</Text>
+        <Title icon={<Icon name="wifi-off" size={20} color={C.muted} />}>{t("app_offlineArea")}</Title>
         <Text style={S.body}>{t("app_offlineAreaText")}</Text>
-        <Pressable style={S.btn} onPress={setHomeHere} disabled={busy} accessibilityRole="button">
-          {busy ? <ActivityIndicator color={C.onBrand} /> : <Text style={S.btnText}>🏠 {t("app_setHomeHere")}</Text>}
+        <Pressable style={({ pressed }) => [S.btn, S.row, { gap: 8 }, pressed && S.pressed]} onPress={setHomeHere} disabled={busy}
+          accessibilityRole="button" accessibilityState={{ busy }}>
+          {busy ? <ActivityIndicator color={C.onBrand} /> : <>
+            <Icon name="home" size={18} color={C.onBrand} />
+            <Text style={[S.btnText, { flexShrink: 1 }]}>{t("app_setHomeHere")}</Text>
+          </>}
         </Pressable>
-        {!!msg && <Text style={S.muted}>{msg}</Text>}
-        {!msg && home && <Text style={S.muted}>✓ {new Date(home.at).toLocaleDateString()}</Text>}
+        {!!msg && <Text style={S.muted} accessibilityLiveRegion="polite">{msg}</Text>}
+        {!msg && home && (
+          <View style={[S.row, { gap: 6 }]}>
+            <Icon name="check" size={14} color={C.muted} />
+            <Text style={S.muted}>{new Date(home.at).toLocaleDateString()}</Text>
+          </View>
+        )}
       </View>
 
       <BetaCard />
 
       <View style={[S.card, { gap: 6 }]}>
-        <Text style={S.h2}>🔒 {t("app_privacy")}</Text>
+        <Title icon={<Icon name="lock" size={20} color={C.muted} />}>{t("app_privacy")}</Title>
         <Text style={S.body}>{t("app_privacyText")}</Text>
         <Text style={S.body}>{t("app_fbPrivacy")}</Text>
         <SentReports />
-        <Pressable onPress={() => Linking.openURL(CONFIG.privacy)}><Text style={{ color: C.link, fontWeight: "600" }}>{t("app_privacy")} ↗</Text></Pressable>
+        <OutLink label={t("app_privacy")} url={CONFIG.privacy} />
       </View>
 
       <View style={[S.card, { gap: 6 }]}>
-        <Text style={S.h2}>🐾 {t("app_about")}</Text>
+        <Title icon={<Symbol name="paw" size={20} color={C.link} />}>{t("app_about")}</Title>
         <Text style={S.body}>{t("app_aboutText")}</Text>
         <Text style={[S.body, { fontStyle: "italic" }]}>{t("app_aboutThanks")}</Text>
-        <Pressable onPress={() => Linking.openURL(CONFIG.website)}><Text style={{ color: C.link, fontWeight: "600" }}>{t("website")} ↗</Text></Pressable>
-        <Pressable onPress={() => Linking.openURL("https://www.openstreetmap.org/copyright")}><Text style={S.muted}>{t("footerProto")} ↗</Text></Pressable>
-        <Pressable onPress={() => router.push("/welcome")} accessibilityRole="button"><Text style={{ color: C.link, fontWeight: "600" }}>🐾 {t("app_ob_replay")}</Text></Pressable>
+        <OutLink label={t("website")} url={CONFIG.website} />
+        <OutLink label={t("footerProto")} url="https://www.openstreetmap.org/copyright" quiet />
+        <Pressable onPress={() => router.push("/welcome")} accessibilityRole="button"
+          style={({ pressed }) => [S.row, { gap: 6, minHeight: 44 }, pressed && S.pressed]}>
+          <Icon name="play-circle" size={16} color={C.link} />
+          <Text style={{ color: C.link, fontWeight: "600", flexShrink: 1 }}>{t("app_ob_replay")}</Text>
+        </Pressable>
         <Text style={S.muted}>{tf("app_version", { v: Constants.expoConfig?.version || "?" })}</Text>
       </View>
     </ScrollView>
