@@ -7,6 +7,7 @@ import assert from "node:assert";
 import { namedFlavor } from "@protomaps/basemaps";
 import type { Category } from "../src/core/classify.ts";
 import { DARK_MAP_LABELS, PALETTES, type Palette, type Scheme, type UrgencyLevel } from "../src/ui/palette.ts";
+import { DARK_MAP_LABELS_MORE, MARKER_RING } from "../src/ui/mapPalette.ts";
 
 let passed = 0, failed = 0;
 function test(name: string, fn: () => void) {
@@ -132,6 +133,23 @@ for (const label of Object.keys(DARK_MAP_LABELS)) {
   rows.push(`dark   map ${label.padEnd(42)} ${darkMap[label]} on ${darkMap[label + "_halo"]}  ${r.toFixed(2)}`);
   test(`${label} on its halo: ${r.toFixed(2)} >= 4.5 and >= light's ${was.toFixed(2)}`, () => assert.ok(r >= TEXT && r >= was, `${r.toFixed(2)}:1`));
 }
+// River, lake and sea names, region names and country names (DARK_MAP_LABELS_MORE in
+// src/ui/mapPalette.ts), each on what Protomaps draws under it: were 2.7, 1.5 and 2.5:1.
+const MORE_UNDER: Record<string, string> = { ocean_label: "water", state_label: "state_label_halo", country_label: "earth" };
+const darkMapAll = { ...darkMap, ...DARK_MAP_LABELS_MORE } as Record<string, string>;
+test("every extra dark label has a known background", () =>
+  assert.deepStrictEqual(Object.keys(DARK_MAP_LABELS_MORE).sort(), Object.keys(MORE_UNDER).sort()));
+for (const [label, under] of Object.entries(MORE_UNDER)) {
+  const r = contrast(darkMapAll[label], darkMapAll[under]);
+  const was = contrast(lightMap[label], lightMap[under]);
+  rows.push(`dark   map ${label.padEnd(42)} ${darkMapAll[label]} on ${darkMapAll[under]}  ${r.toFixed(2)}`);
+  test(`${label} on ${under}: ${r.toFixed(2)} >= 4.5 and >= light's ${was.toFixed(2)}`, () => assert.ok(r >= TEXT && r >= was, `${r.toFixed(2)}:1`));
+}
+test("the extra dark labels stay below the city names (cities first)", () => {
+  for (const label of Object.keys(DARK_MAP_LABELS_MORE))
+    assert.ok(luminance(darkMapAll[label]) <= luminance(darkMapAll.city_label), `${label} ${darkMapAll[label]} is brighter than city_label`);
+});
+
 // Markers: the dark category colours against what lies under them on the dark map.
 const UNDER = ["earth", "buildings", "minor_a", "major", "highway", "water", "park_b"];
 test("dark markers (cat) stand out from the dark map: >= 3", () => {
@@ -140,6 +158,39 @@ test("dark markers (cat) stand out from the dark map: >= 3", () => {
     assert.ok(r >= UI, `${c} ${colour} on ${u} ${darkMap[u]}: ${r.toFixed(2)}`);
   }
 });
+
+// The marker's rings (src/ui/PlaceMap.tsx): a white ring inside a dark one. Whatever lies
+// under a marker, one of the two is its edge at 3:1 or more: the dark ring on the light
+// map (with the white ring alone, shop amber was 1.6:1 on light land), the white ring on
+// the dark map. Checked on every map colour a marker can sit on, also parks and woods.
+console.log("marker rings");
+const MAP_UNDER = [...UNDER, "background", "park_a", "wood_a", "wood_b", "scrub_b", "sand", "pedestrian", "minor_b", "link"];
+test("light map: the dark outer ring >= 3 on every map colour", () => {
+  for (const u of MAP_UNDER) {
+    const r = contrast(MARKER_RING.outer, lightMap[u]);
+    assert.ok(r >= UI, `outer ${MARKER_RING.outer} on ${u} ${lightMap[u]}: ${r.toFixed(2)}`);
+  }
+});
+test("dark map: the white inner ring >= 3 on every map colour", () => {
+  for (const u of MAP_UNDER) {
+    const r = contrast(MARKER_RING.inner, darkMap[u]);
+    assert.ok(r >= UI, `inner ${MARKER_RING.inner} on ${u} ${darkMap[u]}: ${r.toFixed(2)}`);
+  }
+});
+test("the two rings are apart (>= 3), so each shows against the other", () =>
+  assert.ok(contrast(MARKER_RING.inner, MARKER_RING.outer) >= UI));
+// The same marker as the dot on Find's category chips (the map's legend): one of its
+// rings stands out on the chip (C.card) and, when the chip is chosen, on its catDisc.
+for (const scheme of ["light", "dark"] as Scheme[]) {
+  const C = PALETTES[scheme];
+  test(`${scheme}: the legend dot's rings, one of them >= 3 on the chip and on every catDisc`, () => {
+    const under: [string, string][] = [["card", C.card], ...Object.entries(C.catDisc).map(([c, d]) => [`catDisc ${c}`, d] as [string, string])];
+    for (const [what, bg] of under) {
+      const r = Math.max(contrast(MARKER_RING.inner, bg), contrast(MARKER_RING.outer, bg));
+      assert.ok(r >= UI, `rings on ${what} ${bg}: ${r.toFixed(2)}`);
+    }
+  });
+}
 
 if (process.argv.includes("--table")) console.log("\n" + rows.join("\n"));
 console.log(`\n${passed} passed, ${failed} failed`);
