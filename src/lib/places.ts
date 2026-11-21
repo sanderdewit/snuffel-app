@@ -7,7 +7,8 @@ import { CONFIG } from "./config";
 import { db, dbReady, kvGetJson, kvSetJson } from "./db";
 import { classify, type Category } from "../core/classify";
 import { detect, type ChainRef } from "../core/chains";
-import { evaluate, tzFor } from "../core/hours";
+import { evaluate, nextChange, tzFor, week } from "../core/hours";
+import { hoursStatus, type HoursEngine, type Status } from "./hourstext";
 
 export interface Place {
   id: string;
@@ -155,9 +156,16 @@ function address(tags: Record<string, string>): string {
   return parts.join(", ");
 }
 
+/** The opening-hours rules (shared hours.js), for the texts in hourstext.ts. */
+export const HOURS: HoursEngine = { evaluate, nextChange, week };
+/** The place's time zone: its hours are read on its own clock, not the phone's. */
+export const placeTz = (p: Pick<Place, "cc" | "lat" | "lon">) => tzFor(p.cc, p.lat, p.lon);
+/** Open now and until when, read fresh (a list's openNow is from when it was searched). */
+export const hoursNow = (p: Place, now: Date = new Date()): Status => hoursStatus(HOURS, p.hours, placeTz(p), now);
+
 export function refreshOpenState<T extends Place>(places: T[]): T[] {
   for (const p of places) {
-    const oh = evaluate(p.hours, null, tzFor(p.cc, p.lat, p.lon));
+    const oh = evaluate(p.hours, null, placeTz(p));
     p.is247 = !!(oh && oh.always);
     p.openNow = oh ? (oh.always ? true : oh.open) : null;
   }
