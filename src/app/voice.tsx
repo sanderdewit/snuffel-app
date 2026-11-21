@@ -3,7 +3,7 @@
 // or when the screen closes. The transcript is shown, not stored. With a dog
 // chosen, hanging up (or the time limit) brings a note for its file of the signs
 // the owner mentioned: added only when the owner taps it, as in the chat (undo).
-// The bars under the status show the microphone's level (lit in the brand colour
+// The bars under the status show the microphone's level (lit in the link colour
 // while the AI hears speech), so a silent microphone is visible; when the phone
 // sends no sound at all the call ends with a message (realtime.ts) and can be
 // started again here.
@@ -18,6 +18,7 @@ import { getDog, type Dog } from "../lib/dogs";
 import { levelBars } from "../lib/micwatch";
 import { startVoice, type VoiceCall, type VoiceEnd, type VoiceLine, type VoiceState } from "../lib/realtime";
 import type { VoiceNote } from "../lib/voicenote";
+import { Emoji } from "../ui/Emoji";
 import { useTheme } from "../ui/theme";
 
 const END_TEXT: Record<VoiceEnd, string> = {
@@ -108,7 +109,7 @@ export default function Voice() {
     <View style={[S.screen, { padding: 16, gap: 12 }]}>
       <Stack.Screen options={{ title: t("app_betaVoice") }} />
       <View style={[S.card, { alignItems: "center", gap: 10, paddingVertical: 24 }]}>
-        <Text style={{ fontSize: 56 }}>{ended ? "🐾" : state === "speaking" ? "🗣️" : "🎧"}</Text>
+        <Emoji char={ended ? "🐾" : state === "speaking" ? "🗣️" : "🎧"} size={56} box={96} />
         {status && (
           <View style={[S.row, { gap: 8 }]}>
             {(state === "connecting" || state === "thinking") && <ActivityIndicator color={C.brand} />}
@@ -120,7 +121,7 @@ export default function Voice() {
           <View style={[S.row, { gap: 4, height: 20, alignItems: "flex-end" }]} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
             {Array.from({ length: BARS }, (_, i) => (
               <View key={i} style={{ width: 6, height: 6 + i * 3.5, borderRadius: 3,
-                backgroundColor: i < lit ? (state === "hearing" ? C.brand : C.muted) : C.line }} />
+                backgroundColor: i < lit ? (state === "hearing" ? C.link : C.muted) : C.line }} />
             ))}
           </View>
         )}
