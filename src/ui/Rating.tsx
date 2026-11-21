@@ -10,6 +10,7 @@ import { router, useFocusEffect } from "expo-router";
 import { useI18n } from "../i18n";
 import { formatDate, isoDate } from "../lib/dates";
 import { getRating, sentReports, setVote, type Rating as RatingRow } from "../lib/feedback";
+import { Icon } from "./Icon";
 import { useTheme } from "./theme";
 
 const MONO = Platform.select({ ios: "Menlo", default: "monospace" });
@@ -22,8 +23,10 @@ export function CopyCode({ code, big }: { code: string; big?: boolean }) {
   return (
     <View style={[S.row, { gap: 12, flexWrap: "wrap" }]}>
       <Text selectable style={{ fontFamily: MONO, fontSize: big ? 22 : 14, fontWeight: "700", color: C.text, letterSpacing: 1 }}>{code}</Text>
-      <Pressable onPress={() => { Clipboard.setString(code); setCopied(true); }} hitSlop={8} accessibilityRole="button" accessibilityLabel={t("app_fbCopy")}>
-        <Text style={{ color: C.link, fontWeight: "600" }}>{copied ? "✓ " + t("app_fbCopied") : "📋 " + t("app_fbCopy")}</Text>
+      <Pressable onPress={() => { Clipboard.setString(code); setCopied(true); }} accessibilityRole="button" accessibilityLabel={t(copied ? "app_fbCopied" : "app_fbCopy")}
+        style={({ pressed }) => [S.row, { gap: 6, minHeight: 44, paddingHorizontal: 4 }, pressed && S.pressed]}>
+        <Icon name={copied ? "check" : "copy"} size={16} color={copied ? C.ok : C.link} />
+        <Text style={{ color: copied ? C.ok : C.link, fontWeight: "600" }}>{t(copied ? "app_fbCopied" : "app_fbCopy")}</Text>
       </Pressable>
     </View>
   );
@@ -39,8 +42,11 @@ export function Rating({ id }: { id: number }) {
   if (!loaded) return null;
   if (r?.code) {
     return (
-      <View style={{ gap: 2 }}>
-        <Text style={[S.muted, { color: C.ok, fontWeight: "600" }]}>✓ {t("app_fbSentShort")}</Text>
+      <View style={{ gap: 2, paddingHorizontal: 8 }}>
+        <View style={[S.row, { gap: 6 }]}>
+          <Icon name="check" size={14} color={C.ok} />
+          <Text style={[S.muted, { flexShrink: 1, color: C.ok, fontWeight: "600" }]}>{t("app_fbSentShort")}</Text>
+        </View>
         <CopyCode code={r.code} />
       </View>
     );
@@ -51,17 +57,19 @@ export function Rating({ id }: { id: number }) {
     load();
     router.push({ pathname: "/feedback", params: { id: String(id) } });
   };
+  // 44 px targets; the chosen one on the chip surface in the link colour (not colour alone: also the disc)
   const thumb = (vote: "up" | "down", label: string, onPress: () => void) => {
     const on = r?.vote === vote;
     return (
-      <Pressable onPress={onPress} hitSlop={8} accessibilityRole="button" accessibilityLabel={label} accessibilityState={{ selected: on }}
-        style={{ paddingHorizontal: 8, paddingVertical: 2, borderRadius: 12, borderWidth: 1, borderColor: on ? C.link : "transparent", backgroundColor: on ? C.chip : "transparent" }}>
-        <Text style={{ fontSize: 16, opacity: on ? 1 : 0.6 }}>{vote === "up" ? "👍" : "👎"}</Text>
+      <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={label} accessibilityState={{ selected: on }}
+        style={({ pressed }) => [{ width: 44, height: 44, borderRadius: 22, alignItems: "center", justifyContent: "center",
+          backgroundColor: on ? C.chip : "transparent", borderWidth: on ? 1 : 0, borderColor: C.link }, pressed && S.pressed]}>
+        <Icon name={vote === "up" ? "thumbs-up" : "thumbs-down"} size={20} color={on ? C.link : C.muted} />
       </Pressable>
     );
   };
   return (
-    <View style={[S.row, { gap: 6 }]}>
+    <View style={S.row}>
       {thumb("up", t("app_fbUp"), up)}
       {thumb("down", t("app_fbDown"), down)}
     </View>
@@ -71,13 +79,16 @@ export function Rating({ id }: { id: number }) {
 /** Settings → Privacy: what was sent from this phone, with the codes to have it removed. */
 export function SentReports() {
   const { t, lang } = useI18n();
-  const { S } = useTheme();
+  const { C, S } = useTheme();
   const [list, setList] = useState<RatingRow[]>([]);
   useFocusEffect(useCallback(() => { sentReports().then(setList).catch(() => undefined); }, []));
   if (!list.length) return null;
   return (
     <View style={{ gap: 8, marginTop: 4 }}>
-      <Text style={[S.body, { fontWeight: "700" }]}>👎 {t("app_fbSentList")}</Text>
+      <View style={[S.row, { gap: 8 }]}>
+        <Icon name="thumbs-down" size={16} color={C.muted} />
+        <Text style={[S.body, { flex: 1, fontWeight: "700" }]}>{t("app_fbSentList")}</Text>
+      </View>
       {list.map((x) => (
         <View key={x.chatId} style={{ gap: 2 }}>
           <Text style={S.muted} numberOfLines={1}>{formatDate(isoDate(new Date(x.at)), lang)}{x.title ? " · " + x.title : ""}</Text>
