@@ -52,6 +52,10 @@ test("without Open now: as before (independents, chains only when wanted or the 
   assert.deepStrictEqual(view(r.rows), ["!chainOnly", "+widen", "c1"]);
   r = findList([mk("c1", "vet", "open", "AniCura")], opts({ openOnly: false, canWiden: false }));
   assert.deepStrictEqual(view(r.rows), ["!chainOnly", "c1"]);
+  // per category: an independent shop doesn't hide the only (chain) vets
+  r = findList([mk("s1", "shop", "unknown"), mk("c1", "vet", "open", "AniCura"), mk("c2", "shop", "open", "Pets Place")], opts({ openOnly: false }));
+  assert.deepStrictEqual(view(r.rows), ["s1", "!chainOnly", "+widen", "c1"]);
+  assert.deepStrictEqual(ids(r.shown), ["s1", "c1"]);
   // the status is not even asked for
   r = findList(places, opts({ openOnly: false, status: () => { throw new Error("asked"); } }));
   assert.strictEqual(r.shown.length, 2);

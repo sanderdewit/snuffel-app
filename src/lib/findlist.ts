@@ -57,22 +57,26 @@ export interface FindOptions<T> {
 
 const place = <T,>(p: T): Row<T> => ({ kind: "place", p });
 
-/** Without "Open now": independents, then chains when they're wanted or the only ones. */
+/**
+ * Without "Open now": independents, then chains when they're wanted or, with
+ * "Independents only", the chains of every category without an independent place
+ * nearby (per category, as with "Open now": an independent shop must not hide the
+ * only vets, chain-owned ones). The website (web/js/app.js) does the same.
+ */
 function plain<T extends Listable>(inCats: T[], o: FindOptions<T>): { rows: Row<T>[]; shown: T[] } {
   const independents = inCats.filter((p) => !p.chain);
-  const chains = inCats.filter((p) => p.chain);
-  const showChains = chains.length > 0 && (!o.independentOnly || independents.length === 0);
+  const kinds = new Set(independents.map((p) => p.cat));
+  const chains = inCats.filter((p) => p.chain && (!o.independentOnly || !kinds.has(p.cat)));
   const rows = independents.map(place);
-  if (showChains) {
-    if (independents.length) rows.push({ kind: "heading", text: "chains" });
-    else {
-      // Only chains nearby: say so, offer a wider search, and show them below.
+  if (chains.length) {
+    if (o.independentOnly) {
+      // Only chains for some categories: say so, offer a wider search, and show them below.
       rows.push({ kind: "note", text: "chainOnly" });
-      if (o.independentOnly && o.canWiden) rows.push({ kind: "widen" });
-    }
+      if (o.canWiden) rows.push({ kind: "widen" });
+    } else if (independents.length) rows.push({ kind: "heading", text: "chains" });
     rows.push(...chains.map(place));
   }
-  return { rows, shown: showChains ? independents.concat(chains) : independents };
+  return { rows, shown: independents.concat(chains) };
 }
 
 /** The rows of Find's list (places nearest first in, nearest first out within each group). */
