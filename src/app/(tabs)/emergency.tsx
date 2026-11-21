@@ -163,7 +163,7 @@ export default function Emergency() {
 
       <View style={[S.row, { gap: 8, flexWrap: "wrap" }]}>
         <SmallLink icon="message-circle" label={t("app_swallowed")}
-          onPress={() => router.navigate({ pathname: "/ask", params: { q: t("app_aiStarter3") } })} />
+          onPress={() => router.navigate({ pathname: "/ask", params: { q: t("app_aiStarter3"), n: String(Date.now()) } })} />
         <SmallLink icon="search" label={withoutEmoji(t("lostOpen"))} onPress={() => router.push("/lost")} />
       </View>
 

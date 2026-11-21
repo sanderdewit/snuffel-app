@@ -196,7 +196,7 @@ export default function Ask() {
   const scrollRetries = useRef(0);
 
   // ?q= fills in a question (not sent), ?dog= picks the dog: from the walkthrough.
-  const params = useLocalSearchParams<{ q?: string; dog?: string }>();
+  const params = useLocalSearchParams<{ q?: string; dog?: string; n?: string }>();   // n: a new value each time, so the same question fills in again
   const appliedDogParam = useRef<string | undefined>(undefined);   // tab params stick: apply once
   const dogResolved = useRef(false);   // the opening dog is known (dogs and the last choice read)
   useFocusEffect(useCallback(() => {
@@ -212,7 +212,7 @@ export default function Ask() {
       setDogId((cur) => openingDog(d, fromLink, cur, last));
     }).catch(() => undefined);
   }, [params.dog]));
-  useEffect(() => { if (params.q) setText(String(params.q).slice(0, 1000)); }, [params.q]);
+  useEffect(() => { if (params.q) setText(String(params.q).slice(0, 1000)); }, [params.q, params.n]);
   // Whose conversation is on screen: a question handed over by the walkthrough
   // is sent only once that conversation has loaded.
   const [loadedFor, setLoadedFor] = useState<{ dog: number | null } | null>(null);
