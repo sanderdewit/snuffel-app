@@ -2,7 +2,7 @@
 // The microphone check of the AI voice conversation: from the connection's statistics,
 // is the phone still sending audio?
 import assert from "node:assert";
-import { levelBars, micSample, micWatch } from "../src/lib/micwatch.ts";
+import { levelBars, micSample, micWatch, QUIET_LEVEL, quietWatch } from "../src/lib/micwatch.ts";
 
 let passed = 0, failed = 0;
 function test(name: string, fn: () => void) {
@@ -22,6 +22,7 @@ test("reads captured audio, sent packets and level; ignores video and incoming a
     { type: "candidate-pair", state: "succeeded" }
   ));
   assert.deepStrictEqual(s, { samples: 3.5, packets: 170, level: 0.02 });
+  assert.strictEqual(micSample(report({ type: "media-source", kind: "audio", totalAudioEnergy: 0.5 })).energy, 0.5);
 });
 
 test("older reports that say mediaType instead of kind", () => {
@@ -74,6 +75,30 @@ test("reset after restarting the recording: a fresh 4 s", () => {
   w.check({ samples: 1, packets: 50 }, 9000);
   assert.strictEqual(w.check({ samples: 1.25, packets: 62 }, 9250), "ok");
   assert.strictEqual(w.check({ samples: 1.5, packets: 75 }, 14000), "ok");
+});
+
+test("silence throughout (sending, but nothing in it): quiet after 6 s, not before", () => {
+  const w = quietWatch(6000);
+  for (let t = 0; t < 6000; t += 250) assert.strictEqual(w.check({ samples: t / 1000, packets: t / 20, level: 0 }, t), "ok");
+  assert.strictEqual(w.check({ level: 0 }, 6000), "quiet");
+  assert.strictEqual(w.loudest(), 0);
+});
+
+test("a quiet room still has a level: never quiet", () => {
+  const w = quietWatch(6000);
+  for (let t = 0; t <= 20000; t += 250) assert.strictEqual(w.check({ level: t % 2000 === 0 ? 0.002 : 0.0003 }, t), "ok");
+  assert.ok(w.loudest() >= QUIET_LEVEL);
+});
+
+test("silence that ends: the clock starts again; missing level never counts", () => {
+  const w = quietWatch(6000);
+  w.check({ level: 0 }, 0);
+  assert.strictEqual(w.check({ level: 0.05 }, 5000), "ok");
+  assert.strictEqual(w.check({ level: 0 }, 5250), "ok");
+  assert.strictEqual(w.check({}, 11500), "ok");
+  assert.strictEqual(w.check({ level: 0 }, 11250), "quiet");
+  w.reset();
+  assert.strictEqual(w.check({ level: 0 }, 11500), "ok");
 });
 
 test("level bars: silence none, speech some, loud all", () => {

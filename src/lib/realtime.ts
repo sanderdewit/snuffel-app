@@ -12,14 +12,14 @@
 // made from what the model already heard. The connection stays up only for
 // that answer, at most NOTE_WAIT_MS.
 // During the call the microphone is checked from the connection's statistics
-// (micwatch.ts): when the phone stops sending audio, the iPhone's recording is
-// restarted once, and if that doesn't help the call ends with a message, instead
-// of "Listening…" for ever. When the AI heard the owner but no answer comes
+// (micwatch.ts): when the phone stops sending audio, or sends only silence before
+// the AI has heard the owner, the iPhone's microphone is restarted once, and if that
+// doesn't help the call ends with a message, instead of "Listening…" for ever. When the AI heard the owner but no answer comes
 // (ANSWER_WAIT_MS), it is asked once more, then the call ends ("failed"). Both
 // ends show one line on the audio state and the events seen, for a screenshot.
 import { AppState, Platform } from "react-native";
 // LiveKit's maintained fork of react-native-webrtc: same API, supports the New Architecture.
-import { AudioDeviceModule, audioDeviceModuleEvents, type AutomaticAppleAudioConfiguration, mediaDevices, MediaStream, RTCPeerConnection } from "@livekit/react-native-webrtc";
+import { AudioDeviceModule, audioDeviceModuleEvents, AudioEngineAvailability, type AutomaticAppleAudioConfiguration, mediaDevices, MediaStream, RTCPeerConnection } from "@livekit/react-native-webrtc";
 import { ExpoSpeechRecognitionModule } from "expo-speech-recognition";
 import { CONFIG } from "./config";
 import { betaCode } from "./beta";
@@ -29,7 +29,7 @@ import { signCategory } from "./dogsummary";
 import { installId } from "./install";
 import { parseVoiceNote, type VoiceNote } from "./voicenote";
 import { breedForServer, breeds } from "./breeds";
-import { micSample, micWatch } from "./micwatch";
+import { micSample, micWatch, quietWatch } from "./micwatch";
 
 export type VoiceState = "connecting" | "listening" | "hearing" | "thinking" | "speaking" | "ended";   // hearing: the AI hears the owner speak
 export type VoiceEnd = "done" | "time" | "beta" | "rate_limited" | "unavailable" | "mic" | "nomic" | "failed";   // mic: no permission; nomic: no sound from it
@@ -51,21 +51,40 @@ export interface VoiceHandlers {
 export interface VoiceCall { hangUp(): void; close(): void }
 
 const NOTE_WAIT_MS = 8000;
-const MIC_CHECK_MS = 250, MIC_DEAD_MS = 4000, ANSWER_WAIT_MS = 15000;
+const MIC_CHECK_MS = 250, MIC_DEAD_MS = 4000, MIC_QUIET_MS = 6000, ANSWER_WAIT_MS = 15000;
 // The request for the note: a system message, answered as the session's instructions
 // (set by /api/voice) describe. response.create gets no `instructions`: they would
 // replace the session's for that answer, and with them the file note rules, the
 // date, the language and the dog.
 const NOTE_REQUEST = "(The call has ended. Reply only with the JSON note for the dog's file, as described under FILE NOTE AT THE END OF THE CALL.)";
 
+// iPhone: the WebRTC audio engine is shared by the whole app. After a call it kept
+// the microphone (also speech-to-text in the chat heard nothing until the app was
+// restarted), so each call ends by making the engine unavailable, and the next call
+// makes it available again. What the engine looked like just after the last call
+// ended goes into the next call's detail line.
+let lastRelease = "";
+function releaseAudio() {
+  if (Platform.OS !== "ios") return;
+  try { AudioDeviceModule.setEngineAvailability(AudioEngineAvailability.none).catch(() => undefined); } catch { /* older native module */ }
+  try { ExpoSpeechRecognitionModule.setAudioSessionActiveIOS(false, { notifyOthersOnDeactivation: true }); } catch { /* not active */ }
+  setTimeout(() => {
+    try {
+      lastRelease = `engine ${AudioDeviceModule.isEngineRunning() ? "on" : "off"} rec ${AudioDeviceModule.isRecording() ? "yes" : "no"}` +
+        ` play ${AudioDeviceModule.isPlaying() ? "yes" : "no"} muted ${AudioDeviceModule.isMicrophoneMuted() ? "yes" : "no"}`;
+    } catch { lastRelease = "?"; }
+  }, 1500);
+}
+
 /** Starts a conversation right away and returns its handle at once. */
 export function startVoice(lang: string, labels: { emergency: string; lost: string }, dog: Dog | null, h: VoiceHandlers): VoiceCall {
-  let ended = false, closed = false, noting = false, spoke = false;
+  let ended = false, closed = false, noting = false, spoke = false, heardOwner = false;
   let timer: ReturnType<typeof setTimeout> | null = null, noteTimer: ReturnType<typeof setTimeout> | null = null;
   let micTimer: ReturnType<typeof setInterval> | null = null, answerTimer: ReturnType<typeof setTimeout> | null = null;
   // For the detail line: the last microphone numbers, what restarting it found,
   // how often each event came, and the last error the session reported.
-  let lastMic: ReturnType<typeof micSample> = {}, revived: string | null = null, lastError = "";
+  let lastMic: ReturnType<typeof micSample> = {}, revived: string | null = null, lastError = "", atStart = "";
+  let loudest = () => 0;
   const seen = new Map<string, number>();
   let pc: RTCPeerConnection | null = null, mic: MediaStream | null = null;
   let events: ReturnType<RTCPeerConnection["createDataChannel"]> | null = null;
@@ -93,6 +112,7 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
     request.abort();                                   // a session still being set up
     mic?.getTracks().forEach((t) => t.stop());
     try { pc?.close(); } catch { /* already closed */ }
+    releaseAudio();
   }
 
   // The call is over. note: the owner hung up or the time is up, so a note may follow
@@ -115,18 +135,23 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
   // level goes to the screen. No audio for MIC_DEAD_MS: restart the recording once,
   // then end the call ("nomic", with a note only if the owner had already spoken).
   function watchMic() {
-    const watch = micWatch(MIC_DEAD_MS);
+    const watch = micWatch(MIC_DEAD_MS), quiet = quietWatch(MIC_QUIET_MS);
+    loudest = quiet.loudest;
     let busy = false;
     micTimer = setInterval(() => {
       if (busy || ended || !pc) return;
-      if (pc.connectionState !== "connected") { watch.reset(); return; }
+      if (pc.connectionState !== "connected") { watch.reset(); quiet.reset(); return; }
       busy = true;
       pc.getStats().then(async (report) => {
         if (ended) return;
         lastMic = micSample(report);
         h.onLevel?.(lastMic.level);
-        if (watch.check(lastMic, Date.now()) !== "dead") return;
-        if (revived == null) { revived = await reviveMic(); watch.reset(); return; }
+        const now = Date.now();
+        const dead = watch.check(lastMic, now) === "dead";
+        // silence throughout counts only until the AI has heard the owner once
+        const silent = quiet.check(lastMic, now) === "quiet" && !heardOwner;
+        if (!dead && !silent) return;
+        if (revived == null) { revived = (dead ? "dead:" : "silent:") + await reviveMic(); watch.reset(); quiet.reset(); return; }
         end("nomic", spoke, audioState());
       }).catch(() => undefined).finally(() => { busy = false; });
     }, MIC_CHECK_MS);
@@ -180,6 +205,8 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
       part("pc", () => `${pc?.connectionState}/${pc?.iceConnectionState}`),
       part("track", () => { const t = mic?.getAudioTracks()[0]; return t ? `${t.readyState}${t.enabled ? "" : ",off"}${t.muted ? ",muted" : ""}` : "none"; }),
       part("sent", () => `${s.samples ?? "?"}s/${s.packets ?? "?"}p`),
+      part("level", () => `${(s.level ?? -1).toFixed(4)} max ${loudest().toFixed(4)} energy ${s.energy === undefined ? "?" : s.energy.toPrecision(3)}`),
+      !!atStart && "start " + atStart,
       part("spoke", () => (spoke ? "yes" : "no")),
       part("revive", () => revived ?? "-"),
       part("turns", () => `${n("input_audio_buffer.speech_started")}/${n("input_audio_buffer.speech_stopped")}/${n("output_audio_buffer.started")}`),
@@ -192,9 +219,9 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
   function silence() {
     mic?.getTracks().forEach((t) => t.stop());        // nothing more is sent
     try { pc?.getSenders().forEach((s) => { void s.replaceTrack(null); }); } catch { /* closed */ }
-    if (Platform.OS === "ios") {
-      try { if (AudioDeviceModule.isRecording()) AudioDeviceModule.stopRecording().catch(() => undefined); } catch { /* older native module */ }
-    }
+    // Not AudioDeviceModule.stopRecording(): the audio device is shared by every call,
+    // and a call started after one stopped that way recorded only silence. The
+    // recording stops with the connection, at most NOTE_WAIT_MS later.
     try { pc?.getReceivers().forEach((r) => { if (r.track) r.track.enabled = false; }); } catch { /* closed */ }   // muted here at once
     send({ type: "response.cancel" });                // and stopped there: cancel first, then clear (WebRTC)
     send({ type: "output_audio_buffer.clear" });
@@ -232,6 +259,19 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
         const duplex: AutomaticAppleAudioConfiguration = { audioCategory: "playAndRecord", audioMode: "voiceChat", audioCategoryOptions: ["defaultToSpeaker", "allowBluetooth", "allowBluetoothA2DP"] };
         AudioDeviceModule.setAutomaticAudioSessionConfiguration({ recording: duplex, playout: duplex, deactivateOnStop: true });
       } catch { /* older native module: default routing */ }
+      // The audio device is shared by every call: available again (the last call
+      // released it), and not muted (one left muted would record silence).
+      const notes: string[] = [];
+      try {
+        const a = AudioDeviceModule.getEngineAvailability();
+        if (!a.isInputAvailable || !a.isOutputAvailable) notes.push("was-unavailable");
+        await AudioDeviceModule.setEngineAvailability(AudioEngineAvailability.default);
+      } catch { notes.push("avail?"); }
+      try {
+        if (AudioDeviceModule.isMicrophoneMuted()) { notes.push("was-muted"); await AudioDeviceModule.setMicrophoneMuted(false); }
+      } catch { /* older native module */ }
+      if (lastRelease) notes.push("after last call: " + lastRelease);
+      atStart = notes.join(", ");
       // And set it up front, as speech-to-text does: the microphone only opened
       // after 🎙️ had been used once, i.e. when the session was already record-and-play.
       try {
@@ -299,7 +339,7 @@ export function startVoice(lang: string, labels: { emergency: string; lost: stri
           return l;
         };
         switch (m.type) {
-          case "input_audio_buffer.speech_started": answered(); h.onState("hearing"); break;
+          case "input_audio_buffer.speech_started": heardOwner = true; answered(); h.onState("hearing"); break;
           case "input_audio_buffer.speech_stopped": spoke = true; awaitAnswer(); h.onState("thinking"); break;
           case "output_audio_buffer.started": answered(); h.onState("speaking"); break;
           case "output_audio_buffer.stopped": h.onState("listening"); break;
