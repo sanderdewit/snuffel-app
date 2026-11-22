@@ -4,7 +4,8 @@
 //   fastlane/android-metadata/<Play locale>/ (title.txt, short_description.txt,
 //   full_description.txt, trimmed; Play locale from store/locales.json, e.g. nb -> no-NO).
 //   A locale without a listing on Play gets one (edits.listings.update creates it), the
-//   others are updated; unchanged listings are left alone and a promo video is kept.
+//   others are updated; unchanged listings are left alone. An optional video.txt (a
+//   YouTube link) sets the listing's promo video; without one, Play's own video is kept.
 //   Languages without these files are skipped and listed.
 // --screenshots <dir>: <dir>/<app language>/*.png (the screenshots-android artifact) replace
 //   that locale's phone screenshots, uploaded in name order (1-find ... 7-saved). Locales
@@ -71,6 +72,12 @@ if (texts) for (const [lang, l] of selected) {
     else if (chars(t[key]) > f.max) problems.push(`${l.play}/${f.file}: ${chars(t[key])} characters (Google Play takes ${f.max})`);
     if (key !== "fullDescription" && t[key].includes("\n")) problems.push(`${l.play}/${f.file}: one line only`);
   }
+  // Optional promo video (fastlane's video.txt): a YouTube link, landscape, without ads.
+  const videoFile = new URL("video.txt", folder);
+  if (fs.existsSync(videoFile)) {
+    t.video = clean(fs.readFileSync(videoFile, "utf8"));
+    if (!/^https:\/\/www\.youtube\.com\/watch\?v=[\w-]{11}$/.test(t.video)) problems.push(`${l.play}/video.txt: not a link like https://www.youtube.com/watch?v=<id>`);
+  }
   textPlan.push(t);
 }
 
@@ -107,7 +114,7 @@ if (problems.length) { for (const p of problems) console.error("  " + p); consol
 if (!textPlan.length && !shotPlan.length) { console.error(texts && shotsDir === undefined ? "no listing texts to upload" : "nothing to upload"); process.exit(1); }
 if (textPlan.length) {
   console.log("texts (characters: title, short, full description):");
-  for (const t of textPlan) console.log(`  ${t.lang} -> ${t.play}: ${Object.entries(FIELDS).map(([k, f]) => `${chars(t[k])}/${f.max}`).join(", ")}`);
+  for (const t of textPlan) console.log(`  ${t.lang} -> ${t.play}: ${Object.entries(FIELDS).map(([k, f]) => `${chars(t[k])}/${f.max}`).join(", ")}${t.video ? `, video ${t.video.slice(-11)}` : ""}`);
   const longest = Object.entries(FIELDS).map(([k, f]) => { const t = textPlan.reduce((a, b) => (chars(b[k]) > chars(a[k]) ? b : a)); return `${f.name} ${chars(t[k])} (${t.play})`; });
   console.log(`  longest: ${longest.join(", ")}`);
 }
@@ -174,12 +181,14 @@ try {
   for (const t of textPlan) {
     const cur = listings.get(t.play.toLowerCase());
     const diff = Object.keys(FIELDS).filter((k) => !cur || clean(cur[k]) !== t[k]);
+    if (t.video && clean(cur?.video) !== t.video) diff.push("video");
     if (!diff.length) { unchanged.push(cur.language); continue; }
     const language = cur?.language || t.play;
-    const listing = { language, title: t.title, shortDescription: t.shortDescription, fullDescription: t.fullDescription, ...(cur?.video ? { video: cur.video } : {}) };
+    const video = t.video || cur?.video;   // video.txt sets it; without one Play's own is kept
+    const listing = { language, title: t.title, shortDescription: t.shortDescription, fullDescription: t.fullDescription, ...(video ? { video } : {}) };
     if (!dryRun) await call("PUT", `${E}/listings/${encodeURIComponent(language)}`, { json: listing });
     listings.set(language.toLowerCase(), listing);
-    if (cur) updated.push(`${language} (${diff.map((k) => FIELDS[k].name).join(", ")})`);
+    if (cur) updated.push(`${language} (${diff.map((k) => FIELDS[k]?.name || k).join(", ")})`);
     else created.push(language);
   }
   if (textPlan.length) {
