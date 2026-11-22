@@ -1,0 +1,27 @@
+Snuffel aitab sul leida oma koerale head hoolt, lähedalt ja sõltumatult. Loomaarstid, loomahaiglad, koerte trimmisalongid, lemmikloomapoed, koolitajad, koertehotellid ja koerte jalutusalad üle Euroopa, ning me näitame, millised kohad kuuluvad suurtele kettidele.
+
+HÄDAABI: AVATUD LOOMAARST ÜHE PUUDUTUSEGA
+Ava vahekaart Hädaabi (või vajuta pikalt rakenduse ikooni) ja Snuffel näitab kohe loomaarste ja loomahaiglaid, mis on praegu avatud, lähimad eespool. Suletud kliinikud peidetakse ja kui lähedal pole midagi avatud, otsib Snuffel kaugemalt. Helista või alusta teekonda kohe. Sinu oma loomaarst on alati kõige ees.
+
+LAHTIOLEKUAJAD ÜHE PILGUGA
+Lahtiolekuajad selgelt kirjas, näiteks „Praegu avatud · suletakse kell 18:00”, ja kogu nädal iga koha lehel. Lülita vaates Otsi sisse „Praegu avatud”, et suletud kohad peita.
+
+SÕLTUMATU VÕI KETT?
+Suured ketid on viimastel aastatel ostnud palju kliinikuid, sageli nime muutmata. Snuffel tunneb need ära kettide endi kliinikunimekirjade, nende veebisaitide ja OpenStreetMapi põhjal ning näitab sõltumatuid kliinikuid eespool.
+
+SINU KOER, SINU MEELDETULETUSED
+Loo oma koerale profiil (tõug, vanus, kaal, foto) ja saa õigel ajal meeldetuletusi vaktsineerimise, ussitõrje, kirbu- ja puugitõrje ning iga-aastase läbivaatuse kohta.
+
+TERVISE- JA KÄITUMISTOIMIK
+Hoia loomaarsti külastused, diagnoosid, ravimid, allergiad, kaal ja käitumine ühes kohas. Ekspordi toimik PDF-ina uuele loomaarstile või koerahoidjale või vii see teise telefoni (soovi korral parooliga kaitstult).
+
+AI-ABI TERVISE JA KÄITUMISE KOHTA
+Küsi sümptomite või käitumise kohta, näiteks haukumine, ärevus, rihma tirimine või kutsika koolitus, kirjutades või häälega. Assistent tunneb sinu koera profiili ja soovi korral ka toimiku põhipunkte. See aitab hinnata, kui kiireloomuline miski on, selgete tasemetega alates „Jälgi olukorda” kuni „Kiire — mine kohe loomaarsti juurde”; kui on kiire, on kõige ees helistamine sinu loomaarstile ja „Leia kohe avatud loomaarst”. Käitumise puhul soovitab see preemiapõhiseid esimesi samme. AI esmane hinnang, mitte diagnoos ega loomaarsti või käitumisspetsialisti asendus.
+
+TÖÖTAB KA ILMA LEVITA
+Sinu salvestatud kohad, sinu loomaarst ja kõik kohad kuni 15 km kaugusel kodust töötavad ka võrguühenduseta.
+
+PRIVAATSUS
+Kontot pole, jälgimist pole, reklaame pole. Sinu koerad, meeldetuletused, salvestatud kohad ja vestlused jäävad sinu telefoni. Sinu asukohta kasutatakse ainult otsimiseks ja seda ei salvestata.
+
+Hele ja tume välimus. Tasuta, 29 keeles. Kohtade andmed © OpenStreetMapi kaastöötajad.

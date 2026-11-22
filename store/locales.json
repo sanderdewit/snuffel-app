@@ -1,5 +1,5 @@
 {
-  "_help": "Per app language: the phone locale for the screenshots (BCP 47; iOS gets it with underscores, its language without the region), the App Store Connect locale (folder in fastlane/metadata; null = no App Store localisation, not uploaded there) and the Google Play locale (as in fastlane/android-metadata/whatsnew). Read by tools/screenshots*.sh, store.yml and tools/play-listing.mjs; checked by tests/screenshots.test.ts.",
+  "_help": "Per app language: the phone locale for the screenshots (BCP 47; iOS gets it with underscores, its language without the region), the App Store Connect locale (folder in fastlane/metadata; null = no App Store localisation, not uploaded there) and the Google Play locale (as in fastlane/android-metadata/whatsnew, and the listing folder fastlane/android-metadata/<locale>). Read by tools/screenshots*.sh, store.yml and tools/play-listing.mjs; checked by tests/screenshots.test.ts and tests/storetexts.test.mjs.",
   "languages": {
     "bg": { "locale": "bg-BG", "appStore": null, "play": "bg" },
     "ca": { "locale": "ca-ES", "appStore": "ca", "play": "ca" },

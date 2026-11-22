@@ -1,0 +1,27 @@
+Snuffel hilft dir, gute Versorgung für deinen Hund zu finden, in der Nähe und unabhängig. Tierärzte, Tierkliniken, Hundesalons, Tierbedarfsläden, Hundeschulen, Hundehotels und Auslaufflächen in ganz Europa, und wir zeigen dir, welche Orte zu großen Ketten gehören.
+
+NOTFALL: MIT EINEM TIPP ZUM GEÖFFNETEN TIERARZT
+Öffne den Tab „Notfall“ (oder halte das App-Symbol gedrückt) und Snuffel zeigt sofort die Tierärzte und Tierkliniken, die jetzt geöffnet haben, die nächsten zuerst. Geschlossene Praxen werden ausgeblendet, und wenn in der Nähe nichts geöffnet ist, sucht Snuffel weiter. Anrufen oder Route starten geht sofort. Dein eigener Tierarzt steht immer ganz oben.
+
+ÖFFNUNGSZEITEN IM BLICK
+Öffnungszeiten in klaren Worten, etwa „Jetzt geöffnet · schließt um 18:00“, und die ganze Woche auf der Seite jedes Ortes. Schalte in „Suchen“ den Filter „Jetzt geöffnet“ ein, um geschlossene Orte auszublenden.
+
+UNABHÄNGIG ODER KETTE?
+Viele Praxen wurden in den letzten Jahren von großen Ketten übernommen, oft ohne dass sich der Name geändert hat. Snuffel erkennt sie anhand der Praxislisten der Ketten selbst, ihrer Websites und OpenStreetMap und zeigt unabhängige Praxen zuerst.
+
+DEIN HUND, DEINE ERINNERUNGEN
+Lege ein Profil für deinen Hund an (Rasse, Alter, Gewicht, Foto) und erhalte rechtzeitig Erinnerungen an Impfungen, Entwurmung, Floh- und Zeckenschutz und den jährlichen Check-up.
+
+GESUNDHEITS- UND VERHALTENSAKTE
+Halte Tierarztbesuche, Diagnosen, Medikamente, Allergien, Gewicht und Verhalten an einem Ort fest. Exportiere die Akte als PDF für einen neuen Tierarzt oder den Hundesitter, oder übertrage sie auf ein anderes Handy (auf Wunsch mit Passwort geschützt).
+
+KI-HILFE BEI GESUNDHEIT UND VERHALTEN
+Frag nach Beschwerden oder Verhalten, etwa Bellen, Angst, Ziehen an der Leine oder Welpenerziehung, getippt oder per Sprache. Der Assistent kennt das Profil deines Hundes und, wenn du möchtest, die wichtigsten Punkte aus seiner Akte. Er hilft dir einzuschätzen, wie dringend etwas ist, mit klaren Stufen von „Beobachten“ bis „Dringend — jetzt zum Tierarzt“; ist es dringend, stehen der Anruf bei deinem Tierarzt und „Jetzt geöffneten Tierarzt finden“ ganz oben. Bei Verhalten schlägt er erste Schritte auf Basis von Belohnung vor. Eine erste Einschätzung durch KI, keine Diagnose und kein Ersatz für Tierarzt oder Verhaltenstherapeuten.
+
+FUNKTIONIERT AUCH OHNE EMPFANG
+Deine gemerkten Orte, dein eigener Tierarzt und alle Orte im Umkreis von 15 km um dein Zuhause funktionieren auch offline.
+
+DATENSCHUTZ
+Kein Konto, kein Tracking, keine Werbung. Deine Hunde, Erinnerungen, gemerkten Orte und Chats bleiben auf deinem Handy. Dein Standort wird nur für die Suche verwendet und nicht gespeichert.
+
+Heller und dunkler Modus. Kostenlos, in 29 Sprachen. Ortsdaten © OpenStreetMap-Mitwirkende.

@@ -1,0 +1,27 @@
+Snuffel vam pomaga najti dobro oskrbo za vašega psa, blizu in neodvisno. Veterinarji, veterinarske bolnišnice, pasji saloni, trgovine za živali, trenerji, pasji hoteli in pasji parki po vsej Evropi – pokažemo pa tudi, katere lokacije pripadajo velikim verigam.
+
+NUJNO: ODPRT VETERINAR Z ENIM DOTIKOM
+Odprite zavihek Nujno (ali pridržite ikono aplikacije) in Snuffel takoj pokaže veterinarje in veterinarske bolnišnice, ki so zdaj odprti, najbližje najprej. Zaprte ambulante so skrite, in če v bližini ni nič odprto, Snuffel išče dlje. Takoj lahko pokličete ali zaženete navigacijo. Vaš veterinar je vedno na vrhu.
+
+DELOVNI ČAS NA PRVI POGLED
+Delovni čas jasno zapisan, na primer »Odprto · zapre ob 18:00«, in ves teden na strani vsake lokacije. V razdelku Išči vklopite »Zdaj odprto« in zaprte lokacije se skrijejo.
+
+NEODVISNI ALI VERIGA?
+V zadnjih letih so velike verige kupile veliko ambulant, pogosto brez spremembe imena. Snuffel jih prepozna po seznamih klinik, ki jih objavljajo verige same, po njihovih spletnih straneh in OpenStreetMap ter najprej pokaže neodvisne ambulante.
+
+VAŠ PES, VAŠI OPOMNIKI
+Ustvarite profil svojega psa (pasma, starost, teža, fotografija) in pravočasno prejmite opomnike za cepljenja, razglistenje, zaščito pred bolhami in klopi ter letni pregled.
+
+KARTOTEKA ZDRAVJA IN VEDENJA
+Obiske pri veterinarju, diagnoze, zdravila, alergije, težo in vedenje imejte na enem mestu. Kartoteko izvozite v PDF za novega veterinarja ali varuha ali jo prenesite v drug telefon (po želji zaščiteno z geslom).
+
+POMOČ UI PRI ZDRAVJU IN VEDENJU
+Vprašajte o simptomih ali vedenju, kot so lajanje, strah, vlečenje na povodcu ali šolanje mladička – pisno ali z glasom. Pomočnik pozna profil vašega psa in, če želite, glavne točke iz njegove kartoteke. Pomaga oceniti, kako nujno je nekaj, z jasnimi stopnjami od »Spremljajte stanje« do »Nujno — takoj k veterinarju«; kadar je nujno, sta na vrhu klic vašemu veterinarju in »Poišči odprtega veterinarja«. Pri vedenju predlaga prve korake, ki temeljijo na nagrajevanju. Gre za prvo oceno UI, ne za diagnozo ali nadomestilo veterinarja oziroma vedenjskega terapevta.
+
+DELUJE TUDI BREZ SIGNALA
+Shranjene lokacije, vaš veterinar in vse lokacije do 15 km od doma delujejo tudi brez povezave.
+
+ZASEBNOST
+Brez računa, brez sledenja, brez oglasov. Vaši psi, opomniki, shranjene lokacije in klepeti ostanejo v vašem telefonu. Vaša lokacija se uporablja samo za iskanje in se ne shranjuje.
+
+Svetli in temni način. Brezplačno, v 29 jezikih. Podatki o lokacijah © sodelavci OpenStreetMap.

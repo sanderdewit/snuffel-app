@@ -1,8 +1,10 @@
 # Google Play Console: everything to enter
 
-Texts and images for the listing: `fastlane/android-metadata/` (nl-NL primary,
-en-GB). Phone screenshots in all 29 languages: the **screenshots** workflow
-(`screenshots-android` artifact, 16:9 phone), uploaded by **play-listing** (see 6).
+Texts and images for the listing: `fastlane/android-metadata/` (listing texts in
+all 29 languages, one folder per Play locale; icon and feature graphic in en-GB and
+nl-NL). Phone screenshots in all 29 languages: the **screenshots** workflow
+(`screenshots-android` artifact, 16:9 phone). Texts and screenshots are uploaded by
+**play-listing** (see 6).
 
 ## 1. Developer account (once)
 
@@ -117,7 +119,7 @@ Expected: PEGI 3 / Everyone.
 
 | Field | Source |
 |---|---|
-| App name, short description, full description | `fastlane/android-metadata/<lang>/` |
+| App name, short description, full description | `fastlane/android-metadata/<Play locale>/` (`title.txt`, `short_description.txt`, `full_description.txt`; all 29 languages), uploaded by the **play-listing** workflow (below) |
 | App icon (512 × 512) | `…/images/icon.png` |
 | Feature graphic (1024 × 500) | `…/images/featureGraphic.png` |
 | Phone screenshots (2-8) | `screenshots-android` artifact, uploaded by the **play-listing** workflow (below) |
@@ -125,21 +127,32 @@ Expected: PEGI 3 / Everyone.
 | Contact e-mail | support@snuffel.app |
 | Website | https://snuffel.app |
 
-### Phone screenshots (automatic)
+### Listing texts and phone screenshots (automatic)
 
-1. Actions → **screenshots** → Run (languages `all`, or a few codes such as
-   `nl en`; platforms `android`, or both for the App Store too). The app is built
-   once, then about five languages per runner in parallel; the `screenshots-android`
-   artifact holds `<lang>/1-find.png … 7-saved.png` (1080 × 1920). A failed
-   group: **Re-run failed jobs**, which merges again.
-2. Actions → **play-listing** → Run with that run's ID (from its URL), approve in
-   GitHub. Per Play locale the phone screenshots are replaced (app language →
-   Play locale in `store/locales.json`, e.g. `nb` → `no-NO`, `sr` → `sr`, Latin
-   script). Nothing else changes: no bundle, tracks, texts or other images.
-   Locales without a store listing translation on Play are skipped with a
-   warning (add the language under Store listing first). Play reviews the change
-   like any listing edit; if Play says changes can't be sent for review
-   automatically, they are saved and you send them in Publishing overview.
+Google Play only takes screenshots for a language that has a listing (title,
+short and full description) in that language, so the texts go first.
+
+1. For screenshots: Actions → **screenshots** → Run (languages `all`, or a few
+   codes such as `nl en`; platforms `android`, or both for the App Store too). The
+   app is built once, then about five languages per runner in parallel; the
+   `screenshots-android` artifact holds `<lang>/1-find.png … 7-saved.png`
+   (1080 × 1920). A failed group: **Re-run failed jobs**, which merges again.
+2. Actions → **play-listing** → Run, approve in GitHub. Inputs: `texts` (on by
+   default: the listing texts from `fastlane/android-metadata/`), `screenshots_run`
+   (that run's ID from its URL; empty = texts only), `languages` (`all` or app
+   language codes) and `dry_run` (reads the current listings and shows which
+   locales would be created or updated, changes nothing). App language → Play
+   locale as in `store/locales.json` (e.g. `nb` → `no-NO`, `sr` → `sr`, Latin
+   script). One edit: a locale without a listing on Play gets one from its texts,
+   existing listings are updated (unchanged ones are skipped, a promo video is
+   kept), then the phone screenshots are replaced. Nothing else changes: no
+   bundle, tracks, default language or other images. Locales that still have no
+   listing get no screenshots, with a warning. Play reviews the change like any
+   listing edit; if Play says changes can't be sent for review automatically,
+   they are saved and you send them in Publishing overview.
+
+Limits (checked by `tests/storetexts.test.mjs` and before every upload): title
+30, short description 80, full description 4000 characters, release notes 500.
 
 Countries: **the Netherlands** only for now (the data covers 45 countries, so
 more can be added later without an app update).

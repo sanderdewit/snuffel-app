@@ -1,0 +1,27 @@
+Snuffel të ndihmon të gjesh kujdes të mirë për qenin tënd, afër dhe të pavarur. Veterinerë, spitale veterinare, sallone për qen, dyqane për kafshë, trajnerë, hotele për qen dhe zona ku qentë mund të vrapojnë të lirë në të gjithë Evropën, dhe të tregojmë cilat vende u përkasin zinxhirëve të mëdhenj.
+
+URGJENCË: NJË VETERINER I HAPUR ME NJË PREKJE
+Hap skedën Urgjencë (ose mbaj të shtypur ikonën e aplikacionit) dhe Snuffel të tregon menjëherë veterinerët dhe spitalet veterinare që janë të hapura tani, më të afërtit në fillim. Klinikat e mbyllura fshihen dhe, nëse asgjë nuk është e hapur afër, Snuffel kërkon më larg. Telefono ose nis navigimin menjëherë. Veterineri yt është gjithmonë në krye.
+
+ORARI ME NJË SHIKIM
+Orari me fjalë të qarta, si “Hapur tani · mbyllet në 18:00”, dhe e gjithë java në faqen e çdo vendi. Aktivizo “Hapur tani” te Kërko për të fshehur vendet e mbyllura.
+
+I PAVARUR APO ZINXHIR?
+Vitet e fundit shumë klinika janë blerë nga zinxhirë të mëdhenj, shpesh pa ndryshuar emrin. Snuffel i njeh nga listat e klinikave të vetë zinxhirëve, faqet e tyre të internetit dhe OpenStreetMap, dhe tregon së pari klinikat e pavarura.
+
+QENI YT, KUJTESAT E TUA
+Krijo një profil për qenin tënd (raca, mosha, pesha, foto) dhe merr në kohë kujtesa për vaksinat, dehelmintizimin, mbrojtjen nga pleshtat dhe rriqrat dhe kontrollin vjetor.
+
+KARTELA E SHËNDETIT DHE SJELLJES
+Mbaj në një vend vizitat te veterineri, diagnozat, ilaçet, alergjitë, peshën dhe sjelljen. Eksporto kartelën si PDF për një veteriner të ri ose për kujdestarin e qenit, ose kaloje në një telefon tjetër (sipas dëshirës, të mbrojtur me fjalëkalim).
+
+NDIHMË AI PËR SHËNDETIN DHE SJELLJEN
+Pyet për simptoma ose sjellje, si lehja, ankthi, tërheqja e rripit ose stërvitja e këlyshit, me shkrim ose me zë. Asistenti e njeh profilin e qenit tënd dhe, nëse do, pikat kryesore nga kartela e tij. Të ndihmon të vlerësosh sa urgjente është diçka, me nivele të qarta nga “Mbaje nën vëzhgim” deri te “Urgjente — te veterineri tani”; kur është urgjente, në krye janë thirrja te veterineri yt dhe “Gjej një veteriner të hapur tani”. Për sjelljen sugjeron hapat e parë të bazuar te shpërblimi. Vlerësim i parë nga AI, jo diagnozë dhe jo zëvendësim i veterinerit apo specialistit të sjelljes.
+
+FUNKSIONON EDHE PA SINJAL
+Vendet e ruajtura, veterineri yt dhe të gjitha vendet brenda 15 km nga shtëpia funksionojnë edhe pa internet.
+
+PRIVATËSIA
+Pa llogari, pa gjurmim, pa reklama. Qentë e tu, kujtesat, vendet e ruajtura dhe bisedat mbeten në telefonin tënd. Vendndodhja jote përdoret vetëm për kërkim dhe nuk ruhet.
+
+Pamje e çelët dhe e errët. Falas, në 29 gjuhë. Të dhënat e vendeve © kontribuuesit e OpenStreetMap.

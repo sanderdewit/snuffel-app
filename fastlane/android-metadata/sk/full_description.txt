@@ -1,0 +1,27 @@
+Snuffel vám pomôže nájsť dobrú starostlivosť pre vášho psa, blízko a nezávisle. Veterinári, veterinárne kliniky, psie salóny, chovateľské potreby, tréneri, psie hotely a výbehy po celej Európe – a ukážeme vám, ktoré miesta patria veľkým reťazcom.
+
+POHOTOVOSŤ: OTVORENÝ VETERINÁR NA JEDNO ŤUKNUTIE
+Otvorte kartu Pohotovosť (alebo podržte ikonu aplikácie) a Snuffel hneď ukáže veterinárov a veterinárne kliniky, ktoré majú práve otvorené, od najbližších. Zatvorené ambulancie sa skryjú, a ak v okolí nemá nič otvorené, Snuffel hľadá ďalej. Zavolať alebo spustiť navigáciu môžete hneď. Váš veterinár je vždy navrchu.
+
+OTVÁRACIE HODINY NA PRVÝ POHĽAD
+Otváracie hodiny zrozumiteľne, napríklad „Otvorené · zatvára o 18:00“, a celý týždeň na stránke každého miesta. Zapnite v sekcii Hľadať filter „Teraz otvorené“ a zatvorené miesta sa skryjú.
+
+NEZÁVISLÝ ALEBO REŤAZEC?
+Mnohé ambulancie v posledných rokoch kúpili veľké reťazce, často bez zmeny názvu. Snuffel ich rozpozná podľa vlastných zoznamov kliník reťazcov, ich webových stránok a OpenStreetMap a nezávislé ambulancie zobrazí ako prvé.
+
+VÁŠ PES, VAŠE PRIPOMIENKY
+Vytvorte profil svojho psa (plemeno, vek, hmotnosť, fotka) a dostávajte včas pripomienky na očkovanie, odčervenie, ochranu proti blchám a kliešťom a ročnú prehliadku.
+
+KARTA ZDRAVIA A SPRÁVANIA
+Návštevy u veterinára, diagnózy, lieky, alergie, hmotnosť a správanie na jednom mieste. Exportujte kartu do PDF pre nového veterinára alebo opatrovateľa, alebo ju preneste do iného telefónu (voliteľne chránenú heslom).
+
+POMOC AI SO ZDRAVÍM A SPRÁVANÍM
+Pýtajte sa na príznaky alebo správanie, napríklad štekanie, úzkosť, ťahanie na vôdzke či výchovu šteniatka – písaním alebo hlasom. Asistent pozná profil vášho psa a, ak chcete, aj hlavné body z jeho karty. Pomôže vám odhadnúť, aké naliehavé niečo je, s jasnými úrovňami od „Sledujte stav“ po „Naliehavé — ihneď k veterinárovi“; keď je to naliehavé, navrchu sú volanie vášmu veterinárovi a „Nájsť otvoreného veterinára“. Pri správaní navrhne prvé kroky založené na odmeňovaní. Ide o prvé posúdenie od AI, nie o diagnózu ani náhradu veterinára či etológa.
+
+FUNGUJE AJ BEZ SIGNÁLU
+Uložené miesta, váš veterinár a všetky miesta do 15 km od domova fungujú aj offline.
+
+SÚKROMIE
+Žiadny účet, žiadne sledovanie, žiadne reklamy. Vaše psy, pripomienky, uložené miesta a chaty zostávajú vo vašom telefóne. Vaša poloha sa používa iba na vyhľadávanie a neukladá sa.
+
+Svetlý aj tmavý režim. Zadarmo, v 29 jazykoch. Údaje o miestach © prispievatelia OpenStreetMap.
