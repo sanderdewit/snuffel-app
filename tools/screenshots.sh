@@ -69,6 +69,9 @@ for L in ${LANGS[@]}; do
   launch "$L"
   sleep 30   # first start: place data, demo data incl. one AI answer
   echo "$L:"
+  # Emergency is the first shot: set the location again, or a late first fix leaves it
+  # asking for location access (nl, run 45025834282).
+  xcrun simctl location "$UDID" set "$(spot_of "$L")"
   shot "$L" 2-emergency "/emergency" 25   # GPS + widening search; 16 s was sometimes too short
   shot "$L" 3-map       "/?near=1&view=map" 20
   shot "$L" 4-ask       "/ask" 8

@@ -74,8 +74,12 @@ export async function seedDemo(lang: string, t: (key: string) => string): Promis
     { kind: "weight" as const, date: ago(12), title: weight, details: null, value: 6.5 }
   ]) await addRecord({ dogId, ...r });
   const spot = demoSpot(lang);
-  const vets = (await search(spot.lat, spot.lon, 2000).catch(() => [])).filter((p) => p.cat === "vet" && !p.chain && p.phone);
-  if (vets[0]) await setMyVet(vets[0], true);
+  // "My vet": the nearest independent vet with a phone number. Central London has none
+  // within 2 km (its vets are mostly chain-owned), so look further before leaving it out.
+  for (const radius of [2000, 5000]) {
+    const vets = (await search(spot.lat, spot.lon, radius).catch(() => [])).filter((p) => p.cat === "vet" && !p.chain && p.phone);
+    if (vets[0]) { await setMyVet(vets[0], true); break; }
+  }
   if (!(await loadChat(dogId)).length) {
     const q = { role: "user" as const, content: tx.question };
     const r = await ask([q], lang, { emergency: t("emergencyBtn"), lost: "" }, { id: dogId, name: "Bobbie", ...breed, birth: "2019-05-12", weight: 6.5, sex: "female", neutered: true, photo: null });
