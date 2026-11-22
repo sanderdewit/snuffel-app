@@ -10,10 +10,12 @@ set -euo pipefail
 APP="$1"; OUT="$2"; shift 2
 LANGS=("${@:-nl en}")
 BUNDLE=app.snuffel
-LAT=52.3600; LON=4.8852
 LOCALES="$(cd "$(dirname "$0")/.." && pwd)/store/locales.json"
 
 # The phone locale of an app language (BCP 47, e.g. sr-Latn-RS), empty when unknown.
+spot_of() {   # "lat,lon" of the language's capital (store/locales.json)
+  python3 -c 'import json, sys; s = json.load(open(sys.argv[1]))["languages"][sys.argv[2]]["spot"]; print("%s,%s" % (s["lat"], s["lon"]))' "$LOCALES" "$1"
+}
 locale_of() {
   python3 -c 'import json, sys; l = json.load(open(sys.argv[1]))["languages"].get(sys.argv[2]); print(l["locale"] if l else "")' "$LOCALES" "$1"
 }
@@ -61,7 +63,7 @@ for L in ${LANGS[@]}; do
   xcrun simctl bootstatus "$UDID" -b > /dev/null
   xcrun simctl ui "$UDID" appearance light   # the app follows the phone: store images stay light
   xcrun simctl status_bar "$UDID" override --time "9:41" --dataNetwork wifi --wifiBars 3 --cellularMode active --cellularBars 4 --batteryState charged --batteryLevel 100
-  xcrun simctl location "$UDID" set "$LAT,$LON"
+  xcrun simctl location "$UDID" set "$(spot_of "$L")"
   xcrun simctl install "$UDID" "$APP"
   xcrun simctl privacy "$UDID" grant location "$BUNDLE"
   launch "$L"
@@ -75,7 +77,7 @@ for L in ${LANGS[@]}; do
   shot "$L" 7-saved     "/saved" 8
   # Find last: by now a system banner from the fresh simulator ("Ready for Apple
   # Intelligence") is gone, and the location is set once more (a first fix can be late).
-  xcrun simctl location "$UDID" set "$LAT,$LON"
+  xcrun simctl location "$UDID" set "$(spot_of "$L")"
   shot "$L" 1-find      "/?near=1&view=list" 16
   # First-run walkthrough, for review only (review/ is not uploaded to the store).
   mkdir -p "$OUT/review"

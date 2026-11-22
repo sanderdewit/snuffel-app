@@ -4,6 +4,7 @@
 // screenshot build. A normal start never sees it. It fills the phone with a
 // sample dog, reminders, "my vet" and one real AI conversation, once, in the
 // app's language (texts in demotexts.ts).
+import locales from "../../store/locales.json";
 import { Platform, Settings } from "react-native";
 import { isDemo } from "./clock";
 import { Asset } from "expo-asset";
@@ -27,7 +28,13 @@ export function demoRoute(): string | null {
   try { const r = Settings.get("SnuffelDemoRoute"); return typeof r === "string" && r.startsWith("/") ? r : null; } catch { return null; }
 }
 
-const DEMO_SPOT ={ lat: 52.3600, lon: 4.8852 };   // Amsterdam, Vondelpark
+// Where the screenshots are made: a city in the language's country (store/locales.json: mostly the capital,
+// also read by the screenshot scripts for the phone's location), Amsterdam by default.
+const DEMO_SPOT = { lat: 52.3600, lon: 4.8852 };
+function demoSpot(lang: string): { lat: number; lon: number } {
+  const s = (locales.languages as Record<string, { spot?: { lat: number; lon: number } }>)[lang]?.spot;
+  return s ? { lat: s.lat, lon: s.lon } : DEMO_SPOT;
+}
 
 // The app icon (an illustration of a real mini poodle) as Bobbie's photo.
 // On Android release builds bundled images live inside the APK and can't be
@@ -66,7 +73,8 @@ export async function seedDemo(lang: string, t: (key: string) => string): Promis
     { kind: "behaviour" as const, date: ago(20), title: tx.barks, details: tx.barksPractice, value: null },
     { kind: "weight" as const, date: ago(12), title: weight, details: null, value: 6.5 }
   ]) await addRecord({ dogId, ...r });
-  const vets = (await search(DEMO_SPOT.lat, DEMO_SPOT.lon, 2000).catch(() => [])).filter((p) => p.cat === "vet" && !p.chain && p.phone);
+  const spot = demoSpot(lang);
+  const vets = (await search(spot.lat, spot.lon, 2000).catch(() => [])).filter((p) => p.cat === "vet" && !p.chain && p.phone);
   if (vets[0]) await setMyVet(vets[0], true);
   if (!(await loadChat(dogId)).length) {
     const q = { role: "user" as const, content: tx.question };

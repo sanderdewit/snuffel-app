@@ -1,34 +1,295 @@
 {
-  "_help": "Per app language: the phone locale for the screenshots (BCP 47; iOS gets it with underscores, its language without the region), the App Store Connect locale (folder in fastlane/metadata; null = no App Store localisation, not uploaded there) and the Google Play locale (as in fastlane/android-metadata/whatsnew, and the listing folder fastlane/android-metadata/<locale>). Read by tools/screenshots*.sh, store.yml and tools/play-listing.mjs; checked by tests/screenshots.test.ts and tests/storetexts.test.mjs.",
+  "_help": "Per app language: the phone locale for the screenshots (BCP 47; iOS gets it with underscores, its language without the region), the App Store Connect locale (folder in fastlane/metadata; null = no App Store localisation, not uploaded there) and the Google Play locale (as in fastlane/android-metadata/whatsnew, and the listing folder fastlane/android-metadata/<locale>). spot is where the screenshots are made: the capital, or the city the owner chose (Dutch: Utrecht, Polish: Szczecin, Catalan: Barcelona), so the lists show that country's places. Read by tools/screenshots*.sh, src/lib/demo.ts, store.yml and tools/play-listing.mjs; checked by tests/screenshots.test.ts and tests/storetexts.test.mjs.",
   "languages": {
-    "bg": { "locale": "bg-BG", "appStore": null, "play": "bg" },
-    "ca": { "locale": "ca-ES", "appStore": "ca", "play": "ca" },
-    "cs": { "locale": "cs-CZ", "appStore": "cs", "play": "cs-CZ" },
-    "da": { "locale": "da-DK", "appStore": "da", "play": "da-DK" },
-    "de": { "locale": "de-DE", "appStore": "de-DE", "play": "de-DE" },
-    "el": { "locale": "el-GR", "appStore": "el", "play": "el-GR" },
-    "en": { "locale": "en-GB", "appStore": "en-GB", "play": "en-GB" },
-    "es": { "locale": "es-ES", "appStore": "es-ES", "play": "es-ES" },
-    "et": { "locale": "et-EE", "appStore": null, "play": "et" },
-    "fi": { "locale": "fi-FI", "appStore": "fi", "play": "fi-FI" },
-    "fr": { "locale": "fr-FR", "appStore": "fr-FR", "play": "fr-FR" },
-    "hr": { "locale": "hr-HR", "appStore": "hr", "play": "hr" },
-    "hu": { "locale": "hu-HU", "appStore": "hu", "play": "hu-HU" },
-    "is": { "locale": "is-IS", "appStore": null, "play": "is-IS" },
-    "it": { "locale": "it-IT", "appStore": "it", "play": "it-IT" },
-    "lt": { "locale": "lt-LT", "appStore": null, "play": "lt" },
-    "lv": { "locale": "lv-LV", "appStore": null, "play": "lv" },
-    "mk": { "locale": "mk-MK", "appStore": null, "play": "mk-MK" },
-    "nb": { "locale": "nb-NO", "appStore": "no", "play": "no-NO" },
-    "nl": { "locale": "nl-NL", "appStore": "nl-NL", "play": "nl-NL" },
-    "pl": { "locale": "pl-PL", "appStore": "pl", "play": "pl-PL" },
-    "pt": { "locale": "pt-PT", "appStore": "pt-PT", "play": "pt-PT" },
-    "ro": { "locale": "ro-RO", "appStore": "ro", "play": "ro" },
-    "sk": { "locale": "sk-SK", "appStore": "sk", "play": "sk" },
-    "sl": { "locale": "sl-SI", "appStore": "sl-SI", "play": "sl" },
-    "sq": { "locale": "sq-AL", "appStore": null, "play": "sq" },
-    "sr": { "locale": "sr-Latn-RS", "appStore": null, "play": "sr" },
-    "sv": { "locale": "sv-SE", "appStore": "sv", "play": "sv-SE" },
-    "uk": { "locale": "uk-UA", "appStore": "uk", "play": "uk" }
+    "bg": {
+      "locale": "bg-BG",
+      "appStore": null,
+      "play": "bg",
+      "spot": {
+        "city": "Sofia",
+        "lat": 42.6977,
+        "lon": 23.3219
+      }
+    },
+    "ca": {
+      "locale": "ca-ES",
+      "appStore": "ca",
+      "play": "ca",
+      "spot": {
+        "city": "Barcelona",
+        "lat": 41.3922,
+        "lon": 2.1649
+      }
+    },
+    "cs": {
+      "locale": "cs-CZ",
+      "appStore": "cs",
+      "play": "cs-CZ",
+      "spot": {
+        "city": "Prague",
+        "lat": 50.0789,
+        "lon": 14.438
+      }
+    },
+    "da": {
+      "locale": "da-DK",
+      "appStore": "da",
+      "play": "da-DK",
+      "spot": {
+        "city": "Copenhagen",
+        "lat": 55.6838,
+        "lon": 12.564
+      }
+    },
+    "de": {
+      "locale": "de-DE",
+      "appStore": "de-DE",
+      "play": "de-DE",
+      "spot": {
+        "city": "Berlin",
+        "lat": 52.5307,
+        "lon": 13.4065
+      }
+    },
+    "el": {
+      "locale": "el-GR",
+      "appStore": "el",
+      "play": "el-GR",
+      "spot": {
+        "city": "Athens",
+        "lat": 37.98,
+        "lon": 23.733
+      }
+    },
+    "en": {
+      "locale": "en-GB",
+      "appStore": "en-GB",
+      "play": "en-GB",
+      "spot": {
+        "city": "London",
+        "lat": 51.5225,
+        "lon": -0.138
+      }
+    },
+    "es": {
+      "locale": "es-ES",
+      "appStore": "es-ES",
+      "play": "es-ES",
+      "spot": {
+        "city": "Madrid",
+        "lat": 40.424,
+        "lon": -3.7
+      }
+    },
+    "et": {
+      "locale": "et-EE",
+      "appStore": null,
+      "play": "et",
+      "spot": {
+        "city": "Tallinn",
+        "lat": 59.437,
+        "lon": 24.7536
+      }
+    },
+    "fi": {
+      "locale": "fi-FI",
+      "appStore": "fi",
+      "play": "fi-FI",
+      "spot": {
+        "city": "Helsinki",
+        "lat": 60.164,
+        "lon": 24.938
+      }
+    },
+    "fr": {
+      "locale": "fr-FR",
+      "appStore": "fr-FR",
+      "play": "fr-FR",
+      "spot": {
+        "city": "Paris",
+        "lat": 48.864,
+        "lon": 2.35
+      }
+    },
+    "hr": {
+      "locale": "hr-HR",
+      "appStore": "hr",
+      "play": "hr",
+      "spot": {
+        "city": "Zagreb",
+        "lat": 45.813,
+        "lon": 15.977
+      }
+    },
+    "hu": {
+      "locale": "hu-HU",
+      "appStore": "hu",
+      "play": "hu-HU",
+      "spot": {
+        "city": "Budapest",
+        "lat": 47.5,
+        "lon": 19.056
+      }
+    },
+    "is": {
+      "locale": "is-IS",
+      "appStore": null,
+      "play": "is-IS",
+      "spot": {
+        "city": "Reykjavik",
+        "lat": 64.144,
+        "lon": -21.93
+      }
+    },
+    "it": {
+      "locale": "it-IT",
+      "appStore": "it",
+      "play": "it-IT",
+      "spot": {
+        "city": "Rome",
+        "lat": 41.9028,
+        "lon": 12.4964
+      }
+    },
+    "lt": {
+      "locale": "lt-LT",
+      "appStore": null,
+      "play": "lt",
+      "spot": {
+        "city": "Vilnius",
+        "lat": 54.6872,
+        "lon": 25.2797
+      }
+    },
+    "lv": {
+      "locale": "lv-LV",
+      "appStore": null,
+      "play": "lv",
+      "spot": {
+        "city": "Riga",
+        "lat": 56.953,
+        "lon": 24.118
+      }
+    },
+    "mk": {
+      "locale": "mk-MK",
+      "appStore": null,
+      "play": "mk-MK",
+      "spot": {
+        "city": "Skopje",
+        "lat": 41.9965,
+        "lon": 21.4314
+      }
+    },
+    "nb": {
+      "locale": "nb-NO",
+      "appStore": "no",
+      "play": "no-NO",
+      "spot": {
+        "city": "Oslo",
+        "lat": 59.92,
+        "lon": 10.75
+      }
+    },
+    "nl": {
+      "locale": "nl-NL",
+      "appStore": "nl-NL",
+      "play": "nl-NL",
+      "spot": {
+        "city": "Utrecht",
+        "lat": 52.0907,
+        "lon": 5.1214
+      }
+    },
+    "pl": {
+      "locale": "pl-PL",
+      "appStore": "pl",
+      "play": "pl-PL",
+      "spot": {
+        "city": "Szczecin",
+        "lat": 53.4285,
+        "lon": 14.5528
+      }
+    },
+    "pt": {
+      "locale": "pt-PT",
+      "appStore": "pt-PT",
+      "play": "pt-PT",
+      "spot": {
+        "city": "Lisbon",
+        "lat": 38.7223,
+        "lon": -9.1393
+      }
+    },
+    "ro": {
+      "locale": "ro-RO",
+      "appStore": "ro",
+      "play": "ro",
+      "spot": {
+        "city": "Bucharest",
+        "lat": 44.44,
+        "lon": 26.1
+      }
+    },
+    "sk": {
+      "locale": "sk-SK",
+      "appStore": "sk",
+      "play": "sk",
+      "spot": {
+        "city": "Bratislava",
+        "lat": 48.1486,
+        "lon": 17.1077
+      }
+    },
+    "sl": {
+      "locale": "sl-SI",
+      "appStore": "sl-SI",
+      "play": "sl",
+      "spot": {
+        "city": "Ljubljana",
+        "lat": 46.0569,
+        "lon": 14.5058
+      }
+    },
+    "sq": {
+      "locale": "sq-AL",
+      "appStore": null,
+      "play": "sq",
+      "spot": {
+        "city": "Tirana",
+        "lat": 41.3275,
+        "lon": 19.8187
+      }
+    },
+    "sr": {
+      "locale": "sr-Latn-RS",
+      "appStore": null,
+      "play": "sr",
+      "spot": {
+        "city": "Belgrade",
+        "lat": 44.8125,
+        "lon": 20.4612
+      }
+    },
+    "sv": {
+      "locale": "sv-SE",
+      "appStore": "sv",
+      "play": "sv-SE",
+      "spot": {
+        "city": "Stockholm",
+        "lat": 59.336,
+        "lon": 18.064
+      }
+    },
+    "uk": {
+      "locale": "uk-UA",
+      "appStore": "uk",
+      "play": "uk",
+      "spot": {
+        "city": "Kyiv",
+        "lat": 50.4501,
+        "lon": 30.5234
+      }
+    }
   }
 }
