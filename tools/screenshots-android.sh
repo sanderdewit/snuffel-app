@@ -33,6 +33,17 @@ boot_wait() {
   echo "device did not come back"; return 1
 }
 retry() { for i in 1 2 3 4 5; do "$@" && return 0; echo "retry $i: $*"; sleep 5; done; return 1; }
+# After a zygote restart sys.boot_completed stays 1, so boot_wait can return while the
+# package manager is still starting; monkey then finds no activity and exits 252
+# (Catalan, run 45025834282). Wait until the app's start screen resolves.
+app_ready() {
+  for i in $(seq 1 60); do
+    adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER "$PKG" 2>/dev/null | grep -q "$PKG/" && return 0
+    sleep 2
+  done
+  echo "app not resolvable after restart"; return 1
+}
+launch() { adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1 > /dev/null 2>&1; }
 open() { adb shell "am start -W -a android.intent.action.VIEW -d '$1' $PKG" > /dev/null; }
 shot() {   # shot <lang> <name> <app link> <seconds>
   open "$3"; sleep "$4"
@@ -51,15 +62,15 @@ for L in ${LANGS[@]}; do
   mkdir -p "$OUT/$L"
   adb shell pm clear "$PKG" > /dev/null
   echo "== language $LOC"
-  adb shell "setprop persist.sys.locale $LOC; setprop ctl.restart zygote" || true; sleep 5; boot_wait
-  adb shell pm grant "$PKG" android.permission.ACCESS_FINE_LOCATION
-  adb shell pm grant "$PKG" android.permission.ACCESS_COARSE_LOCATION
+  adb shell "setprop persist.sys.locale $LOC; setprop ctl.restart zygote" || true; sleep 5; boot_wait; app_ready
+  retry adb shell pm grant "$PKG" android.permission.ACCESS_FINE_LOCATION
+  retry adb shell pm grant "$PKG" android.permission.ACCESS_COARSE_LOCATION
   adb emu geo fix $(spot_of "$L" | awk -F, '{print $2, $1}') > /dev/null
   # Clean status bar: 9:41, full battery, full signal, no notification icons.
   for c in "enter" "clock -e hhmm 0941" "battery -e level 100 -e plugged false" "network -e wifi show -e level 4 -e fully true" "network -e mobile show -e datatype none -e level 4 -e fully true" "notifications -e visible false"; do
     adb shell "am broadcast -a com.android.systemui.demo -e command $c" > /dev/null
   done
-  adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1 > /dev/null 2>&1
+  retry launch
   sleep 40   # first start: place data, demo data incl. one AI answer
   # GPS fixes in a row, so the location service has a current position.
   for i in 1 2 3; do adb emu geo fix $(spot_of "$L" | awk -F, '{print $2, $1}') > /dev/null; sleep 2; done
