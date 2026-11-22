@@ -1,19 +1,30 @@
-# Google Play store listing: the phone screenshots of a screenshots run, for every
-# Play locale (started by hand). Per locale the existing phone screenshots are
-# replaced (app language -> Play locale in store/locales.json, e.g. nb -> no-NO);
-# the bundle, tracks, texts and other images stay as they are. Uses the Play
-# Developer API with the service account (tools/play-listing.mjs, one edit).
+# Google Play store listing, for every Play locale (started by hand): the listing texts
+# (title, short and full description from fastlane/android-metadata/<Play locale>/) and/or
+# the phone screenshots of a screenshots run. A Play locale without a listing gets one
+# from its texts, so its screenshots can follow in the same run (app language -> Play
+# locale in store/locales.json, e.g. nb -> no-NO). The bundle, tracks, default language
+# and other images stay as they are. Uses the Play Developer API with the service account
+# (tools/play-listing.mjs, one edit).
 name: play-listing
 
 on:
   workflow_dispatch:
     inputs:
+      texts:
+        description: "Upload the listing texts (title, short and full description) from fastlane/android-metadata"
+        type: boolean
+        default: true
       screenshots_run:
-        description: "Run ID of a successful 'screenshots' run with Android images"
-        required: true
+        description: "Run ID of a successful 'screenshots' run with Android images (empty = no screenshots)"
+        required: false
+        default: ""
       languages:
-        description: "App languages to update, space separated (all = every language in that run)"
+        description: "App languages to update, space separated (all = every language)"
         default: "all"
+      dry_run:
+        description: "Dry run: read the current listings and show what would change, without changing anything"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -26,7 +37,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  images:
+  listing:
     runs-on: ubuntu-latest
     environment: release        # main only, approval required; holds PLAY_SERVICE_ACCOUNT_JSON
     timeout-minutes: 20
@@ -34,26 +45,44 @@ jobs:
       # The inputs reach scripts only through env, and are checked first.
       - name: Check the inputs
         env:
+          TEXTS: ${{ inputs.texts }}
           RUN_ID: ${{ inputs.screenshots_run }}
           LANGUAGES: ${{ inputs.languages }}
         run: |
-          [[ "$RUN_ID" =~ ^[0-9]+$ ]] || { echo "::error::screenshots_run must be a run ID (digits only)"; exit 1; }
+          [[ -z "$RUN_ID" || "$RUN_ID" =~ ^[0-9]+$ ]] || { echo "::error::screenshots_run must be a run ID (digits only) or empty"; exit 1; }
           [[ "$LANGUAGES" =~ ^[a-z\ ]+$ ]] || { echo "::error::languages: lowercase codes separated by spaces, or all"; exit 1; }
+          [[ "$TEXTS" == "true" || -n "$RUN_ID" ]] || { echo "::error::nothing to do: turn on texts or give a screenshots_run"; exit 1; }
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
       - name: Screenshots from that run
+        if: inputs.screenshots_run != ''
         env:
           GH_TOKEN: ${{ github.token }}
           RUN_ID: ${{ inputs.screenshots_run }}
         run: gh run download "$RUN_ID" -n screenshots-android -D "$RUNNER_TEMP/shots"
-      - name: Check the images
+      # Lengths and images, without contacting Google.
+      - name: Check the texts and images
         env:
+          TEXTS: ${{ inputs.texts }}
+          RUN_ID: ${{ inputs.screenshots_run }}
           LANGUAGES: ${{ inputs.languages }}
-        run: node tools/play-listing.mjs "$RUNNER_TEMP/shots" --languages "$LANGUAGES" --dry-run
-      - name: Replace the phone screenshots on Google Play
+        run: |
+          args=(--languages "$LANGUAGES" --dry-run)
+          if [[ "$TEXTS" == "true" ]]; then args+=(--texts); fi
+          if [[ -n "$RUN_ID" ]]; then args+=(--screenshots "$RUNNER_TEMP/shots"); fi
+          node tools/play-listing.mjs "${args[@]}"
+      - name: Update the store listing on Google Play
         env:
           PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          TEXTS: ${{ inputs.texts }}
+          RUN_ID: ${{ inputs.screenshots_run }}
           LANGUAGES: ${{ inputs.languages }}
-        run: node tools/play-listing.mjs "$RUNNER_TEMP/shots" --languages "$LANGUAGES"
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          args=(--languages "$LANGUAGES")
+          if [[ "$TEXTS" == "true" ]]; then args+=(--texts); fi
+          if [[ -n "$RUN_ID" ]]; then args+=(--screenshots "$RUNNER_TEMP/shots"); fi
+          if [[ "$DRY_RUN" == "true" ]]; then args+=(--dry-run); fi
+          node tools/play-listing.mjs "${args[@]}"
