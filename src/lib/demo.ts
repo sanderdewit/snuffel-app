@@ -75,8 +75,9 @@ export async function seedDemo(lang: string, t: (key: string) => string): Promis
   ]) await addRecord({ dogId, ...r });
   const spot = demoSpot(lang);
   // "My vet": the nearest independent vet with a phone number. Central London has none
-  // within 2 km (its vets are mostly chain-owned), so look further before leaving it out.
-  for (const radius of [2000, 5000]) {
+  // within 2 km (its vets are mostly chain-owned), nor did Rome, Vilnius, Skopje, Ljubljana
+  // and Tirana: look further before leaving it out (people keep their vet when they move).
+  for (const radius of [2000, 5000, 15000]) {
     const vets = (await search(spot.lat, spot.lon, radius).catch(() => [])).filter((p) => p.cat === "vet" && !p.chain && p.phone);
     if (vets[0]) { await setMyVet(vets[0], true); break; }
   }
