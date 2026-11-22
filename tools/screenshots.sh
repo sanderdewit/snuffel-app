@@ -4,11 +4,22 @@
 # 6.9" iPhone (1320 x 2868), the size App Store Connect requires; smaller
 # iPhones reuse it. Location: Amsterdam. The app runs in screenshot mode
 # (-SnuffelDemo YES: sample dog, reminders, my vet, one real AI answer).
+# Each language gets its own phone locale from store/locales.json (sr: Latin
+# script, sr-Latn / sr_Latn_RS; nb: Bokmål, nb / nb_NO).
 set -euo pipefail
 APP="$1"; OUT="$2"; shift 2
 LANGS=("${@:-nl en}")
 BUNDLE=app.snuffel
 LAT=52.3600; LON=4.8852
+LOCALES="$(cd "$(dirname "$0")/.." && pwd)/store/locales.json"
+
+# The phone locale of an app language (BCP 47, e.g. sr-Latn-RS), empty when unknown.
+locale_of() {
+  python3 -c 'import json, sys; l = json.load(open(sys.argv[1]))["languages"].get(sys.argv[2]); print(l["locale"] if l else "")' "$LOCALES" "$1"
+}
+for L in ${LANGS[@]}; do   # all known before the first simulator starts
+  [ -n "$(locale_of "$L")" ] || { echo "unknown language $L (not in store/locales.json)"; exit 1; }
+done
 
 # The newest "Pro Max" simulator available on this runner.
 DEVICE_TYPE=$(xcrun simctl list devicetypes -j | python3 -c '
@@ -21,9 +32,9 @@ rts = [r for r in json.load(sys.stdin)["runtimes"] if r["platform"] == "iOS" and
 print(sorted(rts, key=lambda r: [int(x) for x in r["version"].split(".")])[-1]["identifier"])')
 echo "device $DEVICE_TYPE, runtime $RUNTIME"
 
-launch() {   # launch <lang> [route]
+launch() {   # launch <lang> [route]   (the language's locale: APPLE_LANG, LOCALE)
   xcrun simctl terminate "$UDID" "$BUNDLE" > /dev/null 2>&1 || true
-  xcrun simctl launch "$UDID" "$BUNDLE" -AppleLanguages "($1)" -AppleLocale "$LOCALE" -SnuffelDemo YES \
+  xcrun simctl launch "$UDID" "$BUNDLE" -AppleLanguages "($APPLE_LANG)" -AppleLocale "$LOCALE" -SnuffelDemo YES \
     ${2:+-SnuffelDemoRoute "$2"} > /dev/null
 }
 # Each screen: restart the app at that route (links would trigger iOS's
@@ -36,7 +47,10 @@ shot() {   # shot <lang> <name> <route> <seconds to settle>
 }
 
 for L in ${LANGS[@]}; do
-  case "$L" in nl) LOCALE=nl_NL ;; en) LOCALE=en_GB ;; *) LOCALE="${L}_$(echo "$L" | tr a-z A-Z)" ;; esac
+  TAG=$(locale_of "$L")
+  LOCALE=${TAG//-/_}       # nl_NL, sr_Latn_RS
+  APPLE_LANG=${TAG%-*}     # nl, sr-Latn, nb
+  echo "== $L: language $APPLE_LANG, locale $LOCALE"
   mkdir -p "$OUT/$L"
   UDID=$(xcrun simctl create "snuffel-$L" "$DEVICE_TYPE" "$RUNTIME")
   xcrun simctl boot "$UDID"
