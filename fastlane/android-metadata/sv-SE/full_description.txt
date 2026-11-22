@@ -1,0 +1,27 @@
+Snuffel hjälper dig att hitta bra vård för din hund, nära och oberoende. Veterinärer, djursjukhus, hundfrisörer, djuraffärer, hundtränare, hundpensionat och hundrastgårdar i hela Europa – och vi visar vilka ställen som tillhör stora kedjor.
+
+AKUT: EN ÖPPEN VETERINÄR MED ETT TRYCK
+Öppna fliken Akut (eller håll in appikonen) så visar Snuffel direkt de veterinärer och djursjukhus som har öppet nu, närmast först. Stängda kliniker döljs, och om inget har öppet i närheten söker Snuffel längre bort. Ring eller starta vägbeskrivningen direkt. Din egen veterinär ligger alltid överst.
+
+ÖPPETTIDER PÅ ETT ÖGONKAST
+Öppettider i klartext, som ”Öppet nu · stänger kl. 18:00”, och hela veckan på varje ställes sida. Slå på ”Öppet nu” i Hitta för att dölja ställen som har stängt.
+
+FRISTÅENDE ELLER KEDJA?
+Många kliniker har de senaste åren köpts upp av stora kedjor, ofta utan att namnet har ändrats. Snuffel känner igen dem utifrån kedjornas egna kliniklistor, deras webbplatser och OpenStreetMap, och visar fristående kliniker först.
+
+DIN HUND, DINA PÅMINNELSER
+Skapa en profil för din hund (ras, ålder, vikt, foto) och få påminnelser i tid om vaccinationer, avmaskning, behandling mot loppor och fästingar och den årliga hälsokontrollen.
+
+HÄLSO- OCH BETEENDEJOURNAL
+Samla veterinärbesök, diagnoser, mediciner, allergier, vikt och beteende på ett ställe. Exportera journalen som PDF till en ny veterinär eller hundvakt, eller flytta den till en annan telefon (skyddad med lösenord om du vill).
+
+AI-HJÄLP MED HÄLSA OCH BETEENDE
+Fråga om symtom eller beteende, som skällande, rädsla, drag i kopplet eller valpträning – skriv eller använd rösten. Assistenten känner till din hunds profil och, om du vill, det viktigaste ur journalen. Den hjälper dig att bedöma hur brådskande något är, med tydliga nivåer från ”Håll koll på det” till ”Akut — uppsök veterinär nu”; är det akut visas samtal till din veterinär och ”Hitta en öppen veterinär nu” först. För beteende föreslår den belöningsbaserade första steg. En första bedömning av AI, ingen diagnos och ingen ersättning för veterinär eller beteendeexpert.
+
+FUNGERAR UTAN TÄCKNING
+Dina sparade ställen, din egen veterinär och alla ställen inom 15 km från hemmet fungerar även offline.
+
+INTEGRITET
+Inget konto, ingen spårning, ingen reklam. Dina hundar, påminnelser, sparade ställen och chattar stannar på din telefon. Din plats används bara för att söka och sparas inte.
+
+Ljust och mörkt läge. Gratis, på 29 språk. Platsdata © OpenStreetMaps bidragsgivare.

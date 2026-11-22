@@ -1,0 +1,27 @@
+Snuffel pomaga znaleźć dobrą opiekę dla twojego psa – blisko i niezależnie. Weterynarze, kliniki weterynaryjne, groomerzy, sklepy zoologiczne, trenerzy psów, hotele dla psów i wybiegi w całej Europie, a do tego pokazujemy, które miejsca należą do dużych sieci.
+
+NAGŁY PRZYPADEK: OTWARTY WETERYNARZ JEDNYM DOTKNIĘCIEM
+Otwórz kartę Nagły przypadek (lub przytrzymaj ikonę aplikacji), a Snuffel od razu pokaże weterynarzy i kliniki weterynaryjne otwarte w tej chwili, od najbliższych. Zamknięte gabinety są ukryte, a jeśli w pobliżu nic nie jest otwarte, Snuffel szuka dalej. Od razu zadzwonisz albo uruchomisz nawigację. Twój weterynarz jest zawsze na samej górze.
+
+GODZINY OTWARCIA NA PIERWSZY RZUT OKA
+Godziny otwarcia podane jasno, np. „Otwarte · zamknięcie o 18:00”, i cały tydzień na stronie każdego miejsca. Włącz „Otwarte” w zakładce Szukaj, aby ukryć zamknięte miejsca.
+
+NIEZALEŻNY CZY SIECIOWY?
+W ostatnich latach wiele gabinetów przejęły duże sieci, często bez zmiany nazwy. Snuffel rozpoznaje je na podstawie list klinik publikowanych przez same sieci, ich stron internetowych i OpenStreetMap, i pokazuje najpierw niezależne gabinety.
+
+TWÓJ PIES, TWOJE PRZYPOMNIENIA
+Utwórz profil swojego psa (rasa, wiek, waga, zdjęcie) i dostawaj na czas przypomnienia o szczepieniach, odrobaczaniu, ochronie przed pchłami i kleszczami oraz corocznym przeglądzie.
+
+KARTA ZDROWIA I ZACHOWANIA
+Wizyty u weterynarza, diagnozy, leki, alergie, waga i zachowanie w jednym miejscu. Wyeksportuj kartę do PDF dla nowego weterynarza lub opiekuna psa albo przenieś ją na inny telefon (opcjonalnie zabezpieczoną hasłem).
+
+POMOC AI: ZDROWIE I ZACHOWANIE
+Zapytaj o objawy lub zachowanie, np. szczekanie, lęk, ciągnięcie na smyczy czy szkolenie szczeniaka – pisząc albo głosowo. Asystent zna profil twojego psa i, jeśli chcesz, najważniejsze informacje z jego karty. Pomaga ocenić, jak pilna jest sprawa, z jasnymi poziomami od „Obserwuj” do „Pilne — jedź teraz do weterynarza”; gdy sprawa jest pilna, na górze są telefon do twojego weterynarza i „Znajdź otwartego weterynarza”. W sprawach zachowania proponuje pierwsze kroki oparte na nagradzaniu. To wstępna ocena AI, a nie diagnoza ani zastępstwo dla weterynarza czy behawiorysty.
+
+DZIAŁA BEZ ZASIĘGU
+Zapisane miejsca, twój weterynarz i wszystkie miejsca w promieniu 15 km od domu działają także offline.
+
+PRYWATNOŚĆ
+Bez konta, bez śledzenia, bez reklam. Twoje psy, przypomnienia, zapisane miejsca i rozmowy zostają w twoim telefonie. Twoja lokalizacja służy tylko do wyszukiwania i nie jest zapisywana.
+
+Jasny i ciemny motyw. Za darmo, w 29 językach. Dane o miejscach © współtwórcy OpenStreetMap.

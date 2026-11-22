@@ -1,0 +1,27 @@
+Snuffel auttaa sinua löytämään koirallesi hyvää hoitoa, läheltä ja itsenäisiltä toimijoilta. Eläinlääkärit, eläinsairaalat, trimmaamot, lemmikkikaupat, koirakoulut, koirahoitolat ja koira-aitaukset kaikkialla Euroopassa, ja näytämme, mitkä paikat kuuluvat suuriin ketjuihin.
+
+PÄIVYSTYS: AUKI OLEVA ELÄINLÄÄKÄRI YHDELLÄ NAPAUTUKSELLA
+Avaa Päivystys-välilehti (tai paina sovelluksen kuvaketta pitkään), niin Snuffel näyttää heti eläinlääkärit ja eläinsairaalat, jotka ovat nyt auki, lähimmät ensin. Suljetut vastaanotot piilotetaan, ja jos lähellä ei ole mitään auki, Snuffel etsii kauempaa. Voit soittaa tai aloittaa reittiohjeet heti. Oma eläinlääkärisi on aina ylimpänä.
+
+AUKIOLOAJAT YHDELLÄ SILMÄYKSELLÄ
+Aukioloajat selkeästi, esimerkiksi ”Auki nyt · sulkeutuu klo 18:00”, ja koko viikko jokaisen paikan sivulla. Kytke Etsi-välilehdellä ”Auki nyt” päälle, niin suljetut paikat piilotetaan.
+
+ITSENÄINEN VAI KETJU?
+Suuret ketjut ovat viime vuosina ostaneet monia vastaanottoja, usein nimeä muuttamatta. Snuffel tunnistaa ne ketjujen omista klinikkaluetteloista, niiden verkkosivuilta ja OpenStreetMap-tiedoista ja näyttää itsenäiset vastaanotot ensin.
+
+KOIRASI, MUISTUTUKSESI
+Luo koirallesi profiili (rotu, ikä, paino, kuva), niin saat ajoissa muistutukset rokotuksista, madotuksesta, kirppu- ja punkkisuojauksesta sekä vuositarkastuksesta.
+
+TERVEYS- JA KÄYTÖSKANSIO
+Pidä eläinlääkärikäynnit, diagnoosit, lääkitys, allergiat, paino ja käytös yhdessä paikassa. Vie kansio PDF-tiedostona uudelle eläinlääkärille tai koiranhoitajalle, tai siirrä se toiseen puhelimeen (halutessasi salasanalla suojattuna).
+
+TEKOÄLYAPU TERVEYTEEN JA KÄYTÖKSEEN
+Kysy oireista tai käytöksestä, kuten haukkumisesta, pelosta, hihnassa vetämisestä tai pennun koulutuksesta, kirjoittamalla tai äänellä. Avustaja tuntee koirasi profiilin ja halutessasi myös kansion tärkeimmät kohdat. Se auttaa arvioimaan, kuinka kiireellinen asia on, selkeillä tasoilla: ”Seuraa tilannetta”, ”Eläinlääkäriin pian”, ”Eläinlääkäriin tänään” ja ”Kiireellinen — eläinlääkäriin heti”. Kiireellisessä tilanteessa ylimpänä ovat soitto eläinlääkärillesi ja ”Etsi auki oleva eläinlääkäri nyt”. Käytökseen se ehdottaa palkitsemiseen perustuvia ensiaskeleita. Tekoälyn alustava arvio, ei diagnoosi eikä korvaa eläinlääkäriä tai koirien käytösneuvojaa.
+
+TOIMII ILMAN VERKKOA
+Tallennetut paikkasi, oma eläinlääkärisi ja kaikki paikat 15 km:n säteellä kodistasi toimivat myös offline-tilassa.
+
+YKSITYISYYS
+Ei tiliä, ei seurantaa, ei mainoksia. Koirasi, muistutukset, tallennetut paikat ja keskustelut pysyvät puhelimessasi. Sijaintiasi käytetään vain hakuun, eikä sitä tallenneta.
+
+Vaalea ja tumma ulkoasu. Ilmainen, 29 kielellä. Paikkatiedot © OpenStreetMap-tekijät.

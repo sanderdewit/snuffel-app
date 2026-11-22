@@ -1,0 +1,27 @@
+Snuffel ti pomaže pronaći dobru skrb za tvog psa, u blizini i neovisno. Veterinari, veterinarske bolnice, saloni za pse, trgovine za kućne ljubimce, treneri, hoteli za pse i parkovi za pse diljem Europe, a pokazujemo ti i koja mjesta pripadaju velikim lancima.
+
+HITNO: OTVOREN VETERINAR JEDNIM DODIROM
+Otvori karticu Hitno (ili dugo pritisni ikonu aplikacije) i Snuffel odmah prikazuje veterinare i veterinarske bolnice koji su sada otvoreni, najbliže prve. Zatvorene ordinacije su skrivene, a ako u blizini ništa nije otvoreno, Snuffel traži dalje. Odmah možeš nazvati ili pokrenuti navigaciju. Tvoj veterinar uvijek je na vrhu.
+
+RADNO VRIJEME NA PRVI POGLED
+Radno vrijeme jasnim riječima, npr. „Otvoreno · zatvara u 18:00”, i cijeli tjedan na stranici svakog mjesta. Uključi „Otvoreno” u odjeljku Traži i zatvorena mjesta se skrivaju.
+
+NEOVISNI ILI LANAC?
+Mnoge su ordinacije posljednjih godina kupili veliki lanci, često bez promjene imena. Snuffel ih prepoznaje prema popisima klinika samih lanaca, njihovim web-stranicama i podacima projekta OpenStreetMap te najprije prikazuje neovisne ordinacije.
+
+TVOJ PAS, TVOJI PODSJETNICI
+Izradi profil svog psa (pasmina, dob, težina, fotografija) i na vrijeme primaj podsjetnike za cijepljenje, dehelmintizaciju, zaštitu od buha i krpelja te godišnji pregled.
+
+KARTON ZDRAVLJA I PONAŠANJA
+Vodi posjete veterinaru, dijagnoze, lijekove, alergije, težinu i ponašanje na jednom mjestu. Izvezi karton kao PDF za novog veterinara ili čuvara psa, ili ga prebaci na drugi telefon (po želji zaštićen lozinkom).
+
+AI POMOĆ ZA ZDRAVLJE I PONAŠANJE
+Pitaj o simptomima ili ponašanju, poput lajanja, tjeskobe, povlačenja na povodcu ili odgoja šteneta, pisanjem ili glasom. Asistent poznaje profil tvog psa i, ako želiš, najvažnije točke iz njegova kartona. Pomaže ti procijeniti koliko je nešto hitno, s jasnim razinama od „Prati stanje” do „Hitno — odmah veterinaru”; kad je hitno, na vrhu su poziv tvom veterinaru i „Pronađi otvorenog veterinara”. Za ponašanje predlaže prve korake temeljene na nagrađivanju. Prva procjena AI-ja, ne dijagnoza i nije zamjena za veterinara ili stručnjaka za ponašanje.
+
+RADI I BEZ SIGNALA
+Tvoja spremljena mjesta, tvoj veterinar i sva mjesta unutar 15 km od doma rade i bez interneta.
+
+PRIVATNOST
+Bez računa, bez praćenja, bez oglasa. Tvoji psi, podsjetnici, spremljena mjesta i razgovori ostaju na tvom telefonu. Tvoja lokacija koristi se samo za pretraživanje i ne sprema se.
+
+Svijetli i tamni način. Besplatno, na 29 jezika. Podaci o mjestima © OpenStreetMap suradnici.

@@ -1,0 +1,27 @@
+Snuffel te ayuda a encontrar una buena atención para tu perro, cerca de ti y de forma independiente. Veterinarios, hospitales veterinarios, peluquerías caninas, tiendas de animales, adiestradores, residencias caninas y zonas de suelta en toda Europa, y te mostramos qué sitios pertenecen a grandes cadenas.
+
+URGENCIAS: UN VETERINARIO ABIERTO CON UN TOQUE
+Abre la pestaña Urgencias (o mantén pulsado el icono de la app) y Snuffel te muestra al instante los veterinarios y hospitales veterinarios abiertos ahora, del más cercano al más lejano. Las clínicas cerradas se ocultan y, si no hay nada abierto cerca, Snuffel busca más lejos. Puedes llamar o iniciar la ruta al momento. Tu propio veterinario aparece siempre arriba.
+
+HORARIOS DE UN VISTAZO
+Horarios en palabras claras, como «Abierto ahora · cierra a las 18:00», y toda la semana en la página de cada sitio. Activa «Abierto ahora» en Buscar para ocultar los sitios cerrados.
+
+¿INDEPENDIENTE O CADENA?
+En los últimos años, muchas clínicas han sido compradas por grandes cadenas, a menudo sin cambiar de nombre. Snuffel las reconoce gracias a las listas de clínicas de las propias cadenas, sus webs y OpenStreetMap, y muestra primero las clínicas independientes.
+
+TU PERRO, TUS RECORDATORIOS
+Crea un perfil para tu perro (raza, edad, peso, foto) y recibe a tiempo recordatorios de vacunas, desparasitación, tratamiento contra pulgas y garrapatas y la revisión anual.
+
+HISTORIAL DE SALUD Y COMPORTAMIENTO
+Guarda en un solo lugar las visitas al veterinario, diagnósticos, medicación, alergias, peso y comportamiento. Exporta el historial en PDF para un nuevo veterinario o un cuidador, o pásalo a otro móvil (con contraseña, si quieres).
+
+AYUDA IA PARA LA SALUD Y EL COMPORTAMIENTO
+Pregunta por síntomas o comportamientos, como ladridos, ansiedad, tirar de la correa o la educación del cachorro, escribiendo o por voz. El asistente conoce el perfil de tu perro y, si quieres, los puntos clave de su historial. Te ayuda a valorar lo urgente que es algo, con niveles claros desde «Vigílalo» hasta «Urgente: ve al veterinario ya»; si es urgente, primero aparecen la llamada a tu veterinario y «Buscar un veterinario abierto ya». Para el comportamiento, te propone primeros pasos basados en el refuerzo positivo. Una primera valoración de la IA, no un diagnóstico, y no sustituye a un veterinario ni a un etólogo.
+
+FUNCIONA SIN COBERTURA
+Tus sitios guardados, tu propio veterinario y todos los sitios a menos de 15 km de casa funcionan también sin conexión.
+
+PRIVACIDAD
+Sin cuenta, sin rastreo, sin anuncios. Tus perros, recordatorios, sitios guardados y conversaciones se quedan en tu móvil. Tu ubicación solo se usa para buscar y no se guarda.
+
+Modo claro y oscuro. Gratis, en 29 idiomas. Datos de lugares © colaboradores de OpenStreetMap.
