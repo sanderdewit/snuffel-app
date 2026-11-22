@@ -1,6 +1,6 @@
 # Build the Android App Bundle, sign it with the Play upload key and upload it
-# to Google Play's internal test track (started by hand). Promoting a build to
-# closed / open testing or production stays a click in the Play Console.
+# to Google Play (started by hand): the internal test track, or with track
+# "production" straight to the public release (after Google's review, like iOS).
 # This is the only workflow that signs: the job runs in the "release"
 # environment, which holds the secrets (ci.yml builds with the debug key).
 #
@@ -14,11 +14,16 @@ name: release-android
 on:
   workflow_dispatch:
     inputs:
-      status:
-        description: "Release status: draft (until the app is published once) or completed"
+      track:
+        description: "Where the bundle goes: internal (test track) or production (the public release, after Google's review)"
         type: choice
-        options: [draft, completed]
-        default: "draft"
+        options: [internal, production]
+        default: "internal"
+      status:
+        description: "Release status: completed (rolled out) or draft (saved in Play Console, rolled out by hand)"
+        type: choice
+        options: [completed, draft]
+        default: "completed"
 
 permissions:
   contents: read
@@ -86,7 +91,7 @@ jobs:
       - name: Without Play access, upload by hand
         if: env.HAS_PLAY != 'true'
         run: echo "::notice::No PLAY_SERVICE_ACCOUNT_JSON in the release environment - upload the .aab (and mapping.txt) from the artifact snuffel-play-${{ github.run_number }} in Play Console."
-      - name: Upload to the internal test track
+      - name: Upload to Google Play (internal or production)
         if: env.HAS_PLAY == 'true'
         uses: r0adkll/upload-google-play@e738b9dd8f2476ea806d921b64aacd24f34515a5 # v1.1.5
         with:
@@ -94,6 +99,6 @@ jobs:
           packageName: app.snuffel
           releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
           mappingFile: android/app/build/outputs/mapping/release/mapping.txt
-          track: internal
+          track: ${{ inputs.track }}
           status: ${{ inputs.status }}
           whatsNewDirectory: fastlane/android-metadata/whatsnew

@@ -53,11 +53,17 @@ the **Pre-launch report** (Google tests every release on real devices).
    delete the file:
 
 ```bash
-gh secret set PLAY_SERVICE_ACCOUNT_JSON -R sanderdewit/snuffel-app < play-upload-key.json
+gh secret set PLAY_SERVICE_ACCOUNT_JSON --env release -R sanderdewit/snuffel-app < play-upload-key.json
 ```
 
-Then Actions → **release-android** → Run (status `draft` until the app has
-been published once, `completed` afterwards).
+(PowerShell: `Get-Content .\play-upload-key.json -Raw | gh secret set PLAY_SERVICE_ACCOUNT_JSON --env release -R sanderdewit/snuffel-app`.)
+Set up on 22 November 2026 (account `play-upload`, permissions: View app
+information, Release to testing tracks, Release to production, Manage store presence).
+
+Then Actions → **release-android** → Run: track `internal` (test track) or
+`production` (the public release, after Google's review), status `completed`
+(or `draft` to roll it out by hand in Play Console). The release notes come from
+fastlane/android-metadata/whatsnew.
 
 ## 5. App content (Policy → App content)
 
