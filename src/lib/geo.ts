@@ -15,16 +15,23 @@ async function nominatim(path: string): Promise<any> {
   return r.json();
 }
 
+// The language place names are asked in. Serbian is written in Latin script in this app,
+// but "sr" gives Cyrillic names ("Теразије, Лондон" under a Latin screen): ask for Latin
+// first, then Serbian, then the local name.
+export function nameLang(lang: string): string {
+  return lang === "sr" ? "sr-Latn,sr" : lang;
+}
+
 export async function geocode(query: string, lang: string): Promise<Spot | null> {
   const data = await nominatim(`/search?format=jsonv2&limit=1&countrycodes=${CONFIG.countryCodes}` +
-    `&accept-language=${encodeURIComponent(lang)}&q=${encodeURIComponent(query)}`);
+    `&accept-language=${encodeURIComponent(nameLang(lang))}&q=${encodeURIComponent(query)}`);
   if (!Array.isArray(data) || !data.length) return null;
   return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon), label: data[0].display_name };
 }
 
 export async function reverseLabel(lat: number, lon: number, lang: string): Promise<string> {
   try {
-    const d = await nominatim(`/reverse?format=jsonv2&zoom=16&accept-language=${encodeURIComponent(lang)}&lat=${lat}&lon=${lon}`);
+    const d = await nominatim(`/reverse?format=jsonv2&zoom=16&accept-language=${encodeURIComponent(nameLang(lang))}&lat=${lat}&lon=${lon}`);
     return (d && d.display_name) || `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
   } catch { return `${lat.toFixed(4)}, ${lon.toFixed(4)}`; }
 }

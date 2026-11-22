@@ -237,7 +237,7 @@
       "play": "sk",
       "spot": {
         "city": "Bratislava",
-        "lat": 48.1486,
+        "lat": 48.1436,
         "lon": 17.1077
       }
     },
@@ -267,8 +267,8 @@
       "play": "sr",
       "spot": {
         "city": "Belgrade",
-        "lat": 44.8125,
-        "lon": 20.4612
+        "lat": 44.815,
+        "lon": 20.464
       }
     },
     "sv": {
