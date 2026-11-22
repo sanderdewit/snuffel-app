@@ -84,7 +84,7 @@ jobs:
         with:
           name: screenshots-app-ios
           path: Snuffel-simulator.zip
-          retention-days: 1
+          retention-days: 7         # as long as the parts: a re-run of a group needs it
           overwrite: true
 
   ios:
@@ -178,7 +178,7 @@ jobs:
         with:
           name: screenshots-app-android
           path: android/app/build/outputs/apk/release/app-release.apk
-          retention-days: 1
+          retention-days: 7         # screenshot build (sample data): never published
           overwrite: true
 
   android:
