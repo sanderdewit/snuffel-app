@@ -1,8 +1,8 @@
 # App Store Connect: everything to enter
 
-Texts and screenshots are in `fastlane/metadata/` (nl-NL primary, en-GB) and are
-uploaded by the **store** workflow. The items below are set once by hand in
-App Store Connect (or answered in its forms).
+Texts are in `fastlane/metadata/` (21 locales, nl-NL primary) and the screenshots
+come from a **screenshots** run; the **store** workflow uploads both. The items
+below are set once by hand in App Store Connect (or answered in its forms).
 
 ## App record (once)
 
@@ -88,8 +88,21 @@ for apps with their own, non-exempt encryption).
 ## Screenshots
 
 6.9" iPhone (1320 × 2868), made by the **screenshots** workflow: 7 per language
-(Find, Emergency, Map, AI help, Dog, Dog file, Saved). Apple scales them for smaller
-iPhones. No iPad version (iPhone only in version 1).
+(Find, Emergency, Map, AI help, Dog, Dog file, Saved), with the sample dog, health
+file and AI question in that language (`src/lib/demotexts.ts`; the answer is a real
+one). Apple scales them for smaller iPhones. No iPad version (iPhone only in version 1).
+
+1. Actions → **screenshots** → Run (languages `all`, or a few codes such as
+   `nl en`; platforms `ios`, or both for Google Play too). The app is built once,
+   then about five languages per runner in parallel, merged into the
+   `screenshots-ios` artifact (`<lang>/1-find.png … 7-saved.png`). A failed group:
+   **Re-run failed jobs**, which merges again.
+2. Actions → **store** → Run with that run's ID as `screenshots_run` and the
+   `app_version` (and `build_number` to submit that build for review in the same
+   run). App language → App Store locale comes from `store/locales.json` (`nb` →
+   `no`, `de` → `de-DE`, …): all 21 locales. bg, et, is, lt, lv, mk, sq and sr have
+   no App Store localisation and are not uploaded; a locale missing from the run
+   keeps its current screenshots.
 
 ## Secrets for the workflows (in the protected `release` environment)
 
