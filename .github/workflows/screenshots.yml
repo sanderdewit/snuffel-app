@@ -1,14 +1,18 @@
-# App Store screenshots (started by hand): builds the app for the simulator,
-# runs it in screenshot mode on a 6.9" iPhone in Amsterdam, and stores the
-# images as an artifact (later uploaded with the store texts by store.yml).
+# Store screenshots (started by hand), in every app language by default. Per platform
+# the app is built once; the languages then run in groups of about five on parallel
+# runners (iOS: 6.9" iPhone simulator, Android: 16:9 emulator; Amsterdam, screenshot
+# mode), and a last job per platform merges the groups into one artifact:
+# screenshots-ios / screenshots-android with <lang>/1-find.png ... 7-saved.png, which
+# store.yml (App Store) and play-listing.yml (Google Play) upload.
+# A failed group: "Re-run failed jobs" takes that group again and merges once more.
 name: screenshots
 
 on:
   workflow_dispatch:
     inputs:
       languages:
-        description: "Languages, space separated"
-        default: "nl en"
+        description: "App languages, space separated (all = the 29 in store/locales.json)"
+        default: "all"
       platforms:
         description: "ios, android or both"
         default: "ios android"
@@ -21,13 +25,45 @@ env:
   LANGUAGES: ${{ inputs.languages }}
 
 jobs:
-  ios:
-    if: contains(inputs.platforms, 'ios') || inputs.platforms == 'both'
-    runs-on: macos-latest
-    timeout-minutes: 120
+  plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      groups: ${{ steps.split.outputs.groups }}
+      languages: ${{ steps.split.outputs.languages }}
     steps:
       - name: Check the inputs
-        run: '[[ "$LANGUAGES" =~ ^[a-z\ ]+$ ]] || { echo "::error::languages: lowercase codes separated by spaces"; exit 1; }'
+        run: '[[ "$LANGUAGES" =~ ^[a-z\ ]*$ ]] || { echo "::error::languages: lowercase codes separated by spaces"; exit 1; }'
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Split the languages into groups of about five
+        id: split
+        run: |
+          python3 - <<'EOF'
+          import json, math, os
+          known = list(json.load(open("store/locales.json"))["languages"])
+          asked = os.environ["LANGUAGES"].split()
+          if not asked or asked == ["all"]: asked = known
+          unknown = [l for l in asked if l not in known]
+          if unknown:
+              print(f"::error::unknown languages: {' '.join(unknown)} (see store/locales.json)")
+              raise SystemExit(1)
+          asked = list(dict.fromkeys(asked))   # each once, in the given order
+          n = math.ceil(len(asked) / 5)
+          groups = [asked[i * len(asked) // n:(i + 1) * len(asked) // n] for i in range(n)]
+          matrix = [{"part": i + 1, "languages": " ".join(g)} for i, g in enumerate(groups)]
+          with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+              out.write(f"groups={json.dumps(matrix)}\n")
+              out.write(f"languages={' '.join(asked)}\n")
+          for m in matrix: print(f"part {m['part']}: {m['languages']}")
+          EOF
+
+  # ---- iOS ----------------------------------------------------------------
+  ios-build:
+    needs: plan
+    if: contains(inputs.platforms, 'ios') || inputs.platforms == 'both'
+    runs-on: macos-latest
+    timeout-minutes: 60
+    steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -42,21 +78,85 @@ jobs:
           xcodebuild -workspace Snuffel.xcworkspace -scheme Snuffel -configuration Release \
             -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath build CODE_SIGNING_ALLOWED=NO | tail -n 20
+      - name: Package the simulator app
+        run: cd ios/build/Build/Products/Release-iphonesimulator && zip -qry "$GITHUB_WORKSPACE/Snuffel-simulator.zip" Snuffel.app
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: screenshots-app-ios
+          path: Snuffel-simulator.zip
+          retention-days: 7         # as long as the parts: a re-run of a group needs it
+          overwrite: true
+
+  ios:
+    needs: [plan, ios-build]
+    name: ios ${{ matrix.group.part }} (${{ matrix.group.languages }})
+    runs-on: macos-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        group: ${{ fromJSON(needs.plan.outputs.groups) }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: screenshots-app-ios
+      - run: unzip -q Snuffel-simulator.zip
       - name: Take the screenshots
-        run: bash tools/screenshots.sh ios/build/Build/Products/Release-iphonesimulator/Snuffel.app screenshots $LANGUAGES
+        env:
+          GROUP: ${{ matrix.group.languages }}
+        run: bash tools/screenshots.sh Snuffel.app screenshots $GROUP
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: screenshots-ios-part-${{ matrix.group.part }}
+          path: screenshots
+          retention-days: 7
+          overwrite: true
+      # What a failed group got that far (logs, images): never merged into the store set.
+      - if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: screenshots-ios-failed-${{ matrix.group.part }}
+          path: screenshots
+          retention-days: 7
+          overwrite: true
+
+  ios-merge:
+    needs: [plan, ios-build, ios]
+    if: ${{ !cancelled() && needs.ios-build.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: screenshots-ios-part-*
+          merge-multiple: true
+          path: screenshots
+      - name: Every language complete?
+        env:
+          WANT: ${{ needs.plan.outputs.languages }}
+        run: |
+          missing=""
+          for L in $WANT; do
+            [ "$(ls "screenshots/$L"/[1-7]-*.png 2>/dev/null | wc -l)" -eq 7 ] || missing="$missing $L"
+          done
+          [ -z "$missing" ] || echo "::warning::not in screenshots-ios (re-run the failed group):$missing"
+          ls screenshots
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: screenshots-ios
           path: screenshots
           retention-days: 90
+          overwrite: true
+          if-no-files-found: error
 
-  android:
+  # ---- Android ------------------------------------------------------------
+  android-build:
+    needs: plan
     if: contains(inputs.platforms, 'android') || inputs.platforms == 'both'
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 60
     steps:
-      - name: Check the inputs
-        run: '[[ "$LANGUAGES" =~ ^[a-z\ ]+$ ]] || { echo "::error::languages: lowercase codes separated by spaces"; exit 1; }'
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -74,12 +174,36 @@ jobs:
         env:
           EXPO_PUBLIC_SNUFFEL_DEMO: "1"
         run: ./gradlew --no-daemon assembleRelease -PreactNativeArchitectures=x86_64
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: screenshots-app-android
+          path: android/app/build/outputs/apk/release/app-release.apk
+          retention-days: 7         # screenshot build (sample data): never published
+          overwrite: true
+
+  android:
+    needs: [plan, android-build]
+    name: android ${{ matrix.group.part }} (${{ matrix.group.languages }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        group: ${{ fromJSON(needs.plan.outputs.groups) }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: screenshots-app-android
+          path: apk
       - name: Enable KVM for the emulator
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
       - name: Take the screenshots (16:9 phone, Amsterdam)
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
+        env:
+          GROUP: ${{ matrix.group.languages }}
         with:
           api-level: 34
           target: google_apis
@@ -87,9 +211,46 @@ jobs:
           profile: pixel_2
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
-          script: bash tools/screenshots-android.sh android/app/build/outputs/apk/release/app-release.apk screenshots-android $LANGUAGES
+          script: bash tools/screenshots-android.sh apk/app-release.apk screenshots-android $GROUP
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: screenshots-android-part-${{ matrix.group.part }}
+          path: screenshots-android
+          retention-days: 7
+          overwrite: true
+      - if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: screenshots-android-failed-${{ matrix.group.part }}
+          path: screenshots-android
+          retention-days: 7
+          overwrite: true
+
+  android-merge:
+    needs: [plan, android-build, android]
+    if: ${{ !cancelled() && needs.android-build.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: screenshots-android-part-*
+          merge-multiple: true
+          path: screenshots-android
+      - name: Every language complete?
+        env:
+          WANT: ${{ needs.plan.outputs.languages }}
+        run: |
+          missing=""
+          for L in $WANT; do
+            [ "$(ls "screenshots-android/$L"/[1-7]-*.png 2>/dev/null | wc -l)" -eq 7 ] || missing="$missing $L"
+          done
+          [ -z "$missing" ] || echo "::warning::not in screenshots-android (re-run the failed group):$missing"
+          ls screenshots-android
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: screenshots-android
           path: screenshots-android
           retention-days: 90
+          overwrite: true
+          if-no-files-found: error

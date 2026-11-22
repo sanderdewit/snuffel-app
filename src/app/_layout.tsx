@@ -26,7 +26,7 @@ function ReminderTexts() {
       body: (dog, kind) => tf("app_reminderBody", { what: what(kind), name: dog.name })
     });
     rescheduleAll().catch(() => undefined);
-    seedDemo(lang, t("emergencyBtn")).catch(() => undefined);   // screenshot mode only
+    seedDemo(lang, t).catch(() => undefined);   // screenshot mode only
   }, [lang, t, tf]);
   return null;
 }

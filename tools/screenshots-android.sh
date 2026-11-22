@@ -4,10 +4,21 @@
 # The APK must be the screenshot build (EXPO_PUBLIC_SNUFFEL_DEMO=1): sample dog,
 # reminders, my vet and one real AI answer. Device: 1080 x 1920 (16:9), because
 # Google Play refuses screenshots longer than 2:1. Location: Amsterdam.
+# Each language gets its own phone locale from store/locales.json (sr: Latin
+# script, sr-Latn-RS; nb: Bokmål, nb-NO).
 set -euo pipefail
 APK="$1"; OUT="$2"; shift 2
 LANGS=("${@:-nl en}")
 PKG=app.snuffel
+LOCALES="$(cd "$(dirname "$0")/.." && pwd)/store/locales.json"
+
+# The phone locale of an app language (BCP 47, e.g. sr-Latn-RS), empty when unknown.
+locale_of() {
+  python3 -c 'import json, sys; l = json.load(open(sys.argv[1]))["languages"].get(sys.argv[2]); print(l["locale"] if l else "")' "$LOCALES" "$1"
+}
+for L in ${LANGS[@]}; do   # all known before the emulator work starts
+  [ -n "$(locale_of "$L")" ] || { echo "unknown language $L (not in store/locales.json)"; exit 1; }
+done
 
 # "adb root" and a zygote restart drop the connection for a moment ("device
 # offline"): wait until adb really reports a booted device again.
@@ -33,7 +44,7 @@ adb shell settings put global sysui_demo_allowed 1
 adb shell cmd uimode night no || true   # the app follows the phone: store images stay light
 
 for L in ${LANGS[@]}; do
-  case "$L" in nl) LOC=nl-NL ;; en) LOC=en-GB ;; *) LOC="$L-$(echo "$L" | tr a-z A-Z)" ;; esac
+  LOC=$(locale_of "$L")   # nl-NL, sr-Latn-RS, nb-NO
   mkdir -p "$OUT/$L"
   adb shell pm clear "$PKG" > /dev/null
   echo "== language $LOC"

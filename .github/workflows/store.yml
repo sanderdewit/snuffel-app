@@ -37,11 +37,27 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           RUN_ID: ${{ inputs.screenshots_run }}
+        # App language -> App Store locale from store/locales.json (nb -> no, de -> de-DE ...).
+        # Languages without an App Store localisation (bg, et, is, lt, lv, mk, sq, sr) are
+        # not uploaded; locales without images in that run keep the ones they have.
         run: |
           gh run download "$RUN_ID" -n screenshots-ios -D /tmp/shots
-          mkdir -p fastlane/screenshots/nl-NL fastlane/screenshots/en-GB
-          cp /tmp/shots/nl/*.png fastlane/screenshots/nl-NL/ 2>/dev/null || true
-          cp /tmp/shots/en/*.png fastlane/screenshots/en-GB/ 2>/dev/null || true
+          python3 - <<'EOF'
+          import glob, json, os, shutil
+          missing = []
+          for lang, l in sorted(json.load(open("store/locales.json"))["languages"].items()):
+              shots = sorted(glob.glob(f"/tmp/shots/{lang}/*.png"))
+              if not l["appStore"]:
+                  print(f"{lang}: no App Store locale, not uploaded")
+              elif not shots:
+                  missing.append(f"{lang} ({l['appStore']})")
+              else:
+                  os.makedirs(f"fastlane/screenshots/{l['appStore']}", exist_ok=True)
+                  for s in shots: shutil.copy(s, f"fastlane/screenshots/{l['appStore']}/")
+                  print(f"{lang} -> {l['appStore']}: {len(shots)} images")
+          if missing: print(f"::notice::not in that run, their screenshots stay as they are: {', '.join(missing)}")
+          if not os.path.isdir("fastlane/screenshots"): print("::error::no screenshots for any App Store locale in that run"); raise SystemExit(1)
+          EOF
           ls -R fastlane/screenshots
       - name: API key for fastlane
         env:
