@@ -1,6 +1,7 @@
 // Snuffel's /api/chat (app only: the website has no AI). The app sends a random
 // install ID (rate limiting per install: phones on mobile data often share one
 // IP) and, when a dog is chosen, its profile so advice fits that dog.
+import { DEMO_DAY, DEMO_TIME, isDemo } from "./clock";
 import { CONFIG } from "./config";
 import { db, dbReady } from "./db";
 import { clock } from "./dates";
@@ -30,8 +31,8 @@ const URGENCIES: Urgency[] = ["emergency", "vet_today", "vet_soon", "monitor", "
 export async function ask(all: ChatMessage[], lang: string, labels: { emergency: string; lost: string }, dog: Dog | null): Promise<AskResult> {
   const history = all.filter((m) => !m.local);
   const body: Record<string, unknown> = {
-    lang, emergencyLabel: labels.emergency, lostLabel: labels.lost, today: today(),   // the phone's date: "yesterday" in an observation
-    time: clock(),   // the phone's time: in the evening "today" means the out-of-hours vet now
+    lang, emergencyLabel: labels.emergency, lostLabel: labels.lost, today: isDemo() ? DEMO_DAY : today(),   // the phone's date: "yesterday" in an observation
+    time: isDemo() ? DEMO_TIME : clock(),   // the phone's time: in the evening "today" means the out-of-hours vet now
     // This app shows "see a vet today" and files the sign category "reproductive";
     // older apps get vet_soon and "other" instead.
     features: ["vet_today", "reproductive"],

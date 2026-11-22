@@ -49,13 +49,16 @@ for L in ${LANGS[@]}; do
   launch "$L"
   sleep 30   # first start: place data, demo data incl. one AI answer
   echo "$L:"
-  shot "$L" 1-find      "/?near=1&view=list" 16
   shot "$L" 2-emergency "/emergency" 25   # GPS + widening search; 16 s was sometimes too short
   shot "$L" 3-map       "/?near=1&view=map" 20
   shot "$L" 4-ask       "/ask" 8
   shot "$L" 5-dog       "/dog/1" 8
   shot "$L" 6-file      "/dog/file/1" 8
   shot "$L" 7-saved     "/saved" 8
+  # Find last: by now a system banner from the fresh simulator ("Ready for Apple
+  # Intelligence") is gone, and the location is set once more (a first fix can be late).
+  xcrun simctl location "$UDID" set "$LAT,$LON"
+  shot "$L" 1-find      "/?near=1&view=list" 16
   # First-run walkthrough, for review only (review/ is not uploaded to the store).
   mkdir -p "$OUT/review"
   for s in 0 1 2 3 4 5; do

@@ -16,8 +16,10 @@ export function isDemo(): boolean {
   try { return Settings.get("SnuffelDemo") === "YES" || Settings.get("SnuffelDemo") === true; } catch { return false; }
 }
 
-// Tuesday 24 November 2026, 10:30 in Amsterdam (09:30 UTC).
+// Tuesday 24 November 2026, 10:30 in Amsterdam (09:30 UTC); the same day and time go to
+// the AI with the sample question (ai.ts), so its answer fits the morning.
 const DEMO_NOW = Date.parse("2026-11-24T09:30:00Z");
+export const DEMO_DAY = "2026-11-24", DEMO_TIME = "10:30";
 let demo: boolean | null = null;
 
 /** Now, as the app should see it for opening hours. */
