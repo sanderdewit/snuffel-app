@@ -43,6 +43,10 @@ shot() {   # shot <lang> <name> <route> <seconds to settle>
   launch "$1" "$3"
   sleep "$4"
   xcrun simctl io "$UDID" screenshot "$OUT/$1/$2.png" > /dev/null
+  # A (nearly) black image means the app was still starting: wait and take it again.
+  if [ "$(stat -f%z "$OUT/$1/$2.png")" -lt 120000 ]; then
+    sleep 8; xcrun simctl io "$UDID" screenshot "$OUT/$1/$2.png" > /dev/null; echo "  $1/$2.png (taken again)"
+  fi
   echo "  $1/$2.png"
 }
 

@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import type { ColorValue } from "react-native";
-import { Tabs, router } from "expo-router";
+import { Tabs, router, usePathname } from "expo-router";
 import { demoRoute } from "../../lib/demo";
 import * as QuickActions from "expo-quick-actions";
 import { useQuickActionRouting } from "expo-quick-actions/router";
@@ -24,11 +24,24 @@ export default function TabsLayout() {
       .catch(() => undefined);
   }, [t]);
 
-  // Screenshot mode only: open the screen named at launch.
+  // Screenshot mode only: open the screen named at launch. On a busy machine the
+  // navigator may not be ready after 800 ms and the push is lost (the app stayed on
+  // Find): push again every 1.5 s until the screen is there (at most five times).
+  const pathname = usePathname();
+  const at = useRef(pathname);
+  at.current = pathname;
   useEffect(() => {
     const route = demoRoute();
     if (!route) return;
-    const timer = setTimeout(() => router.push(route as never), 800);
+    const target = route.split("?")[0];
+    let tries = 0, timer: ReturnType<typeof setTimeout>;
+    const go = () => {
+      if (tries > 0 && (at.current === target || tries > 5)) return;
+      tries++;
+      router.push(route as never);
+      timer = setTimeout(go, 1500);
+    };
+    timer = setTimeout(go, 800);
     return () => clearTimeout(timer);
   }, []);
 
