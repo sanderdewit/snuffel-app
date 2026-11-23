@@ -5,7 +5,7 @@
   "dependencies": {
     "@config-plugins/react-native-webrtc": "^15.0.2",
     "@expo/vector-icons": "^15.0.2",
-    "@livekit/react-native-webrtc": "150.1.0",
+    "@livekit/react-native-webrtc": "150.2.0",
     "@maplibre/maplibre-react-native": "^11.5.0",
     "@noble/ciphers": "^2.4.0",
     "@noble/hashes": "^2.4.0",
