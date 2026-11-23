@@ -1,9 +1,3 @@
-A fresh new look, in light and dark mode.
+New and changed places reach the app sooner: it now checks for new place data every time it is opened, just like the website.
 
-Opening hours at a glance: "Open now · closes at 18:00", the whole week, and an "Open now" filter in Find.
-
-In an urgent AI answer, calling your vet and "Find an open vet now" come first.
-
-Your dog gets its own overview page; entries in the health file can now be opened and edited.
-
-Also new: the full breed list, choose which dog a chat is about, rate answers, and add an AI voice conversation (beta) to your dog's file.
+More groomers are found, and Care & hotels only lists places that take dogs.

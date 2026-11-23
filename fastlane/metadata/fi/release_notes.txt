@@ -1,9 +1,3 @@
-Raikas uusi ulkoasu, vaalea ja tumma.
+Uudet ja muuttuneet paikat näkyvät sovelluksessa nopeammin: se tarkistaa nyt uudet tiedot aina avattaessa, kuten verkkosivustokin.
 
-Aukioloajat yhdellä silmäyksellä: ”Auki nyt · sulkeutuu klo 18:00”, koko viikko ja ”Auki nyt” -suodatin Etsi-välilehdellä.
-
-Kiireellisessä tekoälyvastauksessa ylimpänä: soitto eläinlääkärillesi ja ”Etsi auki oleva eläinlääkäri nyt”.
-
-Koirallasi on oma yleiskatsaussivu, ja terveyskansion merkintöjä voit nyt avata ja muokata.
-
-Myös uutta: koko rotulista, koiran valinta chatille, vastausten arviointi ja tekoälypuhelu (beeta) koirasi kansioon.
+Trimmaamoja löytyy enemmän, ja kohdassa ”Hoitolat ja hotellit” näkyvät vain paikat, jotka ottavat koiria hoitoon.

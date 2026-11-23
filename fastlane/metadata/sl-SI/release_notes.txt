@@ -1,9 +1,3 @@
-Svež nov videz, v svetlem in temnem načinu.
+Nove in spremenjene lokacije se v aplikaciji pokažejo prej: zdaj ob vsakem odprtju preveri, ali so na voljo novi podatki, tako kot spletna stran.
 
-Delovni čas na prvi pogled: »Odprto · zapre ob 18:00«, ves teden in filter »Zdaj odprto« v razdelku Išči.
-
-Pri nujnem odgovoru UI sta na vrhu klic vašemu veterinarju in »Poišči odprtega veterinarja«.
-
-Vaš pes ima svojo stran s pregledom; vnose v kartoteki zdravja lahko zdaj odprete in uredite.
-
-Še novo: celoten seznam pasem, izbira psa za klepet, ocenjevanje odgovorov in dodajanje glasovnega pogovora z UI (beta) v kartoteko psa.
+Najde več pasjih salonov, pod »Varstvo in hoteli« pa so le še lokacije, ki sprejemajo pse.

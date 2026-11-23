@@ -1,9 +1,3 @@
-Ett fräscht nytt utseende, i ljust och mörkt läge.
+Nya och ändrade platser kommer snabbare in i appen: den letar nu efter nya data varje gång den öppnas, precis som webbplatsen.
 
-Öppettider på ett ögonkast: ”Öppet nu · stänger kl. 18:00”, hela veckan och ett ”Öppet nu”-filter i Hitta.
-
-Vid ett akut AI-svar visas samtal till din veterinär och ”Hitta en öppen veterinär nu” först.
-
-Din hund får en egen översiktssida, och poster i hälsojournalen kan nu öppnas och redigeras.
-
-Också nytt: hela raslistan, välj vilken hund en chatt gäller, betygsätt svar och lägg till ett AI-röstsamtal (beta) i din hunds journal.
+Fler hundfrisörer hittas, och under ”Dagis och pensionat” visas bara ställen som tar emot hundar.

@@ -1,9 +1,3 @@
-Un aspecto nuevo, claro y oscuro.
+Los lugares nuevos y modificados llegan antes a la aplicación: ahora busca datos nuevos cada vez que se abre, igual que la web.
 
-Horarios de un vistazo: «Abierto ahora · cierra a las 18:00», toda la semana y un filtro «Abierto ahora» en Buscar.
-
-En las respuestas urgentes de la IA, primero: llamar a tu veterinario y «Buscar un veterinario abierto ya».
-
-Tu perro tiene su página de resumen; ahora puedes abrir y editar las entradas del historial.
-
-Además: todas las razas, elige el perro de cada chat, valora respuestas y añade una conversación de voz con IA (beta) al historial.
+Se encuentran más peluquerías caninas, y en «Guarderías y residencias» solo aparecen sitios que acogen perros.

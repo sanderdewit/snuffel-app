@@ -1,9 +1,3 @@
-Svěží nový vzhled, ve světlém i tmavém režimu.
+Nová a změněná místa se v aplikaci objeví dříve: nyní kontroluje nová data při každém otevření, stejně jako web.
 
-Otevírací doba na první pohled: „Otevřeno · zavírá: 18:00“, celý týden a filtr „Nyní otevřeno“ v sekci Hledat.
-
-U naléhavé odpovědi AI jsou nahoře volání vašemu veterináři a „Najít otevřeného veterináře“.
-
-Váš pes má vlastní stránku s přehledem; záznamy v kartě zdraví teď můžete otevřít a upravit.
-
-Další novinky: úplný seznam plemen, volba psa pro chat, hodnocení odpovědí a přidání hlasového rozhovoru s AI (beta) do karty psa.
+Najde se více psích salonů a v sekci „Péče a hotely“ jsou jen místa, která přijímají psy.

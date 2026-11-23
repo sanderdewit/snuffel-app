@@ -1,9 +1,3 @@
-Friss, új megjelenés, világos és sötét módban.
+Az új és módosult helyek hamarabb megjelennek az alkalmazásban: mostantól minden megnyitáskor ellenőrzi, vannak-e új adatok, akárcsak a weboldal.
 
-Nyitvatartás egy pillantással: „Most nyitva · 18:00-kor zár”, az egész hét, és „Most nyitva” szűrő a Keresés fülön.
-
-Sürgős MI-válasznál legfelül: az állatorvosod hívása és a „Most nyitva tartó állatorvos keresése”.
-
-A kutyádnak saját áttekintő oldala lett; a napló bejegyzései most már megnyithatók és szerkeszthetők.
-
-Továbbá: teljes fajtalista, kutyaválasztás csevegésenként, válaszok értékelése és MI-hangbeszélgetés (béta) a kutyád naplójába.
+Több kutyakozmetika található, és a „Panziók és hotelek” alatt csak olyan helyek szerepelnek, amelyek kutyát fogadnak.
