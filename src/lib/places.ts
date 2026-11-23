@@ -2,7 +2,9 @@
 // reads, with every cell kept in SQLite. Network first; when offline (or the
 // download fails) the stored copy is used, whatever its age. Cells around home
 // are "pinned" so the cache trim never removes them.
+import { AppState } from "react-native";
 import { clockNow } from "./clock";
+import { versionCheck, type Stored } from "./freshness";
 import type { SymbolName } from "../ui/Icon";
 import { CONFIG } from "./config";
 import { db, dbReady, kvGetJson, kvSetJson } from "./db";
@@ -65,13 +67,14 @@ async function fetchJson<T>(url: string, timeoutMs = 15000): Promise<T> {
   } finally { clearTimeout(timer); }
 }
 
-// ---- manifest and chain reference (refreshed at most daily, else stored) ----
-let manifestP: Promise<Manifest | null> | null = null;
+// ---- manifest (src/lib/freshness.ts: at the first search, when the app comes back
+// to the front, at most every 15 minutes) and chain reference (daily, and with every
+// new data version) ----
 export let offline = false;
 
-async function cachedDaily<T>(key: string, url: string): Promise<T | null> {
+async function cachedDaily<T>(key: string, url: string, force = false): Promise<T | null> {
   const stored = await kvGetJson<{ at: number; v: T }>(key);
-  if (stored && Date.now() - stored.at < DAY_MS) return stored.v;
+  if (stored && !force && Date.now() - stored.at < DAY_MS) return stored.v;
   try {
     const v = await fetchJson<T>(url);
     await kvSetJson(key, { at: Date.now(), v });
@@ -83,19 +86,37 @@ async function cachedDaily<T>(key: string, url: string): Promise<T | null> {
   }
 }
 
-function manifest(): Promise<Manifest | null> {
-  if (!manifestP) {
-    manifestP = cachedDaily<Manifest>("manifest", CONFIG.dataBase + "places/manifest.json").then((m) => {
-      if (m) m.cellSet = new Set(m.cells);
-      else manifestP = null;   // try again next time
-      return m;
-    });
-  }
-  return manifestP;
+const MANIFEST_URL = CONFIG.dataBase + "places/manifest.json";
+const manifestCheck = versionCheck<Manifest>({
+  load: () => kvGetJson<Stored<Manifest>>("manifest"),
+  // Stored without cellSet (a Set doesn't survive JSON); manifest() adds it.
+  save: (s) => kvSetJson("manifest", { ...s, v: { ...s.v, cellSet: undefined } }),
+  fetch: async (etag) => {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 15000);
+    try {
+      const r = await fetch(MANIFEST_URL, { signal: ctrl.signal, headers: { Accept: "application/json", ...(etag ? { "If-None-Match": etag } : {}) } });
+      return { status: r.status, etag: r.headers.get("etag"), value: r.ok ? ((await r.json()) as Manifest) : undefined };
+    } finally { clearTimeout(timer); }
+  },
+  now: () => Date.now(),
+  // A new data version comes with its own chain reference.
+  onNew: (m, previous) => { if (previous && previous.version !== m.version) chainsStale = true; },
+  onOnline: (online) => { offline = !online; }
+});
+AppState.addEventListener("change", (s) => { if (s === "active") manifestCheck.refreshIfDue(); });
+
+async function manifest(): Promise<Manifest | null> {
+  const m = await manifestCheck.get();
+  if (m && !(m.cellSet instanceof Set)) m.cellSet = new Set(m.cells);
+  return m;
 }
-let chainRefP: Promise<ChainRef | null> | null = null;
+let chainRefP: Promise<ChainRef | null> | null = null, chainRefAt = 0, chainsStale = false;
 function chainRef(): Promise<ChainRef | null> {
-  if (!chainRefP) chainRefP = cachedDaily<ChainRef>("chains", CONFIG.dataBase + "chains.json");
+  if (!chainRefP || chainsStale || Date.now() - chainRefAt >= DAY_MS) {
+    chainRefP = cachedDaily<ChainRef>("chains", CONFIG.dataBase + "chains.json", chainsStale);
+    chainRefAt = Date.now(); chainsStale = false;
+  }
   return chainRefP;
 }
 
