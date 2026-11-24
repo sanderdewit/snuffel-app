@@ -1,4 +1,4 @@
-Snuffel auttaa sinua löytämään koirallesi parhaan hoidon, läheltä ja itsenäisiltä toimijoilta. Eläinlääkärit, eläinsairaalat, trimmaamot, lemmikkikaupat, koirakoulut, koirahoitolat ja koira-aitaukset kaikkialla Euroopassa, ja näytämme, mitkä paikat kuuluvat suuriin ketjuihin.
+Snuffel auttaa sinua löytämään koirallesi hyvää hoitoa, läheltä ja itsenäisiltä toimijoilta. Eläinlääkärit, eläinsairaalat, trimmaamot, lemmikkikaupat, koirakoulut, koirahoitolat ja koira-aitaukset kaikkialla Euroopassa, ja näytämme, mitkä paikat kuuluvat suuriin ketjuihin.
 
 PÄIVYSTYS: AUKI OLEVA ELÄINLÄÄKÄRI YHDELLÄ NAPAUTUKSELLA
 Avaa Päivystys-välilehti (tai paina sovelluksen kuvaketta pitkään), niin Snuffel näyttää heti eläinlääkärit ja eläinsairaalat, jotka ovat nyt auki, lähimmät ensin. Suljetut vastaanotot piilotetaan, ja jos lähellä ei ole mitään auki, Snuffel etsii kauempaa. Voit soittaa tai aloittaa reittiohjeet heti. Oma eläinlääkärisi on aina ylimpänä.
